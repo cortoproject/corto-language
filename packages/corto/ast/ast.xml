@@ -183,6 +183,7 @@
                     <constant name="ElementStorage"/>
                     <constant name="TemporaryStorage"/>
                     <constant name="TemplateStorage"/>
+                    <constant name="UnresolvedReferenceStorage"/>
                 </meta:scope>
             </enum>
 
@@ -244,6 +245,20 @@
                     <virtual name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
                     <method name="getValue()" returnType="word"/>
                     <member name="value" type="object"/>
+                </meta:scope>
+            </class>
+
+            <!-- Unresolved object, allows for just in time resolving -->
+            <class name="UnresolvedReference" base="Storage" baseAccess="readonly">
+                <meta:scope>
+                    <method name="construct()" returnType="int16"/>
+                    <member name="ref" type="string"/>
+                    <member name="scope" type="object"/>
+                    <member name="line" type="uint32"/>
+                    <member name="column" type="uint32"/>
+                    <method name="resolve(type targetType)" returnType="object"/>
+                    <method name="error()" returnType="void"/>
+                    <virtual name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
                 </meta:scope>
             </class>
 
@@ -718,9 +733,6 @@
                     <member name="isLocal" type="bool" modifiers="private|local"/> <!-- If set, next declaration will result in local variable -->
                     <member name="parseSingleExpr" type="bool" modifiers="private|local"/> <!-- If set parser is parsing one instruction -->
                     <member name="singleExpr" type="ast::Expression" modifiers="private|local"/>
-                    <!-- Due to limitations in the parser sometimes failed resolves can't be immediately reported.
-                         This field keeps track of a failed resolve and will be used in a report if it causes issues. -->
-                    <member name="lastFailedResolve" type="string" modifiers="private|local"/>
 
                     <!-- Variables prepared for initializer (maximum of 64 variables can be initialized simultaneously) -->
                     <member name="variables" type="array{ast::Storage,64}" modifiers="private|readonly"/>
@@ -737,19 +749,6 @@
                     <member name="initializerCount" type="int8" modifiers="private|local"/>
                     <member name="initAnonymousId" type="uint32" modifiers="private|local"/>
                     <member name="initDynamic" type="bool" modifiers="private|local"/>
-
-                    <!-- Stage unresolved variables for implicit declaration -->
-                    <struct name="stagedId">
-                        <meta:scope>
-                            <member name="name" type="string"/>
-                            <member name="found" type="bool"/>
-                            <member name="line" type="uint32"/>
-                            <member name="column" type="uint32"/>
-                        </meta:scope>
-                    </struct>
-                    <member name="staged" type="array{stagedId,64}" modifiers="private|local"/>
-                    <member name="stagedCount" type="uint32" modifiers="private|local"/>
-                    <member name="stagingAllowed" type="bool" modifiers="private|local"/>
 
                     <!-- Parser framework functions -->
                     <method name="parse(sequence{string} argv)" returnType="uint32"/>
@@ -789,8 +788,7 @@
                     <!-- Finalize bound functions -->
                     <method name="finalize(ic::program program)" returnType="int16"/>
 
-                    <method name="initStage(string id,bool found)"/>
-                    <method name="initDeclareStaged(ast::Expression expr)"/>
+                    <method name="initDeclare(Expression ids)" returnType="int16"/>
                     <method name="initPushStatic()" returnType="int16"/>
                     <method name="initPushExpression()" returnType="Expression"/>
                     <method name="initPush()" returnType="int16"/>

@@ -157,6 +157,14 @@ corto_int16 _ast_CallBuilder_buildSignature(ast_CallBuilder *this) {
                 if (!argumentType && (ast_Node(argument)->kind == Ast_InitializerExpr)) {
                     flags |= CORTO_PARAMETER_WILDCARD;
                 }
+
+                /* If the argument is an UnresolvedReference, add a wildcard */
+                if ((ast_Node(argument)->kind == Ast_StorageExpr) &&
+                    (ast_Storage(argument)->kind == Ast_UnresolvedReferenceStorage)) {
+                    argumentType = NULL;
+                    flags |= CORTO_PARAMETER_WILDCARD;
+                }
+
                 flags |= argument->isReference ? CORTO_PARAMETER_REFERENCE : 0;
                 flags |= (argument->deref == Ast_ByReference) ? CORTO_PARAMETER_FORCEREFERENCE : 0;
                 signature = corto_signatureAdd(signature, corto_type(argumentType), flags);

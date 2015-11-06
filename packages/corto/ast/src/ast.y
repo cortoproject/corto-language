@@ -56,15 +56,25 @@ ast_Expression ast_declarationSeqDo(ast_Storage type, ast_ParserDeclarationSeq *
     ast_Comma result = ast_CommaCreate();
     ast_Expression expr = NULL;
 
-    if (type && !corto_instanceof(corto_type_o, ast_Object(type)->value)) {
-        _fast_err("object in declaration is not a type");
-        return NULL;
-    }
-
     ast_Parser_collect(yparser(), result);
     yparser()->variableCount = 0;
     for(i=0; i<declarations->length; i++)
     {
+        if (type->kind == Ast_UnresolvedReferenceStorage) {
+            corto_type typeObject = ast_UnresolvedReference_resolve(type, NULL);
+            if (!typeObject) {
+                return NULL;
+            } else {
+                type = ast_Storage(ast_ObjectCreate(typeObject));
+                ast_Parser_collect(yparser(), type);
+            }
+        }
+
+        if (type && !corto_instanceof(corto_type_o, ast_Object(type)->value)) {
+            _fast_err("object in declaration is not a type");
+            return NULL;
+        }
+
         if (!(declarations->buffer[i].storage = ast_Parser_declaration(
             yparser(),
             type ? ast_Object(type)->value : NULL,
@@ -402,8 +412,8 @@ init_colon
     ;
 
 init_key
-    : '@' {ast_Parser_initKeyValuePush(yparser());} initializer_braces {ast_Parser_initKeyValuePop(yparser());}
-    | literal_expr {ast_Parser_initKeyValueSet(yparser(), $1);}
+    : '@' {ast_Parser_initKeyValuePush(yparser());} initializer_braces {ast_Parser_initKeyValuePop(yparser()); fast_op;}
+    | literal_expr {ast_Parser_initKeyValueSet(yparser(), $1); fast_op;}
     ;
 
 /* ======================================================================== */
@@ -585,14 +595,14 @@ wait_expr
 declaration_expr
     : wait_expr
     | wait_expr ':' {
-        ast_Parser_initDeclareStaged(yparser(), NULL); fast_op;
+        ast_Parser_initDeclare(yparser(), $1); fast_op;
         ast_Parser_initPushStatic(yparser()); fast_op;
     } initializer {
         ast_Parser_initPop(yparser()); fast_op;
         $$ = NULL;
     }
     | wait_expr ':' {
-        ast_Parser_initDeclareStaged(yparser(), NULL); fast_op;
+        ast_Parser_initDeclare(yparser(), $1); fast_op;
         ast_Parser_initPushStatic(yparser()); fast_op;
         ast_Parser_initPop(yparser()); fast_op;
         $$ = NULL;

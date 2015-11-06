@@ -421,7 +421,10 @@ corto_int16 _ast_Binary_construct(ast_Binary this) {
     if (ast_Binary_isArithmic(this)) {
         if ((lvalueType->kind != CORTO_PRIMITIVE) || (rvalueType->kind != CORTO_PRIMITIVE) ||
             ((this->lvalue->deref == Ast_ByReference) || (this->rvalue->deref == Ast_ByReference))) {
-            ast_Parser_error(yparser(), "invalid operands for arithmic operation");
+            corto_id id1, id2;
+            ast_Parser_error(yparser(), "invalid operands for arithmic operation (%s vs %s)",
+                corto_fullname(lvalueType, id1),
+                corto_fullname(rvalueType, id2));
             goto error;
         }
     }

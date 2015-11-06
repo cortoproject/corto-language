@@ -127,6 +127,13 @@ ast_Call ast_createCallFromExpr(ast_Expression f, ast_Expression arguments) {
             result = ast_Call(ast_DelegateCallCreate(NULL, arguments, f));
             break;
 
+        case Ast_UnresolvedReferenceStorage:
+            /* No use in trying to resolve the unresolved identifier here, there
+             * is no additional information available that could help resolving
+             * the identifier */
+            ast_UnresolvedReference_error(f);
+            goto error;
+
         default:
             ast_Parser_error(yparser(), "'%s' expression is not callable",
                 corto_nameof(corto_enum_constant(ast_storageKind_o, ast_Storage(f)->kind)));

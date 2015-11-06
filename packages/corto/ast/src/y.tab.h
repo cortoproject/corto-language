@@ -164,7 +164,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 130 "src/ast.y"
+#line 140 "src/ast.y"
 {
     /* Literals */
     corto_bool Boolean;

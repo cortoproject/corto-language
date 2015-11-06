@@ -590,19 +590,29 @@ error:
 
 ast_Expression ast_Parser_resolve(ast_Parser this, corto_id id) {
     ast_Expression result = NULL;
-    corto_object object;
+    corto_object object = NULL;
 
-    object = corto_resolve(this->scope, id);
-    if (!object){
-        corto_object rvalueType = ast_Parser_getLvalueType(this, FALSE);
-        if (rvalueType && corto_checkAttr(rvalueType, CORTO_ATTR_SCOPED)) {
-            object = corto_resolve(rvalueType, id);
-        }
+    corto_object rvalueType = ast_Parser_getLvalueType(this, FALSE);
+    if (rvalueType && corto_checkAttr(rvalueType, CORTO_ATTR_SCOPED)) {
+        object = corto_resolve(rvalueType, id);
     }
+
+    if (!object){
+        object = corto_resolve(this->scope, id);
+    }
+
     if (object) {
         result = ast_Expression(ast_ObjectCreate(object));
         ast_Parser_collect(this, result);
         corto_release(object);
+    } else {
+        result = ast_Expression(
+            ast_UnresolvedReferenceCreate(
+                id,
+                this->scope,
+                this->line,
+                this->column));
+        ast_Parser_collect(this, result);
     }
 
     return result;
@@ -723,27 +733,22 @@ corto_void _ast_Parser_addStatement(ast_Parser this, ast_Node statement) {
 /* $begin(::corto::ast::Parser::addStatement) */
     ast_CHECK_ERRSET(this);
 
-    /* Process staged declarations that do not have initializers (for example, enum Color:: RED, YELLOW, GREEN, BLUE;) */
-    if (!this->pass && !statement) {
-        if (this->stagingAllowed) {
-            ast_Parser_initDeclareStaged(this, NULL);
-        }
-    }
-
-    /* If this is the first pass and a comma expression is encountered, report error. Comma expressions
-     * shouldn't be used by themselves. */
-    if (!this->pass && statement) {
-        if (statement->kind == Ast_CommaExpr) {
-            ast_Parser_error(this, "invalid usage of comma expression");
-            goto error;
-        }
     /* If a comma expression is encountered in the second pass it could be the result of an expanded
      * comma expression. Only add if the expression has side effects. If it doesn't have side effects
      * it is likely the result of a staged declaration */
-    } else if (this->pass && statement &&
-              (statement->kind == Ast_CommaExpr) &&
-              (!ast_Expression_hasSideEffects(ast_Expression(statement)))) {
-        return;
+    if (statement && (statement->kind == Ast_CommaExpr)) {
+        if (this->pass) {
+            if (!ast_Expression_hasSideEffects(ast_Expression(statement))) {
+                return;
+            }
+        } else {
+            if (ast_Parser_initDeclare(this, statement)) {
+                goto error;
+            }
+
+            /* Don't add the Comma expression to the AST */
+            return;
+        }
     }
 
     if (statement) {
@@ -786,16 +791,6 @@ corto_string _ast_Parser_argumentToString(ast_Parser this, corto_type type, cort
     corto_string str;
     corto_string result;
     ast_CHECK_ERRSET(this);
-
-    /* 1st pass & 2nd pass are equal */
-    if (!type) {
-        if (this->lastFailedResolve) {
-            ast_Parser_error(this, "unresolved type '%s'", this->lastFailedResolve);
-        } else {
-            /* Cause is most likely an already reported error */
-        }
-        goto error;
-    }
 
     if (!corto_class_instanceof(corto_type_o, type)) {
         corto_id id;
@@ -847,8 +842,6 @@ ast_Node _ast_Parser_binaryExpr(ast_Parser this, ast_Expression lvalues, ast_Exp
 /* $begin(::corto::ast::Parser::binaryExpr) */
     ast_Node result = NULL;
     ast_CHECK_ERRSET(this);
-
-    this->stagingAllowed = FALSE;
 
     if (lvalues && rvalues && (this->pass || ((this->initializerCount >= 0) && this->initializers[this->initializerCount]))) {
         ast_ExpandAction combine = ast_Parser_combineComma;
@@ -1018,8 +1011,6 @@ ast_Expression _ast_Parser_callExpr(ast_Parser this, ast_Expression function, as
 /* $begin(::corto::ast::Parser::callExpr) */
     ast_Expression result = NULL;
 
-    this->stagingAllowed = FALSE;
-
     if (function && this->pass) {
         corto_object o = NULL;
         ast_ExpressionList functions = function ? ast_Expression_toList(function) : NULL;
@@ -1076,8 +1067,6 @@ error:
 ast_Expression _ast_Parser_castExpr(ast_Parser this, corto_type lvalue, ast_Expression rvalue) {
 /* $begin(::corto::ast::Parser::castExpr) */
     ast_Expression result = NULL;
-
-    this->stagingAllowed = FALSE;
 
     if (this->pass) {
         corto_type rvalueType;
@@ -1160,19 +1149,9 @@ ast_Storage _ast_Parser_declaration(ast_Parser this, corto_type type, corto_stri
         goto error;
     }
 
-    this->stagingAllowed = FALSE;
-
     /* If block is not root or local-keyword is used, declare local */
     if (this->blockCount || this->isLocal) {
         if (this->pass) {
-            if (!type) {
-                if (this->lastFailedResolve) {
-                    ast_Parser_error(this, "unresolved type '%s'", this->lastFailedResolve);
-                    goto error;
-                } else {
-                    corto_assert(type != NULL, "no type provided for declaration");
-                }
-            }
             corto_assert(this->block != NULL, "no valid code-block set in parser context.");
 
             /* If the variable is declared in the global scope, verify that its name doesn't clash with an object */
@@ -1203,14 +1182,7 @@ ast_Storage _ast_Parser_declaration(ast_Parser this, corto_type type, corto_stri
         }
     } else {
         corto_object o;
-        if (!type) {
-            if (this->lastFailedResolve) {
-                ast_Parser_error(this, "unresolved type '%s'", this->lastFailedResolve);
-                goto error;
-            } else {
-                corto_assert(type != NULL, "no type provided for declaration");
-            }
-        }
+
         corto_assert(this->block != NULL, "no valid code-block set in parser context.");
 
         if (!this->pass) {
@@ -1252,15 +1224,6 @@ ast_Storage _ast_Parser_declareFunction(ast_Parser this, corto_type returnType, 
 
     if (!this->pass) {
         corto_id functionName;
-
-        if (!returnType) {
-            if (this->lastFailedResolve) {
-                ast_Parser_error(this, "unresolved type '%s'", this->lastFailedResolve);
-                goto error;
-            } else {
-                corto_assert(returnType != NULL, "no type provided for declaration");
-            }
-        }
 
         /* Obtain name of function */
         corto_signatureName(id, functionName);
@@ -1681,51 +1644,72 @@ error:
 /* $end */
 }
 
-corto_void _ast_Parser_initDeclareStaged(ast_Parser this, ast_Expression expr) {
-/* $begin(::corto::ast::Parser::initDeclareStaged) */
-    corto_uint32 i;
+corto_int16 _ast_Parser_initDeclare(ast_Parser this, ast_Expression ids) {
+/* $begin(::corto::ast::Parser::initDeclare) */
+    ast_ExpressionList expressions = ast_Expression_toList(ids);
 
-    this->variableCount = 0;
+    /* Comma expression is encountered in the first pass. If this expression
+     * contains out of UnresolvedReference nodes, declare objects */
+    ast_ExpressionListForeach(expressions, s) {
+        if (ast_Node(s)->kind == Ast_StorageExpr) {
+            corto_string id = NULL;
+            corto_object oldScope = NULL, scope = NULL;
+            corto_type type;
 
-    if (expr) {
-        corto_ll exprList = ast_Expression_toList(expr);
-        corto_iter iter = corto_llIter(exprList);
+            /* Resolve unresolved reference */
+            if (ast_Storage(s)->kind == Ast_UnresolvedReferenceStorage) {
+                ast_UnresolvedReference ref = ast_UnresolvedReference(s);
+                id = ref->ref;
+                scope = ref->scope;
 
-        if (this->stagedCount) {
-            ast_Parser_error(this, "invalid declaration");
-            goto error;
-        }
-
-        while(corto_iterHasNext(&iter)) {
-            this->variables[this->variableCount] = corto_iterNext(&iter);
-            this->variableCount++;
-        }
-
-        ast_Expression_cleanList(exprList);
-    } else {
-        for(i=0; i<this->stagedCount; i++) {
-            if (corto_instanceof(corto_type(corto_type_o), this->scope)) {
-                corto_type defaultType;
-                corto_type scopeType = corto_type(corto_typeof(this->scope));
-                if (scopeType->defaultType) {
-                    defaultType = scopeType->defaultType;
-                } else {
-                    defaultType = corto_any_o;
+            /* An object/variable could've been accidentally resolved in what should
+             * have been a declaration. In that case, take the object name as
+             * input for the declaration */
+            } else if (ast_Storage(s)->kind == Ast_ObjectStorage) {
+                corto_object o = ast_Object(s)->value;
+                if (o && corto_checkAttr(o, CORTO_ATTR_SCOPED)) {
+                    id = corto_nameof(o);
                 }
-
-                /* Add variable to parser-list for initialization */
-                ast_Parser_declaration(this, defaultType, this->staged[i].name, FALSE);
-
-                corto_dealloc(this->staged[i].name);
-                this->staged[i].name = NULL;
+            } else if (ast_Storage(s)->kind == Ast_LocalStorage) {
+                id = ast_Local(s)->name;
+            } else {
+                ast_Parser_error(this, "invalid usage of comma expression");
+                goto error;                
             }
+
+            /* Temporarily set scope to scope of unresolved ref */
+            if (scope) {
+                corto_setref(&oldScope, this->scope);
+                corto_setref(&this->scope, scope);
+            }
+
+            /* Obtain default type from scope */
+            if (scope) {
+                type = corto_typeof(scope)->defaultType;
+            } else {
+                type = corto_typeof(this->scope)->defaultType;
+            }
+
+            /* Declare object */
+            if (!ast_Parser_declaration(this, type, id, FALSE)) {
+                goto error;
+            }
+
+            if (scope) {
+                corto_setref(&this->scope, oldScope);
+                corto_setref(&oldScope, NULL);
+            }
+        } else {
+            ast_Parser_error(this, "invalid usage of comma expression");
+            goto error;
         }
     }
 
-    this->stagedCount = 0;
-    return;
+    ast_Expression_cleanList(expressions);
+
+    return 0;
 error:
-    fast_err;
+    return -1;
 /* $end */
 }
 
@@ -1863,16 +1847,6 @@ ast_Expression _ast_Parser_initPushIdentifier(ast_Parser this, ast_Expression ty
     CORTO_UNUSED(this);
     CORTO_UNUSED(type);
 
-    if (!type) {
-        if (this->lastFailedResolve) {
-            ast_Parser_error(this, "unresolved identifier '%s'", this->lastFailedResolve);
-            goto error;
-        } else {
-            ast_Parser_error(this, "invalid expression");
-            goto error;
-        }
-    }
-
     o = corto_type(ast_Object(type)->value);
     if (!corto_instanceof(corto_type(corto_type_o), o)) {
         corto_id id;
@@ -1992,18 +1966,6 @@ error:
 /* $end */
 }
 
-corto_void _ast_Parser_initStage(ast_Parser this, corto_string id, corto_bool found) {
-/* $begin(::corto::ast::Parser::initStage) */
-
-    this->staged[this->stagedCount].name = corto_strdup(id);
-    this->staged[this->stagedCount].line = this->line;
-    this->staged[this->stagedCount].column = this->column;
-    this->staged[this->stagedCount].found = found;
-    this->stagedCount++;
-
-/* $end */
-}
-
 corto_int16 _ast_Parser_initValue(ast_Parser this, ast_Expression expr) {
 /* $begin(::corto::ast::Parser::initValue) */
     ast_CHECK_ERRSET(this);
@@ -2041,7 +2003,6 @@ corto_bool _ast_Parser_isErrSet(ast_Parser this) {
 ast_Expression _ast_Parser_lookup(ast_Parser this, corto_string id) {
 /* $begin(::corto::ast::Parser::lookup) */
     ast_Expression result = NULL;
-    corto_bool stage = TRUE;
     ast_CHECK_ERRSET(this);
 
     if (this->pass) {
@@ -2060,28 +2021,6 @@ ast_Expression _ast_Parser_lookup(ast_Parser this, corto_string id) {
         result = ast_Parser_resolve(this, id);
     }
 
-    /* If either doing a static initializer or parser is
-     * doing the 2nd pass all variables should be resolvable */
-    if (!result) {
-        if (this->pass ||
-            ((this->initializerCount >= 0) &&
-             this->initializers[this->initializerCount] &&
-            corto_instanceof(corto_type(ast_StaticInitializer_o), this->initializers[this->initializerCount]))) {
-            ast_Parser_error(this, "unresolved identifier '%s'", id);
-            stage = FALSE;
-            fast_err;
-        }
-
-        if (this->lastFailedResolve) {
-            corto_dealloc(this->lastFailedResolve);
-        }
-        this->lastFailedResolve = corto_strdup(id);
-    }
-
-    if (stage) {
-        ast_Parser_initStage(this, id, result != NULL);
-    }
-
     return result;
 /* $end */
 }
@@ -2089,8 +2028,6 @@ ast_Expression _ast_Parser_lookup(ast_Parser this, corto_string id) {
 ast_Expression _ast_Parser_memberExpr(ast_Parser this, ast_Expression lvalue, ast_Expression rvalue) {
 /* $begin(::corto::ast::Parser::memberExpr) */
     ast_Expression result = NULL;
-
-    this->stagingAllowed = FALSE;
 
     if (this->pass) {
         corto_type t = ast_Expression_getType(lvalue);
@@ -2116,8 +2053,6 @@ ast_Storage _ast_Parser_observerDeclaration(ast_Parser this, corto_string id, as
     CORTO_UNUSED(object);
     CORTO_UNUSED(mask);
     ast_CHECK_ERRSET(this);
-
-    this->stagingAllowed = FALSE;
 
     ast_Storage result = NULL;
     corto_bool isTemplate = corto_class_instanceof(corto_type_o, this->scope);
@@ -2222,7 +2157,7 @@ corto_uint32 _ast_Parser_parse(ast_Parser this, corto_stringSeq argv) {
 
     this->pass = 0;
     if ( fast_yparse(this, 1, 1)) {
-        corto_print("%s: parsed with errors (%d errors, %d warnings)", this->filename, this->errors, this->warnings);
+        corto_error("%s: parsed with errors (%d errors, %d warnings)", this->filename, this->errors, this->warnings);
         goto error;
     }
 
@@ -2232,13 +2167,13 @@ corto_uint32 _ast_Parser_parse(ast_Parser this, corto_stringSeq argv) {
 
     this->pass = 1;
     if ( fast_yparse(this, 1, 1)) {
-        corto_print("%s: parsed with errors (%d errors, %d warnings)", this->filename, this->errors, this->warnings);
+        corto_error("%s: parsed with errors (%d errors, %d warnings)", this->filename, this->errors, this->warnings);
         goto error;
     }
 
     /* Parse to corto intermediate code */
     if ( ast_Parser_toIc(this, argv)) {
-        corto_print("%s: parsed with errors (%d errors, %d warnings)", this->filename, this->errors, this->warnings);
+        corto_error("%s: parsed with errors (%d errors, %d warnings)", this->filename, this->errors, this->warnings);
         goto error;
     }
 
@@ -2495,8 +2430,6 @@ ast_Expression _ast_Parser_postfixExpr(ast_Parser this, ast_Expression lvalue, c
 /* $begin(::corto::ast::Parser::postfixExpr) */
     ast_Expression result = NULL;
 
-    this->stagingAllowed = FALSE;
-
     if (this->pass) {
         result = ast_Expression(ast_PostFixCreate(lvalue, _operator));
         if (!result) {
@@ -2655,7 +2588,6 @@ error:
 
 corto_void _ast_Parser_reset(ast_Parser this) {
 /* $begin(::corto::ast::Parser::reset) */
-    corto_uint32 i;
 
     this->variableCount = 0;
     this->variablesInitialized = FALSE;
@@ -2663,19 +2595,6 @@ corto_void _ast_Parser_reset(ast_Parser this) {
     this->lvalueSp = 0;
     this->complexTypeSp = 0;
     this->initializerCount = -1;
-    this->stagingAllowed = TRUE;
-
-    if (this->pass) {
-        for(i=0; i<this->stagedCount; i++) {
-            if (!this->staged[i].found) {
-                ast_Parser_error(this, "unresolved identifier '%s'", this->staged[i].name);
-                fast_err;
-            }
-            corto_dealloc(this->staged[i].name);
-            this->staged[i].name = NULL;
-        }
-    }
-    this->stagedCount = 0;
 
 /* $end */
 }
@@ -2708,9 +2627,7 @@ ast_Expression _ast_Parser_unaryExpr(ast_Parser this, ast_Expression lvalue, cor
 /* $begin(::corto::ast::Parser::unaryExpr) */
     ast_Expression result = NULL;
 
-    this->stagingAllowed = FALSE;
-
-    if (lvalue) {
+    if (lvalue && this->pass) {
         if (_operator == CORTO_SUB) {
             corto_type lvalueType = ast_Expression_getType(lvalue);
 
@@ -2798,8 +2715,6 @@ ast_Node _ast_Parser_updateStatement(ast_Parser this, ast_Expression expr, ast_B
 /* $begin(::corto::ast::Parser::updateStatement) */
     ast_Node result = NULL;
 
-    this->stagingAllowed = FALSE;
-
     if (this->pass) {
         ast_Block functionBlock;
         ast_Expression from = NULL;
@@ -2844,8 +2759,6 @@ ast_Expression _ast_Parser_waitExpr(ast_Parser this, ast_Expression expr, ast_Ex
 /* $begin(::corto::ast::Parser::waitExpr) */
     ast_Expression result = NULL;
 
-    this->stagingAllowed = FALSE;
-
     if (this->pass) {
         corto_ll exprList = ast_Expression_toList(expr);
 
@@ -2860,8 +2773,6 @@ ast_Expression _ast_Parser_waitExpr(ast_Parser this, ast_Expression expr, ast_Ex
 ast_Node _ast_Parser_whileStatement(ast_Parser this, ast_Expression condition, ast_Block trueBranch, corto_bool isUntil) {
 /* $begin(::corto::ast::Parser::whileStatement) */
     ast_Node result = NULL;
-
-    this->stagingAllowed = FALSE;
 
     if (this->pass) {
         if (isUntil && this->block->isRoot) {

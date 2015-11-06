@@ -188,6 +188,20 @@ corto_int16 _ast_StaticInitializer_value(ast_StaticInitializer this, ast_Express
     corto_uint32 variable;
     corto_uint32 fp = ast_Initializer(this)->fp;
     corto_type type = ast_Initializer_currentType(ast_Initializer(this));
+
+    /* With the type, it might be able to resolve an unresolve identifier */
+    if ((ast_Node(v)->kind == Ast_StorageExpr) && 
+        (ast_Storage(v)->kind == Ast_UnresolvedReferenceStorage)) {
+        corto_object o = ast_UnresolvedReference_resolve(v, type);
+
+        if (!o) {
+            goto error;
+        } else {
+            v = ast_Expression(ast_ObjectCreate(o));
+            ast_Parser_collect(yparser(), v);
+        }
+    }
+
     corto_type vType = ast_Expression_getType_type(v, type);
     
     if (!type) {
