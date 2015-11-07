@@ -10,14 +10,11 @@
 
 /* $header() */
 #include "ast__private.h"
-/* $end */
 
-corto_int16 _ast_Unary_construct(ast_Unary this) {
-/* $begin(::corto::ast::Unary::construct) */
+corto_int16 ast_Unary_doConstruct(ast_Unary this) {
     corto_type lvalueType;
 
     lvalueType = ast_Expression_getType(this->lvalue);
-    ast_Node(this)->kind = Ast_UnaryExpr;
 
     if (lvalueType->kind != CORTO_ITERATOR) {
         if (this->_operator == CORTO_COND_NOT) {
@@ -38,6 +35,24 @@ corto_int16 _ast_Unary_construct(ast_Unary this) {
 
     return 0;
 error:
+    return -1;    
+} 
+/* $end */
+
+corto_int16 _ast_Unary_construct(ast_Unary this) {
+/* $begin(::corto::ast::Unary::construct) */
+    ast_Node(this)->kind = Ast_UnaryExpr;
+
+    if (this->lvalue->unresolved) {
+        ast_Expression(this)->unresolved = TRUE;
+    } else {
+        if (ast_Unary_doConstruct(this)) {
+            goto error;
+        }
+    }
+
+    return 0;
+error:
     return -1;
 /* $end */
 }
@@ -51,6 +66,29 @@ corto_bool _ast_Unary_hasReturnedResource_v(ast_Unary this) {
 corto_bool _ast_Unary_hasSideEffects_v(ast_Unary this) {
 /* $begin(::corto::ast::Unary::hasSideEffects) */
     return ast_Expression_hasSideEffects(this->lvalue);
+/* $end */
+}
+
+ast_Expression _ast_Unary_resolve_v(ast_Unary this, corto_type type) {
+/* $begin(::corto::ast::Unary::resolve) */
+
+    if (ast_Expression(this)->unresolved) {
+        ast_Expression lvalue = ast_Expression_resolve(this->lvalue, type);
+        if (!lvalue) {
+            goto error;
+        }
+
+        corto_setref(&this->lvalue, lvalue);
+        ast_Expression(this)->unresolved = FALSE;
+
+        if (ast_Unary_doConstruct(this)) {
+            goto error;
+        }
+    }
+
+    return ast_Expression(this);
+error:
+    return NULL;
 /* $end */
 }
 

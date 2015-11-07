@@ -403,16 +403,13 @@ error:
     return -1;
 }
 
-/* $end */
-
-corto_int16 _ast_Binary_construct(ast_Binary this) {
-/* $begin(::corto::ast::Binary::construct) */
+corto_int16 ast_Binary_doConstruct(ast_Binary this) {
     corto_type lvalueType, rvalueType;
 
-    ast_Node(this)->kind = Ast_BinaryExpr;
     if (!(lvalueType = ast_Expression_getType_expr(this->lvalue, this->rvalue))) {
         goto error;
     }
+
     if (!(rvalueType = ast_Expression_getType_expr(this->rvalue, this->lvalue))) {
         goto error;
     }
@@ -450,6 +447,30 @@ corto_int16 _ast_Binary_construct(ast_Binary this) {
 
     /* Set operator */
     ast_Binary_setOperator(this, this->_operator);
+
+    return 0;
+error:
+    return -1;
+}
+
+/* $end */
+
+corto_int16 _ast_Binary_construct(ast_Binary this) {
+/* $begin(::corto::ast::Binary::construct) */
+
+    ast_Node(this)->kind = Ast_BinaryExpr;
+
+    if (this->lvalue->unresolved ||
+        this->rvalue->unresolved)
+    {
+        ast_Expression(this)->unresolved = TRUE;
+        corto_setref(&ast_Expression(this)->type, corto_void_o);
+    } else 
+    {
+        if (ast_Binary_doConstruct(this)) {
+            goto error;
+        }
+    }
 
     return 0;
 error:
@@ -571,6 +592,37 @@ corto_bool _ast_Binary_hasSideEffects_v(ast_Binary this) {
     }
 
     return result || ast_Expression_hasSideEffects(this->lvalue) || ast_Expression_hasSideEffects(this->rvalue);
+/* $end */
+}
+
+ast_Expression _ast_Binary_resolve_v(ast_Binary this, corto_type type) {
+/* $begin(::corto::ast::Binary::resolve) */
+    ast_Expression lvalue, rvalue;
+
+    if (ast_Expression(this)->unresolved) {
+        lvalue = ast_Expression_resolve(this->lvalue, type);
+        if (!lvalue) {
+            goto error;
+        }
+
+        rvalue = ast_Expression_resolve(this->rvalue, type);
+        if (!rvalue) {
+            goto error;
+        }
+
+        corto_setref(&this->lvalue, lvalue);
+        corto_setref(&this->rvalue, rvalue);
+
+        if (ast_Binary_doConstruct(this)) {
+            goto error;
+        }
+
+        ast_Expression(this)->unresolved = FALSE;
+    }
+
+    return ast_Expression(this);
+error:
+    return NULL;
 /* $end */
 }
 

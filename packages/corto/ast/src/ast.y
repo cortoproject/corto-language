@@ -60,15 +60,7 @@ ast_Expression ast_declarationSeqDo(ast_Storage type, ast_ParserDeclarationSeq *
     yparser()->variableCount = 0;
     for(i=0; i<declarations->length; i++)
     {
-        if (type->kind == Ast_UnresolvedReferenceStorage) {
-            corto_type typeObject = ast_UnresolvedReference_resolve(type, NULL);
-            if (!typeObject) {
-                return NULL;
-            } else {
-                type = ast_Storage(ast_ObjectCreate(typeObject));
-                ast_Parser_collect(yparser(), type);
-            }
-        }
+        type = ast_Storage(ast_Expression_resolve(type, NULL));
 
         if (type && !corto_instanceof(corto_type_o, ast_Object(type)->value)) {
             _fast_err("object in declaration is not a type");

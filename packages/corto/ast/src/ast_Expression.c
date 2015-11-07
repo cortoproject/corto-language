@@ -200,18 +200,7 @@ ast_Expression _ast_Expression_cast(ast_Expression this, corto_type type, corto_
 
     /* When object is unresolved reference, it may be possible to resolve it now
      * with additional information about the target type */
-    if ((ast_Node(this)->kind == Ast_StorageExpr) &&
-        (ast_Storage(this)->kind == Ast_UnresolvedReferenceStorage)) 
-    {
-        corto_object o = ast_UnresolvedReference_resolve(this, type);
-        if (o) {
-            this = ast_Expression(ast_ObjectCreate(o));
-            ast_Parser_collect(yparser(), this);
-            return this;
-        } else {
-            goto error;
-        }
-    }
+    this = ast_Expression_resolve(this, type);
 
     exprType = ast_Expression_getType(this);
     if((this->deref == Ast_ByReference) && !isReference && !exprType->reference) {
@@ -514,6 +503,13 @@ corto_bool _ast_Expression_hasSideEffects_v(ast_Expression this) {
 /* $begin(::corto::ast::Expression::hasSideEffects) */
     CORTO_UNUSED(this);
     return FALSE;
+/* $end */
+}
+
+ast_Expression _ast_Expression_resolve_v(ast_Expression this, corto_type type) {
+/* $begin(::corto::ast::Expression::resolve) */
+    CORTO_UNUSED(type);
+    return this;
 /* $end */
 }
 

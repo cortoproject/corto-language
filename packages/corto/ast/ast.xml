@@ -75,6 +75,7 @@
                     <member name="type" type="type" modifiers="readonly"/>
                     <member name="isReference" type="bool" modifiers="readonly"/>
                     <member name="deref" type="derefKind" modifiers="readonly"/>
+                    <member name="unresolved" type="bool" modifiers="readonly"/>
                     <method name="getType()" returnType="type"/>
                     <method name="getType_expr(Expression target)" returnType="type"/>
                     <method name="getType_type(type target)" returnType="type"/>
@@ -85,6 +86,7 @@
                     <virtual name="toList()" returnType="list{Expression}"/>
                     <virtual name="hasSideEffects()" returnType="bool"/>
                     <virtual name="hasReturnedResource()" returnType="bool"/>
+                    <virtual name="resolve(type type)" returnType="Expression"/>
                     <function name="fromList(list{Expression} list)" returnType="Expression"/>
                     <function name="cleanList(list{Expression} list)"/>
                 </meta:scope>
@@ -256,7 +258,7 @@
                     <member name="scope" type="object"/>
                     <member name="line" type="uint32"/>
                     <member name="column" type="uint32"/>
-                    <method name="resolve(type targetType)" returnType="object"/>
+                    <virtual name="resolve(type type)" returnType="Expression"/>
                     <method name="error()" returnType="void"/>
                     <virtual name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
                 </meta:scope>
@@ -413,6 +415,7 @@
                     <member name="operator" type="operatorKind"/>
                     <virtual name="hasSideEffects()" returnType="bool"/>
                     <virtual name="hasReturnedResource()" returnType="bool"/>
+                    <virtual name="resolve(type type)" returnType="Expression"/>
                     <virtual name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
                 </meta:scope>
             </class>
@@ -430,6 +433,7 @@
                     <method name="setOperator(operatorKind kind)" returnType="void"/>
                     <virtual name="hasSideEffects()" returnType="bool"/>
                     <virtual name="hasReturnedResource()" returnType="bool"/>
+                    <virtual name="resolve(type type)" returnType="Expression"/>
                     <virtual name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
                 </meta:scope>
             </class>

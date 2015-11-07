@@ -159,8 +159,7 @@ corto_int16 _ast_CallBuilder_buildSignature(ast_CallBuilder *this) {
                 }
 
                 /* If the argument is an UnresolvedReference, add a wildcard */
-                if ((ast_Node(argument)->kind == Ast_StorageExpr) &&
-                    (ast_Storage(argument)->kind == Ast_UnresolvedReferenceStorage)) {
+                if (ast_Expression(argument)->unresolved) {
                     argumentType = NULL;
                     flags |= CORTO_PARAMETER_WILDCARD;
                 }

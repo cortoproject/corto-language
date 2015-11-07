@@ -16,6 +16,7 @@ corto_int16 _ast_UnresolvedReference_construct(ast_UnresolvedReference this) {
 /* $begin(::corto::ast::UnresolvedReference::construct) */
 
     ast_Storage(this)->kind = Ast_UnresolvedReferenceStorage;
+    ast_Expression(this)->unresolved = TRUE;
     corto_setref(&ast_Expression(this)->type, corto_void_o);
 
     return ast_Storage_construct(this);
@@ -39,19 +40,24 @@ corto_void _ast_UnresolvedReference_error(ast_UnresolvedReference this) {
 /* $end */
 }
 
-corto_object _ast_UnresolvedReference_resolve(ast_UnresolvedReference this, corto_type targetType) {
+ast_Expression _ast_UnresolvedReference_resolve_v(ast_UnresolvedReference this, corto_type type) {
 /* $begin(::corto::ast::UnresolvedReference::resolve) */
-    corto_object result = NULL;
+    ast_Expression result = NULL;
+    corto_object o = NULL;
 
-    if (targetType) {
-        result = corto_resolve(targetType, this->ref);
+    if (type) {
+        o = corto_resolve(type, this->ref);
     }
 
-    if (!result) {
-        result = corto_resolve(this->scope, this->ref);
-        if (!result) {
+    if (!o) {
+        o = corto_resolve(this->scope, this->ref);
+        if (!o) {
             ast_UnresolvedReference_error(this);
         }
+    }
+
+    if (o) {
+        result = ast_Expression(ast_ObjectCreate(o));
     }
 
     return result;
