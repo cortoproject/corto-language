@@ -13,14 +13,14 @@
 /* $end */
 
 corto_int16 _ast_Boolean_init(ast_Boolean this) {
-/* $begin(::corto::ast::Boolean::init) */
+/* $begin(corto/ast/Boolean/init) */
     ast_Literal(this)->kind = Ast_Bool;
     return ast_Literal_init(ast_Literal(this));
 /* $end */
 }
 
 corto_int16 _ast_Boolean_serialize(ast_Boolean this, corto_type dstType, corto_word dst) {
-/* $begin(::corto::ast::Boolean::serialize) */
+/* $begin(corto/ast/Boolean/serialize) */
     ast_valueKind kind;
 
     kind = ast_valueKindFromType(dstType);
@@ -56,7 +56,7 @@ error:
 }
 
 ic_node _ast_Boolean_toIc_v(ast_Boolean this, ic_program program, ic_storage storage, corto_bool stored) {
-/* $begin(::corto::ast::Boolean::toIc) */
+/* $begin(corto/ast/Boolean/toIc) */
     ic_node result;
     CORTO_UNUSED(storage);
     CORTO_UNUSED(stored);

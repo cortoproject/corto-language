@@ -13,7 +13,7 @@
 /* $end */
 
 corto_int16 _ast_InitializerExpression_construct(ast_InitializerExpression this) {
-/* $begin(::corto::ast::InitializerExpression::construct) */
+/* $begin(corto/ast/InitializerExpression/construct) */
     corto_int16 result = 0;
 
     ast_Node(this)->kind = Ast_InitializerExpr;
@@ -23,7 +23,7 @@ corto_int16 _ast_InitializerExpression_construct(ast_InitializerExpression this)
 }
 
 corto_int16 _ast_InitializerExpression_define(ast_InitializerExpression this) {
-/* $begin(::corto::ast::InitializerExpression::define) */
+/* $begin(corto/ast/InitializerExpression/define) */
     ast_InitOper *elem = ast_InitOperListAppendAlloc(this->operations);
     elem->kind = Ast_InitOpDefine;
     return 0;
@@ -31,14 +31,14 @@ corto_int16 _ast_InitializerExpression_define(ast_InitializerExpression this) {
 }
 
 corto_bool _ast_InitializerExpression_hasReturnedResource_v(ast_InitializerExpression this) {
-/* $begin(::corto::ast::InitializerExpression::hasReturnedResource) */
+/* $begin(corto/ast/InitializerExpression/hasReturnedResource) */
     CORTO_UNUSED(this);
     return FALSE;
 /* $end */
 }
 
 corto_int16 _ast_InitializerExpression_insert(ast_InitializerExpression this, ast_Expression variable) {
-/* $begin(::corto::ast::InitializerExpression::insert) */
+/* $begin(corto/ast/InitializerExpression/insert) */
     ast_DynamicInitializer initializer;
 
     corto_setref(&ast_Initializer(this)->variables[0].object, variable);
@@ -96,7 +96,7 @@ error:
 }
 
 corto_int32 _ast_InitializerExpression_member(ast_InitializerExpression this, corto_string name) {
-/* $begin(::corto::ast::InitializerExpression::member) */
+/* $begin(corto/ast/InitializerExpression/member) */
     ast_InitOper *elem = ast_InitOperListAppendAlloc(this->operations);
     elem->kind = Ast_InitOpMember;
     elem->name = corto_strdup(name);
@@ -105,7 +105,7 @@ corto_int32 _ast_InitializerExpression_member(ast_InitializerExpression this, co
 }
 
 corto_int16 _ast_InitializerExpression_pop(ast_InitializerExpression this) {
-/* $begin(::corto::ast::InitializerExpression::pop) */
+/* $begin(corto/ast/InitializerExpression/pop) */
     ast_InitOper *elem = ast_InitOperListAppendAlloc(this->operations);
     elem->kind = Ast_InitOpPop;
     return 0;
@@ -113,7 +113,7 @@ corto_int16 _ast_InitializerExpression_pop(ast_InitializerExpression this) {
 }
 
 corto_int16 _ast_InitializerExpression_push(ast_InitializerExpression this) {
-/* $begin(::corto::ast::InitializerExpression::push) */
+/* $begin(corto/ast/InitializerExpression/push) */
     ast_InitOper *elem = ast_InitOperListAppendAlloc(this->operations);
     elem->kind = Ast_InitOpPush;
     return 0;
@@ -121,7 +121,7 @@ corto_int16 _ast_InitializerExpression_push(ast_InitializerExpression this) {
 }
 
 corto_int16 _ast_InitializerExpression_value(ast_InitializerExpression this, ast_Expression v) {
-/* $begin(::corto::ast::InitializerExpression::value) */
+/* $begin(corto/ast/InitializerExpression/value) */
     ast_InitOper *elem = ast_InitOperListAppendAlloc(this->operations);
     elem->kind = Ast_InitOpValue;
     corto_setref(&elem->expr, v);

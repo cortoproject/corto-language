@@ -13,7 +13,7 @@
 /* $end */
 
 corto_int16 _ast_Object_construct(ast_Object this) {
-/* $begin(::corto::ast::Object::construct) */
+/* $begin(corto/ast/Object/construct) */
     corto_type t = corto_typeof(ast_Object(this)->value);
 
     /* TODO: this is not nice */
@@ -30,7 +30,7 @@ corto_int16 _ast_Object_construct(ast_Object this) {
 }
 
 corto_word _ast_Object_getValue(ast_Object this) {
-/* $begin(::corto::ast::Object::getValue) */
+/* $begin(corto/ast/Object/getValue) */
     corto_word result = 0;
 
     /* Value of objects can only be used at compiletime when object is of
@@ -43,8 +43,21 @@ corto_word _ast_Object_getValue(ast_Object this) {
 /* $end */
 }
 
+corto_string _ast_Object_id_v(ast_Object this) {
+/* $begin(corto/ast/Object/id) */
+    corto_object o = this->value;
+    corto_string result = NULL;
+
+    if (o && corto_checkAttr(o, CORTO_ATTR_SCOPED)) {
+        result = corto_nameof(o);
+    }
+
+    return result;
+/* $end */
+}
+
 corto_int16 _ast_Object_serialize(ast_Object this, corto_type dstType, corto_word dst) {
-/* $begin(::corto::ast::Object::serialize) */
+/* $begin(corto/ast/Object/serialize) */
     ast_valueKind kind;
 
     if (!dstType->reference) {
@@ -129,7 +142,7 @@ error:
 }
 
 ic_node _ast_Object_toIc_v(ast_Object this, ic_program program, ic_storage storage, corto_bool stored) {
-/* $begin(::corto::ast::Object::toIc) */
+/* $begin(corto/ast/Object/toIc) */
     CORTO_UNUSED(program);
     CORTO_UNUSED(storage);
     CORTO_UNUSED(stored);

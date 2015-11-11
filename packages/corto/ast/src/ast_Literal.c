@@ -13,7 +13,7 @@
 /* $end */
 
 corto_word _ast_Literal_getValue_v(ast_Literal this) {
-/* $begin(::corto::ast::Literal::getValue) */
+/* $begin(corto/ast/Literal/getValue) */
     corto_word result = 0;
 
     switch(this->kind) {
@@ -30,7 +30,7 @@ corto_word _ast_Literal_getValue_v(ast_Literal this) {
 }
 
 corto_int16 _ast_Literal_init(ast_Literal this) {
-/* $begin(::corto::ast::Literal::init) */
+/* $begin(corto/ast/Literal/init) */
     if (!ast_Expression(this)->type) {
         switch(this->kind) {
         case Ast_Bool:

@@ -191,16 +191,19 @@ ast_Expression ast_Expression_narrow(ast_Expression expr, corto_type target) {
 /* $end */
 
 ast_Expression _ast_Expression_cast(ast_Expression this, corto_type type, corto_bool isReference) {
-/* $begin(::corto::ast::Expression::cast) */
+/* $begin(corto/ast/Expression/cast) */
     corto_type exprType, refType;
     ast_Expression result = NULL;
     corto_bool castRequired = TRUE;
-    
+
     corto_assert(type != NULL, "cannot cast to unknown type NULL");
 
     /* When object is unresolved reference, it may be possible to resolve it now
      * with additional information about the target type */
     this = ast_Expression_resolve(this, type);
+    if (ast_Expression_getType(this) == type) {
+        return this;
+    }
 
     exprType = ast_Expression_getType(this);
     if((this->deref == Ast_ByReference) && !isReference && !exprType->reference) {
@@ -212,7 +215,7 @@ ast_Expression _ast_Expression_cast(ast_Expression this, corto_type type, corto_
     /* If types are different, cast */
     if (refType != type) {
         if (!exprType) {
-            /* If expression is an untyped initializer, create an anonymous variable of the destination type 
+            /* If expression is an untyped initializer, create an anonymous variable of the destination type
              * and assign it to the initializer. */
             if(ast_Node(this)->kind == Ast_InitializerExpr) {
                 ast_Expression local = ast_Expression(ast_TemporaryCreate(type, FALSE));
@@ -305,7 +308,7 @@ ast_Expression _ast_Expression_cast(ast_Expression this, corto_type type, corto_
                  * of the same kind or 'score' to the same width */
                 if ((refType->kind == CORTO_PRIMITIVE) &&
                    (type->kind == CORTO_PRIMITIVE) &&
-                   (ast_Expression_getCastScore(corto_primitive(refType)) == 
+                   (ast_Expression_getCastScore(corto_primitive(refType)) ==
                     ast_Expression_getCastScore(corto_primitive(type)))) {
                     if (corto_primitive(exprType)->width != corto_primitive(type)->width) {
                         result = ast_Expression(ast_CastCreate(type, this, isReference));
@@ -321,7 +324,7 @@ ast_Expression _ast_Expression_cast(ast_Expression this, corto_type type, corto_
                 /* If collections are castable, they must be equivalent */
                 } else if (type->kind == CORTO_COLLECTION) {
                     castRequired = FALSE;
-                    
+
                 /* For all other cases, insert cast */
                 } else {
                     result = ast_Expression(ast_CastCreate(type, this, isReference));
@@ -344,7 +347,7 @@ ast_Expression _ast_Expression_cast(ast_Expression this, corto_type type, corto_
 
             /* If assigning to a generic reference, insert cast */
             } else if (exprType->kind == CORTO_VOID && (exprType->reference || isReference)) {
-                result = ast_Expression(ast_CastCreate(type, this, isReference));    
+                result = ast_Expression(ast_CastCreate(type, this, isReference));
             }
         }
     } else {
@@ -369,7 +372,7 @@ error:
 }
 
 corto_void _ast_Expression_cleanList(ast_ExpressionList list) {
-/* $begin(::corto::ast::Expression::cleanList) */
+/* $begin(corto/ast/Expression/cleanList) */
     if (list) {
         corto_iter iter = corto_llIter(list);
         while(corto_iterHasNext(&iter)) {
@@ -381,14 +384,14 @@ corto_void _ast_Expression_cleanList(ast_ExpressionList list) {
 }
 
 ast_Expression _ast_Expression_fold_v(ast_Expression this) {
-/* $begin(::corto::ast::Expression::fold) */
+/* $begin(corto/ast/Expression/fold) */
     CORTO_UNUSED(this);
     return this;
 /* $end */
 }
 
 ast_Expression _ast_Expression_fromList(ast_ExpressionList list) {
-/* $begin(::corto::ast::Expression::fromList) */
+/* $begin(corto/ast/Expression/fromList) */
     ast_Expression result = NULL;
 
     /* Convert list to comma expression */
@@ -399,7 +402,7 @@ ast_Expression _ast_Expression_fromList(ast_ExpressionList list) {
             corto_ll toList = corto_llNew(); /* Copy list */
             corto_iter iter;
             ast_Expression expr;
-            
+
             result = ast_Expression(ast_CommaCreate());
 
             iter = corto_llIter(list);
@@ -411,18 +414,18 @@ ast_Expression _ast_Expression_fromList(ast_ExpressionList list) {
             ast_Parser_collect(yparser(), result);
         }
     }
-    
+
     return result;
 /* $end */
 }
 
 corto_type _ast_Expression_getType(ast_Expression this) {
-/* $begin(::corto::ast::Expression::getType) */
+/* $begin(corto/ast/Expression/getType) */
     return this->type;
 /* $end */
 }
 
-/* $header(::corto::ast::Expression::getType_expr) */
+/* $header(corto/ast/Expression/getType_expr) */
 corto_type ast_Expression_getType_intern(ast_Expression this, corto_type target, ast_Expression targetExpr) {
     corto_type result = ast_Expression_getType(this);
 
@@ -453,13 +456,13 @@ corto_type ast_Expression_getType_intern(ast_Expression this, corto_type target,
     }
 
     return result;
-error: 
+error:
     ast_Parser_error(yparser(), "inconsistent usage of references");
-    return NULL;  
+    return NULL;
 }
 /* $end */
 corto_type _ast_Expression_getType_expr(ast_Expression this, ast_Expression target) {
-/* $begin(::corto::ast::Expression::getType_expr) */
+/* $begin(corto/ast/Expression/getType_expr) */
     corto_type type,result;
 
     result = ast_Expression_getType(this);
@@ -480,41 +483,48 @@ corto_type _ast_Expression_getType_expr(ast_Expression this, ast_Expression targ
 }
 
 corto_type _ast_Expression_getType_type(ast_Expression this, corto_type target) {
-/* $begin(::corto::ast::Expression::getType_type) */
+/* $begin(corto/ast/Expression/getType_type) */
     return ast_Expression_getType_intern(this, target, NULL);
 /* $end */
 }
 
 corto_word _ast_Expression_getValue_v(ast_Expression this) {
-/* $begin(::corto::ast::Expression::getValue) */
+/* $begin(corto/ast/Expression/getValue) */
     CORTO_UNUSED(this);
     return 0;
 /* $end */
 }
 
 corto_bool _ast_Expression_hasReturnedResource_v(ast_Expression this) {
-/* $begin(::corto::ast::Expression::hasReturnedResource) */
+/* $begin(corto/ast/Expression/hasReturnedResource) */
     CORTO_UNUSED(this);
     return FALSE;
 /* $end */
 }
 
 corto_bool _ast_Expression_hasSideEffects_v(ast_Expression this) {
-/* $begin(::corto::ast::Expression::hasSideEffects) */
+/* $begin(corto/ast/Expression/hasSideEffects) */
     CORTO_UNUSED(this);
     return FALSE;
 /* $end */
 }
 
+corto_string _ast_Expression_id_v(ast_Expression this) {
+/* $begin(corto/ast/Expression/id) */
+    CORTO_UNUSED(this);
+    return NULL;
+/* $end */
+}
+
 ast_Expression _ast_Expression_resolve_v(ast_Expression this, corto_type type) {
-/* $begin(::corto::ast::Expression::resolve) */
+/* $begin(corto/ast/Expression/resolve) */
     CORTO_UNUSED(type);
     return this;
 /* $end */
 }
 
 corto_int16 _ast_Expression_serialize_v(ast_Expression this, corto_type dstType, corto_word dst) {
-/* $begin(::corto::ast::Expression::serialize) */
+/* $begin(corto/ast/Expression/serialize) */
     CORTO_UNUSED(this);
     CORTO_UNUSED(dstType);
     CORTO_UNUSED(dst);
@@ -524,14 +534,14 @@ corto_int16 _ast_Expression_serialize_v(ast_Expression this, corto_type dstType,
 }
 
 ast_ExpressionList _ast_Expression_toList_v(ast_Expression this) {
-/* $begin(::corto::ast::Expression::toList) */
+/* $begin(corto/ast/Expression/toList) */
     ast_NodeList result = NULL;
-    
+
     if (this) {
         result = corto_llNew();
         ast_ExpressionListInsert(result, this);
     }
-    
+
     return result;
 /* $end */
 }

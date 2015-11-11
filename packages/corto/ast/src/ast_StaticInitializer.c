@@ -110,7 +110,7 @@ error:
 /* $end */
 
 corto_int16 _ast_StaticInitializer_construct(ast_StaticInitializer this) {
-/* $begin(::corto::ast::StaticInitializer::construct) */
+/* $begin(corto/ast/StaticInitializer/construct) */
     corto_int8 variable;
     
     /* Copy offsets of variables into frames */
@@ -130,7 +130,7 @@ error:
 }
 
 corto_int16 _ast_StaticInitializer_define(ast_StaticInitializer this) {
-/* $begin(::corto::ast::StaticInitializer::define) */
+/* $begin(corto/ast/StaticInitializer/define) */
     corto_uint32 variable;
     corto_object o;
 
@@ -169,7 +169,7 @@ error:
 }
 
 corto_int16 _ast_StaticInitializer_push(ast_StaticInitializer this) {
-/* $begin(::corto::ast::StaticInitializer::push) */
+/* $begin(corto/ast/StaticInitializer/push) */
     corto_uint8 variable;
     
     /* Obtain offset for all that variables being initialized */
@@ -183,7 +183,7 @@ corto_int16 _ast_StaticInitializer_push(ast_StaticInitializer this) {
 }
 
 corto_int16 _ast_StaticInitializer_value(ast_StaticInitializer this, ast_Expression v) {
-/* $begin(::corto::ast::StaticInitializer::value) */
+/* $begin(corto/ast/StaticInitializer/value) */
     corto_word offset;
     corto_uint32 variable;
     corto_uint32 fp = ast_Initializer(this)->fp;

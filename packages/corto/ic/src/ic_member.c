@@ -9,7 +9,7 @@
 #include "ic.h"
 
 corto_int16 _ic_member_construct(ic_member this) {
-/* $begin(::corto::ic::member::construct) */
+/* $begin(corto/ic/member/construct) */
     corto_id name;
 
     ic_storage(this)->kind = IC_MEMBER;

@@ -56,7 +56,7 @@ error:
 /* $end */
 
 corto_int16 _ast_Member_construct(ast_Member this) {
-/* $begin(::corto::ast::Member::construct) */
+/* $begin(corto/ast/Member/construct) */
 
     ast_Storage(this)->kind = Ast_MemberStorage;
     
@@ -100,13 +100,13 @@ error:
 }
 
 corto_bool _ast_Member_hasSideEffects_v(ast_Member this) {
-/* $begin(::corto::ast::Member::hasSideEffects) */
+/* $begin(corto/ast/Member/hasSideEffects) */
     return ast_Expression_hasSideEffects(this->lvalue);
 /* $end */
 }
 
 ic_node _ast_Member_toIc_v(ast_Member this, ic_program program, ic_storage storage, corto_bool stored) {
-/* $begin(::corto::ast::Member::toIc) */
+/* $begin(corto/ast/Member/toIc) */
     ic_member result = NULL;
     corto_member member;
     ic_node lvalue;

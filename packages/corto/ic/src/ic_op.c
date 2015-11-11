@@ -78,14 +78,14 @@ static corto_string ic_op_derefToString(corto_string string, ic_node s, ic_deref
 /* $end */
 
 corto_int16 _ic_op_construct(ic_op this) {
-/* $begin(::corto::ic::op::construct) */
+/* $begin(corto/ic/op/construct) */
     ic_node(this)->kind = IC_OP;
     return ic_node_construct(ic_node(this));
 /* $end */
 }
 
 corto_string _ic_op_str(ic_op this, corto_string in) {
-/* $begin(::corto::ic::op::str) */
+/* $begin(corto/ic/op/str) */
     in = strappend(in, "  %s", ic_opKindStr(this->kind));
     if (this->s1) {
         in = ic_op_derefToString(in, this->s1, this->s1Deref);
@@ -108,7 +108,7 @@ corto_string _ic_op_str(ic_op this, corto_string in) {
 }
 
 corto_bool _ic_op_validate(ic_op this) {
-/* $begin(::corto::ic::op::validate) */
+/* $begin(corto/ic/op/validate) */
     corto_bool result = TRUE;
 
     switch(this->kind) {

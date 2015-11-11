@@ -13,7 +13,7 @@
 /* $end */
 
 corto_int16 _ast_Define_construct(ast_Define this) {
-/* $begin(::corto::ast::Define::construct) */
+/* $begin(corto/ast/Define/construct) */
 
     ast_Node(this)->kind = Ast_DefineExpr;
 
@@ -22,7 +22,7 @@ corto_int16 _ast_Define_construct(ast_Define this) {
 }
 
 ic_node _ast_Define_toIc_v(ast_Define this, ic_program program, ic_storage storage, corto_bool stored) {
-/* $begin(::corto::ast::Define::toIc) */
+/* $begin(corto/ast/Define/toIc) */
     ic_node object;
     CORTO_UNUSED(stored);
     CORTO_UNUSED(storage);

@@ -13,7 +13,7 @@
 /* $end */
 
 corto_int16 _ast_DelegateCall_construct(ast_DelegateCall this) {
-/* $begin(::corto::ast::DelegateCall::construct) */
+/* $begin(corto/ast/DelegateCall/construct) */
     if (!this->expr) {
         ast_Parser_error(yparser(), "no expression provided for delegate call");
         goto error;

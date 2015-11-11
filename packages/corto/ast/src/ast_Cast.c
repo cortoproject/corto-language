@@ -13,7 +13,7 @@
 /* $end */
 
 corto_int16 _ast_Cast_construct(ast_Cast this) {
-/* $begin(::corto::ast::Cast::construct) */
+/* $begin(corto/ast/Cast/construct) */
 
     ast_Node(this)->kind = Ast_CallExpr;
 
@@ -43,7 +43,7 @@ error:
 }
 
 corto_bool _ast_Cast_hasReturnedResource_v(ast_Cast this) {
-/* $begin(::corto::ast::Cast::hasReturnedResource) */
+/* $begin(corto/ast/Cast/hasReturnedResource) */
 
     return ast_Expression_hasReturnedResource(this->rvalue);
 
@@ -51,7 +51,7 @@ corto_bool _ast_Cast_hasReturnedResource_v(ast_Cast this) {
 }
 
 ic_node _ast_Cast_toIc_v(ast_Cast this, ic_program program, ic_storage storage, corto_bool stored) {
-/* $begin(::corto::ast::Cast::toIc) */
+/* $begin(corto/ast/Cast/toIc) */
     ic_node lvalue, rvalue, result;
     corto_bool deref1 = IC_DEREF_VALUE, deref2 = IC_DEREF_VALUE;
     corto_type thisType = ast_Expression_getType(ast_Expression(this));

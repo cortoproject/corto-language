@@ -13,7 +13,7 @@
 /* $end */
 
 corto_int16 _ast_Element_construct(ast_Element this) {
-/* $begin(::corto::ast::Element::construct) */
+/* $begin(corto/ast/Element/construct) */
     corto_type lvalueType, rvalueType;
 
     ast_Storage(this)->kind = Ast_ElementStorage;
@@ -60,7 +60,7 @@ error:
 }
 
 ic_node _ast_Element_toIc_v(ast_Element this, ic_program program, ic_storage storage, corto_bool stored) {
-/* $begin(::corto::ast::Element::toIc) */
+/* $begin(corto/ast/Element/toIc) */
     ic_element result;
     ic_node lvalue, rvalue;
     CORTO_UNUSED(stored);

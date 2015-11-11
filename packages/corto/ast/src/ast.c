@@ -155,7 +155,7 @@ error:
 /* $end */
 
 corto_bool _ast_isOperatorAssignment(corto_operatorKind _operator) {
-/* $begin(::corto::ast::isOperatorAssignment) */
+/* $begin(corto/ast/isOperatorAssignment) */
     corto_bool result;
     switch(_operator) {
     case CORTO_ASSIGN:
@@ -177,7 +177,7 @@ corto_bool _ast_isOperatorAssignment(corto_operatorKind _operator) {
 }
 
 corto_void _ast_report(corto_string kind, corto_string filename, corto_uint32 line, corto_uint32 column, corto_string error, corto_string token) {
-/* $begin(::corto::ast::report) */
+/* $begin(corto/ast/report) */
     CORTO_UNUSED(token);
 
     if (yparser()->repl) {
@@ -194,7 +194,7 @@ corto_void _ast_report(corto_string kind, corto_string filename, corto_uint32 li
 }
 
 corto_void _ast_reportError(corto_string filename, corto_uint32 line, corto_uint32 column, corto_string error, corto_string token) {
-/* $begin(::corto::ast::reportError) */
+/* $begin(corto/ast/reportError) */
 
     ast_report("error", filename, line, column, error, token);
 
@@ -202,7 +202,7 @@ corto_void _ast_reportError(corto_string filename, corto_uint32 line, corto_uint
 }
 
 corto_void _ast_reportWarning(corto_string filename, corto_uint32 line, corto_uint32 column, corto_string error, corto_string token) {
-/* $begin(::corto::ast::reportWarning) */
+/* $begin(corto/ast/reportWarning) */
 
     ast_report("warning", filename, line, column, error, token);
 
@@ -210,7 +210,7 @@ corto_void _ast_reportWarning(corto_string filename, corto_uint32 line, corto_ui
 }
 
 ast_valueKind _ast_valueKindFromType(corto_type type) {
-/* $begin(::corto::ast::valueKindFromType) */
+/* $begin(corto/ast/valueKindFromType) */
     ast_valueKind result = Ast_Nothing;
 
     if (type->reference) {

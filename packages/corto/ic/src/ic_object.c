@@ -9,7 +9,7 @@
 #include "ic.h"
 
 corto_int16 _ic_object_construct(ic_object this) {
-/* $begin(::corto::ic::object::construct) */
+/* $begin(corto/ic/object/construct) */
     corto_id id;
     ic_storage(this)->kind = IC_OBJECT;
     ic_storage(this)->name = corto_strdup(corto_fullname(this->ptr, id));

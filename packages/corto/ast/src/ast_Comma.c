@@ -13,7 +13,7 @@
 /* $end */
 
 corto_int16 _ast_Comma_addExpression(ast_Comma this, ast_Expression expr) {
-/* $begin(::corto::ast::Comma::addExpression) */
+/* $begin(corto/ast/Comma/addExpression) */
     if (expr) {
         corto_assert(this->expressions != NULL, "initialization failed");
         corto_llAppend(this->expressions, expr); corto_claim(expr);
@@ -27,7 +27,7 @@ corto_int16 _ast_Comma_addExpression(ast_Comma this, ast_Expression expr) {
 }
 
 ast_Expression _ast_Comma_addOrCreate(ast_Expression list, ast_Expression expr) {
-/* $begin(::corto::ast::Comma::addOrCreate) */
+/* $begin(corto/ast/Comma/addOrCreate) */
     ast_Expression result;
     
     if (!list) {
@@ -47,7 +47,7 @@ ast_Expression _ast_Comma_addOrCreate(ast_Expression list, ast_Expression expr) 
 }
 
 corto_int16 _ast_Comma_construct(ast_Comma this) {
-/* $begin(::corto::ast::Comma::construct) */
+/* $begin(corto/ast/Comma/construct) */
     if (this->expressions) {
         ast_Expression firstExpr = corto_llGet(this->expressions, 0);
 
@@ -63,7 +63,7 @@ corto_int16 _ast_Comma_construct(ast_Comma this) {
 }
 
 corto_bool _ast_Comma_hasReturnedResource_v(ast_Comma this) {
-/* $begin(::corto::ast::Comma::hasReturnedResource) */
+/* $begin(corto/ast/Comma/hasReturnedResource) */
     corto_bool result = FALSE;
 
     ast_ExpressionListForeach(this->expressions, elem) {
@@ -78,7 +78,7 @@ corto_bool _ast_Comma_hasReturnedResource_v(ast_Comma this) {
 }
 
 corto_bool _ast_Comma_hasSideEffects_v(ast_Comma this) {
-/* $begin(::corto::ast::Comma::hasSideEffects) */
+/* $begin(corto/ast/Comma/hasSideEffects) */
     corto_bool result = FALSE;
     
     ast_ExpressionListForeach(this->expressions, elem) {
@@ -93,7 +93,7 @@ corto_bool _ast_Comma_hasSideEffects_v(ast_Comma this) {
 }
 
 corto_int16 _ast_Comma_init(ast_Comma this) {
-/* $begin(::corto::ast::Comma::init) */
+/* $begin(corto/ast/Comma/init) */
 
     ast_Node(this)->kind = Ast_CommaExpr;
     ast_Expression(this)->type = NULL;
@@ -103,7 +103,7 @@ corto_int16 _ast_Comma_init(ast_Comma this) {
 }
 
 ast_Expression _ast_Comma_insertOrCreate(ast_Expression list, ast_Expression expr) {
-/* $begin(::corto::ast::Comma::insertOrCreate) */
+/* $begin(corto/ast/Comma/insertOrCreate) */
     ast_Expression result;
     
     if (!list) {
@@ -123,7 +123,7 @@ ast_Expression _ast_Comma_insertOrCreate(ast_Expression list, ast_Expression exp
 }
 
 ic_node _ast_Comma_toIc_v(ast_Comma this, ic_program program, ic_storage storage, corto_bool stored) {
-/* $begin(::corto::ast::Comma::toIc) */
+/* $begin(corto/ast/Comma/toIc) */
 
     ast_ExpressionListForeach(this->expressions, expr) {
         ast_Node_toIc(expr, program, storage, stored);
@@ -134,7 +134,7 @@ ic_node _ast_Comma_toIc_v(ast_Comma this, ic_program program, ic_storage storage
 }
 
 ast_NodeList _ast_Comma_toList(ast_Comma this) {
-/* $begin(::corto::ast::Comma::toList) */
+/* $begin(corto/ast/Comma/toList) */
 
     ast_NodeList result = corto_llNew();
     ast_ExpressionListForeach(this->expressions, expr) {

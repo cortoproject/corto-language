@@ -9,27 +9,27 @@
 #include "ic.h"
 
 corto_void _ic_scope_add(ic_scope this, ic_node n) {
-/* $begin(::corto::ic::scope::add) */
+/* $begin(corto/ic/scope/add) */
     corto_llAppend(this->program, n);
 /* $end */
 }
 
 corto_void _ic_scope_addStorage(ic_scope this, ic_storage s) {
-/* $begin(::corto::ic::scope::addStorage) */
+/* $begin(corto/ic/scope/addStorage) */
     corto_llAppend(this->storages, s);
     corto_setref(&s->scope, this);
 /* $end */
 }
 
 corto_int16 _ic_scope_construct(ic_scope this) {
-/* $begin(::corto::ic::scope::construct) */
+/* $begin(corto/ic/scope/construct) */
     ic_node(this)->kind = IC_SCOPE;
     return ic_node_construct(ic_node(this));
 /* $end */
 }
 
 ic_storage _ic_scope_lookupStorage(ic_scope this, corto_string name, corto_bool recursive) {
-/* $begin(::corto::ic::scope::lookupStorage) */
+/* $begin(corto/ic/scope/lookupStorage) */
     corto_iter storageIter;
     ic_storage result = NULL;
 
@@ -52,7 +52,7 @@ ic_storage _ic_scope_lookupStorage(ic_scope this, corto_string name, corto_bool 
 }
 
 corto_string _ic_scope_str(ic_scope this, corto_string in) {
-/* $begin(::corto::ic::scope::str) */
+/* $begin(corto/ic/scope/str) */
     corto_iter programIter, storageIter;
     ic_storage storage;
     corto_uint32 storages = 0;

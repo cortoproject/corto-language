@@ -40,7 +40,7 @@ error:
 /* $end */
 
 corto_int16 _ast_Update_construct(ast_Update this) {
-/* $begin(::corto::ast::Update::construct) */
+/* $begin(corto/ast/Update/construct) */
     corto_iter exprIter;
     ast_Expression expr;
 
@@ -66,7 +66,7 @@ error:
 /* $end */
 }
 
-/* $header(::corto::ast::Update::toIc) */
+/* $header(corto/ast/Update/toIc) */
 static void ast_Update_begin(ast_Update this, ic_program program, ic_node expr) {
     IC_1(program, ast_Node(this)->line, ic_updatebegin, expr, IC_DEREF_ADDRESS);
 }
@@ -78,7 +78,7 @@ static void ast_Update_end(ast_Update this, ic_program program, ic_node expr, ic
 
 /* $end */
 ic_node _ast_Update_toIc_v(ast_Update this, ic_program program, ic_storage storage, corto_bool stored) {
-/* $begin(::corto::ast::Update::toIc) */
+/* $begin(corto/ast/Update/toIc) */
     ic_node expr, from = NULL;
     corto_iter exprIter;
     CORTO_UNUSED(storage);

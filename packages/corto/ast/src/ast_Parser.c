@@ -730,7 +730,7 @@ error:
 /* $end */
 
 corto_void _ast_Parser_addStatement(ast_Parser this, ast_Node statement) {
-/* $begin(::corto::ast::Parser::addStatement) */
+/* $begin(corto/ast/Parser/addStatement) */
     ast_CHECK_ERRSET(this);
 
     /* If a comma expression is encountered in the second pass it could be the result of an expanded
@@ -787,7 +787,7 @@ error:
 }
 
 corto_string _ast_Parser_argumentToString(ast_Parser this, corto_type type, corto_string id, corto_bool reference) {
-/* $begin(::corto::ast::Parser::argumentToString) */
+/* $begin(corto/ast/Parser/argumentToString) */
     corto_string str;
     corto_string result;
     ast_CHECK_ERRSET(this);
@@ -839,11 +839,13 @@ error:
 }
 
 ast_Node _ast_Parser_binaryExpr(ast_Parser this, ast_Expression lvalues, ast_Expression rvalues, corto_operatorKind _operator) {
-/* $begin(::corto::ast::Parser::binaryExpr) */
+/* $begin(corto/ast/Parser/binaryExpr) */
     ast_Node result = NULL;
     ast_CHECK_ERRSET(this);
 
-    if (lvalues && rvalues && (this->pass || ((this->initializerCount >= 0) && this->initializers[this->initializerCount]))) {
+    if (lvalues && rvalues && (this->pass || ((this->initializerCount >= 0) &&
+        this->initializers[this->initializerCount])))
+    {
         ast_ExpandAction combine = ast_Parser_combineComma;
 
         switch(_operator) {
@@ -898,7 +900,7 @@ error:
 }
 
 corto_int16 _ast_Parser_bind(ast_Parser this, ast_Storage function, ast_Block block) {
-/* $begin(::corto::ast::Parser::bind) */
+/* $begin(corto/ast/Parser/bind) */
     ast_Binding *binding;
     ast_CHECK_ERRSET(this);
 
@@ -917,7 +919,7 @@ corto_int16 _ast_Parser_bind(ast_Parser this, ast_Storage function, ast_Block bl
 }
 
 corto_int16 _ast_Parser_bindOneliner(ast_Parser this, ast_Storage function, ast_Block block, ast_Expression expr) {
-/* $begin(::corto::ast::Parser::bindOneliner) */
+/* $begin(corto/ast/Parser/bindOneliner) */
     ast_CHECK_ERRSET(this);
 
     if (this->pass) {
@@ -958,7 +960,7 @@ error:
 }
 
 corto_void _ast_Parser_blockPop(ast_Parser this) {
-/* $begin(::corto::ast::Parser::blockPop) */
+/* $begin(corto/ast/Parser/blockPop) */
     ast_CHECK_ERRSET(this);
 
     this->blockCount--;
@@ -979,7 +981,7 @@ corto_void _ast_Parser_blockPop(ast_Parser this) {
 }
 
 ast_Block _ast_Parser_blockPush(ast_Parser this, corto_bool presetBlock) {
-/* $begin(::corto::ast::Parser::blockPush) */
+/* $begin(corto/ast/Parser/blockPush) */
     ast_CHECK_ERRSET(this);
 
     if (!this->blockPreset || presetBlock) {
@@ -1008,7 +1010,7 @@ ast_Block _ast_Parser_blockPush(ast_Parser this, corto_bool presetBlock) {
 }
 
 ast_Expression _ast_Parser_callExpr(ast_Parser this, ast_Expression function, ast_Expression arguments) {
-/* $begin(::corto::ast::Parser::callExpr) */
+/* $begin(corto/ast/Parser/callExpr) */
     ast_Expression result = NULL;
 
     if (function && this->pass) {
@@ -1052,7 +1054,7 @@ ast_Expression _ast_Parser_callExpr(ast_Parser this, ast_Expression function, as
                 }
             }
         }}
-        
+
         ast_Expression_cleanList(functions);
         ast_Expression_cleanList(args);
     }
@@ -1065,7 +1067,7 @@ error:
 }
 
 ast_Expression _ast_Parser_castExpr(ast_Parser this, corto_type lvalue, ast_Expression rvalue) {
-/* $begin(::corto::ast::Parser::castExpr) */
+/* $begin(corto/ast/Parser/castExpr) */
     ast_Expression result = NULL;
 
     if (this->pass) {
@@ -1111,7 +1113,7 @@ error:
 }
 
 corto_void _ast_Parser_collect(ast_Parser this, corto_object o) {
-/* $begin(::corto::ast::Parser::collect) */
+/* $begin(corto/ast/Parser/collect) */
     /* 1st pass & 2nd pass are equal */
 
     corto_assert(this->collected != NULL, "initialization failed");
@@ -1121,7 +1123,7 @@ corto_void _ast_Parser_collect(ast_Parser this, corto_object o) {
 }
 
 corto_void _ast_Parser_collectHeap(ast_Parser this, corto_word addr) {
-/* $begin(::corto::ast::Parser::collectHeap) */
+/* $begin(corto/ast/Parser/collectHeap) */
     ast_CHECK_ERRSET(this);
 
     /* 1st pass & 2nd pass are equal */
@@ -1132,7 +1134,7 @@ corto_void _ast_Parser_collectHeap(ast_Parser this, corto_word addr) {
 }
 
 corto_int16 _ast_Parser_construct(ast_Parser this) {
-/* $begin(::corto::ast::Parser::construct) */
+/* $begin(corto/ast/Parser/construct) */
     CORTO_UNUSED(this);
     ast_Parser_reset(this);
     corto_threadTlsSet(ast_PARSER_KEY, this);
@@ -1141,7 +1143,7 @@ corto_int16 _ast_Parser_construct(ast_Parser this) {
 }
 
 ast_Storage _ast_Parser_declaration(ast_Parser this, corto_type type, corto_string id, corto_bool isReference) {
-/* $begin(::corto::ast::Parser::declaration) */
+/* $begin(corto/ast/Parser/declaration) */
     ast_Storage result = NULL;
     ast_CHECK_ERRSET(this);
 
@@ -1215,7 +1217,7 @@ error:
 }
 
 ast_Storage _ast_Parser_declareFunction(ast_Parser this, corto_type returnType, corto_string id, corto_type kind, corto_bool returnsReference) {
-/* $begin(::corto::ast::Parser::declareFunction) */
+/* $begin(corto/ast/Parser/declareFunction) */
     corto_function function;
     corto_object o;
     ast_Storage result = NULL;
@@ -1326,7 +1328,7 @@ error:
 }
 
 ast_Block _ast_Parser_declareFunctionParams(ast_Parser this, ast_Storage function) {
-/* $begin(::corto::ast::Parser::declareFunctionParams) */
+/* $begin(corto/ast/Parser/declareFunctionParams) */
     corto_function function_o;
     corto_parameter *param;
     ast_Block result = NULL;
@@ -1382,7 +1384,7 @@ error:
 }
 
 corto_int16 _ast_Parser_define(ast_Parser this) {
-/* $begin(::corto::ast::Parser::define) */
+/* $begin(corto/ast/Parser/define) */
     ast_CHECK_ERRSET(this);
 
     if ((this->initializerCount >= 0) && this->initializers[this->initializerCount]) {
@@ -1401,7 +1403,7 @@ error:
 }
 
 corto_int16 _ast_Parser_defineScope(ast_Parser this) {
-/* $begin(::corto::ast::Parser::defineScope) */
+/* $begin(corto/ast/Parser/defineScope) */
     ast_CHECK_ERRSET(this);
 
     if (!this->pass) {
@@ -1431,7 +1433,7 @@ error:
 }
 
 corto_int16 _ast_Parser_defineVariable(ast_Parser this, ast_Storage object) {
-/* $begin(::corto::ast::Parser::defineVariable) */
+/* $begin(corto/ast/Parser/defineVariable) */
     corto_int16 result = 0;
     CORTO_UNUSED(this);
     ast_CHECK_ERRSET(this);
@@ -1459,7 +1461,7 @@ error:
 }
 
 corto_void _ast_Parser_destruct(ast_Parser this) {
-/* $begin(::corto::ast::Parser::destruct) */
+/* $begin(corto/ast/Parser/destruct) */
     corto_iter iter;
 
     if (this->heapCollected) {
@@ -1478,7 +1480,7 @@ corto_void _ast_Parser_destruct(ast_Parser this) {
 }
 
 ast_Expression _ast_Parser_elementExpr(ast_Parser this, ast_Expression lvalue, ast_Expression rvalue) {
-/* $begin(::corto::ast::Parser::elementExpr) */
+/* $begin(corto/ast/Parser/elementExpr) */
     ast_Expression result = NULL;
 
     /* Expand element expression with comma-expressions */
@@ -1509,7 +1511,7 @@ error:
 }
 
 corto_int16 _ast_Parser_finalize(ast_Parser this, ic_program program) {
-/* $begin(::corto::ast::Parser::finalize) */
+/* $begin(corto/ast/Parser/finalize) */
     ic_scope scope = NULL;
     ic_storage returnValue = NULL;
     ast_Binding *binding;
@@ -1559,7 +1561,7 @@ error:
 }
 
 corto_int16 _ast_Parser_foreach(ast_Parser this, corto_string loopId, ast_Expression collection) {
-/* $begin(::corto::ast::Parser::foreach) */
+/* $begin(corto/ast/Parser/foreach) */
     CORTO_UNUSED(this);
     CORTO_UNUSED(loopId);
     CORTO_UNUSED(collection);
@@ -1568,7 +1570,7 @@ corto_int16 _ast_Parser_foreach(ast_Parser this, corto_string loopId, ast_Expres
 }
 
 corto_type _ast_Parser_getComplexType(ast_Parser this) {
-/* $begin(::corto::ast::Parser::getComplexType) */
+/* $begin(corto/ast/Parser/getComplexType) */
     corto_type result = NULL;
 
     if (this->complexTypeSp > 0) {
@@ -1583,7 +1585,7 @@ corto_type _ast_Parser_getComplexType(ast_Parser this) {
 }
 
 ast_Expression _ast_Parser_getLvalue(ast_Parser this, corto_bool assignment) {
-/* $begin(::corto::ast::Parser::getLvalue) */
+/* $begin(corto/ast/Parser/getLvalue) */
     ast_Expression result = NULL;
 
     if (this->lvalueSp > 0) {
@@ -1600,7 +1602,7 @@ ast_Expression _ast_Parser_getLvalue(ast_Parser this, corto_bool assignment) {
 }
 
 corto_type _ast_Parser_getLvalueType(ast_Parser this, corto_bool assignment) {
-/* $begin(::corto::ast::Parser::getLvalueType) */
+/* $begin(corto/ast/Parser/getLvalueType) */
     corto_type result = NULL;
 
     /* Check if the parser set an lvalue */
@@ -1626,7 +1628,7 @@ corto_type _ast_Parser_getLvalueType(ast_Parser this, corto_bool assignment) {
 }
 
 ast_Node _ast_Parser_ifStatement(ast_Parser this, ast_Expression condition, ast_Block trueBranch, ast_If falseBranch) {
-/* $begin(::corto::ast::Parser::ifStatement) */
+/* $begin(corto/ast/Parser/ifStatement) */
     ast_Node result = NULL;
 
     if (this->pass) {
@@ -1645,7 +1647,7 @@ error:
 }
 
 corto_int16 _ast_Parser_initDeclare(ast_Parser this, ast_Expression ids) {
-/* $begin(::corto::ast::Parser::initDeclare) */
+/* $begin(corto/ast/Parser/initDeclare) */
     ast_ExpressionList expressions = ast_Expression_toList(ids);
 
     /* Comma expression is encountered in the first pass. If this expression
@@ -1674,7 +1676,7 @@ corto_int16 _ast_Parser_initDeclare(ast_Parser this, ast_Expression ids) {
                 id = ast_Local(s)->name;
             } else {
                 ast_Parser_error(this, "invalid usage of comma expression");
-                goto error;                
+                goto error;
             }
 
             /* Temporarily set scope to scope of unresolved ref */
@@ -1714,7 +1716,7 @@ error:
 }
 
 corto_int16 _ast_Parser_initKeyValuePop(ast_Parser this) {
-/* $begin(::corto::ast::Parser::initKeyValuePop) */
+/* $begin(corto/ast/Parser/initKeyValuePop) */
     if ((this->initializerCount >= 0) && this->initializers[this->initializerCount]) {
         if (ast_Initializer_popKey(this->initializers[this->initializerCount])) {
             goto error;
@@ -1728,7 +1730,7 @@ error:
 }
 
 corto_int16 _ast_Parser_initKeyValuePush(ast_Parser this) {
-/* $begin(::corto::ast::Parser::initKeyValuePush) */
+/* $begin(corto/ast/Parser/initKeyValuePush) */
     if ((this->initializerCount >= 0) && this->initializers[this->initializerCount]) {
         if (ast_Initializer_pushKey(this->initializers[this->initializerCount])) {
             goto error;
@@ -1742,7 +1744,7 @@ error:
 }
 
 corto_int16 _ast_Parser_initKeyValueSet(ast_Parser this, ast_Expression expr) {
-/* $begin(::corto::ast::Parser::initKeyValueSet) */
+/* $begin(corto/ast/Parser/initKeyValueSet) */
     if ((this->initializerCount >= 0) && this->initializers[this->initializerCount]) {
         if (ast_Initializer_valueKey(this->initializers[this->initializerCount], expr)) {
             goto error;
@@ -1757,7 +1759,7 @@ error:
 }
 
 corto_int16 _ast_Parser_initMember(ast_Parser this, corto_string member) {
-/* $begin(::corto::ast::Parser::initMember) */
+/* $begin(corto/ast/Parser/initMember) */
     ast_CHECK_ERRSET(this);
 
     if ((this->initializerCount >= 0) && this->initializers[this->initializerCount]) {
@@ -1774,7 +1776,7 @@ error:
 }
 
 corto_int16 _ast_Parser_initPop(ast_Parser this) {
-/* $begin(::corto::ast::Parser::initPop) */
+/* $begin(corto/ast/Parser/initPop) */
     ast_CHECK_ERRSET(this);
 
     /* Primitive values are not pushed/pop'd */
@@ -1792,7 +1794,7 @@ error:
 }
 
 corto_int16 _ast_Parser_initPush(ast_Parser this) {
-/* $begin(::corto::ast::Parser::initPush) */
+/* $begin(corto/ast/Parser/initPush) */
     ast_CHECK_ERRSET(this);
 
     if (!this->variablePushed) {
@@ -1814,7 +1816,7 @@ error:
 }
 
 ast_Expression _ast_Parser_initPushExpression(ast_Parser this) {
-/* $begin(::corto::ast::Parser::initPushExpression) */
+/* $begin(corto/ast/Parser/initPushExpression) */
     ast_Initializer initializer = NULL;
 
     this->initializerCount++;
@@ -1836,7 +1838,7 @@ ast_Expression _ast_Parser_initPushExpression(ast_Parser this) {
 }
 
 ast_Expression _ast_Parser_initPushIdentifier(ast_Parser this, ast_Expression type) {
-/* $begin(::corto::ast::Parser::initPushIdentifier) */
+/* $begin(corto/ast/Parser/initPushIdentifier) */
     corto_object o;
     corto_type t;
     corto_bool isDynamic = TRUE;
@@ -1846,6 +1848,13 @@ ast_Expression _ast_Parser_initPushIdentifier(ast_Parser this, ast_Expression ty
 
     CORTO_UNUSED(this);
     CORTO_UNUSED(type);
+
+    printf("type = %s\n", ast_Expression_id(type));
+
+    type = ast_Expression_resolve(type, NULL);
+    if (!type) {
+        goto error;
+    }
 
     o = corto_type(ast_Object(type)->value);
     if (!corto_instanceof(corto_type(corto_type_o), o)) {
@@ -1914,7 +1923,7 @@ error:
 }
 
 corto_int16 _ast_Parser_initPushStatic(ast_Parser this) {
-/* $begin(::corto::ast::Parser::initPushStatic) */
+/* $begin(corto/ast/Parser/initPushStatic) */
     corto_bool isLocal = this->isLocal;
     ast_InitializerVariableArray64 variables;
     ast_Initializer initializer;
@@ -1967,7 +1976,7 @@ error:
 }
 
 corto_int16 _ast_Parser_initValue(ast_Parser this, ast_Expression expr) {
-/* $begin(::corto::ast::Parser::initValue) */
+/* $begin(corto/ast/Parser/initValue) */
     ast_CHECK_ERRSET(this);
 
     if ((this->initializerCount >= 0) && this->initializers[this->initializerCount]) {
@@ -1985,7 +1994,7 @@ error:
 }
 
 corto_bool _ast_Parser_isAbortSet(ast_Parser this) {
-/* $begin(::corto::ast::Parser::isAbortSet) */
+/* $begin(corto/ast/Parser/isAbortSet) */
     corto_bool result = this->abort;
     this->abort = FALSE;
     return result;
@@ -1993,7 +2002,7 @@ corto_bool _ast_Parser_isAbortSet(ast_Parser this) {
 }
 
 corto_bool _ast_Parser_isErrSet(ast_Parser this) {
-/* $begin(::corto::ast::Parser::isErrSet) */
+/* $begin(corto/ast/Parser/isErrSet) */
     corto_bool result = this->errSet;
     this->errSet = FALSE;
     return result;
@@ -2001,7 +2010,7 @@ corto_bool _ast_Parser_isErrSet(ast_Parser this) {
 }
 
 ast_Expression _ast_Parser_lookup(ast_Parser this, corto_string id) {
-/* $begin(::corto::ast::Parser::lookup) */
+/* $begin(corto/ast/Parser/lookup) */
     ast_Expression result = NULL;
     ast_CHECK_ERRSET(this);
 
@@ -2026,7 +2035,7 @@ ast_Expression _ast_Parser_lookup(ast_Parser this, corto_string id) {
 }
 
 ast_Expression _ast_Parser_memberExpr(ast_Parser this, ast_Expression lvalue, ast_Expression rvalue) {
-/* $begin(::corto::ast::Parser::memberExpr) */
+/* $begin(corto/ast/Parser/memberExpr) */
     ast_Expression result = NULL;
 
     if (this->pass) {
@@ -2049,7 +2058,7 @@ error:
 }
 
 ast_Storage _ast_Parser_observerDeclaration(ast_Parser this, corto_string id, ast_Expression object, corto_eventMask mask, ast_Object dispatcher) {
-/* $begin(::corto::ast::Parser::observerDeclaration) */
+/* $begin(corto/ast/Parser/observerDeclaration) */
     CORTO_UNUSED(object);
     CORTO_UNUSED(mask);
     ast_CHECK_ERRSET(this);
@@ -2136,7 +2145,7 @@ error:
 }
 
 corto_void _ast_Parser_observerPush(ast_Parser this) {
-/* $begin(::corto::ast::Parser::observerPush) */
+/* $begin(corto/ast/Parser/observerPush) */
     ast_CHECK_ERRSET(this);
 
     /* Observer-implementations are parsed in the 2nd pass */
@@ -2152,7 +2161,7 @@ corto_void _ast_Parser_observerPush(ast_Parser this) {
 }
 
 corto_uint32 _ast_Parser_parse(ast_Parser this, corto_stringSeq argv) {
-/* $begin(::corto::ast::Parser::parse) */
+/* $begin(corto/ast/Parser/parse) */
     ast_CHECK_ERRSET(this);
 
     this->pass = 0;
@@ -2185,7 +2194,7 @@ error:
 }
 
 ast_Expression _ast_Parser_parseExpression(ast_Parser this, corto_string expr, ast_Block block, corto_object scope, corto_uint32 line, corto_uint32 column) {
-/* $begin(::corto::ast::Parser::parseExpression) */
+/* $begin(corto/ast/Parser/parseExpression) */
     ast_Expression result = NULL;
     corto_string exprFinalized;
 
@@ -2248,7 +2257,7 @@ error:
 }
 
 corto_int16 _ast_Parser_parseLine(corto_string expr, corto_object scope, corto_word value) {
-/* $begin(::corto::ast::Parser::parseLine) */
+/* $begin(corto/ast/Parser/parseLine) */
     ast_Parser parser = ast_ParserCreate(expr, NULL);
     ic_program program = ic_programCreate(parser->filename);
     ast_Expression result = NULL; /* Resulting ast-expression of 'exr' */
@@ -2394,7 +2403,7 @@ error:
 }
 
 corto_void _ast_Parser_popComplexType(ast_Parser this) {
-/* $begin(::corto::ast::Parser::popComplexType) */
+/* $begin(corto/ast/Parser/popComplexType) */
 
     this->complexTypeSp--;
     if (this->complexTypeSp < 0) {
@@ -2406,7 +2415,7 @@ corto_void _ast_Parser_popComplexType(ast_Parser this) {
 }
 
 corto_void _ast_Parser_popLvalue(ast_Parser this) {
-/* $begin(::corto::ast::Parser::popLvalue) */
+/* $begin(corto/ast/Parser/popLvalue) */
 
     this->lvalueSp--;
     if (this->lvalueSp < 0) {
@@ -2418,7 +2427,7 @@ corto_void _ast_Parser_popLvalue(ast_Parser this) {
 }
 
 corto_void _ast_Parser_popScope(ast_Parser this, corto_object previous) {
-/* $begin(::corto::ast::Parser::popScope) */
+/* $begin(corto/ast/Parser/popScope) */
     ast_CHECK_ERRSET(this);
 
     /* Restore scope */
@@ -2427,7 +2436,7 @@ corto_void _ast_Parser_popScope(ast_Parser this, corto_object previous) {
 }
 
 ast_Expression _ast_Parser_postfixExpr(ast_Parser this, ast_Expression lvalue, corto_operatorKind _operator) {
-/* $begin(::corto::ast::Parser::postfixExpr) */
+/* $begin(corto/ast/Parser/postfixExpr) */
     ast_Expression result = NULL;
 
     if (this->pass) {
@@ -2446,7 +2455,7 @@ error:
 }
 
 corto_void _ast_Parser_pushComplexType(ast_Parser this, ast_Expression lvalue) {
-/* $begin(::corto::ast::Parser::pushComplexType) */
+/* $begin(corto/ast/Parser/pushComplexType) */
 
     if (lvalue) {
         corto_setref(&this->complexType[this->complexTypeSp], ast_Expression_getType(lvalue));
@@ -2459,7 +2468,7 @@ corto_void _ast_Parser_pushComplexType(ast_Parser this, ast_Expression lvalue) {
 }
 
 corto_void _ast_Parser_pushLvalue(ast_Parser this, ast_Expression lvalue, corto_bool isAssignment) {
-/* $begin(::corto::ast::Parser::pushLvalue) */
+/* $begin(corto/ast/Parser/pushLvalue) */
 
     corto_setref(&this->lvalue[this->lvalueSp].expr, lvalue);
     this->lvalue[this->lvalueSp].isAssignment = isAssignment;
@@ -2469,7 +2478,7 @@ corto_void _ast_Parser_pushLvalue(ast_Parser this, ast_Expression lvalue, corto_
 }
 
 corto_int16 _ast_Parser_pushPackage(ast_Parser this, corto_string name) {
-/* $begin(::corto::ast::Parser::pushPackage) */
+/* $begin(corto/ast/Parser/pushPackage) */
     char ch, *ptr, *bptr;
     corto_id buffer;
 
@@ -2537,7 +2546,7 @@ error:
 }
 
 corto_void _ast_Parser_pushReturnAsLvalue(ast_Parser this, corto_function function) {
-/* $begin(::corto::ast::Parser::pushReturnAsLvalue) */
+/* $begin(corto/ast/Parser/pushReturnAsLvalue) */
     ast_Expression result = NULL;
 
     if (this->pass) {
@@ -2561,7 +2570,7 @@ error:
 }
 
 corto_object _ast_Parser_pushScope(ast_Parser this) {
-/* $begin(::corto::ast::Parser::pushScope) */
+/* $begin(corto/ast/Parser/pushScope) */
     corto_object oldScope = NULL;
 
     ast_CHECK_ERRSET(this);
@@ -2587,7 +2596,7 @@ error:
 }
 
 corto_void _ast_Parser_reset(ast_Parser this) {
-/* $begin(::corto::ast::Parser::reset) */
+/* $begin(corto/ast/Parser/reset) */
 
     this->variableCount = 0;
     this->variablesInitialized = FALSE;
@@ -2600,7 +2609,7 @@ corto_void _ast_Parser_reset(ast_Parser this) {
 }
 
 ast_Expression _ast_Parser_ternaryExpr(ast_Parser this, ast_Expression cond, ast_Expression iftrue, ast_Expression iffalse) {
-/* $begin(::corto::ast::Parser::ternaryExpr) */
+/* $begin(corto/ast/Parser/ternaryExpr) */
     ast_Expression result = NULL;
 
     if (this->pass) {
@@ -2624,7 +2633,7 @@ error:
 }
 
 ast_Expression _ast_Parser_unaryExpr(ast_Parser this, ast_Expression lvalue, corto_operatorKind _operator) {
-/* $begin(::corto::ast::Parser::unaryExpr) */
+/* $begin(corto/ast/Parser/unaryExpr) */
     ast_Expression result = NULL;
 
     if (lvalue && this->pass) {
@@ -2712,7 +2721,7 @@ error:
 }
 
 ast_Node _ast_Parser_updateStatement(ast_Parser this, ast_Expression expr, ast_Block block) {
-/* $begin(::corto::ast::Parser::updateStatement) */
+/* $begin(corto/ast/Parser/updateStatement) */
     ast_Node result = NULL;
 
     if (this->pass) {
@@ -2756,7 +2765,7 @@ error:
 }
 
 ast_Expression _ast_Parser_waitExpr(ast_Parser this, ast_Expression expr, ast_Expression timeout) {
-/* $begin(::corto::ast::Parser::waitExpr) */
+/* $begin(corto/ast/Parser/waitExpr) */
     ast_Expression result = NULL;
 
     if (this->pass) {
@@ -2771,7 +2780,7 @@ ast_Expression _ast_Parser_waitExpr(ast_Parser this, ast_Expression expr, ast_Ex
 }
 
 ast_Node _ast_Parser_whileStatement(ast_Parser this, ast_Expression condition, ast_Block trueBranch, corto_bool isUntil) {
-/* $begin(::corto::ast::Parser::whileStatement) */
+/* $begin(corto/ast/Parser/whileStatement) */
     ast_Node result = NULL;
 
     if (this->pass) {

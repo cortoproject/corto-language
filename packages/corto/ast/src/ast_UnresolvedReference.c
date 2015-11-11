@@ -13,7 +13,7 @@
  /* $end */
 
 corto_int16 _ast_UnresolvedReference_construct(ast_UnresolvedReference this) {
-/* $begin(::corto::ast::UnresolvedReference::construct) */
+/* $begin(corto/ast/UnresolvedReference/construct) */
 
     ast_Storage(this)->kind = Ast_UnresolvedReferenceStorage;
     ast_Expression(this)->unresolved = TRUE;
@@ -24,13 +24,13 @@ corto_int16 _ast_UnresolvedReference_construct(ast_UnresolvedReference this) {
 }
 
 corto_void _ast_UnresolvedReference_error(ast_UnresolvedReference this) {
-/* $begin(::corto::ast::UnresolvedReference::error) */
+/* $begin(corto/ast/UnresolvedReference/error) */
     corto_id errMsg;
 
     sprintf(errMsg, "unresolved identifier: %s", this->ref);
     ast_reportError(
-        yparser()->filename, 
-        this->line, 
+        yparser()->filename,
+        this->line,
         this->column,
         errMsg,
         NULL);
@@ -40,8 +40,16 @@ corto_void _ast_UnresolvedReference_error(ast_UnresolvedReference this) {
 /* $end */
 }
 
+corto_string _ast_UnresolvedReference_id_v(ast_UnresolvedReference this) {
+/* $begin(corto/ast/UnresolvedReference/id) */
+
+    return this->ref;
+
+/* $end */
+}
+
 ast_Expression _ast_UnresolvedReference_resolve_v(ast_UnresolvedReference this, corto_type type) {
-/* $begin(::corto::ast::UnresolvedReference::resolve) */
+/* $begin(corto/ast/UnresolvedReference/resolve) */
     ast_Expression result = NULL;
     corto_object o = NULL;
 
@@ -65,7 +73,7 @@ ast_Expression _ast_UnresolvedReference_resolve_v(ast_UnresolvedReference this, 
 }
 
 ic_node _ast_UnresolvedReference_toIc_v(ast_UnresolvedReference this, ic_program program, ic_storage storage, corto_bool stored) {
-/* $begin(::corto::ast::UnresolvedReference::toIc) */
+/* $begin(corto/ast/UnresolvedReference/toIc) */
 
     CORTO_UNUSED(this);
     CORTO_UNUSED(program);

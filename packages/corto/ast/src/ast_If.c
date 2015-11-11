@@ -13,7 +13,7 @@
 /* $end */
 
 corto_int16 _ast_If_construct(ast_If this) {
-/* $begin(::corto::ast::If::construct) */
+/* $begin(corto/ast/If/construct) */
     corto_type conditionType;
 
     ast_Node(this)->kind = Ast_IfExpr;
@@ -38,13 +38,13 @@ error:
 }
 
 corto_void _ast_If_noWarnUnreachable(ast_If this) {
-/* $begin(::corto::ast::If::noWarnUnreachable) */
+/* $begin(corto/ast/If/noWarnUnreachable) */
     this->warnUnreachable = FALSE;
 /* $end */
 }
 
 ic_node _ast_If_toIc_v(ast_If this, ic_program program, ic_storage storage, corto_bool stored) {
-/* $begin(::corto::ast::If::toIc) */
+/* $begin(corto/ast/If/toIc) */
     ic_storage accumulator;
     ic_label labelEval = NULL, labelEnd = NULL;
     ic_node expr = NULL;

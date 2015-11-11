@@ -13,7 +13,7 @@
 /* $end */
 
 corto_int16 _ast_New_construct(ast_New this) {
-/* $begin(::corto::ast::New::construct) */
+/* $begin(corto/ast/New/construct) */
 
     ast_Node(this)->kind = Ast_NewExpr;
     corto_setref(&ast_Expression(this)->type, this->type);
@@ -24,14 +24,14 @@ corto_int16 _ast_New_construct(ast_New this) {
 }
 
 corto_bool _ast_New_hasSideEffects_v(ast_New this) {
-/* $begin(::corto::ast::New::hasSideEffects) */
+/* $begin(corto/ast/New/hasSideEffects) */
     CORTO_UNUSED(this);
     return TRUE;
 /* $end */
 }
 
 ic_node _ast_New_toIc_v(ast_New this, ic_program program, ic_storage storage, corto_bool stored) {
-/* $begin(::corto::ast::New::toIc) */
+/* $begin(corto/ast/New/toIc) */
     ic_node type, attrs, result;
     CORTO_UNUSED(stored);
 

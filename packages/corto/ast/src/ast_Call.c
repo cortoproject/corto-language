@@ -63,7 +63,7 @@ error:
 /* $end */
 
 corto_int16 _ast_Call_construct(ast_Call this) {
-/* $begin(::corto::ast::Call::construct) */
+/* $begin(corto/ast/Call/construct) */
     ast_Node(this)->kind = Ast_CallExpr;
 
     /* Insert casts based on expression list and arguments */
@@ -84,7 +84,7 @@ error:
 }
 
 corto_bool _ast_Call_hasReturnedResource_v(ast_Call this) {
-/* $begin(::corto::ast::Call::hasReturnedResource) */
+/* $begin(corto/ast/Call/hasReturnedResource) */
 
     return this->returnType->reference || 
         this->returnsReference || 
@@ -94,14 +94,14 @@ corto_bool _ast_Call_hasReturnedResource_v(ast_Call this) {
 }
 
 corto_bool _ast_Call_hasSideEffects_v(ast_Call this) {
-/* $begin(::corto::ast::Call::hasSideEffects) */
+/* $begin(corto/ast/Call/hasSideEffects) */
     CORTO_UNUSED(this);
     return TRUE;
 /* $end */
 }
 
 corto_void _ast_Call_setParameters(ast_Call this, corto_function function) {
-/* $begin(::corto::ast::Call::setParameters) */
+/* $begin(corto/ast/Call/setParameters) */
     corto_uint32 i;
 
     /* Set parameters */
@@ -119,7 +119,7 @@ corto_void _ast_Call_setParameters(ast_Call this, corto_function function) {
 }
 
 ic_node _ast_Call_toIc_v(ast_Call this, ic_program program, ic_storage storage, corto_bool stored) {
-/* $begin(::corto::ast::Call::toIc) */
+/* $begin(corto/ast/Call/toIc) */
     ic_storage result = NULL;
     ic_node function;
     ast_Expression argument = NULL;

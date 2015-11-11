@@ -13,7 +13,7 @@
 /* $end */
 
 corto_int16 _ast_While_construct(ast_While this) {
-/* $begin(::corto::ast::While::construct) */
+/* $begin(corto/ast/While/construct) */
     corto_type conditionType;
 
     ast_Node(this)->kind = Ast_WhileExpr;
@@ -37,7 +37,7 @@ error:
 }
 
 ic_node _ast_While_toIc_v(ast_While this, ic_program program, ic_storage storage, corto_bool stored) {
-/* $begin(::corto::ast::While::toIc) */
+/* $begin(corto/ast/While/toIc) */
     ic_storage accumulator;
     ic_label labelEval, labelNeq = NULL;
     ast_Expression condition = NULL;

@@ -66,7 +66,7 @@ error:
 /* $end */
 
 ast_Call _ast_CallBuilder_build(ast_CallBuilder *this) {
-/* $begin(::corto::ast::CallBuilder::build) */
+/* $begin(corto/ast/CallBuilder/build) */
     ast_Call result = NULL;
 
     /* Obtain signature */
@@ -135,7 +135,7 @@ error:
 }
 
 corto_int16 _ast_CallBuilder_buildSignature(ast_CallBuilder *this) {
-/* $begin(::corto::ast::CallBuilder::buildSignature) */
+/* $begin(corto/ast/CallBuilder/buildSignature) */
     corto_string signature;
     corto_iter argumentIter;
     ast_Expression argument;

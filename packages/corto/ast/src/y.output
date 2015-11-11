@@ -1,4 +1,4 @@
-Terminals which are not used
+Terminals unused in grammar
 
    ERROR
    ARROW_LEFT
@@ -14,7 +14,7 @@ Grammar
     0 $accept: code $end
 
     1 code: statements
-    2     | /* empty */
+    2     | %empty
 
     3 statements: statement
     4           | statements statement
@@ -26,7 +26,7 @@ Grammar
     9          | switch_statement
    10          | declaration ENDL
 
-   11 @1: /* empty */
+   11 @1: %empty
 
    12 statement: scope_statement @1 scope
    13          | function_declaration ENDL
@@ -41,32 +41,32 @@ Grammar
    21 scope: SCOPE INDENT statements DEDENT
    22      | SCOPE statement
 
-   23 @2: /* empty */
+   23 $@2: %empty
 
-   24 scope: SCOPEPRE @2 INDENT statements DEDENT
+   24 scope: SCOPEPRE $@2 INDENT statements DEDENT
 
-   25 @3: /* empty */
+   25 $@3: %empty
 
-   26 scope: SCOPEPRE @3 statement
+   26 scope: SCOPEPRE $@3 statement
 
    27 scope_statement: expr
    28                | declaration
 
    29 block_start: ':' INDENT
 
-   30 @4: /* empty */
+   30 $@4: %empty
 
-   31 block: block_start statements @4 DEDENT
+   31 block: block_start statements $@4 DEDENT
 
-   32 @5: /* empty */
+   32 @5: %empty
 
    33 block: ':' @5 statement
 
-   34 @6: /* empty */
+   34 @6: %empty
 
    35 function_implementation: function_declaration @6 block
 
-   36 @7: /* empty */
+   36 @7: %empty
 
    37 function_implementation: function_declaration @7 '=' expr ENDL
 
@@ -91,9 +91,9 @@ Grammar
 
    52 declaration: identifier declaration_list
 
-   53 @8: /* empty */
+   53 $@8: %empty
 
-   54 declaration: KW_LOCAL @8 declaration_ref
+   54 declaration: KW_LOCAL $@8 declaration_ref
 
    55 declaration_ref: identifier declaration_list
    56                | identifier '&' declaration_list
@@ -112,24 +112,24 @@ Grammar
    64 init_value: initializer_braces
    65           | logical_or_expr
 
-   66 @9: /* empty */
+   66 $@9: %empty
 
-   67 @10: /* empty */
+   67 $@10: %empty
 
-   68 initializer_braces: '{' @9 initializer @10 '}'
+   68 initializer_braces: '{' $@9 initializer $@10 '}'
    69                   | '{' '}'
 
    70 init_list_colon: init_colon
    71                | init_list_colon init_colon
 
-   72 @11: /* empty */
+   72 $@11: %empty
 
-   73 init_colon: any_id '=' @11 init_value
+   73 init_colon: any_id '=' $@11 init_value
    74           | init_key '=' init_value
 
-   75 @12: /* empty */
+   75 $@12: %empty
 
-   76 init_key: '@' @12 initializer_braces
+   76 init_key: '@' $@12 initializer_braces
    77         | literal_expr
 
    78 literal_expr: BOOLEAN
@@ -140,9 +140,9 @@ Grammar
    83             | STRING
    84             | NUL
 
-   85 @13: /* empty */
+   85 $@13: %empty
 
-   86 bracket_expr: '(' @13 wait_expr ')'
+   86 bracket_expr: '(' $@13 wait_expr ')'
 
    87 primary_expr: bracket_expr
    88             | literal_expr
@@ -153,9 +153,9 @@ Grammar
 
    92 postfix_expr: iter_expr
 
-   93 @14: /* empty */
+   93 $@14: %empty
 
-   94 postfix_expr: postfix_expr @14 '[' expr ']'
+   94 postfix_expr: postfix_expr $@14 '[' expr ']'
    95             | postfix_expr '(' ')'
    96             | postfix_expr bracket_expr
    97             | postfix_expr '.' any_id
@@ -176,11 +176,11 @@ Grammar
 
   110 multiplicative_expr: unary_expr
 
-  111 @15: /* empty */
+  111 $@15: %empty
 
-  112 @16: /* empty */
+  112 $@16: %empty
 
-  113 multiplicative_expr: multiplicative_expr @15 multiplicative_operator unary_expr @16
+  113 multiplicative_expr: multiplicative_expr $@15 multiplicative_operator unary_expr $@16
 
   114 multiplicative_operator: '*'
   115                        | '/'
@@ -188,60 +188,60 @@ Grammar
 
   117 additive_expr: multiplicative_expr
 
-  118 @17: /* empty */
+  118 $@17: %empty
 
-  119 @18: /* empty */
+  119 $@18: %empty
 
-  120 additive_expr: additive_expr @17 additive_operator multiplicative_expr @18
+  120 additive_expr: additive_expr $@17 additive_operator multiplicative_expr $@18
 
   121 additive_operator: '+'
   122                  | '-'
 
   123 shift_expr: additive_expr
 
-  124 @19: /* empty */
+  124 $@19: %empty
 
-  125 @20: /* empty */
+  125 $@20: %empty
 
-  126 shift_expr: shift_expr @19 SHIFT_LEFT additive_expr @20
+  126 shift_expr: shift_expr $@19 SHIFT_LEFT additive_expr $@20
 
-  127 @21: /* empty */
+  127 $@21: %empty
 
-  128 @22: /* empty */
+  128 $@22: %empty
 
-  129 shift_expr: shift_expr @21 SHIFT_RIGHT additive_expr @22
+  129 shift_expr: shift_expr $@21 SHIFT_RIGHT additive_expr $@22
 
   130 and_expr: shift_expr
 
-  131 @23: /* empty */
+  131 $@23: %empty
 
-  132 @24: /* empty */
+  132 $@24: %empty
 
-  133 and_expr: and_expr @23 '&' shift_expr @24
+  133 and_expr: and_expr $@23 '&' shift_expr $@24
 
   134 xor_expr: and_expr
 
-  135 @25: /* empty */
+  135 $@25: %empty
 
-  136 @26: /* empty */
+  136 $@26: %empty
 
-  137 xor_expr: xor_expr @25 '^' and_expr @26
+  137 xor_expr: xor_expr $@25 '^' and_expr $@26
 
   138 or_expr: xor_expr
 
-  139 @27: /* empty */
+  139 $@27: %empty
 
-  140 @28: /* empty */
+  140 $@28: %empty
 
-  141 or_expr: or_expr @27 '|' xor_expr @28
+  141 or_expr: or_expr $@27 '|' xor_expr $@28
 
   142 boolean_expr: or_expr
 
-  143 @29: /* empty */
+  143 $@29: %empty
 
-  144 @30: /* empty */
+  144 $@30: %empty
 
-  145 boolean_expr: boolean_expr @29 boolean_operator or_expr @30
+  145 boolean_expr: boolean_expr $@29 boolean_operator or_expr $@30
 
   146 boolean_operator: '<'
   147                 | '>'
@@ -250,32 +250,32 @@ Grammar
 
   150 equality_expr: boolean_expr
 
-  151 @31: /* empty */
+  151 $@31: %empty
 
-  152 @32: /* empty */
+  152 $@32: %empty
 
-  153 equality_expr: equality_expr @31 equality_operator boolean_expr @32
+  153 equality_expr: equality_expr $@31 equality_operator boolean_expr $@32
 
   154 equality_operator: EQ
   155                  | NEQ
 
   156 logical_and_expr: equality_expr
 
-  157 @33: /* empty */
+  157 $@33: %empty
 
-  158 @34: /* empty */
+  158 $@34: %empty
 
-  159 logical_and_expr: logical_and_expr @33 LAND equality_expr @34
+  159 logical_and_expr: logical_and_expr $@33 LAND equality_expr $@34
 
   160 logical_or_expr: logical_and_expr
 
-  161 @35: /* empty */
+  161 $@35: %empty
 
-  162 @36: /* empty */
+  162 $@36: %empty
 
-  163 logical_or_expr: logical_or_expr @35 LOR logical_and_expr @36
+  163 logical_or_expr: logical_or_expr $@35 LOR logical_and_expr $@36
 
-  164 @37: /* empty */
+  164 @37: %empty
 
   165 initializer_expr: @37 initializer_braces
   166                 | logical_or_expr
@@ -288,11 +288,11 @@ Grammar
 
   171 assignment_expr: comma_expr
 
-  172 @38: /* empty */
+  172 $@38: %empty
 
-  173 @39: /* empty */
+  173 $@39: %empty
 
-  174 assignment_expr: assignment_expr @38 assignment_operator comma_expr @39
+  174 assignment_expr: assignment_expr $@38 assignment_operator comma_expr $@39
 
   175 assignment_operator: '='
   176                    | ADD_ASSIGN
@@ -309,35 +309,35 @@ Grammar
 
   186 declaration_expr: wait_expr
 
-  187 @40: /* empty */
+  187 $@40: %empty
 
-  188 declaration_expr: wait_expr ':' @40 initializer
+  188 declaration_expr: wait_expr ':' $@40 initializer
   189                 | wait_expr ':'
 
-  190 @41: /* empty */
+  190 $@41: %empty
 
-  191 declaration_expr: declaration ':' @41 initializer
+  191 declaration_expr: declaration ':' $@41 initializer
 
-  192 @42: /* empty */
+  192 $@42: %empty
 
-  193 @43: /* empty */
+  193 $@43: %empty
 
-  194 declaration_expr: declaration '{' @42 initializer @43 '}'
+  194 declaration_expr: declaration '{' $@42 initializer $@43 '}'
 
-  195 @44: /* empty */
+  195 $@44: %empty
 
-  196 declaration_expr: declaration '{' @44 '}'
+  196 declaration_expr: declaration '{' $@44 '}'
   197                 | declaration ':'
 
-  198 @45: /* empty */
+  198 $@45: %empty
 
-  199 declaration_expr: declaration '=' @45 comma_expr
+  199 declaration_expr: declaration '=' $@45 comma_expr
 
   200 expr: declaration_expr
 
   201 identifier: identifier_id
 
-  202 @46: /* empty */
+  202 @46: %empty
 
   203 identifier: identifier @46 initializer_braces
 
@@ -528,15 +528,15 @@ code (87)
 statements (88)
     on left: 3 4 5, on right: 1 4 21 24 31
 statement (89)
-    on left: 6 7 8 9 10 12 13 14 15 16 17 18 19 20,
-    on right: 3 4 22 26 33 244 246
+    on left: 6 7 8 9 10 12 13 14 15 16 17 18 19 20, on right: 3 4 22
+    26 33 244 246
 @1 (90)
     on left: 11, on right: 12
 scope (91)
     on left: 21 22 24 26, on right: 12
-@2 (92)
+$@2 (92)
     on left: 23, on right: 24
-@3 (93)
+$@3 (93)
     on left: 25, on right: 26
 scope_statement (94)
     on left: 27 28, on right: 12
@@ -544,7 +544,7 @@ block_start (95)
     on left: 29, on right: 31
 block (96)
     on left: 31 33, on right: 17 35 235 236 237 239 253 270
-@4 (97)
+$@4 (97)
     on left: 30, on right: 31
 @5 (98)
     on left: 32, on right: 33
@@ -566,7 +566,7 @@ package_declaration (106)
     on left: 51, on right: 18
 declaration (107)
     on left: 52 54, on right: 10 28 191 194 196 197 199
-@8 (108)
+$@8 (108)
     on left: 53, on right: 54
 declaration_ref (109)
     on left: 55 56, on right: 54
@@ -582,25 +582,25 @@ init_value (114)
     on left: 64 65, on right: 62 73 74
 initializer_braces (115)
     on left: 68 69, on right: 64 76 165 203
-@9 (116)
+$@9 (116)
     on left: 66, on right: 68
-@10 (117)
+$@10 (117)
     on left: 67, on right: 68
 init_list_colon (118)
     on left: 70 71, on right: 63 71
 init_colon (119)
     on left: 73 74, on right: 70 71
-@11 (120)
+$@11 (120)
     on left: 72, on right: 73
 init_key (121)
     on left: 76 77, on right: 74
-@12 (122)
+$@12 (122)
     on left: 75, on right: 76
 literal_expr (123)
     on left: 78 79 80 81 82 83 84, on right: 77 88
 bracket_expr (124)
     on left: 86, on right: 87 96
-@13 (125)
+$@13 (125)
     on left: 85, on right: 86
 primary_expr (126)
     on left: 87 88 89, on right: 90
@@ -609,7 +609,7 @@ iter_expr (127)
 postfix_expr (128)
     on left: 92 94 95 96 97 98 99 100, on right: 94 95 96 97 98 99
     100 101 102 269 270
-@14 (129)
+$@14 (129)
     on left: 93, on right: 94
 unary_expr (130)
     on left: 101 102, on right: 110 113
@@ -617,75 +617,75 @@ unary_operator (131)
     on left: 103 104 105 106 107 108 109, on right: 102
 multiplicative_expr (132)
     on left: 110 113, on right: 113 117 120
-@15 (133)
+$@15 (133)
     on left: 111, on right: 113
-@16 (134)
+$@16 (134)
     on left: 112, on right: 113
 multiplicative_operator (135)
     on left: 114 115 116, on right: 113
 additive_expr (136)
     on left: 117 120, on right: 120 123 126 129
-@17 (137)
+$@17 (137)
     on left: 118, on right: 120
-@18 (138)
+$@18 (138)
     on left: 119, on right: 120
 additive_operator (139)
     on left: 121 122, on right: 120
 shift_expr (140)
     on left: 123 126 129, on right: 126 129 130 133
-@19 (141)
+$@19 (141)
     on left: 124, on right: 126
-@20 (142)
+$@20 (142)
     on left: 125, on right: 126
-@21 (143)
+$@21 (143)
     on left: 127, on right: 129
-@22 (144)
+$@22 (144)
     on left: 128, on right: 129
 and_expr (145)
     on left: 130 133, on right: 133 134 137
-@23 (146)
+$@23 (146)
     on left: 131, on right: 133
-@24 (147)
+$@24 (147)
     on left: 132, on right: 133
 xor_expr (148)
     on left: 134 137, on right: 137 138 141
-@25 (149)
+$@25 (149)
     on left: 135, on right: 137
-@26 (150)
+$@26 (150)
     on left: 136, on right: 137
 or_expr (151)
     on left: 138 141, on right: 141 142 145
-@27 (152)
+$@27 (152)
     on left: 139, on right: 141
-@28 (153)
+$@28 (153)
     on left: 140, on right: 141
 boolean_expr (154)
     on left: 142 145, on right: 145 150 153
-@29 (155)
+$@29 (155)
     on left: 143, on right: 145
-@30 (156)
+$@30 (156)
     on left: 144, on right: 145
 boolean_operator (157)
     on left: 146 147 148 149, on right: 145
 equality_expr (158)
     on left: 150 153, on right: 153 156 159
-@31 (159)
+$@31 (159)
     on left: 151, on right: 153
-@32 (160)
+$@32 (160)
     on left: 152, on right: 153
 equality_operator (161)
     on left: 154 155, on right: 153
 logical_and_expr (162)
     on left: 156 159, on right: 159 160 163
-@33 (163)
+$@33 (163)
     on left: 157, on right: 159
-@34 (164)
+$@34 (164)
     on left: 158, on right: 159
 logical_or_expr (165)
     on left: 160 163, on right: 65 163 166 185
-@35 (166)
+$@35 (166)
     on left: 161, on right: 163
-@36 (167)
+$@36 (167)
     on left: 162, on right: 163
 initializer_expr (168)
     on left: 165 166, on right: 167 168
@@ -697,9 +697,9 @@ comma_expr (171)
     on left: 169 170, on right: 170 171 174 199
 assignment_expr (172)
     on left: 171 174, on right: 174 183 184 185 255
-@38 (173)
+$@38 (173)
     on left: 172, on right: 174
-@39 (174)
+$@39 (174)
     on left: 173, on right: 174
 assignment_operator (175)
     on left: 175 176 177 178 179 180 181 182, on right: 174
@@ -708,17 +708,17 @@ wait_expr (176)
     251
 declaration_expr (177)
     on left: 186 188 189 191 194 196 197 199, on right: 200
-@40 (178)
+$@40 (178)
     on left: 187, on right: 188
-@41 (179)
+$@41 (179)
     on left: 190, on right: 191
-@42 (180)
+$@42 (180)
     on left: 192, on right: 194
-@43 (181)
+$@43 (181)
     on left: 193, on right: 194
-@44 (182)
+$@44 (182)
     on left: 195, on right: 196
-@45 (183)
+$@45 (183)
     on left: 198, on right: 199
 expr (184)
     on left: 200, on right: 6 27 37 94
@@ -733,8 +733,8 @@ identifier_string (188)
     on left: 205 206, on right: 39 42 204
 any_id (189)
     on left: 207 208 209 210 211 212 213 214 215 216 217 218 219 220
-    221 222 223 224 225 226 227 228 229 230 231 232 233 234,
-    on right: 38 39 41 42 48 49 50 59 73 97 206
+    221 222 223 224 225 226 227 228 229 230 231 232 233 234, on right:
+    38 39 41 42 48 49 50 59 73 97 206
 if_statement (190)
     on left: 235 236 237, on right: 7 237
 if_start (191)
@@ -771,7 +771,7 @@ update_statement (206)
     on left: 269 270, on right: 16
 
 
-state 0
+State 0
 
     0 $accept: . code $end
 
@@ -862,119 +862,119 @@ state 0
     update_statement         go to state 81
 
 
-state 1
+State 1
 
     5 statements: error .
 
     $default  reduce using rule 5 (statements)
 
 
-state 2
+State 2
 
    78 literal_expr: BOOLEAN .
 
     $default  reduce using rule 78 (literal_expr)
 
 
-state 3
+State 3
 
    79 literal_expr: CHARACTER .
 
     $default  reduce using rule 79 (literal_expr)
 
 
-state 4
+State 4
 
    80 literal_expr: INTEGER .
 
     $default  reduce using rule 80 (literal_expr)
 
 
-state 5
+State 5
 
    81 literal_expr: SIGNEDINTEGER .
 
     $default  reduce using rule 81 (literal_expr)
 
 
-state 6
+State 6
 
    82 literal_expr: FLOATINGPOINT .
 
     $default  reduce using rule 82 (literal_expr)
 
 
-state 7
+State 7
 
    83 literal_expr: STRING .
 
     $default  reduce using rule 83 (literal_expr)
 
 
-state 8
+State 8
 
    84 literal_expr: NUL .
 
     $default  reduce using rule 84 (literal_expr)
 
 
-state 9
+State 9
 
   207 any_id: ID .
 
     $default  reduce using rule 207 (any_id)
 
 
-state 10
+State 10
 
   205 identifier_string: GID .
 
     $default  reduce using rule 205 (identifier_string)
 
 
-state 11
+State 11
 
    51 package_declaration: PACKAGE . GID
 
     GID  shift, and go to state 82
 
 
-state 12
+State 12
 
   106 unary_operator: LNOT .
 
     $default  reduce using rule 106 (unary_operator)
 
 
-state 13
+State 13
 
   107 unary_operator: INC .
 
     $default  reduce using rule 107 (unary_operator)
 
 
-state 14
+State 14
 
   108 unary_operator: DEC .
 
     $default  reduce using rule 108 (unary_operator)
 
 
-state 15
+State 15
 
    19 statement: ENDL .
 
     $default  reduce using rule 19 (statement)
 
 
-state 16
+State 16
 
    20 statement: TAB .
 
     $default  reduce using rule 20 (statement)
 
 
-state 17
+State 17
 
   269 update_statement: KW_UPDATE . postfix_expr ENDL
   270                 | KW_UPDATE . postfix_expr block
@@ -1005,28 +1005,28 @@ state 17
     any_id             go to state 72
 
 
-state 18
+State 18
 
   233 any_id: KW_DECLARE .
 
     $default  reduce using rule 233 (any_id)
 
 
-state 19
+State 19
 
   234 any_id: KW_DEFINE .
 
     $default  reduce using rule 234 (any_id)
 
 
-state 20
+State 20
 
   256 observer_dispatch: KW_ON .
 
     $default  reduce using rule 256 (observer_dispatch)
 
 
-state 21
+State 21
 
   238 if_start: KW_IF . wait_expr
 
@@ -1084,7 +1084,7 @@ state 21
     any_id               go to state 72
 
 
-state 22
+State 22
 
   241 while_until: KW_WHILE . wait_expr
 
@@ -1142,7 +1142,7 @@ state 22
     any_id               go to state 72
 
 
-state 23
+State 23
 
   242 switch_statement: KW_SWITCH . wait_expr ':' case_list INDENT switch_statements DEDENT
   243                 | KW_SWITCH . wait_expr ':' switch_statements DEDENT
@@ -1201,7 +1201,7 @@ state 23
     any_id               go to state 72
 
 
-state 24
+State 24
 
   184 wait_expr: KW_WAIT . assignment_expr
   185          | KW_WAIT . assignment_expr KW_FOR logical_or_expr
@@ -1258,16 +1258,16 @@ state 24
     any_id               go to state 72
 
 
-state 25
+State 25
 
-   54 declaration: KW_LOCAL . @8 declaration_ref
+   54 declaration: KW_LOCAL . $@8 declaration_ref
 
-    $default  reduce using rule 53 (@8)
+    $default  reduce using rule 53 ($@8)
 
-    @8  go to state 89
+    $@8  go to state 89
 
 
-state 26
+State 26
 
    29 block_start: ':' . INDENT
    33 block: ':' . @5 statement
@@ -1279,23 +1279,23 @@ state 26
     @5  go to state 91
 
 
-state 27
+State 27
 
   109 unary_operator: '&' .
 
     $default  reduce using rule 109 (unary_operator)
 
 
-state 28
+State 28
 
-   86 bracket_expr: '(' . @13 wait_expr ')'
+   86 bracket_expr: '(' . $@13 wait_expr ')'
 
-    $default  reduce using rule 85 (@13)
+    $default  reduce using rule 85 ($@13)
 
-    @13  go to state 92
+    $@13  go to state 92
 
 
-state 29
+State 29
 
   208 any_id: '@' . KW_SCOPE
   209       | '@' . KW_UPDATE
@@ -1350,7 +1350,7 @@ state 29
     KW_LOCAL         shift, and go to state 117
 
 
-state 30
+State 30
 
    91 iter_expr: '*' . iter_expr
 
@@ -1379,35 +1379,35 @@ state 30
     any_id             go to state 72
 
 
-state 31
+State 31
 
   103 unary_operator: '-' .
 
     $default  reduce using rule 103 (unary_operator)
 
 
-state 32
+State 32
 
   104 unary_operator: '~' .
 
     $default  reduce using rule 104 (unary_operator)
 
 
-state 33
+State 33
 
   105 unary_operator: '!' .
 
     $default  reduce using rule 105 (unary_operator)
 
 
-state 34
+State 34
 
     0 $accept: code . $end
 
     $end  shift, and go to state 119
 
 
-state 35
+State 35
 
     1 code: statements .
     4 statements: statements . statement
@@ -1496,14 +1496,14 @@ state 35
     update_statement         go to state 81
 
 
-state 36
+State 36
 
     3 statements: statement .
 
     $default  reduce using rule 3 (statements)
 
 
-state 37
+State 37
 
    12 statement: scope_statement . @1 scope
 
@@ -1512,9 +1512,9 @@ state 37
     @1  go to state 121
 
 
-state 38
+State 38
 
-   31 block: block_start . statements @4 DEDENT
+   31 block: block_start . statements $@4 DEDENT
 
     error          shift, and go to state 1
     BOOLEAN        shift, and go to state 2
@@ -1601,21 +1601,21 @@ state 38
     update_statement         go to state 81
 
 
-state 39
+State 39
 
    17 statement: block .
 
     $default  reduce using rule 17 (statement)
 
 
-state 40
+State 40
 
    14 statement: function_implementation .
 
     $default  reduce using rule 14 (statement)
 
 
-state 41
+State 41
 
    13 statement: function_declaration . ENDL
    35 function_implementation: function_declaration . @6 block
@@ -1630,22 +1630,22 @@ state 41
     @7  go to state 125
 
 
-state 42
+State 42
 
    18 statement: package_declaration . ENDL
 
     ENDL  shift, and go to state 126
 
 
-state 43
+State 43
 
    10 statement: declaration . ENDL
    28 scope_statement: declaration .
-  191 declaration_expr: declaration . ':' @41 initializer
-  194                 | declaration . '{' @42 initializer @43 '}'
-  196                 | declaration . '{' @44 '}'
+  191 declaration_expr: declaration . ':' $@41 initializer
+  194                 | declaration . '{' $@42 initializer $@43 '}'
+  196                 | declaration . '{' $@44 '}'
   197                 | declaration . ':'
-  199                 | declaration . '=' @45 comma_expr
+  199                 | declaration . '=' $@45 comma_expr
 
     ENDL  shift, and go to state 127
     ':'   shift, and go to state 128
@@ -1655,37 +1655,37 @@ state 43
     $default  reduce using rule 28 (scope_statement)
 
 
-state 44
+State 44
 
    88 primary_expr: literal_expr .
 
     $default  reduce using rule 88 (primary_expr)
 
 
-state 45
+State 45
 
    87 primary_expr: bracket_expr .
 
     $default  reduce using rule 87 (primary_expr)
 
 
-state 46
+State 46
 
    90 iter_expr: primary_expr .
 
     $default  reduce using rule 90 (iter_expr)
 
 
-state 47
+State 47
 
    92 postfix_expr: iter_expr .
 
     $default  reduce using rule 92 (postfix_expr)
 
 
-state 48
+State 48
 
-   94 postfix_expr: postfix_expr . @14 '[' expr ']'
+   94 postfix_expr: postfix_expr . $@14 '[' expr ']'
    95             | postfix_expr . '(' ')'
    96             | postfix_expr . bracket_expr
    97             | postfix_expr . '.' any_id
@@ -1699,21 +1699,21 @@ state 48
     '('  shift, and go to state 133
     '.'  shift, and go to state 134
 
-    '['       reduce using rule 93 (@14)
+    '['       reduce using rule 93 ($@14)
     $default  reduce using rule 101 (unary_expr)
 
     bracket_expr  go to state 135
-    @14           go to state 136
+    $@14          go to state 136
 
 
-state 49
+State 49
 
   110 multiplicative_expr: unary_expr .
 
     $default  reduce using rule 110 (multiplicative_expr)
 
 
-state 50
+State 50
 
   102 unary_expr: unary_operator . postfix_expr
 
@@ -1743,127 +1743,127 @@ state 50
     any_id             go to state 72
 
 
-state 51
+State 51
 
-  113 multiplicative_expr: multiplicative_expr . @15 multiplicative_operator unary_expr @16
+  113 multiplicative_expr: multiplicative_expr . $@15 multiplicative_operator unary_expr $@16
   117 additive_expr: multiplicative_expr .
 
-    '*'       reduce using rule 111 (@15)
-    '/'       reduce using rule 111 (@15)
-    '%'       reduce using rule 111 (@15)
+    '*'       reduce using rule 111 ($@15)
+    '/'       reduce using rule 111 ($@15)
+    '%'       reduce using rule 111 ($@15)
     $default  reduce using rule 117 (additive_expr)
 
-    @15  go to state 138
+    $@15  go to state 138
 
 
-state 52
+State 52
 
-  120 additive_expr: additive_expr . @17 additive_operator multiplicative_expr @18
+  120 additive_expr: additive_expr . $@17 additive_operator multiplicative_expr $@18
   123 shift_expr: additive_expr .
 
-    '-'       reduce using rule 118 (@17)
-    '+'       reduce using rule 118 (@17)
+    '-'       reduce using rule 118 ($@17)
+    '+'       reduce using rule 118 ($@17)
     $default  reduce using rule 123 (shift_expr)
 
-    @17  go to state 139
+    $@17  go to state 139
 
 
-state 53
+State 53
 
-  126 shift_expr: shift_expr . @19 SHIFT_LEFT additive_expr @20
-  129           | shift_expr . @21 SHIFT_RIGHT additive_expr @22
+  126 shift_expr: shift_expr . $@19 SHIFT_LEFT additive_expr $@20
+  129           | shift_expr . $@21 SHIFT_RIGHT additive_expr $@22
   130 and_expr: shift_expr .
 
-    SHIFT_LEFT   reduce using rule 124 (@19)
-    SHIFT_RIGHT  reduce using rule 127 (@21)
+    SHIFT_LEFT   reduce using rule 124 ($@19)
+    SHIFT_RIGHT  reduce using rule 127 ($@21)
     $default     reduce using rule 130 (and_expr)
 
-    @19  go to state 140
-    @21  go to state 141
+    $@19  go to state 140
+    $@21  go to state 141
 
 
-state 54
+State 54
 
-  133 and_expr: and_expr . @23 '&' shift_expr @24
+  133 and_expr: and_expr . $@23 '&' shift_expr $@24
   134 xor_expr: and_expr .
 
-    '&'       reduce using rule 131 (@23)
+    '&'       reduce using rule 131 ($@23)
     $default  reduce using rule 134 (xor_expr)
 
-    @23  go to state 142
+    $@23  go to state 142
 
 
-state 55
+State 55
 
-  137 xor_expr: xor_expr . @25 '^' and_expr @26
+  137 xor_expr: xor_expr . $@25 '^' and_expr $@26
   138 or_expr: xor_expr .
 
-    '^'       reduce using rule 135 (@25)
+    '^'       reduce using rule 135 ($@25)
     $default  reduce using rule 138 (or_expr)
 
-    @25  go to state 143
+    $@25  go to state 143
 
 
-state 56
+State 56
 
-  141 or_expr: or_expr . @27 '|' xor_expr @28
+  141 or_expr: or_expr . $@27 '|' xor_expr $@28
   142 boolean_expr: or_expr .
 
-    '|'       reduce using rule 139 (@27)
+    '|'       reduce using rule 139 ($@27)
     $default  reduce using rule 142 (boolean_expr)
 
-    @27  go to state 144
+    $@27  go to state 144
 
 
-state 57
+State 57
 
-  145 boolean_expr: boolean_expr . @29 boolean_operator or_expr @30
+  145 boolean_expr: boolean_expr . $@29 boolean_operator or_expr $@30
   150 equality_expr: boolean_expr .
 
-    LEQ       reduce using rule 143 (@29)
-    GEQ       reduce using rule 143 (@29)
-    '<'       reduce using rule 143 (@29)
-    '>'       reduce using rule 143 (@29)
+    LEQ       reduce using rule 143 ($@29)
+    GEQ       reduce using rule 143 ($@29)
+    '<'       reduce using rule 143 ($@29)
+    '>'       reduce using rule 143 ($@29)
     $default  reduce using rule 150 (equality_expr)
 
-    @29  go to state 145
+    $@29  go to state 145
 
 
-state 58
+State 58
 
-  153 equality_expr: equality_expr . @31 equality_operator boolean_expr @32
+  153 equality_expr: equality_expr . $@31 equality_operator boolean_expr $@32
   156 logical_and_expr: equality_expr .
 
-    EQ        reduce using rule 151 (@31)
-    NEQ       reduce using rule 151 (@31)
+    EQ        reduce using rule 151 ($@31)
+    NEQ       reduce using rule 151 ($@31)
     $default  reduce using rule 156 (logical_and_expr)
 
-    @31  go to state 146
+    $@31  go to state 146
 
 
-state 59
+State 59
 
-  159 logical_and_expr: logical_and_expr . @33 LAND equality_expr @34
+  159 logical_and_expr: logical_and_expr . $@33 LAND equality_expr $@34
   160 logical_or_expr: logical_and_expr .
 
-    LAND      reduce using rule 157 (@33)
+    LAND      reduce using rule 157 ($@33)
     $default  reduce using rule 160 (logical_or_expr)
 
-    @33  go to state 147
+    $@33  go to state 147
 
 
-state 60
+State 60
 
-  163 logical_or_expr: logical_or_expr . @35 LOR logical_and_expr @36
+  163 logical_or_expr: logical_or_expr . $@35 LOR logical_and_expr $@36
   166 initializer_expr: logical_or_expr .
 
-    LOR       reduce using rule 161 (@35)
+    LOR       reduce using rule 161 ($@35)
     $default  reduce using rule 166 (initializer_expr)
 
-    @35  go to state 148
+    $@35  go to state 148
 
 
-state 61
+State 61
 
   167 conditional_expr: initializer_expr .
   168                 | initializer_expr . '?' conditional_expr ':' conditional_expr
@@ -1873,7 +1873,7 @@ state 61
     $default  reduce using rule 167 (conditional_expr)
 
 
-state 62
+State 62
 
   165 initializer_expr: @37 . initializer_braces
 
@@ -1882,14 +1882,14 @@ state 62
     initializer_braces  go to state 151
 
 
-state 63
+State 63
 
   169 comma_expr: conditional_expr .
 
     $default  reduce using rule 169 (comma_expr)
 
 
-state 64
+State 64
 
   170 comma_expr: comma_expr . ',' conditional_expr
   171 assignment_expr: comma_expr .
@@ -1899,9 +1899,9 @@ state 64
     $default  reduce using rule 171 (assignment_expr)
 
 
-state 65
+State 65
 
-  174 assignment_expr: assignment_expr . @38 assignment_operator comma_expr @39
+  174 assignment_expr: assignment_expr . $@38 assignment_operator comma_expr $@39
   183 wait_expr: assignment_expr .
 
     SCOPE     reduce using rule 183 (wait_expr)
@@ -1910,15 +1910,15 @@ state 65
     ':'       reduce using rule 183 (wait_expr)
     ')'       reduce using rule 183 (wait_expr)
     ']'       reduce using rule 183 (wait_expr)
-    $default  reduce using rule 172 (@38)
+    $default  reduce using rule 172 ($@38)
 
-    @38  go to state 153
+    $@38  go to state 153
 
 
-state 66
+State 66
 
   186 declaration_expr: wait_expr .
-  188                 | wait_expr . ':' @40 initializer
+  188                 | wait_expr . ':' $@40 initializer
   189                 | wait_expr . ':'
 
     ':'  shift, and go to state 154
@@ -1926,14 +1926,14 @@ state 66
     $default  reduce using rule 186 (declaration_expr)
 
 
-state 67
+State 67
 
   200 expr: declaration_expr .
 
     $default  reduce using rule 200 (expr)
 
 
-state 68
+State 68
 
     6 statement: expr . ENDL
    27 scope_statement: expr .
@@ -1943,7 +1943,7 @@ state 68
     $default  reduce using rule 27 (scope_statement)
 
 
-state 69
+State 69
 
    38 function_declaration: identifier . any_id function_argumentList
    39                     | identifier . any_id function_argumentList identifier_string
@@ -1972,35 +1972,35 @@ state 69
     any_id            go to state 161
 
 
-state 70
+State 70
 
   201 identifier: identifier_id .
 
     $default  reduce using rule 201 (identifier)
 
 
-state 71
+State 71
 
   204 identifier_id: identifier_string .
 
     $default  reduce using rule 204 (identifier_id)
 
 
-state 72
+State 72
 
   206 identifier_string: any_id .
 
     $default  reduce using rule 206 (identifier_string)
 
 
-state 73
+State 73
 
     7 statement: if_statement .
 
     $default  reduce using rule 7 (statement)
 
 
-state 74
+State 74
 
   235 if_statement: if_start . block
   236             | if_start . block KW_ELSE block
@@ -2012,14 +2012,14 @@ state 74
     block        go to state 162
 
 
-state 75
+State 75
 
     8 statement: while_statement .
 
     $default  reduce using rule 8 (statement)
 
 
-state 76
+State 76
 
   239 while_statement: while_until . block
   240                | while_until . ENDL
@@ -2031,21 +2031,21 @@ state 76
     block        go to state 164
 
 
-state 77
+State 77
 
     9 statement: switch_statement .
 
     $default  reduce using rule 9 (statement)
 
 
-state 78
+State 78
 
    15 statement: observer_statement .
 
     $default  reduce using rule 15 (statement)
 
 
-state 79
+State 79
 
   253 observer_statement: observer_declaration . block
   254                   | observer_declaration . ENDL
@@ -2057,7 +2057,7 @@ state 79
     block        go to state 166
 
 
-state 80
+State 80
 
   255 observer_declaration: observer_dispatch . event_mask assignment_expr
 
@@ -2075,23 +2075,23 @@ state 80
     event_childflag  go to state 177
 
 
-state 81
+State 81
 
    16 statement: update_statement .
 
     $default  reduce using rule 16 (statement)
 
 
-state 82
+State 82
 
    51 package_declaration: PACKAGE GID .
 
     $default  reduce using rule 51 (package_declaration)
 
 
-state 83
+State 83
 
-   94 postfix_expr: postfix_expr . @14 '[' expr ']'
+   94 postfix_expr: postfix_expr . $@14 '[' expr ']'
    95             | postfix_expr . '(' ')'
    96             | postfix_expr . bracket_expr
    97             | postfix_expr . '.' any_id
@@ -2108,15 +2108,15 @@ state 83
     '('   shift, and go to state 133
     '.'   shift, and go to state 134
 
-    $default  reduce using rule 93 (@14)
+    $default  reduce using rule 93 ($@14)
 
     block_start   go to state 38
     block         go to state 179
     bracket_expr  go to state 135
-    @14           go to state 136
+    $@14          go to state 136
 
 
-state 84
+State 84
 
    89 primary_expr: identifier .
   203 identifier: identifier . @46 initializer_braces
@@ -2127,21 +2127,21 @@ state 84
     @46  go to state 160
 
 
-state 85
+State 85
 
   238 if_start: KW_IF wait_expr .
 
     $default  reduce using rule 238 (if_start)
 
 
-state 86
+State 86
 
   241 while_until: KW_WHILE wait_expr .
 
     $default  reduce using rule 241 (while_until)
 
 
-state 87
+State 87
 
   242 switch_statement: KW_SWITCH wait_expr . ':' case_list INDENT switch_statements DEDENT
   243                 | KW_SWITCH wait_expr . ':' switch_statements DEDENT
@@ -2149,9 +2149,9 @@ state 87
     ':'  shift, and go to state 180
 
 
-state 88
+State 88
 
-  174 assignment_expr: assignment_expr . @38 assignment_operator comma_expr @39
+  174 assignment_expr: assignment_expr . $@38 assignment_operator comma_expr $@39
   184 wait_expr: KW_WAIT assignment_expr .
   185          | KW_WAIT assignment_expr . KW_FOR logical_or_expr
 
@@ -2163,14 +2163,14 @@ state 88
     ':'       reduce using rule 184 (wait_expr)
     ')'       reduce using rule 184 (wait_expr)
     ']'       reduce using rule 184 (wait_expr)
-    $default  reduce using rule 172 (@38)
+    $default  reduce using rule 172 ($@38)
 
-    @38  go to state 153
+    $@38  go to state 153
 
 
-state 89
+State 89
 
-   54 declaration: KW_LOCAL @8 . declaration_ref
+   54 declaration: KW_LOCAL $@8 . declaration_ref
 
     ID          shift, and go to state 9
     GID         shift, and go to state 10
@@ -2185,14 +2185,14 @@ state 89
     any_id             go to state 72
 
 
-state 90
+State 90
 
    29 block_start: ':' INDENT .
 
     $default  reduce using rule 29 (block_start)
 
 
-state 91
+State 91
 
    33 block: ':' @5 . statement
 
@@ -2279,9 +2279,9 @@ state 91
     update_statement         go to state 81
 
 
-state 92
+State 92
 
-   86 bracket_expr: '(' @13 . wait_expr ')'
+   86 bracket_expr: '(' $@13 . wait_expr ')'
 
     BOOLEAN        shift, and go to state 2
     CHARACTER      shift, and go to state 3
@@ -2337,203 +2337,203 @@ state 92
     any_id               go to state 72
 
 
-state 93
+State 93
 
   230 any_id: '@' LOR .
 
     $default  reduce using rule 230 (any_id)
 
 
-state 94
+State 94
 
   229 any_id: '@' LAND .
 
     $default  reduce using rule 229 (any_id)
 
 
-state 95
+State 95
 
   231 any_id: '@' LNOT .
 
     $default  reduce using rule 231 (any_id)
 
 
-state 96
+State 96
 
   232 any_id: '@' SCOPE .
 
     $default  reduce using rule 232 (any_id)
 
 
-state 97
+State 97
 
   209 any_id: '@' KW_UPDATE .
 
     $default  reduce using rule 209 (any_id)
 
 
-state 98
+State 98
 
   210 any_id: '@' KW_DECLARE .
 
     $default  reduce using rule 210 (any_id)
 
 
-state 99
+State 99
 
   211 any_id: '@' KW_DEFINE .
 
     $default  reduce using rule 211 (any_id)
 
 
-state 100
+State 100
 
   212 any_id: '@' KW_DESTRUCT .
 
     $default  reduce using rule 212 (any_id)
 
 
-state 101
+State 101
 
   214 any_id: '@' KW_ON .
 
     $default  reduce using rule 214 (any_id)
 
 
-state 102
+State 102
 
   208 any_id: '@' KW_SCOPE .
 
     $default  reduce using rule 208 (any_id)
 
 
-state 103
+State 103
 
   215 any_id: '@' KW_SELF .
 
     $default  reduce using rule 215 (any_id)
 
 
-state 104
+State 104
 
   216 any_id: '@' KW_SYNCHRONIZED .
 
     $default  reduce using rule 216 (any_id)
 
 
-state 105
+State 105
 
   217 any_id: '@' KW_IF .
 
     $default  reduce using rule 217 (any_id)
 
 
-state 106
+State 106
 
   218 any_id: '@' KW_ELSE .
 
     $default  reduce using rule 218 (any_id)
 
 
-state 107
+State 107
 
   219 any_id: '@' KW_WHILE .
 
     $default  reduce using rule 219 (any_id)
 
 
-state 108
+State 108
 
   220 any_id: '@' KW_SWITCH .
 
     $default  reduce using rule 220 (any_id)
 
 
-state 109
+State 109
 
   221 any_id: '@' KW_CASE .
 
     $default  reduce using rule 221 (any_id)
 
 
-state 110
+State 110
 
   222 any_id: '@' KW_DEFAULT .
 
     $default  reduce using rule 222 (any_id)
 
 
-state 111
+State 111
 
   223 any_id: '@' KW_BREAK .
 
     $default  reduce using rule 223 (any_id)
 
 
-state 112
+State 112
 
   224 any_id: '@' KW_FOR .
 
     $default  reduce using rule 224 (any_id)
 
 
-state 113
+State 113
 
   213 any_id: '@' KW_WAIT .
 
     $default  reduce using rule 213 (any_id)
 
 
-state 114
+State 114
 
   225 any_id: '@' KW_TRY .
 
     $default  reduce using rule 225 (any_id)
 
 
-state 115
+State 115
 
   226 any_id: '@' KW_CATCH .
 
     $default  reduce using rule 226 (any_id)
 
 
-state 116
+State 116
 
   227 any_id: '@' KW_IMPORT .
 
     $default  reduce using rule 227 (any_id)
 
 
-state 117
+State 117
 
   228 any_id: '@' KW_LOCAL .
 
     $default  reduce using rule 228 (any_id)
 
 
-state 118
+State 118
 
    91 iter_expr: '*' iter_expr .
 
     $default  reduce using rule 91 (iter_expr)
 
 
-state 119
+State 119
 
     0 $accept: code $end .
 
     $default  accept
 
 
-state 120
+State 120
 
     4 statements: statements statement .
 
     $default  reduce using rule 4 (statements)
 
 
-state 121
+State 121
 
    12 statement: scope_statement @1 . scope
 
@@ -2543,10 +2543,10 @@ state 121
     scope  go to state 188
 
 
-state 122
+State 122
 
     4 statements: statements . statement
-   31 block: block_start statements . @4 DEDENT
+   31 block: block_start statements . $@4 DEDENT
 
     BOOLEAN        shift, and go to state 2
     CHARACTER      shift, and go to state 3
@@ -2582,13 +2582,13 @@ state 122
     '!'            shift, and go to state 33
 
     '{'       reduce using rule 164 (@37)
-    $default  reduce using rule 30 (@4)
+    $default  reduce using rule 30 ($@4)
 
     statement                go to state 120
     scope_statement          go to state 37
     block_start              go to state 38
     block                    go to state 39
-    @4                       go to state 189
+    $@4                      go to state 189
     function_implementation  go to state 40
     function_declaration     go to state 41
     package_declaration      go to state 42
@@ -2633,14 +2633,14 @@ state 122
     update_statement         go to state 81
 
 
-state 123
+State 123
 
    13 statement: function_declaration ENDL .
 
     $default  reduce using rule 13 (statement)
 
 
-state 124
+State 124
 
    35 function_implementation: function_declaration @6 . block
 
@@ -2650,89 +2650,89 @@ state 124
     block        go to state 190
 
 
-state 125
+State 125
 
    37 function_implementation: function_declaration @7 . '=' expr ENDL
 
     '='  shift, and go to state 191
 
 
-state 126
+State 126
 
    18 statement: package_declaration ENDL .
 
     $default  reduce using rule 18 (statement)
 
 
-state 127
+State 127
 
    10 statement: declaration ENDL .
 
     $default  reduce using rule 10 (statement)
 
 
-state 128
+State 128
 
-  191 declaration_expr: declaration ':' . @41 initializer
+  191 declaration_expr: declaration ':' . $@41 initializer
   197                 | declaration ':' .
 
     SCOPE     reduce using rule 197 (declaration_expr)
     SCOPEPRE  reduce using rule 197 (declaration_expr)
     ENDL      reduce using rule 197 (declaration_expr)
     ']'       reduce using rule 197 (declaration_expr)
-    $default  reduce using rule 190 (@41)
+    $default  reduce using rule 190 ($@41)
 
-    @41  go to state 192
-
-
-state 129
-
-  199 declaration_expr: declaration '=' . @45 comma_expr
-
-    $default  reduce using rule 198 (@45)
-
-    @45  go to state 193
+    $@41  go to state 192
 
 
-state 130
+State 129
 
-  194 declaration_expr: declaration '{' . @42 initializer @43 '}'
-  196                 | declaration '{' . @44 '}'
+  199 declaration_expr: declaration '=' . $@45 comma_expr
 
-    '}'       reduce using rule 195 (@44)
-    $default  reduce using rule 192 (@42)
+    $default  reduce using rule 198 ($@45)
 
-    @42  go to state 194
-    @44  go to state 195
+    $@45  go to state 193
 
 
-state 131
+State 130
+
+  194 declaration_expr: declaration '{' . $@42 initializer $@43 '}'
+  196                 | declaration '{' . $@44 '}'
+
+    '}'       reduce using rule 195 ($@44)
+    $default  reduce using rule 192 ($@42)
+
+    $@42  go to state 194
+    $@44  go to state 195
+
+
+State 131
 
    99 postfix_expr: postfix_expr INC .
 
     $default  reduce using rule 99 (postfix_expr)
 
 
-state 132
+State 132
 
   100 postfix_expr: postfix_expr DEC .
 
     $default  reduce using rule 100 (postfix_expr)
 
 
-state 133
+State 133
 
-   86 bracket_expr: '(' . @13 wait_expr ')'
+   86 bracket_expr: '(' . $@13 wait_expr ')'
    95 postfix_expr: postfix_expr '(' . ')'
 
     ')'  shift, and go to state 196
 
-    $default  reduce using rule 85 (@13)
+    $default  reduce using rule 85 ($@13)
 
-    @13  go to state 92
+    $@13  go to state 92
 
 
-state 134
+State 134
 
    97 postfix_expr: postfix_expr '.' . any_id
    98             | postfix_expr '.' . KW_DESTRUCT
@@ -2746,23 +2746,23 @@ state 134
     any_id  go to state 198
 
 
-state 135
+State 135
 
    96 postfix_expr: postfix_expr bracket_expr .
 
     $default  reduce using rule 96 (postfix_expr)
 
 
-state 136
+State 136
 
-   94 postfix_expr: postfix_expr @14 . '[' expr ']'
+   94 postfix_expr: postfix_expr $@14 . '[' expr ']'
 
     '['  shift, and go to state 199
 
 
-state 137
+State 137
 
-   94 postfix_expr: postfix_expr . @14 '[' expr ']'
+   94 postfix_expr: postfix_expr . $@14 '[' expr ']'
    95             | postfix_expr . '(' ')'
    96             | postfix_expr . bracket_expr
    97             | postfix_expr . '.' any_id
@@ -2776,16 +2776,16 @@ state 137
     '('  shift, and go to state 133
     '.'  shift, and go to state 134
 
-    '['       reduce using rule 93 (@14)
+    '['       reduce using rule 93 ($@14)
     $default  reduce using rule 102 (unary_expr)
 
     bracket_expr  go to state 135
-    @14           go to state 136
+    $@14          go to state 136
 
 
-state 138
+State 138
 
-  113 multiplicative_expr: multiplicative_expr @15 . multiplicative_operator unary_expr @16
+  113 multiplicative_expr: multiplicative_expr $@15 . multiplicative_operator unary_expr $@16
 
     '*'  shift, and go to state 200
     '/'  shift, and go to state 201
@@ -2794,9 +2794,9 @@ state 138
     multiplicative_operator  go to state 203
 
 
-state 139
+State 139
 
-  120 additive_expr: additive_expr @17 . additive_operator multiplicative_expr @18
+  120 additive_expr: additive_expr $@17 . additive_operator multiplicative_expr $@18
 
     '-'  shift, and go to state 204
     '+'  shift, and go to state 205
@@ -2804,44 +2804,44 @@ state 139
     additive_operator  go to state 206
 
 
-state 140
+State 140
 
-  126 shift_expr: shift_expr @19 . SHIFT_LEFT additive_expr @20
+  126 shift_expr: shift_expr $@19 . SHIFT_LEFT additive_expr $@20
 
     SHIFT_LEFT  shift, and go to state 207
 
 
-state 141
+State 141
 
-  129 shift_expr: shift_expr @21 . SHIFT_RIGHT additive_expr @22
+  129 shift_expr: shift_expr $@21 . SHIFT_RIGHT additive_expr $@22
 
     SHIFT_RIGHT  shift, and go to state 208
 
 
-state 142
+State 142
 
-  133 and_expr: and_expr @23 . '&' shift_expr @24
+  133 and_expr: and_expr $@23 . '&' shift_expr $@24
 
     '&'  shift, and go to state 209
 
 
-state 143
+State 143
 
-  137 xor_expr: xor_expr @25 . '^' and_expr @26
+  137 xor_expr: xor_expr $@25 . '^' and_expr $@26
 
     '^'  shift, and go to state 210
 
 
-state 144
+State 144
 
-  141 or_expr: or_expr @27 . '|' xor_expr @28
+  141 or_expr: or_expr $@27 . '|' xor_expr $@28
 
     '|'  shift, and go to state 211
 
 
-state 145
+State 145
 
-  145 boolean_expr: boolean_expr @29 . boolean_operator or_expr @30
+  145 boolean_expr: boolean_expr $@29 . boolean_operator or_expr $@30
 
     LEQ  shift, and go to state 212
     GEQ  shift, and go to state 213
@@ -2851,9 +2851,9 @@ state 145
     boolean_operator  go to state 216
 
 
-state 146
+State 146
 
-  153 equality_expr: equality_expr @31 . equality_operator boolean_expr @32
+  153 equality_expr: equality_expr $@31 . equality_operator boolean_expr $@32
 
     EQ   shift, and go to state 217
     NEQ  shift, and go to state 218
@@ -2861,21 +2861,21 @@ state 146
     equality_operator  go to state 219
 
 
-state 147
+State 147
 
-  159 logical_and_expr: logical_and_expr @33 . LAND equality_expr @34
+  159 logical_and_expr: logical_and_expr $@33 . LAND equality_expr $@34
 
     LAND  shift, and go to state 220
 
 
-state 148
+State 148
 
-  163 logical_or_expr: logical_or_expr @35 . LOR logical_and_expr @36
+  163 logical_or_expr: logical_or_expr $@35 . LOR logical_and_expr $@36
 
     LOR  shift, and go to state 221
 
 
-state 149
+State 149
 
   168 conditional_expr: initializer_expr '?' . conditional_expr ':' conditional_expr
 
@@ -2929,26 +2929,26 @@ state 149
     any_id               go to state 72
 
 
-state 150
+State 150
 
-   68 initializer_braces: '{' . @9 initializer @10 '}'
+   68 initializer_braces: '{' . $@9 initializer $@10 '}'
    69                   | '{' . '}'
 
     '}'  shift, and go to state 223
 
-    $default  reduce using rule 66 (@9)
+    $default  reduce using rule 66 ($@9)
 
-    @9  go to state 224
+    $@9  go to state 224
 
 
-state 151
+State 151
 
   165 initializer_expr: @37 initializer_braces .
 
     $default  reduce using rule 165 (initializer_expr)
 
 
-state 152
+State 152
 
   170 comma_expr: comma_expr ',' . conditional_expr
 
@@ -3002,9 +3002,9 @@ state 152
     any_id               go to state 72
 
 
-state 153
+State 153
 
-  174 assignment_expr: assignment_expr @38 . assignment_operator comma_expr @39
+  174 assignment_expr: assignment_expr $@38 . assignment_operator comma_expr $@39
 
     MUL_ASSIGN     shift, and go to state 226
     DIV_ASSIGN     shift, and go to state 227
@@ -3018,28 +3018,28 @@ state 153
     assignment_operator  go to state 234
 
 
-state 154
+State 154
 
-  188 declaration_expr: wait_expr ':' . @40 initializer
+  188 declaration_expr: wait_expr ':' . $@40 initializer
   189                 | wait_expr ':' .
 
     SCOPE     reduce using rule 189 (declaration_expr)
     SCOPEPRE  reduce using rule 189 (declaration_expr)
     ENDL      reduce using rule 189 (declaration_expr)
     ']'       reduce using rule 189 (declaration_expr)
-    $default  reduce using rule 187 (@40)
+    $default  reduce using rule 187 ($@40)
 
-    @40  go to state 235
+    $@40  go to state 235
 
 
-state 155
+State 155
 
     6 statement: expr ENDL .
 
     $default  reduce using rule 6 (statement)
 
 
-state 156
+State 156
 
    40 function_declaration: identifier GID . function_argumentList
 
@@ -3048,7 +3048,7 @@ state 156
     function_argumentList  go to state 237
 
 
-state 157
+State 157
 
    41 function_declaration: identifier '&' . any_id function_argumentList
    42                     | identifier '&' . any_id function_argumentList identifier_string
@@ -3063,7 +3063,7 @@ state 157
     any_id  go to state 239
 
 
-state 158
+State 158
 
    52 declaration: identifier declaration_list .
    58 declaration_list: declaration_list . ',' declaration_id
@@ -3073,14 +3073,14 @@ state 158
     $default  reduce using rule 52 (declaration)
 
 
-state 159
+State 159
 
    57 declaration_list: declaration_id .
 
     $default  reduce using rule 57 (declaration_list)
 
 
-state 160
+State 160
 
   203 identifier: identifier @46 . initializer_braces
 
@@ -3089,7 +3089,7 @@ state 160
     initializer_braces  go to state 241
 
 
-state 161
+State 161
 
    38 function_declaration: identifier any_id . function_argumentList
    39                     | identifier any_id . function_argumentList identifier_string
@@ -3102,7 +3102,7 @@ state 161
     function_argumentList  go to state 242
 
 
-state 162
+State 162
 
   235 if_statement: if_start block .
   236             | if_start block . KW_ELSE block
@@ -3114,84 +3114,84 @@ state 162
     $default  reduce using rule 235 (if_statement)
 
 
-state 163
+State 163
 
   240 while_statement: while_until ENDL .
 
     $default  reduce using rule 240 (while_statement)
 
 
-state 164
+State 164
 
   239 while_statement: while_until block .
 
     $default  reduce using rule 239 (while_statement)
 
 
-state 165
+State 165
 
   254 observer_statement: observer_declaration ENDL .
 
     $default  reduce using rule 254 (observer_statement)
 
 
-state 166
+State 166
 
   253 observer_statement: observer_declaration block .
 
     $default  reduce using rule 253 (observer_statement)
 
 
-state 167
+State 167
 
   262 event_baseflag: KW_UPDATE .
 
     $default  reduce using rule 262 (event_baseflag)
 
 
-state 168
+State 168
 
   263 event_baseflag: KW_DECLARE .
 
     $default  reduce using rule 263 (event_baseflag)
 
 
-state 169
+State 169
 
   264 event_baseflag: KW_DEFINE .
 
     $default  reduce using rule 264 (event_baseflag)
 
 
-state 170
+State 170
 
   265 event_baseflag: KW_DESTRUCT .
 
     $default  reduce using rule 265 (event_baseflag)
 
 
-state 171
+State 171
 
   267 event_childflag: KW_SCOPE .
 
     $default  reduce using rule 267 (event_childflag)
 
 
-state 172
+State 172
 
   266 event_childflag: KW_SELF .
 
     $default  reduce using rule 266 (event_childflag)
 
 
-state 173
+State 173
 
   268 event_childflag: KW_SYNCHRONIZED .
 
     $default  reduce using rule 268 (event_childflag)
 
 
-state 174
+State 174
 
   255 observer_declaration: observer_dispatch event_mask . assignment_expr
   258 event_mask: event_mask . '|' event_flag
@@ -3249,14 +3249,14 @@ state 174
     any_id               go to state 72
 
 
-state 175
+State 175
 
   257 event_mask: event_flag .
 
     $default  reduce using rule 257 (event_mask)
 
 
-state 176
+State 176
 
   259 event_flag: event_baseflag .
   261           | event_baseflag . event_childflag
@@ -3270,28 +3270,28 @@ state 176
     event_childflag  go to state 246
 
 
-state 177
+State 177
 
   260 event_flag: event_childflag .
 
     $default  reduce using rule 260 (event_flag)
 
 
-state 178
+State 178
 
   269 update_statement: KW_UPDATE postfix_expr ENDL .
 
     $default  reduce using rule 269 (update_statement)
 
 
-state 179
+State 179
 
   270 update_statement: KW_UPDATE postfix_expr block .
 
     $default  reduce using rule 270 (update_statement)
 
 
-state 180
+State 180
 
   242 switch_statement: KW_SWITCH wait_expr ':' . case_list INDENT switch_statements DEDENT
   243                 | KW_SWITCH wait_expr ':' . switch_statements DEDENT
@@ -3386,7 +3386,7 @@ state 180
     update_statement         go to state 81
 
 
-state 181
+State 181
 
   185 wait_expr: KW_WAIT assignment_expr KW_FOR . logical_or_expr
 
@@ -3435,14 +3435,14 @@ state 181
     any_id               go to state 72
 
 
-state 182
+State 182
 
-   54 declaration: KW_LOCAL @8 declaration_ref .
+   54 declaration: KW_LOCAL $@8 declaration_ref .
 
     $default  reduce using rule 54 (declaration)
 
 
-state 183
+State 183
 
    55 declaration_ref: identifier . declaration_list
    56                | identifier . '&' declaration_list
@@ -3462,21 +3462,21 @@ state 183
     any_id            go to state 258
 
 
-state 184
+State 184
 
    33 block: ':' @5 statement .
 
     $default  reduce using rule 33 (block)
 
 
-state 185
+State 185
 
-   86 bracket_expr: '(' @13 wait_expr . ')'
+   86 bracket_expr: '(' $@13 wait_expr . ')'
 
     ')'  shift, and go to state 259
 
 
-state 186
+State 186
 
    21 scope: SCOPE . INDENT statements DEDENT
    22      | SCOPE . statement
@@ -3565,40 +3565,40 @@ state 186
     update_statement         go to state 81
 
 
-state 187
+State 187
 
-   24 scope: SCOPEPRE . @2 INDENT statements DEDENT
-   26      | SCOPEPRE . @3 statement
+   24 scope: SCOPEPRE . $@2 INDENT statements DEDENT
+   26      | SCOPEPRE . $@3 statement
 
-    INDENT    reduce using rule 23 (@2)
-    $default  reduce using rule 25 (@3)
+    INDENT    reduce using rule 23 ($@2)
+    $default  reduce using rule 25 ($@3)
 
-    @2  go to state 262
-    @3  go to state 263
+    $@2  go to state 262
+    $@3  go to state 263
 
 
-state 188
+State 188
 
    12 statement: scope_statement @1 scope .
 
     $default  reduce using rule 12 (statement)
 
 
-state 189
+State 189
 
-   31 block: block_start statements @4 . DEDENT
+   31 block: block_start statements $@4 . DEDENT
 
     DEDENT  shift, and go to state 264
 
 
-state 190
+State 190
 
    35 function_implementation: function_declaration @6 block .
 
     $default  reduce using rule 35 (function_implementation)
 
 
-state 191
+State 191
 
    37 function_implementation: function_declaration @7 '=' . expr ENDL
 
@@ -3660,9 +3660,9 @@ state 191
     any_id               go to state 72
 
 
-state 192
+State 192
 
-  191 declaration_expr: declaration ':' @41 . initializer
+  191 declaration_expr: declaration ':' $@41 . initializer
 
     BOOLEAN        shift, and go to state 2
     CHARACTER      shift, and go to state 3
@@ -3717,9 +3717,9 @@ state 192
     any_id               go to state 278
 
 
-state 193
+State 193
 
-  199 declaration_expr: declaration '=' @45 . comma_expr
+  199 declaration_expr: declaration '=' $@45 . comma_expr
 
     BOOLEAN        shift, and go to state 2
     CHARACTER      shift, and go to state 3
@@ -3772,9 +3772,9 @@ state 193
     any_id               go to state 72
 
 
-state 194
+State 194
 
-  194 declaration_expr: declaration '{' @42 . initializer @43 '}'
+  194 declaration_expr: declaration '{' $@42 . initializer $@43 '}'
 
     BOOLEAN        shift, and go to state 2
     CHARACTER      shift, and go to state 3
@@ -3829,37 +3829,37 @@ state 194
     any_id               go to state 278
 
 
-state 195
+State 195
 
-  196 declaration_expr: declaration '{' @44 . '}'
+  196 declaration_expr: declaration '{' $@44 . '}'
 
     '}'  shift, and go to state 281
 
 
-state 196
+State 196
 
    95 postfix_expr: postfix_expr '(' ')' .
 
     $default  reduce using rule 95 (postfix_expr)
 
 
-state 197
+State 197
 
    98 postfix_expr: postfix_expr '.' KW_DESTRUCT .
 
     $default  reduce using rule 98 (postfix_expr)
 
 
-state 198
+State 198
 
    97 postfix_expr: postfix_expr '.' any_id .
 
     $default  reduce using rule 97 (postfix_expr)
 
 
-state 199
+State 199
 
-   94 postfix_expr: postfix_expr @14 '[' . expr ']'
+   94 postfix_expr: postfix_expr $@14 '[' . expr ']'
 
     BOOLEAN        shift, and go to state 2
     CHARACTER      shift, and go to state 3
@@ -3919,30 +3919,30 @@ state 199
     any_id               go to state 72
 
 
-state 200
+State 200
 
   114 multiplicative_operator: '*' .
 
     $default  reduce using rule 114 (multiplicative_operator)
 
 
-state 201
+State 201
 
   115 multiplicative_operator: '/' .
 
     $default  reduce using rule 115 (multiplicative_operator)
 
 
-state 202
+State 202
 
   116 multiplicative_operator: '%' .
 
     $default  reduce using rule 116 (multiplicative_operator)
 
 
-state 203
+State 203
 
-  113 multiplicative_expr: multiplicative_expr @15 multiplicative_operator . unary_expr @16
+  113 multiplicative_expr: multiplicative_expr $@15 multiplicative_operator . unary_expr $@16
 
     BOOLEAN        shift, and go to state 2
     CHARACTER      shift, and go to state 3
@@ -3979,23 +3979,23 @@ state 203
     any_id             go to state 72
 
 
-state 204
+State 204
 
   122 additive_operator: '-' .
 
     $default  reduce using rule 122 (additive_operator)
 
 
-state 205
+State 205
 
   121 additive_operator: '+' .
 
     $default  reduce using rule 121 (additive_operator)
 
 
-state 206
+State 206
 
-  120 additive_expr: additive_expr @17 additive_operator . multiplicative_expr @18
+  120 additive_expr: additive_expr $@17 additive_operator . multiplicative_expr $@18
 
     BOOLEAN        shift, and go to state 2
     CHARACTER      shift, and go to state 3
@@ -4033,9 +4033,9 @@ state 206
     any_id               go to state 72
 
 
-state 207
+State 207
 
-  126 shift_expr: shift_expr @19 SHIFT_LEFT . additive_expr @20
+  126 shift_expr: shift_expr $@19 SHIFT_LEFT . additive_expr $@20
 
     BOOLEAN        shift, and go to state 2
     CHARACTER      shift, and go to state 3
@@ -4074,9 +4074,9 @@ state 207
     any_id               go to state 72
 
 
-state 208
+State 208
 
-  129 shift_expr: shift_expr @21 SHIFT_RIGHT . additive_expr @22
+  129 shift_expr: shift_expr $@21 SHIFT_RIGHT . additive_expr $@22
 
     BOOLEAN        shift, and go to state 2
     CHARACTER      shift, and go to state 3
@@ -4115,9 +4115,9 @@ state 208
     any_id               go to state 72
 
 
-state 209
+State 209
 
-  133 and_expr: and_expr @23 '&' . shift_expr @24
+  133 and_expr: and_expr $@23 '&' . shift_expr $@24
 
     BOOLEAN        shift, and go to state 2
     CHARACTER      shift, and go to state 3
@@ -4157,9 +4157,9 @@ state 209
     any_id               go to state 72
 
 
-state 210
+State 210
 
-  137 xor_expr: xor_expr @25 '^' . and_expr @26
+  137 xor_expr: xor_expr $@25 '^' . and_expr $@26
 
     BOOLEAN        shift, and go to state 2
     CHARACTER      shift, and go to state 3
@@ -4200,9 +4200,9 @@ state 210
     any_id               go to state 72
 
 
-state 211
+State 211
 
-  141 or_expr: or_expr @27 '|' . xor_expr @28
+  141 or_expr: or_expr $@27 '|' . xor_expr $@28
 
     BOOLEAN        shift, and go to state 2
     CHARACTER      shift, and go to state 3
@@ -4244,37 +4244,37 @@ state 211
     any_id               go to state 72
 
 
-state 212
+State 212
 
   148 boolean_operator: LEQ .
 
     $default  reduce using rule 148 (boolean_operator)
 
 
-state 213
+State 213
 
   149 boolean_operator: GEQ .
 
     $default  reduce using rule 149 (boolean_operator)
 
 
-state 214
+State 214
 
   146 boolean_operator: '<' .
 
     $default  reduce using rule 146 (boolean_operator)
 
 
-state 215
+State 215
 
   147 boolean_operator: '>' .
 
     $default  reduce using rule 147 (boolean_operator)
 
 
-state 216
+State 216
 
-  145 boolean_expr: boolean_expr @29 boolean_operator . or_expr @30
+  145 boolean_expr: boolean_expr $@29 boolean_operator . or_expr $@30
 
     BOOLEAN        shift, and go to state 2
     CHARACTER      shift, and go to state 3
@@ -4317,23 +4317,23 @@ state 216
     any_id               go to state 72
 
 
-state 217
+State 217
 
   154 equality_operator: EQ .
 
     $default  reduce using rule 154 (equality_operator)
 
 
-state 218
+State 218
 
   155 equality_operator: NEQ .
 
     $default  reduce using rule 155 (equality_operator)
 
 
-state 219
+State 219
 
-  153 equality_expr: equality_expr @31 equality_operator . boolean_expr @32
+  153 equality_expr: equality_expr $@31 equality_operator . boolean_expr $@32
 
     BOOLEAN        shift, and go to state 2
     CHARACTER      shift, and go to state 3
@@ -4377,9 +4377,9 @@ state 219
     any_id               go to state 72
 
 
-state 220
+State 220
 
-  159 logical_and_expr: logical_and_expr @33 LAND . equality_expr @34
+  159 logical_and_expr: logical_and_expr $@33 LAND . equality_expr $@34
 
     BOOLEAN        shift, and go to state 2
     CHARACTER      shift, and go to state 3
@@ -4424,9 +4424,9 @@ state 220
     any_id               go to state 72
 
 
-state 221
+State 221
 
-  163 logical_or_expr: logical_or_expr @35 LOR . logical_and_expr @36
+  163 logical_or_expr: logical_or_expr $@35 LOR . logical_and_expr $@36
 
     BOOLEAN        shift, and go to state 2
     CHARACTER      shift, and go to state 3
@@ -4472,23 +4472,23 @@ state 221
     any_id               go to state 72
 
 
-state 222
+State 222
 
   168 conditional_expr: initializer_expr '?' conditional_expr . ':' conditional_expr
 
     ':'  shift, and go to state 294
 
 
-state 223
+State 223
 
    69 initializer_braces: '{' '}' .
 
     $default  reduce using rule 69 (initializer_braces)
 
 
-state 224
+State 224
 
-   68 initializer_braces: '{' @9 . initializer @10 '}'
+   68 initializer_braces: '{' $@9 . initializer $@10 '}'
 
     BOOLEAN        shift, and go to state 2
     CHARACTER      shift, and go to state 3
@@ -4543,72 +4543,72 @@ state 224
     any_id               go to state 278
 
 
-state 225
+State 225
 
   170 comma_expr: comma_expr ',' conditional_expr .
 
     $default  reduce using rule 170 (comma_expr)
 
 
-state 226
+State 226
 
   178 assignment_operator: MUL_ASSIGN .
 
     $default  reduce using rule 178 (assignment_operator)
 
 
-state 227
+State 227
 
   179 assignment_operator: DIV_ASSIGN .
 
     $default  reduce using rule 179 (assignment_operator)
 
 
-state 228
+State 228
 
   176 assignment_operator: ADD_ASSIGN .
 
     $default  reduce using rule 176 (assignment_operator)
 
 
-state 229
+State 229
 
   177 assignment_operator: SUB_ASSIGN .
 
     $default  reduce using rule 177 (assignment_operator)
 
 
-state 230
+State 230
 
   181 assignment_operator: OR_ASSIGN .
 
     $default  reduce using rule 181 (assignment_operator)
 
 
-state 231
+State 231
 
   180 assignment_operator: AND_ASSIGN .
 
     $default  reduce using rule 180 (assignment_operator)
 
 
-state 232
+State 232
 
   182 assignment_operator: UPDATE_ASSIGN .
 
     $default  reduce using rule 182 (assignment_operator)
 
 
-state 233
+State 233
 
   175 assignment_operator: '=' .
 
     $default  reduce using rule 175 (assignment_operator)
 
 
-state 234
+State 234
 
-  174 assignment_expr: assignment_expr @38 assignment_operator . comma_expr @39
+  174 assignment_expr: assignment_expr $@38 assignment_operator . comma_expr $@39
 
     BOOLEAN        shift, and go to state 2
     CHARACTER      shift, and go to state 3
@@ -4661,9 +4661,9 @@ state 234
     any_id               go to state 72
 
 
-state 235
+State 235
 
-  188 declaration_expr: wait_expr ':' @40 . initializer
+  188 declaration_expr: wait_expr ':' $@40 . initializer
 
     BOOLEAN        shift, and go to state 2
     CHARACTER      shift, and go to state 3
@@ -4718,7 +4718,7 @@ state 235
     any_id               go to state 278
 
 
-state 236
+State 236
 
    44 function_argumentList: '(' . ')'
    45                      | '(' . function_arguments ')'
@@ -4739,14 +4739,14 @@ state 236
     any_id              go to state 72
 
 
-state 237
+State 237
 
    40 function_declaration: identifier GID function_argumentList .
 
     $default  reduce using rule 40 (function_declaration)
 
 
-state 238
+State 238
 
    43 function_declaration: identifier '&' GID . function_argumentList
 
@@ -4755,7 +4755,7 @@ state 238
     function_argumentList  go to state 303
 
 
-state 239
+State 239
 
    41 function_declaration: identifier '&' any_id . function_argumentList
    42                     | identifier '&' any_id . function_argumentList identifier_string
@@ -4765,7 +4765,7 @@ state 239
     function_argumentList  go to state 304
 
 
-state 240
+State 240
 
    58 declaration_list: declaration_list ',' . declaration_id
 
@@ -4778,14 +4778,14 @@ state 240
     any_id          go to state 258
 
 
-state 241
+State 241
 
   203 identifier: identifier @46 initializer_braces .
 
     $default  reduce using rule 203 (identifier)
 
 
-state 242
+State 242
 
    38 function_declaration: identifier any_id function_argumentList .
    39                     | identifier any_id function_argumentList . identifier_string
@@ -4802,7 +4802,7 @@ state 242
     any_id             go to state 72
 
 
-state 243
+State 243
 
   236 if_statement: if_start block KW_ELSE . block
   237             | if_start block KW_ELSE . if_statement
@@ -4816,7 +4816,7 @@ state 243
     if_start      go to state 74
 
 
-state 244
+State 244
 
   258 event_mask: event_mask '|' . event_flag
 
@@ -4833,26 +4833,26 @@ state 244
     event_childflag  go to state 177
 
 
-state 245
+State 245
 
-  174 assignment_expr: assignment_expr . @38 assignment_operator comma_expr @39
+  174 assignment_expr: assignment_expr . $@38 assignment_operator comma_expr $@39
   255 observer_declaration: observer_dispatch event_mask assignment_expr .
 
     ENDL      reduce using rule 255 (observer_declaration)
     ':'       reduce using rule 255 (observer_declaration)
-    $default  reduce using rule 172 (@38)
+    $default  reduce using rule 172 ($@38)
 
-    @38  go to state 153
+    $@38  go to state 153
 
 
-state 246
+State 246
 
   261 event_flag: event_baseflag event_childflag .
 
     $default  reduce using rule 261 (event_flag)
 
 
-state 247
+State 247
 
   248 case_statement: DEDENT . case_list INDENT
 
@@ -4863,7 +4863,7 @@ state 247
     case_label  go to state 254
 
 
-state 248
+State 248
 
   251 case_label: KW_CASE . wait_expr ':'
 
@@ -4921,21 +4921,21 @@ state 248
     any_id               go to state 72
 
 
-state 249
+State 249
 
   252 case_label: KW_DEFAULT . ':'
 
     ':'  shift, and go to state 312
 
 
-state 250
+State 250
 
   244 switch_statements: statement .
 
     $default  reduce using rule 244 (switch_statements)
 
 
-state 251
+State 251
 
   243 switch_statement: KW_SWITCH wait_expr ':' switch_statements . DEDENT
   246 switch_statements: switch_statements . statement
@@ -5026,14 +5026,14 @@ state 251
     update_statement         go to state 81
 
 
-state 252
+State 252
 
   245 switch_statements: case_statement .
 
     $default  reduce using rule 245 (switch_statements)
 
 
-state 253
+State 253
 
   242 switch_statement: KW_SWITCH wait_expr ':' case_list . INDENT switch_statements DEDENT
   250 case_list: case_list . case_label
@@ -5045,25 +5045,25 @@ state 253
     case_label  go to state 317
 
 
-state 254
+State 254
 
   249 case_list: case_label .
 
     $default  reduce using rule 249 (case_list)
 
 
-state 255
+State 255
 
-  163 logical_or_expr: logical_or_expr . @35 LOR logical_and_expr @36
+  163 logical_or_expr: logical_or_expr . $@35 LOR logical_and_expr $@36
   185 wait_expr: KW_WAIT assignment_expr KW_FOR logical_or_expr .
 
-    LOR       reduce using rule 161 (@35)
+    LOR       reduce using rule 161 ($@35)
     $default  reduce using rule 185 (wait_expr)
 
-    @35  go to state 148
+    $@35  go to state 148
 
 
-state 256
+State 256
 
    56 declaration_ref: identifier '&' . declaration_list
 
@@ -5077,7 +5077,7 @@ state 256
     any_id            go to state 258
 
 
-state 257
+State 257
 
    55 declaration_ref: identifier declaration_list .
    58 declaration_list: declaration_list . ',' declaration_id
@@ -5087,21 +5087,21 @@ state 257
     $default  reduce using rule 55 (declaration_ref)
 
 
-state 258
+State 258
 
    59 declaration_id: any_id .
 
     $default  reduce using rule 59 (declaration_id)
 
 
-state 259
+State 259
 
-   86 bracket_expr: '(' @13 wait_expr ')' .
+   86 bracket_expr: '(' $@13 wait_expr ')' .
 
     $default  reduce using rule 86 (bracket_expr)
 
 
-state 260
+State 260
 
    21 scope: SCOPE INDENT . statements DEDENT
 
@@ -5190,23 +5190,23 @@ state 260
     update_statement         go to state 81
 
 
-state 261
+State 261
 
    22 scope: SCOPE statement .
 
     $default  reduce using rule 22 (scope)
 
 
-state 262
+State 262
 
-   24 scope: SCOPEPRE @2 . INDENT statements DEDENT
+   24 scope: SCOPEPRE $@2 . INDENT statements DEDENT
 
     INDENT  shift, and go to state 320
 
 
-state 263
+State 263
 
-   26 scope: SCOPEPRE @3 . statement
+   26 scope: SCOPEPRE $@3 . statement
 
     BOOLEAN        shift, and go to state 2
     CHARACTER      shift, and go to state 3
@@ -5291,34 +5291,34 @@ state 263
     update_statement         go to state 81
 
 
-state 264
+State 264
 
-   31 block: block_start statements @4 DEDENT .
+   31 block: block_start statements $@4 DEDENT .
 
     $default  reduce using rule 31 (block)
 
 
-state 265
+State 265
 
-  191 declaration_expr: declaration . ':' @41 initializer
-  194                 | declaration . '{' @42 initializer @43 '}'
-  196                 | declaration . '{' @44 '}'
+  191 declaration_expr: declaration . ':' $@41 initializer
+  194                 | declaration . '{' $@42 initializer $@43 '}'
+  196                 | declaration . '{' $@44 '}'
   197                 | declaration . ':'
-  199                 | declaration . '=' @45 comma_expr
+  199                 | declaration . '=' $@45 comma_expr
 
     ':'  shift, and go to state 128
     '='  shift, and go to state 129
     '{'  shift, and go to state 130
 
 
-state 266
+State 266
 
    37 function_implementation: function_declaration @7 '=' expr . ENDL
 
     ENDL  shift, and go to state 322
 
 
-state 267
+State 267
 
    52 declaration: identifier . declaration_list
    89 primary_expr: identifier .
@@ -5338,9 +5338,9 @@ state 267
     any_id            go to state 258
 
 
-state 268
+State 268
 
-   76 init_key: '@' . @12 initializer_braces
+   76 init_key: '@' . $@12 initializer_braces
   208 any_id: '@' . KW_SCOPE
   209       | '@' . KW_UPDATE
   210       | '@' . KW_DECLARE
@@ -5393,43 +5393,43 @@ state 268
     KW_IMPORT        shift, and go to state 116
     KW_LOCAL         shift, and go to state 117
 
-    $default  reduce using rule 75 (@12)
+    $default  reduce using rule 75 ($@12)
 
-    @12  go to state 323
+    $@12  go to state 323
 
 
-state 269
+State 269
 
    61 initializer: initializer . ',' init_list_value
-  191 declaration_expr: declaration ':' @41 initializer .
+  191 declaration_expr: declaration ':' $@41 initializer .
 
     ','  shift, and go to state 324
 
     $default  reduce using rule 191 (declaration_expr)
 
 
-state 270
+State 270
 
    60 initializer: init_list_value .
 
     $default  reduce using rule 60 (initializer)
 
 
-state 271
+State 271
 
    62 init_list_value: init_value .
 
     $default  reduce using rule 62 (init_list_value)
 
 
-state 272
+State 272
 
    64 init_value: initializer_braces .
 
     $default  reduce using rule 64 (init_value)
 
 
-state 273
+State 273
 
    63 init_list_value: init_list_colon .
    71 init_list_colon: init_list_colon . init_colon
@@ -5454,21 +5454,21 @@ state 273
     any_id        go to state 327
 
 
-state 274
+State 274
 
    70 init_list_colon: init_colon .
 
     $default  reduce using rule 70 (init_list_colon)
 
 
-state 275
+State 275
 
    74 init_colon: init_key . '=' init_value
 
     '='  shift, and go to state 328
 
 
-state 276
+State 276
 
    77 init_key: literal_expr .
    88 primary_expr: literal_expr .
@@ -5477,20 +5477,20 @@ state 276
     $default  reduce using rule 88 (primary_expr)
 
 
-state 277
+State 277
 
    65 init_value: logical_or_expr .
-  163 logical_or_expr: logical_or_expr . @35 LOR logical_and_expr @36
+  163 logical_or_expr: logical_or_expr . $@35 LOR logical_and_expr $@36
 
-    LOR       reduce using rule 161 (@35)
+    LOR       reduce using rule 161 ($@35)
     $default  reduce using rule 65 (init_value)
 
-    @35  go to state 148
+    $@35  go to state 148
 
 
-state 278
+State 278
 
-   73 init_colon: any_id . '=' @11 init_value
+   73 init_colon: any_id . '=' $@11 init_value
   206 identifier_string: any_id .
 
     '='  shift, and go to state 329
@@ -5498,183 +5498,183 @@ state 278
     $default  reduce using rule 206 (identifier_string)
 
 
-state 279
+State 279
 
   170 comma_expr: comma_expr . ',' conditional_expr
-  199 declaration_expr: declaration '=' @45 comma_expr .
+  199 declaration_expr: declaration '=' $@45 comma_expr .
 
     ','  shift, and go to state 152
 
     $default  reduce using rule 199 (declaration_expr)
 
 
-state 280
+State 280
 
    61 initializer: initializer . ',' init_list_value
-  194 declaration_expr: declaration '{' @42 initializer . @43 '}'
+  194 declaration_expr: declaration '{' $@42 initializer . $@43 '}'
 
     ','  shift, and go to state 324
 
-    $default  reduce using rule 193 (@43)
+    $default  reduce using rule 193 ($@43)
 
-    @43  go to state 330
+    $@43  go to state 330
 
 
-state 281
+State 281
 
-  196 declaration_expr: declaration '{' @44 '}' .
+  196 declaration_expr: declaration '{' $@44 '}' .
 
     $default  reduce using rule 196 (declaration_expr)
 
 
-state 282
+State 282
 
-   94 postfix_expr: postfix_expr @14 '[' expr . ']'
+   94 postfix_expr: postfix_expr $@14 '[' expr . ']'
 
     ']'  shift, and go to state 331
 
 
-state 283
+State 283
 
-  113 multiplicative_expr: multiplicative_expr @15 multiplicative_operator unary_expr . @16
+  113 multiplicative_expr: multiplicative_expr $@15 multiplicative_operator unary_expr . $@16
 
-    $default  reduce using rule 112 (@16)
+    $default  reduce using rule 112 ($@16)
 
-    @16  go to state 332
-
-
-state 284
-
-  113 multiplicative_expr: multiplicative_expr . @15 multiplicative_operator unary_expr @16
-  120 additive_expr: additive_expr @17 additive_operator multiplicative_expr . @18
-
-    '*'       reduce using rule 111 (@15)
-    '/'       reduce using rule 111 (@15)
-    '%'       reduce using rule 111 (@15)
-    $default  reduce using rule 119 (@18)
-
-    @15  go to state 138
-    @18  go to state 333
+    $@16  go to state 332
 
 
-state 285
+State 284
 
-  120 additive_expr: additive_expr . @17 additive_operator multiplicative_expr @18
-  126 shift_expr: shift_expr @19 SHIFT_LEFT additive_expr . @20
+  113 multiplicative_expr: multiplicative_expr . $@15 multiplicative_operator unary_expr $@16
+  120 additive_expr: additive_expr $@17 additive_operator multiplicative_expr . $@18
 
-    '-'       reduce using rule 118 (@17)
-    '+'       reduce using rule 118 (@17)
-    $default  reduce using rule 125 (@20)
+    '*'       reduce using rule 111 ($@15)
+    '/'       reduce using rule 111 ($@15)
+    '%'       reduce using rule 111 ($@15)
+    $default  reduce using rule 119 ($@18)
 
-    @17  go to state 139
-    @20  go to state 334
-
-
-state 286
-
-  120 additive_expr: additive_expr . @17 additive_operator multiplicative_expr @18
-  129 shift_expr: shift_expr @21 SHIFT_RIGHT additive_expr . @22
-
-    '-'       reduce using rule 118 (@17)
-    '+'       reduce using rule 118 (@17)
-    $default  reduce using rule 128 (@22)
-
-    @17  go to state 139
-    @22  go to state 335
+    $@15  go to state 138
+    $@18  go to state 333
 
 
-state 287
+State 285
 
-  126 shift_expr: shift_expr . @19 SHIFT_LEFT additive_expr @20
-  129           | shift_expr . @21 SHIFT_RIGHT additive_expr @22
-  133 and_expr: and_expr @23 '&' shift_expr . @24
+  120 additive_expr: additive_expr . $@17 additive_operator multiplicative_expr $@18
+  126 shift_expr: shift_expr $@19 SHIFT_LEFT additive_expr . $@20
 
-    SHIFT_LEFT   reduce using rule 124 (@19)
-    SHIFT_RIGHT  reduce using rule 127 (@21)
-    $default     reduce using rule 132 (@24)
+    '-'       reduce using rule 118 ($@17)
+    '+'       reduce using rule 118 ($@17)
+    $default  reduce using rule 125 ($@20)
 
-    @19  go to state 140
-    @21  go to state 141
-    @24  go to state 336
+    $@17  go to state 139
+    $@20  go to state 334
 
 
-state 288
+State 286
 
-  133 and_expr: and_expr . @23 '&' shift_expr @24
-  137 xor_expr: xor_expr @25 '^' and_expr . @26
+  120 additive_expr: additive_expr . $@17 additive_operator multiplicative_expr $@18
+  129 shift_expr: shift_expr $@21 SHIFT_RIGHT additive_expr . $@22
 
-    '&'       reduce using rule 131 (@23)
-    $default  reduce using rule 136 (@26)
+    '-'       reduce using rule 118 ($@17)
+    '+'       reduce using rule 118 ($@17)
+    $default  reduce using rule 128 ($@22)
 
-    @23  go to state 142
-    @26  go to state 337
-
-
-state 289
-
-  137 xor_expr: xor_expr . @25 '^' and_expr @26
-  141 or_expr: or_expr @27 '|' xor_expr . @28
-
-    '^'       reduce using rule 135 (@25)
-    $default  reduce using rule 140 (@28)
-
-    @25  go to state 143
-    @28  go to state 338
+    $@17  go to state 139
+    $@22  go to state 335
 
 
-state 290
+State 287
 
-  141 or_expr: or_expr . @27 '|' xor_expr @28
-  145 boolean_expr: boolean_expr @29 boolean_operator or_expr . @30
+  126 shift_expr: shift_expr . $@19 SHIFT_LEFT additive_expr $@20
+  129           | shift_expr . $@21 SHIFT_RIGHT additive_expr $@22
+  133 and_expr: and_expr $@23 '&' shift_expr . $@24
 
-    '|'       reduce using rule 139 (@27)
-    $default  reduce using rule 144 (@30)
+    SHIFT_LEFT   reduce using rule 124 ($@19)
+    SHIFT_RIGHT  reduce using rule 127 ($@21)
+    $default     reduce using rule 132 ($@24)
 
-    @27  go to state 144
-    @30  go to state 339
-
-
-state 291
-
-  145 boolean_expr: boolean_expr . @29 boolean_operator or_expr @30
-  153 equality_expr: equality_expr @31 equality_operator boolean_expr . @32
-
-    LEQ       reduce using rule 143 (@29)
-    GEQ       reduce using rule 143 (@29)
-    '<'       reduce using rule 143 (@29)
-    '>'       reduce using rule 143 (@29)
-    $default  reduce using rule 152 (@32)
-
-    @29  go to state 145
-    @32  go to state 340
+    $@19  go to state 140
+    $@21  go to state 141
+    $@24  go to state 336
 
 
-state 292
+State 288
 
-  153 equality_expr: equality_expr . @31 equality_operator boolean_expr @32
-  159 logical_and_expr: logical_and_expr @33 LAND equality_expr . @34
+  133 and_expr: and_expr . $@23 '&' shift_expr $@24
+  137 xor_expr: xor_expr $@25 '^' and_expr . $@26
 
-    EQ        reduce using rule 151 (@31)
-    NEQ       reduce using rule 151 (@31)
-    $default  reduce using rule 158 (@34)
+    '&'       reduce using rule 131 ($@23)
+    $default  reduce using rule 136 ($@26)
 
-    @31  go to state 146
-    @34  go to state 341
-
-
-state 293
-
-  159 logical_and_expr: logical_and_expr . @33 LAND equality_expr @34
-  163 logical_or_expr: logical_or_expr @35 LOR logical_and_expr . @36
-
-    LAND      reduce using rule 157 (@33)
-    $default  reduce using rule 162 (@36)
-
-    @33  go to state 147
-    @36  go to state 342
+    $@23  go to state 142
+    $@26  go to state 337
 
 
-state 294
+State 289
+
+  137 xor_expr: xor_expr . $@25 '^' and_expr $@26
+  141 or_expr: or_expr $@27 '|' xor_expr . $@28
+
+    '^'       reduce using rule 135 ($@25)
+    $default  reduce using rule 140 ($@28)
+
+    $@25  go to state 143
+    $@28  go to state 338
+
+
+State 290
+
+  141 or_expr: or_expr . $@27 '|' xor_expr $@28
+  145 boolean_expr: boolean_expr $@29 boolean_operator or_expr . $@30
+
+    '|'       reduce using rule 139 ($@27)
+    $default  reduce using rule 144 ($@30)
+
+    $@27  go to state 144
+    $@30  go to state 339
+
+
+State 291
+
+  145 boolean_expr: boolean_expr . $@29 boolean_operator or_expr $@30
+  153 equality_expr: equality_expr $@31 equality_operator boolean_expr . $@32
+
+    LEQ       reduce using rule 143 ($@29)
+    GEQ       reduce using rule 143 ($@29)
+    '<'       reduce using rule 143 ($@29)
+    '>'       reduce using rule 143 ($@29)
+    $default  reduce using rule 152 ($@32)
+
+    $@29  go to state 145
+    $@32  go to state 340
+
+
+State 292
+
+  153 equality_expr: equality_expr . $@31 equality_operator boolean_expr $@32
+  159 logical_and_expr: logical_and_expr $@33 LAND equality_expr . $@34
+
+    EQ        reduce using rule 151 ($@31)
+    NEQ       reduce using rule 151 ($@31)
+    $default  reduce using rule 158 ($@34)
+
+    $@31  go to state 146
+    $@34  go to state 341
+
+
+State 293
+
+  159 logical_and_expr: logical_and_expr . $@33 LAND equality_expr $@34
+  163 logical_or_expr: logical_or_expr $@35 LOR logical_and_expr . $@36
+
+    LAND      reduce using rule 157 ($@33)
+    $default  reduce using rule 162 ($@36)
+
+    $@33  go to state 147
+    $@36  go to state 342
+
+
+State 294
 
   168 conditional_expr: initializer_expr '?' conditional_expr ':' . conditional_expr
 
@@ -5728,48 +5728,48 @@ state 294
     any_id               go to state 72
 
 
-state 295
+State 295
 
    61 initializer: initializer . ',' init_list_value
-   68 initializer_braces: '{' @9 initializer . @10 '}'
+   68 initializer_braces: '{' $@9 initializer . $@10 '}'
 
     ','  shift, and go to state 324
 
-    $default  reduce using rule 67 (@10)
+    $default  reduce using rule 67 ($@10)
 
-    @10  go to state 344
+    $@10  go to state 344
 
 
-state 296
+State 296
 
   170 comma_expr: comma_expr . ',' conditional_expr
-  174 assignment_expr: assignment_expr @38 assignment_operator comma_expr . @39
+  174 assignment_expr: assignment_expr $@38 assignment_operator comma_expr . $@39
 
     ','  shift, and go to state 152
 
-    $default  reduce using rule 173 (@39)
+    $default  reduce using rule 173 ($@39)
 
-    @39  go to state 345
+    $@39  go to state 345
 
 
-state 297
+State 297
 
    61 initializer: initializer . ',' init_list_value
-  188 declaration_expr: wait_expr ':' @40 initializer .
+  188 declaration_expr: wait_expr ':' $@40 initializer .
 
     ','  shift, and go to state 324
 
     $default  reduce using rule 188 (declaration_expr)
 
 
-state 298
+State 298
 
    44 function_argumentList: '(' ')' .
 
     $default  reduce using rule 44 (function_argumentList)
 
 
-state 299
+State 299
 
    50 function_argument: '$' . any_id
 
@@ -5781,7 +5781,7 @@ state 299
     any_id  go to state 346
 
 
-state 300
+State 300
 
    45 function_argumentList: '(' function_arguments . ')'
    47 function_arguments: function_arguments . ',' function_argument
@@ -5790,14 +5790,14 @@ state 300
     ','  shift, and go to state 348
 
 
-state 301
+State 301
 
    46 function_arguments: function_argument .
 
     $default  reduce using rule 46 (function_arguments)
 
 
-state 302
+State 302
 
    48 function_argument: identifier . any_id
    49                  | identifier . '&' any_id
@@ -5815,14 +5815,14 @@ state 302
     any_id  go to state 350
 
 
-state 303
+State 303
 
    43 function_declaration: identifier '&' GID function_argumentList .
 
     $default  reduce using rule 43 (function_declaration)
 
 
-state 304
+State 304
 
    41 function_declaration: identifier '&' any_id function_argumentList .
    42                     | identifier '&' any_id function_argumentList . identifier_string
@@ -5839,42 +5839,42 @@ state 304
     any_id             go to state 72
 
 
-state 305
+State 305
 
    58 declaration_list: declaration_list ',' declaration_id .
 
     $default  reduce using rule 58 (declaration_list)
 
 
-state 306
+State 306
 
    39 function_declaration: identifier any_id function_argumentList identifier_string .
 
     $default  reduce using rule 39 (function_declaration)
 
 
-state 307
+State 307
 
   236 if_statement: if_start block KW_ELSE block .
 
     $default  reduce using rule 236 (if_statement)
 
 
-state 308
+State 308
 
   237 if_statement: if_start block KW_ELSE if_statement .
 
     $default  reduce using rule 237 (if_statement)
 
 
-state 309
+State 309
 
   258 event_mask: event_mask '|' event_flag .
 
     $default  reduce using rule 258 (event_mask)
 
 
-state 310
+State 310
 
   248 case_statement: DEDENT case_list . INDENT
   250 case_list: case_list . case_label
@@ -5886,21 +5886,21 @@ state 310
     case_label  go to state 317
 
 
-state 311
+State 311
 
   251 case_label: KW_CASE wait_expr . ':'
 
     ':'  shift, and go to state 353
 
 
-state 312
+State 312
 
   252 case_label: KW_DEFAULT ':' .
 
     $default  reduce using rule 252 (case_label)
 
 
-state 313
+State 313
 
   243 switch_statement: KW_SWITCH wait_expr ':' switch_statements DEDENT .
   248 case_statement: DEDENT . case_list INDENT
@@ -5914,21 +5914,21 @@ state 313
     case_label  go to state 254
 
 
-state 314
+State 314
 
   246 switch_statements: switch_statements statement .
 
     $default  reduce using rule 246 (switch_statements)
 
 
-state 315
+State 315
 
   247 switch_statements: switch_statements case_statement .
 
     $default  reduce using rule 247 (switch_statements)
 
 
-state 316
+State 316
 
   242 switch_statement: KW_SWITCH wait_expr ':' case_list INDENT . switch_statements DEDENT
 
@@ -6018,14 +6018,14 @@ state 316
     update_statement         go to state 81
 
 
-state 317
+State 317
 
   250 case_list: case_list case_label .
 
     $default  reduce using rule 250 (case_list)
 
 
-state 318
+State 318
 
    56 declaration_ref: identifier '&' declaration_list .
    58 declaration_list: declaration_list . ',' declaration_id
@@ -6035,7 +6035,7 @@ state 318
     $default  reduce using rule 56 (declaration_ref)
 
 
-state 319
+State 319
 
     4 statements: statements . statement
    21 scope: SCOPE INDENT statements . DEDENT
@@ -6124,9 +6124,9 @@ state 319
     update_statement         go to state 81
 
 
-state 320
+State 320
 
-   24 scope: SCOPEPRE @2 INDENT . statements DEDENT
+   24 scope: SCOPEPRE $@2 INDENT . statements DEDENT
 
     error          shift, and go to state 1
     BOOLEAN        shift, and go to state 2
@@ -6213,30 +6213,30 @@ state 320
     update_statement         go to state 81
 
 
-state 321
+State 321
 
-   26 scope: SCOPEPRE @3 statement .
+   26 scope: SCOPEPRE $@3 statement .
 
     $default  reduce using rule 26 (scope)
 
 
-state 322
+State 322
 
    37 function_implementation: function_declaration @7 '=' expr ENDL .
 
     $default  reduce using rule 37 (function_implementation)
 
 
-state 323
+State 323
 
-   76 init_key: '@' @12 . initializer_braces
+   76 init_key: '@' $@12 . initializer_braces
 
     '{'  shift, and go to state 150
 
     initializer_braces  go to state 357
 
 
-state 324
+State 324
 
    61 initializer: initializer ',' . init_list_value
 
@@ -6292,28 +6292,28 @@ state 324
     any_id               go to state 278
 
 
-state 325
+State 325
 
    71 init_list_colon: init_list_colon init_colon .
 
     $default  reduce using rule 71 (init_list_colon)
 
 
-state 326
+State 326
 
    77 init_key: literal_expr .
 
     $default  reduce using rule 77 (init_key)
 
 
-state 327
+State 327
 
-   73 init_colon: any_id . '=' @11 init_value
+   73 init_colon: any_id . '=' $@11 init_value
 
     '='  shift, and go to state 329
 
 
-state 328
+State 328
 
    74 init_colon: init_key '=' . init_value
 
@@ -6365,142 +6365,142 @@ state 328
     any_id               go to state 72
 
 
-state 329
+State 329
 
-   73 init_colon: any_id '=' . @11 init_value
+   73 init_colon: any_id '=' . $@11 init_value
 
-    $default  reduce using rule 72 (@11)
+    $default  reduce using rule 72 ($@11)
 
-    @11  go to state 360
+    $@11  go to state 360
 
 
-state 330
+State 330
 
-  194 declaration_expr: declaration '{' @42 initializer @43 . '}'
+  194 declaration_expr: declaration '{' $@42 initializer $@43 . '}'
 
     '}'  shift, and go to state 361
 
 
-state 331
+State 331
 
-   94 postfix_expr: postfix_expr @14 '[' expr ']' .
+   94 postfix_expr: postfix_expr $@14 '[' expr ']' .
 
     $default  reduce using rule 94 (postfix_expr)
 
 
-state 332
+State 332
 
-  113 multiplicative_expr: multiplicative_expr @15 multiplicative_operator unary_expr @16 .
+  113 multiplicative_expr: multiplicative_expr $@15 multiplicative_operator unary_expr $@16 .
 
     $default  reduce using rule 113 (multiplicative_expr)
 
 
-state 333
+State 333
 
-  120 additive_expr: additive_expr @17 additive_operator multiplicative_expr @18 .
+  120 additive_expr: additive_expr $@17 additive_operator multiplicative_expr $@18 .
 
     $default  reduce using rule 120 (additive_expr)
 
 
-state 334
+State 334
 
-  126 shift_expr: shift_expr @19 SHIFT_LEFT additive_expr @20 .
+  126 shift_expr: shift_expr $@19 SHIFT_LEFT additive_expr $@20 .
 
     $default  reduce using rule 126 (shift_expr)
 
 
-state 335
+State 335
 
-  129 shift_expr: shift_expr @21 SHIFT_RIGHT additive_expr @22 .
+  129 shift_expr: shift_expr $@21 SHIFT_RIGHT additive_expr $@22 .
 
     $default  reduce using rule 129 (shift_expr)
 
 
-state 336
+State 336
 
-  133 and_expr: and_expr @23 '&' shift_expr @24 .
+  133 and_expr: and_expr $@23 '&' shift_expr $@24 .
 
     $default  reduce using rule 133 (and_expr)
 
 
-state 337
+State 337
 
-  137 xor_expr: xor_expr @25 '^' and_expr @26 .
+  137 xor_expr: xor_expr $@25 '^' and_expr $@26 .
 
     $default  reduce using rule 137 (xor_expr)
 
 
-state 338
+State 338
 
-  141 or_expr: or_expr @27 '|' xor_expr @28 .
+  141 or_expr: or_expr $@27 '|' xor_expr $@28 .
 
     $default  reduce using rule 141 (or_expr)
 
 
-state 339
+State 339
 
-  145 boolean_expr: boolean_expr @29 boolean_operator or_expr @30 .
+  145 boolean_expr: boolean_expr $@29 boolean_operator or_expr $@30 .
 
     $default  reduce using rule 145 (boolean_expr)
 
 
-state 340
+State 340
 
-  153 equality_expr: equality_expr @31 equality_operator boolean_expr @32 .
+  153 equality_expr: equality_expr $@31 equality_operator boolean_expr $@32 .
 
     $default  reduce using rule 153 (equality_expr)
 
 
-state 341
+State 341
 
-  159 logical_and_expr: logical_and_expr @33 LAND equality_expr @34 .
+  159 logical_and_expr: logical_and_expr $@33 LAND equality_expr $@34 .
 
     $default  reduce using rule 159 (logical_and_expr)
 
 
-state 342
+State 342
 
-  163 logical_or_expr: logical_or_expr @35 LOR logical_and_expr @36 .
+  163 logical_or_expr: logical_or_expr $@35 LOR logical_and_expr $@36 .
 
     $default  reduce using rule 163 (logical_or_expr)
 
 
-state 343
+State 343
 
   168 conditional_expr: initializer_expr '?' conditional_expr ':' conditional_expr .
 
     $default  reduce using rule 168 (conditional_expr)
 
 
-state 344
+State 344
 
-   68 initializer_braces: '{' @9 initializer @10 . '}'
+   68 initializer_braces: '{' $@9 initializer $@10 . '}'
 
     '}'  shift, and go to state 362
 
 
-state 345
+State 345
 
-  174 assignment_expr: assignment_expr @38 assignment_operator comma_expr @39 .
+  174 assignment_expr: assignment_expr $@38 assignment_operator comma_expr $@39 .
 
     $default  reduce using rule 174 (assignment_expr)
 
 
-state 346
+State 346
 
    50 function_argument: '$' any_id .
 
     $default  reduce using rule 50 (function_argument)
 
 
-state 347
+State 347
 
    45 function_argumentList: '(' function_arguments ')' .
 
     $default  reduce using rule 45 (function_argumentList)
 
 
-state 348
+State 348
 
    47 function_arguments: function_arguments ',' . function_argument
 
@@ -6518,7 +6518,7 @@ state 348
     any_id             go to state 72
 
 
-state 349
+State 349
 
    49 function_argument: identifier '&' . any_id
 
@@ -6530,35 +6530,35 @@ state 349
     any_id  go to state 364
 
 
-state 350
+State 350
 
    48 function_argument: identifier any_id .
 
     $default  reduce using rule 48 (function_argument)
 
 
-state 351
+State 351
 
    42 function_declaration: identifier '&' any_id function_argumentList identifier_string .
 
     $default  reduce using rule 42 (function_declaration)
 
 
-state 352
+State 352
 
   248 case_statement: DEDENT case_list INDENT .
 
     $default  reduce using rule 248 (case_statement)
 
 
-state 353
+State 353
 
   251 case_label: KW_CASE wait_expr ':' .
 
     $default  reduce using rule 251 (case_label)
 
 
-state 354
+State 354
 
   242 switch_statement: KW_SWITCH wait_expr ':' case_list INDENT switch_statements . DEDENT
   246 switch_statements: switch_statements . statement
@@ -6649,17 +6649,17 @@ state 354
     update_statement         go to state 81
 
 
-state 355
+State 355
 
    21 scope: SCOPE INDENT statements DEDENT .
 
     $default  reduce using rule 21 (scope)
 
 
-state 356
+State 356
 
     4 statements: statements . statement
-   24 scope: SCOPEPRE @2 INDENT statements . DEDENT
+   24 scope: SCOPEPRE $@2 INDENT statements . DEDENT
 
     BOOLEAN        shift, and go to state 2
     CHARACTER      shift, and go to state 3
@@ -6745,30 +6745,30 @@ state 356
     update_statement         go to state 81
 
 
-state 357
+State 357
 
-   76 init_key: '@' @12 initializer_braces .
+   76 init_key: '@' $@12 initializer_braces .
 
     $default  reduce using rule 76 (init_key)
 
 
-state 358
+State 358
 
    61 initializer: initializer ',' init_list_value .
 
     $default  reduce using rule 61 (initializer)
 
 
-state 359
+State 359
 
    74 init_colon: init_key '=' init_value .
 
     $default  reduce using rule 74 (init_colon)
 
 
-state 360
+State 360
 
-   73 init_colon: any_id '=' @11 . init_value
+   73 init_colon: any_id '=' $@11 . init_value
 
     BOOLEAN        shift, and go to state 2
     CHARACTER      shift, and go to state 3
@@ -6818,35 +6818,35 @@ state 360
     any_id               go to state 72
 
 
-state 361
+State 361
 
-  194 declaration_expr: declaration '{' @42 initializer @43 '}' .
+  194 declaration_expr: declaration '{' $@42 initializer $@43 '}' .
 
     $default  reduce using rule 194 (declaration_expr)
 
 
-state 362
+State 362
 
-   68 initializer_braces: '{' @9 initializer @10 '}' .
+   68 initializer_braces: '{' $@9 initializer $@10 '}' .
 
     $default  reduce using rule 68 (initializer_braces)
 
 
-state 363
+State 363
 
    47 function_arguments: function_arguments ',' function_argument .
 
     $default  reduce using rule 47 (function_arguments)
 
 
-state 364
+State 364
 
    49 function_argument: identifier '&' any_id .
 
     $default  reduce using rule 49 (function_argument)
 
 
-state 365
+State 365
 
   242 switch_statement: KW_SWITCH wait_expr ':' case_list INDENT switch_statements DEDENT .
   248 case_statement: DEDENT . case_list INDENT
@@ -6860,15 +6860,15 @@ state 365
     case_label  go to state 254
 
 
-state 366
+State 366
 
-   24 scope: SCOPEPRE @2 INDENT statements DEDENT .
+   24 scope: SCOPEPRE $@2 INDENT statements DEDENT .
 
     $default  reduce using rule 24 (scope)
 
 
-state 367
+State 367
 
-   73 init_colon: any_id '=' @11 init_value .
+   73 init_colon: any_id '=' $@11 init_value .
 
     $default  reduce using rule 73 (init_colon)

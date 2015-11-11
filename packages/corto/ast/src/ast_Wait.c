@@ -56,7 +56,7 @@ corto_interface ast_findCommonAncestor(corto_interface t1, corto_interface t2) {
 /* $end */
 
 corto_int16 _ast_Wait_construct(ast_Wait this) {
-/* $begin(::corto::ast::Wait::construct) */
+/* $begin(corto/ast/Wait/construct) */
     corto_iter exprIter;
     ast_Expression expr, timeoutExpr;
     corto_type exprType, resultType = NULL;
@@ -116,14 +116,14 @@ error:
 }
 
 corto_bool _ast_Wait_hasReturnedResource_v(ast_Wait this) {
-/* $begin(::corto::ast::Wait::hasReturnedResource) */
+/* $begin(corto/ast/Wait/hasReturnedResource) */
     CORTO_UNUSED(this);
     return FALSE;
 /* $end */
 }
 
 ic_node _ast_Wait_toIc_v(ast_Wait this, ic_program program, ic_storage storage, corto_bool stored) {
-/* $begin(::corto::ast::Wait::toIc) */
+/* $begin(corto/ast/Wait/toIc) */
     corto_iter exprIter;
     ast_Expression expr;
     ic_node ic, result;

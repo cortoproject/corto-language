@@ -160,7 +160,7 @@ static void fast_doIndents(int indent);
 %}
 
 id [_a-zA-Z][_a-zA-Z0-9]*
-gid ("::"*{id})+
+gid (("::"|"/")*{id})+
 
 %%
 

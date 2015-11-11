@@ -13,7 +13,7 @@ corto_threadKey IC_PROGRAM_KEY;
 /* $end */
 
 ic_opKind _ic_opKindFromOperator(corto_operatorKind _operator) {
-/* $begin(::corto::ic::opKindFromOperator) */
+/* $begin(corto/ic/opKindFromOperator) */
 
     switch(_operator) {
     case CORTO_ASSIGN: return ic_set;

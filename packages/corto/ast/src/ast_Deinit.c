@@ -13,7 +13,7 @@
 /* $end */
 
 corto_int16 _ast_Deinit_construct(ast_Deinit this) {
-/* $begin(::corto::ast::Deinit::construct) */
+/* $begin(corto/ast/Deinit/construct) */
 	corto_type t = ast_Expression_getType(ast_Expression(this->storage));
     ast_Node(this)->kind = Ast_DeinitExpr;
     corto_setref(&ast_Expression(this)->type, t);
@@ -22,7 +22,7 @@ corto_int16 _ast_Deinit_construct(ast_Deinit this) {
 }
 
 ic_node _ast_Deinit_toIc_v(ast_Deinit this, ic_program program, ic_storage storage, corto_bool stored) {
-/* $begin(::corto::ast::Deinit::toIc) */
+/* $begin(corto/ast/Deinit/toIc) */
     ic_node s;
     CORTO_UNUSED(stored);
     CORTO_UNUSED(storage);

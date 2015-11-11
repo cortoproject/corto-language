@@ -164,7 +164,7 @@ corto_type ast_Parser_initGetType(ast_Initializer this, corto_member *m_out) {
 /* $end */
 
 corto_int16 _ast_Initializer_construct(ast_Initializer this) {
-/* $begin(::corto::ast::Initializer::construct) */
+/* $begin(corto/ast/Initializer/construct) */
     corto_uint32 variable;
     corto_type t = ast_Expression_getType(this->variables[0].object);
     
@@ -207,13 +207,13 @@ error:
 }
 
 corto_type _ast_Initializer_currentType(ast_Initializer this) {
-/* $begin(::corto::ast::Initializer::currentType) */
+/* $begin(corto/ast/Initializer/currentType) */
     return ast_Parser_initGetType(this, NULL);
 /* $end */
 }
 
 corto_int16 _ast_Initializer_define_v(ast_Initializer this) {
-/* $begin(::corto::ast::Initializer::define) */
+/* $begin(corto/ast/Initializer/define) */
     CORTO_UNUSED(this);
 #ifdef CORTO_INIT_DEBUG
     {
@@ -228,7 +228,7 @@ corto_int16 _ast_Initializer_define_v(ast_Initializer this) {
 }
 
 corto_uint16 _ast_Initializer_initFrame(ast_Initializer this) {
-/* $begin(::corto::ast::Initializer::initFrame) */
+/* $begin(corto/ast/Initializer/initFrame) */
     struct corto_serializer_s s;
     corto_type t;
     ast_Initializer_findMember_t walkData;
@@ -267,7 +267,7 @@ corto_uint16 _ast_Initializer_initFrame(ast_Initializer this) {
 }
 
 corto_int32 _ast_Initializer_member_v(ast_Initializer this, corto_string name) {
-/* $begin(::corto::ast::Initializer::member) */
+/* $begin(corto/ast/Initializer/member) */
     struct corto_serializer_s s;
     corto_type t;
     ast_Initializer_findMember_t walkData;
@@ -308,7 +308,7 @@ error:
 }
 
 corto_int16 _ast_Initializer_next_v(ast_Initializer this) {
-/* $begin(::corto::ast::Initializer::next) */
+/* $begin(corto/ast/Initializer/next) */
     
     /* Increase location by one */
     this->frames[this->fp].location++;
@@ -330,7 +330,7 @@ corto_int16 _ast_Initializer_next_v(ast_Initializer this) {
 }
 
 corto_int8 _ast_Initializer_pop_v(ast_Initializer this) {
-/* $begin(::corto::ast::Initializer::pop) */
+/* $begin(corto/ast/Initializer/pop) */
 
     if (this->fp) {
         this->fp--;
@@ -352,13 +352,13 @@ corto_int8 _ast_Initializer_pop_v(ast_Initializer this) {
 }
 
 corto_int16 _ast_Initializer_popKey_v(ast_Initializer this) {
-/* $begin(::corto::ast::Initializer::popKey) */
+/* $begin(corto/ast/Initializer/popKey) */
     return ast_Initializer_pop(this);
 /* $end */
 }
 
 corto_int16 _ast_Initializer_push_v(ast_Initializer this) {
-/* $begin(::corto::ast::Initializer::push) */
+/* $begin(corto/ast/Initializer/push) */
     corto_type t = ast_Initializer_currentType(this);
 
     if (!this->fp || (this->fp && !t->reference)) {
@@ -391,27 +391,27 @@ error:
 }
 
 corto_int16 _ast_Initializer_pushKey_v(ast_Initializer this) {
-/* $begin(::corto::ast::Initializer::pushKey) */
+/* $begin(corto/ast/Initializer/pushKey) */
     this->frames[this->fp+1].isKey = TRUE;
     return ast_Initializer_push(this);
 /* $end */
 }
 
 corto_type _ast_Initializer_type(ast_Initializer this) {
-/* $begin(::corto::ast::Initializer::type) */
+/* $begin(corto/ast/Initializer/type) */
     return ast_Expression_getType(this->variables[0].object);
 /* $end */
 }
 
 corto_int16 _ast_Initializer_value_v(ast_Initializer this, ast_Expression v) {
-/* $begin(::corto::ast::Initializer::value) */
+/* $begin(corto/ast/Initializer/value) */
     CORTO_UNUSED(v);
     return ast_Initializer_next(this);
 /* $end */
 }
 
 corto_int16 _ast_Initializer_valueKey_v(ast_Initializer this, ast_Expression key) {
-/* $begin(::corto::ast::Initializer::valueKey) */
+/* $begin(corto/ast/Initializer/valueKey) */
     this->frames[this->fp].isKey = TRUE;
     return ast_Initializer_value(this, key);
 /* $end */
