@@ -727,6 +727,53 @@ error:
     return NULL;
 }
 
+/* Parse single line internally */
+ast_Expression ast_Parser_parseIntern(corto_string expr, corto_object scope, ast_Parser *p) {
+    ast_Parser parser = ast_ParserCreate(expr, NULL);
+    ast_Expression result = NULL; /* Resulting ast-expression of 'exr' */
+
+    parser->repl = TRUE;
+    parser->pass = 0;
+    if (p) {
+        *p = parser;
+    }
+
+    corto_setref(&parser->scope, scope);
+    if ( fast_yparse(parser, 1, 1)) {
+        goto error;
+    }
+
+    if (parser->errors) {
+        goto error;
+    }
+
+    /* Reset parser-state so 2nd pass starts clean */
+    ast_Parser_reset(parser);
+
+    parser->pass = 1;
+    corto_setref(&parser->scope, scope);
+    if (fast_yparse(parser, 1, 1)) {
+        goto error;
+    }
+
+    /* Find last executed expression */
+    if (parser->block) {
+        if (corto_llSize(parser->block->statements)) {
+            ast_Node lastNode = corto_llLast(parser->block->statements);
+
+            /* If node is an expression, store expression in variable so it can be resolved later */
+            if (corto_instanceof(corto_type(ast_Expression_o), lastNode) && (lastNode->kind != Ast_CommaExpr)) {
+                result = ast_Expression(lastNode);
+            }
+        }
+    }
+
+    return result;
+error:
+    corto_delete(parser);
+    *p = NULL;
+    return NULL;
+}
 /* $end */
 
 corto_void _ast_Parser_addStatement(ast_Parser this, ast_Node statement) {
@@ -2258,147 +2305,149 @@ error:
 
 corto_int16 _ast_Parser_parseLine(corto_string expr, corto_object scope, corto_word value) {
 /* $begin(corto/ast/Parser/parseLine) */
-    ast_Parser parser = ast_ParserCreate(expr, NULL);
-    ic_program program = ic_programCreate(parser->filename);
-    ast_Expression result = NULL; /* Resulting ast-expression of 'exr' */
     ic_scope icScope; /* Parsed intermediate-code program */
     ic_storage returnValue = NULL; /* Intermediate representation of return value */
     corto_type returnType = NULL; /* Return type */
     ic_op ret = NULL; /* ret or stop instruction */
+    ast_Parser parser = NULL;
     corto_value *v = (corto_value*)value;
+    ic_program program = NULL;
 
-    parser->repl = TRUE;
-
-    parser->pass = 0;
-    corto_setref(&parser->scope, scope);
-    if ( fast_yparse(parser, 1, 1)) {
+    ast_Expression result = ast_Parser_parseIntern(expr, scope, &parser);
+    if (!parser) {
         goto error;
     }
 
-    if (parser->errors) {
-        goto error;
-    }
+    if (result && result->type) {
+        ast_Local resultLocal;
+        ast_Binary assignment;
 
-    /* Reset parser-state so 2nd pass starts clean */
-    ast_Parser_reset(parser);
-
-    parser->pass = 1;
-    corto_setref(&parser->scope, scope);
-    if (fast_yparse(parser, 1, 1)) {
-        goto error;
-    }
-
-    /* Find last executed expression */
-    if (parser->block) {
-        if (corto_llSize(parser->block->statements)) {
-            ast_Node lastNode = corto_llLast(parser->block->statements);
-
-            /* If node is an expression, store expression in variable so it can be resolved later */
-            if (corto_instanceof(corto_type(ast_Expression_o), lastNode) && (lastNode->kind != Ast_CommaExpr)) {
-                ast_Local resultLocal;
-                ast_Binary assignment;
-                result = ast_Expression(lastNode);
-
-                if (result->type) {
-                    returnType = corto_type(ast_Expression_getType(result));
-                    if ((returnType->kind != CORTO_VOID) || (result->deref == Ast_ByReference)) {
-                        resultLocal = ast_Block_declare(parser->block, "<result>", result->type, FALSE,
-                            result->isReference);
-                        ast_Expression(resultLocal)->deref = result->isReference ? Ast_ByReference : Ast_ByValue;
-                        if (!resultLocal) {
-                            goto error;
-                        }
-                        resultLocal->kind = Ast_LocalReturn;
-                        assignment = ast_BinaryCreate(ast_Expression(resultLocal), result, CORTO_ASSIGN);
-                        corto_llReplace(parser->block->statements, lastNode, assignment);
-                    }
-                } else {
-                    ast_Parser_error(parser, "invalid expression");
-                    goto error;
-                }
+        returnType = corto_type(ast_Expression_getType(result));
+        if ((returnType->kind != CORTO_VOID) || (result->deref == Ast_ByReference)) {
+            resultLocal = ast_Block_declare(parser->block, "<result>", result->type, FALSE,
+                result->isReference);
+            ast_Expression(resultLocal)->deref = result->isReference ? Ast_ByReference : Ast_ByValue;
+            if (!resultLocal) {
+                goto error;
             }
+            resultLocal->kind = Ast_LocalReturn;
+            assignment = ast_BinaryCreate(ast_Expression(resultLocal), result, CORTO_ASSIGN);
+            corto_llReplace(parser->block->statements, result, assignment);
         }
     }
 
-    /* Parse root-block */
-    icScope = (ic_scope)ast_Block_toIc(parser->block, program, NULL, FALSE);
-    if (parser->errors) {
-        goto error;
-    }
+    if (result) {
+        program = ic_programCreate(parser->filename);
 
-    /* Finalize functions */
-    if (ast_Parser_finalize(parser, program)) {
-        goto error;
-    }
-
-    returnValue = ic_scope_lookupStorage(icScope, "<result>", TRUE);
-    if (returnValue) {
-        ret = IC_1_OP(parser->line, ic_ret, returnValue, IC_DEREF_VALUE, FALSE);
-        if (result->isReference) {
-            ((ic_storage)returnValue)->isReference = TRUE;
-            ((ic_op)ret)->s1Deref = IC_DEREF_ADDRESS;
-        }else {
-            ((ic_op)ret)->s1Deref = IC_DEREF_VALUE;
+        /* Parse root-block */
+        icScope = (ic_scope)ast_Block_toIc(parser->block, program, NULL, FALSE);
+        if (parser->errors) {
+            goto error;
         }
-    } else {
-        ret = IC_1_OP(parser->line, ic_stop, NULL, IC_DEREF_VALUE, FALSE);
-    }
 
-    ic_program_add(program, ic_node(ret));
+        /* Finalize functions */
+        if (ast_Parser_finalize(parser, program)) {
+            goto error;
+        }
 
-#ifdef IC_TRACING
-    extern corto_bool CORTO_DEBUG_ENABLED;
-    if (CORTO_DEBUG_ENABLED) {
-        printf("=====\n%s\n\n", ic_program_toString(program));
-    }
-#endif
-
-    /* Translate program to vm code */
-    ic_program_assemble(program);
-
-    /* Run vm program */
-    if (returnValue) {
-        if (result->isReference) {
-            corto_object o = NULL;
-            ic_program_run(program, (corto_word)&o, CORTO_SEQUENCE_EMPTY(corto_stringSeq));
-            if (o) {
-                corto_valueObjectInit(v, o, NULL);
-            } else {
-                v->is.value.storage = 0;
-                corto_valueValueInit(v, NULL, corto_object_o, &v->is.value.storage);
+        returnValue = ic_scope_lookupStorage(icScope, "<result>", TRUE);
+        if (returnValue) {
+            ret = IC_1_OP(parser->line, ic_ret, returnValue, IC_DEREF_VALUE, FALSE);
+            if (result->isReference) {
+                ((ic_storage)returnValue)->isReference = TRUE;
+                ((ic_op)ret)->s1Deref = IC_DEREF_ADDRESS;
+            }else {
+                ((ic_op)ret)->s1Deref = IC_DEREF_VALUE;
             }
         } else {
-            if(returnType->kind == CORTO_PRIMITIVE) {
-                corto_valueValueInit(v, NULL, returnType, &v->is.value.storage);
-                ic_program_run(program, (corto_word)&v->is.value.storage, CORTO_SEQUENCE_EMPTY(corto_stringSeq));
-            } else {
-                void *ptr = corto_alloc(corto_type_sizeof(returnType));
-                ic_program_run(program, (corto_word)&ptr, CORTO_SEQUENCE_EMPTY(corto_stringSeq));
-                if (ptr) {
-                    corto_valueValueInit(v, NULL, returnType, ptr);
+            ret = IC_1_OP(parser->line, ic_stop, NULL, IC_DEREF_VALUE, FALSE);
+        }
+
+        ic_program_add(program, ic_node(ret));
+
+#ifdef IC_TRACING
+        extern corto_bool CORTO_DEBUG_ENABLED;
+        if (CORTO_DEBUG_ENABLED) {
+            printf("=====\n%s\n\n", ic_program_toString(program));
+        }
+#endif
+
+        /* Translate program to vm code */
+        ic_program_assemble(program);
+
+        /* Run vm program */
+        if (returnValue) {
+            if (result->isReference) {
+                corto_object o = NULL;
+                ic_program_run(program, (corto_word)&o, CORTO_SEQUENCE_EMPTY(corto_stringSeq));
+                if (o) {
+                    corto_valueObjectInit(v, o, NULL);
                 } else {
                     v->is.value.storage = 0;
                     corto_valueValueInit(v, NULL, corto_object_o, &v->is.value.storage);
                 }
+            } else {
+                if(returnType->kind == CORTO_PRIMITIVE) {
+                    corto_valueValueInit(v, NULL, returnType, &v->is.value.storage);
+                    ic_program_run(program, (corto_word)&v->is.value.storage, CORTO_SEQUENCE_EMPTY(corto_stringSeq));
+                } else {
+                    void *ptr = corto_alloc(corto_type_sizeof(returnType));
+                    ic_program_run(program, (corto_word)&ptr, CORTO_SEQUENCE_EMPTY(corto_stringSeq));
+                    if (ptr) {
+                        corto_valueValueInit(v, NULL, returnType, ptr);
+                    } else {
+                        v->is.value.storage = 0;
+                        corto_valueValueInit(v, NULL, corto_object_o, &v->is.value.storage);
+                    }
+                }
+            }
+        } else {
+            ic_program_run(program, 0, CORTO_SEQUENCE_EMPTY(corto_stringSeq));
+            if (v) {
+                corto_valueValueInit(v, NULL, corto_type(corto_void_o), NULL);
             }
         }
+        /* Free program */
+        corto_delete(program);
     } else {
-        ic_program_run(program, 0, CORTO_SEQUENCE_EMPTY(corto_stringSeq));
-        if (v) {
-            corto_valueValueInit(v, NULL, corto_type(corto_void_o), NULL);
-        }
+        corto_valueValueInit(v, NULL, corto_type(corto_void_o), NULL);
     }
 
-    /* Free program */
-    corto_release(program);
-
     /* Free parser */
-    corto_release(parser);
+    corto_delete(parser);
 
     return 0;
 error:
-    corto_release(program);
+    if (parser) {
+        corto_delete(parser);
+    }
+    if (program) {
+        corto_delete(program);
+    }
     return -1;
+/* $end */
+}
+
+corto_type _ast_Parser_parseType(corto_string expr, corto_object scope) {
+/* $begin(corto/ast/Parser/parseType) */
+    ast_Parser parser = NULL;
+    ast_Expression e = ast_Parser_parseIntern(expr, scope, &parser);
+    corto_type result = NULL;
+
+    if (!e) {
+        goto error;
+    }
+
+    result = ast_Expression_getType(e);
+
+    corto_delete(parser);
+
+    return result;
+error:
+    if (parser) {
+        corto_delete(parser);
+    }
+    return NULL;
 /* $end */
 }
 

@@ -760,6 +760,7 @@
                     <!-- Parser framework functions -->
                     <method name="parse(sequence{string} argv)" returnType="uint32"/>
                     <function name="parseLine(string expr,object scope,word value)" returnType="int16"/> <!--  Parse a single line -->
+                    <function name="parseType(string expr,object scope)" returnType="type"/> <!-- Obtain type of expression, don't run -->
                     <method name="parseExpression(string expr,ast::Block block,object scope,uint32 line,uint32 column)" returnType="ast::Expression"/>
                     <method name="isErrSet()" returnType="bool"/>
                     <method name="isAbortSet()" returnType="bool"/>
