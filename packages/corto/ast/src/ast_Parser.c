@@ -672,8 +672,6 @@ ast_Storage ast_Parser_observerCreate(ast_Parser this, corto_string id, ast_Expr
         observer->mask = mask;
         corto_setref(&observer->dispatcher, dispatcher);
 
-        corto_attach(this->scope, observer);
-
         /* If observer is a template observer, manually attach */
         if (parent) {
             corto_class_bindObserver(corto_class(parent), observer);
