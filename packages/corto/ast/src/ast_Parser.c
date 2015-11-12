@@ -1894,8 +1894,6 @@ ast_Expression _ast_Parser_initPushIdentifier(ast_Parser this, ast_Expression ty
     CORTO_UNUSED(this);
     CORTO_UNUSED(type);
 
-    printf("type = %s\n", ast_Expression_id(type));
-
     type = ast_Expression_resolve(type, NULL);
     if (!type) {
         goto error;
