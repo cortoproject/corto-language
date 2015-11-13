@@ -2332,63 +2332,70 @@ corto_int16 _ast_Parser_parseLine(corto_string expr, corto_object scope, corto_w
         }
     }
 
-    if (result) {
-        program = ic_programCreate(parser->filename);
+    program = ic_programCreate(parser->filename);
 
-        /* Parse root-block */
-        icScope = (ic_scope)ast_Block_toIc(parser->block, program, NULL, FALSE);
-        if (parser->errors) {
-            goto error;
+    /* Parse root-block */
+    icScope = (ic_scope)ast_Block_toIc(parser->block, program, NULL, FALSE);
+    if (parser->errors) {
+        goto error;
+    }
+
+    /* Finalize functions */
+    if (ast_Parser_finalize(parser, program)) {
+        goto error;
+    }
+
+    returnValue = ic_scope_lookupStorage(icScope, "<result>", TRUE);
+    if (returnValue) {
+        ret = IC_1_OP(parser->line, ic_ret, returnValue, IC_DEREF_VALUE, FALSE);
+        if (result->isReference) {
+            ((ic_storage)returnValue)->isReference = TRUE;
+            ((ic_op)ret)->s1Deref = IC_DEREF_ADDRESS;
+        }else {
+            ((ic_op)ret)->s1Deref = IC_DEREF_VALUE;
         }
+    } else {
+        ret = IC_1_OP(parser->line, ic_stop, NULL, IC_DEREF_VALUE, FALSE);
+    }
 
-        /* Finalize functions */
-        if (ast_Parser_finalize(parser, program)) {
-            goto error;
-        }
-
-        returnValue = ic_scope_lookupStorage(icScope, "<result>", TRUE);
-        if (returnValue) {
-            ret = IC_1_OP(parser->line, ic_ret, returnValue, IC_DEREF_VALUE, FALSE);
-            if (result->isReference) {
-                ((ic_storage)returnValue)->isReference = TRUE;
-                ((ic_op)ret)->s1Deref = IC_DEREF_ADDRESS;
-            }else {
-                ((ic_op)ret)->s1Deref = IC_DEREF_VALUE;
-            }
-        } else {
-            ret = IC_1_OP(parser->line, ic_stop, NULL, IC_DEREF_VALUE, FALSE);
-        }
-
-        ic_program_add(program, ic_node(ret));
+    ic_program_add(program, ic_node(ret));
 
 #ifdef IC_TRACING
-        extern corto_bool CORTO_DEBUG_ENABLED;
-        if (CORTO_DEBUG_ENABLED) {
-            printf("=====\n%s\n\n", ic_program_toString(program));
-        }
+    extern corto_bool CORTO_DEBUG_ENABLED;
+    if (CORTO_DEBUG_ENABLED) {
+        printf("=====\n%s\n\n", ic_program_toString(program));
+    }
 #endif
 
-        /* Translate program to vm code */
-        ic_program_assemble(program);
+    /* Translate program to vm code */
+    ic_program_assemble(program);
+
+    if (result) {
 
         /* Run vm program */
-        if (returnValue) {
-            if (result->isReference) {
-                corto_object o = NULL;
-                ic_program_run(program, (corto_word)&o, CORTO_SEQUENCE_EMPTY(corto_stringSeq));
+        if (result && result->isReference) {
+            corto_object o = NULL;
+            ic_program_run(program, (corto_word)&o, CORTO_SEQUENCE_EMPTY(corto_stringSeq));
+            if (v) {
                 if (o) {
                     corto_valueObjectInit(v, o, NULL);
                 } else {
                     v->is.value.storage = 0;
                     corto_valueValueInit(v, NULL, corto_object_o, &v->is.value.storage);
                 }
-            } else {
-                if(returnType->kind == CORTO_PRIMITIVE) {
+            }
+        } else if (result) {
+            if(returnType->kind == CORTO_PRIMITIVE) {
+                if (v) {
                     corto_valueValueInit(v, NULL, returnType, &v->is.value.storage);
                     ic_program_run(program, (corto_word)&v->is.value.storage, CORTO_SEQUENCE_EMPTY(corto_stringSeq));
                 } else {
-                    void *ptr = corto_alloc(corto_type_sizeof(returnType));
-                    ic_program_run(program, (corto_word)&ptr, CORTO_SEQUENCE_EMPTY(corto_stringSeq));
+                    ic_program_run(program, 0, CORTO_SEQUENCE_EMPTY(corto_stringSeq));
+                }
+            } else {
+                void *ptr = corto_alloc(corto_type_sizeof(returnType));
+                ic_program_run(program, (corto_word)&ptr, CORTO_SEQUENCE_EMPTY(corto_stringSeq));
+                if (v) {
                     if (ptr) {
                         corto_valueValueInit(v, NULL, returnType, ptr);
                     } else {
@@ -2397,17 +2404,16 @@ corto_int16 _ast_Parser_parseLine(corto_string expr, corto_object scope, corto_w
                     }
                 }
             }
-        } else {
-            ic_program_run(program, 0, CORTO_SEQUENCE_EMPTY(corto_stringSeq));
-            if (v) {
-                corto_valueValueInit(v, NULL, corto_type(corto_void_o), NULL);
-            }
         }
-        /* Free program */
-        corto_delete(program);
     } else {
-        corto_valueValueInit(v, NULL, corto_type(corto_void_o), NULL);
+        ic_program_run(program, 0, CORTO_SEQUENCE_EMPTY(corto_stringSeq));
+        if (v) {
+            corto_valueValueInit(v, NULL, corto_type(corto_void_o), NULL);
+        }
     }
+
+    /* Free program */
+    corto_delete(program);
 
     /* Free parser */
     corto_delete(parser);
