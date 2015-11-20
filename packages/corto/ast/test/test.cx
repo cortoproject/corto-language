@@ -1,0 +1,58 @@
+#package ::test
+
+test::Suite Void::
+    void setup() method
+    void tc_void()
+    void tc_object()
+
+test::Suite Binary::
+    void setup() method
+    void tc_t_b8()
+    void tc_t_b16()
+    void tc_t_b32()
+    void tc_t_b64()
+    void tc_t_bword()
+    void tc_o_b8()
+    void tc_o_b16()
+    void tc_o_b32()
+    void tc_o_b64()
+    void tc_o_bword()
+    void tc_o_octet()
+    void tc_o_word()
+
+test::Suite Boolean::
+    void setup() method
+    void tc_t_mybool()
+    void tc_o_boolTrue()
+    void tc_o_boolFalse()
+    void tc_o_myboolTrue()
+    void tc_o_myboolFalse()
+
+test::Suite Character::
+    void setup() method
+    void tc_t_mychar()
+    void tc_o_charAlpha()
+    void tc_o_charNum()
+    void tc_o_charNull()
+    void tc_o_charSlash()
+    void tc_o_charNewline()
+    void tc_o_charQuote()
+
+test::Suite Int::
+    void setup() method
+    void tc_t_myInt8()
+    void tc_t_myInt16()
+    void tc_t_myInt32()
+    void tc_t_myInt64()
+    void tc_o_int8()
+    void tc_o_int8Min()
+    void tc_o_int8Max()
+    void tc_o_int16()
+    void tc_o_int16Min()
+    void tc_o_int16Max()
+    void tc_o_int32()
+    void tc_o_int32Min()
+    void tc_o_int32Max()
+    void tc_o_int64()
+    void tc_o_int64Min()
+    void tc_o_int64Max()

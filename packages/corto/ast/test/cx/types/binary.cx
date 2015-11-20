@@ -1,0 +1,14 @@
+binary t_b8: width_8
+binary t_b16: width_16
+binary t_b32: width_32
+binary t_b64: width_64
+binary t_word: width_word
+
+t_b8 o_b8: 0xFF
+t_b16 o_b16: 0xFFFF
+t_b32 o_b32: 0xFFFFFFFF
+t_b64 o_b64: 0xFFFFFFFFFFFFFFFF
+t_word o_bword: 0xFFFFFFFF
+
+octet o_octet: 0xFF
+word o_word: 0xFFFFFFFF

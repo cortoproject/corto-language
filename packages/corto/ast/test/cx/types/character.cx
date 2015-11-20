@@ -1,0 +1,8 @@
+character t_mychar: width_8
+
+char o_charAlpha: 'a'
+char o_charNum: '0'
+char o_charNull: 0
+char o_charSlash: '\\'
+char o_charNewline: '\n'
+char o_charQuote: '\''

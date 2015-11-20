@@ -726,15 +726,15 @@ error:
 }
 
 /* Parse single line internally */
-ast_Expression ast_Parser_parseIntern(corto_string expr, corto_object scope, ast_Parser *p) {
-    ast_Parser parser = ast_ParserCreate(expr, NULL);
+ast_Expression ast_Parser_parseIntern(ast_Parser parser, corto_object scope, corto_int32 *err) {
     ast_Expression result = NULL; /* Resulting ast-expression of 'exr' */
 
+    /* Ensure that corto scripts are parsed with default attributes */
+    corto_attr prevAttr = corto_setAttr(CORTO_ATTR_DEFAULT);
+
+    if (err) *err = 0;
     parser->repl = TRUE;
     parser->pass = 0;
-    if (p) {
-        *p = parser;
-    }
 
     corto_setref(&parser->scope, scope);
     if ( fast_yparse(parser, 1, 1)) {
@@ -766,10 +766,12 @@ ast_Expression ast_Parser_parseIntern(corto_string expr, corto_object scope, ast
         }
     }
 
+    corto_setAttr(prevAttr);
+
     return result;
 error:
-    corto_delete(parser);
-    *p = NULL;
+    corto_setAttr(prevAttr);
+    if (err) *err = -1;
     return NULL;
 }
 /* $end */
@@ -2206,20 +2208,10 @@ corto_void _ast_Parser_observerPush(ast_Parser this) {
 corto_uint32 _ast_Parser_parse(ast_Parser this, corto_stringSeq argv) {
 /* $begin(corto/ast/Parser/parse) */
     ast_CHECK_ERRSET(this);
+    corto_int32 err = 0;
 
-    this->pass = 0;
-    if ( fast_yparse(this, 1, 1)) {
-        corto_error("%s: parsed with errors (%d errors, %d warnings)", this->filename, this->errors, this->warnings);
-        goto error;
-    }
-
-    /* Reset parser-state so 2nd pass starts clean */
-    ast_Parser_reset(this);
-    corto_setref(&this->scope, NULL);
-
-    this->pass = 1;
-    if ( fast_yparse(this, 1, 1)) {
-        corto_error("%s: parsed with errors (%d errors, %d warnings)", this->filename, this->errors, this->warnings);
+    ast_Parser_parseIntern(this, NULL, &err);
+    if (err) {
         goto error;
     }
 
@@ -2305,12 +2297,13 @@ corto_int16 _ast_Parser_parseLine(corto_string expr, corto_object scope, corto_w
     ic_storage returnValue = NULL; /* Intermediate representation of return value */
     corto_type returnType = NULL; /* Return type */
     ic_op ret = NULL; /* ret or stop instruction */
-    ast_Parser parser = NULL;
     corto_value *v = (corto_value*)value;
     ic_program program = NULL;
+    corto_int32 err = 0;
+    ast_Parser parser = ast_ParserCreate(expr, NULL);
 
-    ast_Expression result = ast_Parser_parseIntern(expr, scope, &parser);
-    if (!parser) {
+    ast_Expression result = ast_Parser_parseIntern(parser, scope, &err);
+    if (err) {
         goto error;
     }
 
@@ -2432,11 +2425,11 @@ error:
 
 corto_type _ast_Parser_parseType(corto_string expr, corto_object scope) {
 /* $begin(corto/ast/Parser/parseType) */
-    ast_Parser parser = NULL;
-    ast_Expression e = ast_Parser_parseIntern(expr, scope, &parser);
+    corto_int32 err = 0;
     corto_type result = NULL;
-
-    if (!e) {
+    ast_Parser parser = ast_ParserCreate(expr, NULL);
+    ast_Expression e = ast_Parser_parseIntern(parser, scope, &err);
+    if (!e || err) {
         goto error;
     }
 

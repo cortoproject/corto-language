@@ -1,0 +1,21 @@
+
+int t_myInt8: width_8
+int t_myInt16: width_16
+int t_myInt32: width_32
+int t_myInt64: width_64
+
+int8 o_int8: 10
+int8 o_int8Min: -128
+int8 o_int8Max: 127
+
+int16 o_int16: 10
+int16 o_int16Min: -32768
+int16 o_int16Max: 32767
+
+int32 o_int32: 10
+int32 o_int32Min: -2147483648
+int32 o_int32Max: 2147483647
+
+int64 o_int64: 10
+int64 o_int64Min: -9223372036854775808
+int64 o_int64Max: 9223372036854775807

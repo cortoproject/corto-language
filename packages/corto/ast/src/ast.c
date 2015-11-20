@@ -37,7 +37,7 @@ int fast_cortoRun(corto_string file, int argc, char* argv[], void* udata) {
         /* Create parser */
         p = ast_ParserCreate(source, file);
 
-        /* Parse script */
+        /* Parse & run script */
         ast_Parser_parse(p, seq);
         corto_release(p);
         corto_dealloc(source);
