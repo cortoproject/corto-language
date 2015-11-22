@@ -94,3 +94,13 @@ test::Suite Float::
     void tc_o_float64ePt()
     void tc_o_float64eMin()
     void tc_o_float64eMinPt()
+
+test::Suite Enum::
+    void setup() method
+    void tc_t_Color()
+    void tc_t_Temperature()
+    void tc_t_Transportation()
+    void tc_o_color()
+    void tc_o_colorFullname()
+    void tc_o_temperature()
+    void tc_o_transportation()

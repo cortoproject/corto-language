@@ -1,0 +1,28 @@
+
+enum Color:: Red, Green, Blue
+
+Color o_colorRedFullname: Color::Red
+Color o_colorGreenFullname: Color::Green
+Color o_colorBlueFullname: Color::Blue
+
+Color o_colorRed: Red
+Color o_colorGreen: Green
+Color o_colorBlue: Blue
+
+enum Temperature::
+    Cold: 40
+    Moderate: 65
+    Hot: 90
+
+Temperature o_temperatureCold: Cold
+Temperature o_temperatureModerate: Moderate
+Temperature o_temperatureHot: Hot
+
+enum Transportation::
+    constant ByCar
+    constant ByBus
+    constant ByPlane
+
+Transportation o_transportationByCar: ByCar
+Transportation o_transportationByBus: ByBus
+Transportation o_transportationByPlane: ByPlane
