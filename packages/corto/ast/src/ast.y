@@ -58,38 +58,52 @@ ast_Expression ast_declarationSeqDo(ast_Storage type, ast_ParserDeclarationSeq *
 
     ast_Parser_collect(yparser(), result);
     yparser()->variableCount = 0;
-    for(i=0; i<declarations->length; i++)
+
+    for(i = 0; i < declarations->length; i++)
     {
         type = ast_Storage(ast_Expression_resolve(type, NULL));
 
         if (type && !corto_instanceof(corto_type_o, ast_Object(type)->value)) {
             _fast_err("object in declaration is not a type");
-            return NULL;
+            goto error;
         }
 
         if (!(declarations->buffer[i].storage = ast_Parser_declaration(
             yparser(),
             type ? ast_Object(type)->value : NULL,
             declarations->buffer[i].name,
-            isReference))) {
-                return NULL;
+            isReference)))
+        {
+            goto error;
         }
+
         corto_dealloc(declarations->buffer[i].name);
         expr = ast_Expression(declarations->buffer[i].storage);
 
         /* In a declaration of locals assignment is always a reference-assignment. */
         if (isReference) {
-            expr = ast_Expression(ast_Parser_unaryExpr(yparser(), expr, CORTO_AND));
+            expr = ast_Expression(
+                ast_Parser_unaryExpr(yparser(),
+                expr,
+                CORTO_AND));
+
             ast_Parser_collect(yparser(), expr);
         }
 
         ast_Comma_addExpression(result, expr);
     }
+
     corto_dealloc(declarations->buffer);
     declarations->buffer = NULL;
     declarations->length = 0;
 
     return ast_Expression(result);
+error:
+    corto_dealloc(declarations->buffer);
+    declarations->buffer = NULL;
+    declarations->length = 0;
+
+    return NULL;
 }
 
 %}
@@ -208,7 +222,7 @@ statements
     : statement { ast_Parser_reset(yparser()); fast_op;}
     | statements statement { ast_Parser_reset(yparser()); fast_op;}
     | error {
-        $$=NULL;
+        $$ = NULL;
         if(!yparser()->errors) {
             printf("unreported error:%d: ast_Parser.c:%d\n", yparser()->line, yparser()->errLine);
         }
@@ -220,15 +234,15 @@ statement
     | if_statement              {ast_Parser_addStatement(yparser(), $1); fast_op;}
     | while_statement           {ast_Parser_addStatement(yparser(), $1); fast_op;}
     | switch_statement          {ast_Parser_addStatement(yparser(), $1); fast_op;}
-    | declaration ENDL          {$$=NULL;}
+    | declaration ENDL          {$$ = NULL;}
     | scope_statement           {$<Variable>$ = ast_Parser_pushScope(yparser()); ast_Parser_pushLvalue(yparser(),NULL, FALSE); fast_op;} scope {ast_Parser_popScope(yparser(),$<Variable>2); fast_op;}
-    | function_declaration ENDL {$$=NULL;}
-    | function_implementation   {$$=NULL;}
-    | observer_statement        {$$=NULL;}
+    | function_declaration ENDL {$$ = NULL;}
+    | function_implementation   {$$ = NULL;}
+    | observer_statement        {$$ = NULL;}
     | update_statement          {ast_Parser_addStatement(yparser(), $1); fast_op;}
     | block                     {ast_Parser_addStatement(yparser(), $1); fast_op;}
     | package_declaration ENDL
-    | ENDL                      {$$=NULL;}
+    | ENDL                      {$$ = NULL;}
     | TAB                       {ast_Parser_error(yparser(), "usage of tabs is not allowed");}
     ;
 
@@ -352,13 +366,13 @@ package_declaration
     ;
 
 declaration
-    : identifier declaration_list { $$=ast_declarationSeqDo($1, &$2, FALSE); fast_op; $$=NULL; }
+    : identifier declaration_list { $$ = ast_declarationSeqDo($1, &$2, FALSE); fast_op; $$ = NULL; }
     | KW_LOCAL {yparser()->isLocal = TRUE;} declaration_ref     {$$=$3;}
     ;
 
 declaration_ref
-    : identifier declaration_list       {$$=ast_declarationSeqDo($1, &$2, FALSE); fast_op;}
-    | identifier '&' declaration_list   {$$=ast_declarationSeqDo($1, &$3, TRUE); fast_op;}
+    : identifier declaration_list       {$$ = ast_declarationSeqDo($1, &$2, FALSE); fast_op;}
+    | identifier '&' declaration_list   {$$ = ast_declarationSeqDo($1, &$3, TRUE); fast_op;}
     ;
 
 declaration_list
@@ -374,7 +388,7 @@ declaration_id
 /* Initializer */
 /* ======================================================================== */
 initializer
-    : init_list_value {$$=NULL;}
+    : init_list_value {$$ = NULL;}
     | initializer ',' init_list_value
     ;
 
@@ -390,7 +404,7 @@ init_value
 
 initializer_braces
     : '{' {ast_Parser_initPush(yparser()); fast_op;} initializer {ast_Parser_initPop(yparser()); fast_op;} '}' {$$=$3;}
-    | '{' '}' {ast_Parser_initPush(yparser()); fast_op; ast_Parser_initPop(yparser()); fast_op; $$=NULL;}
+    | '{' '}' {ast_Parser_initPush(yparser()); fast_op; ast_Parser_initPop(yparser()); fast_op; $$ = NULL;}
     ;
 
 init_list_colon
@@ -703,8 +717,8 @@ while_until
 /* Switch statement */
 /* ======================================================================== */
 switch_statement
-    : KW_SWITCH wait_expr ':' case_list INDENT switch_statements DEDENT    {$$=NULL;}
-    | KW_SWITCH wait_expr ':' switch_statements DEDENT                    {$$=NULL;}
+    : KW_SWITCH wait_expr ':' case_list INDENT switch_statements DEDENT    {$$ = NULL;}
+    | KW_SWITCH wait_expr ':' switch_statements DEDENT                    {$$ = NULL;}
     ;
 
 switch_statements
@@ -715,7 +729,7 @@ switch_statements
     ;
 
 case_statement
-    : DEDENT case_list INDENT    {$$=NULL;}
+    : DEDENT case_list INDENT    {$$ = NULL;}
     ;
 
 case_list
@@ -737,11 +751,11 @@ observer_statement
     ;
 
 observer_declaration
-    : observer_dispatch event_mask assignment_expr  {$$=NULL; ast_Parser_observerDeclaration(yparser(), NULL, $3, $2, $1); fast_op;}
+    : observer_dispatch event_mask assignment_expr  {$$ = NULL; ast_Parser_observerDeclaration(yparser(), NULL, $3, $2, $1); fast_op;}
     ;
 
 observer_dispatch
-    : KW_ON                 {$$=NULL; ast_Parser_observerPush(yparser());}
+    : KW_ON                 {$$ = NULL; ast_Parser_observerPush(yparser());}
     ;
 
 event_mask

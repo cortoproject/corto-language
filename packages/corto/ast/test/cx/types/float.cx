@@ -1,0 +1,21 @@
+
+float t_myFloat32: width_32
+float t_myFloat64: width_64
+
+float32 o_float32: 10
+float32 o_float32Min: -10
+float32 o_float32Pt: 10.5
+float32 o_float32MinPt: -10.5
+float32 o_float32e: 1e2
+float32 o_float32ePt: 1.05e2
+float32 o_float32eMin: 1e-2
+float32 o_float32eMinPt: 1.05e-2
+
+float64 o_float64: 10
+float64 o_float64Min: -10
+float64 o_float64Pt: 10.5
+float64 o_float64MinPt: -10.5
+float64 o_float64e: 1e2
+float64 o_float64ePt: 1.05e2
+float64 o_float64eMin: 1e-2
+float64 o_float64eMinPt: 1.05e-2

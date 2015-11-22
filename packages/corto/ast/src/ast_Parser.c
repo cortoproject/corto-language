@@ -733,7 +733,6 @@ ast_Expression ast_Parser_parseIntern(ast_Parser parser, corto_object scope, cor
     corto_attr prevAttr = corto_setAttr(CORTO_ATTR_DEFAULT);
 
     if (err) *err = 0;
-    parser->repl = TRUE;
     parser->pass = 0;
 
     corto_setref(&parser->scope, scope);
@@ -1237,10 +1236,8 @@ ast_Storage _ast_Parser_declaration(ast_Parser this, corto_type type, corto_stri
         if (!this->pass) {
             o = corto_declareChild(this->scope, id, type);
             if (!o) {
-                corto_id id1;
-                ast_Parser_error(this, "declare of '%s' of type '%s' failed",
-                        id,
-                        ast_Parser_id(type, id1));
+                ast_Parser_error(this, "%s",
+                        corto_lasterr());
                 goto error;
             }
         } else {
@@ -2301,6 +2298,7 @@ corto_int16 _ast_Parser_parseLine(corto_string expr, corto_object scope, corto_w
     ic_program program = NULL;
     corto_int32 err = 0;
     ast_Parser parser = ast_ParserCreate(expr, NULL);
+    parser->repl = TRUE;
 
     ast_Expression result = ast_Parser_parseIntern(parser, scope, &err);
     if (err) {
@@ -2428,6 +2426,8 @@ corto_type _ast_Parser_parseType(corto_string expr, corto_object scope) {
     corto_int32 err = 0;
     corto_type result = NULL;
     ast_Parser parser = ast_ParserCreate(expr, NULL);
+    parser->repl = TRUE;
+
     ast_Expression e = ast_Parser_parseIntern(parser, scope, &err);
     if (!e || err) {
         goto error;

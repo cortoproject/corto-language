@@ -1,0 +1,21 @@
+
+uint t_myUint8: width_8
+uint t_myUint16: width_16
+uint t_myUint32: width_32
+uint t_myUint64: width_64
+
+uint8 o_uint8: 10
+uint8 o_uint8Min: 0
+uint8 o_uint8Max: 255
+
+uint16 o_uint16: 10
+uint16 o_uint16Min: 0
+uint16 o_uint16Max: 65535
+
+uint32 o_uint32: 10
+uint32 o_uint32Min: 0
+uint32 o_uint32Max: 4294967295
+
+uint64 o_uint64: 10
+uint64 o_uint64Min: 0
+uint64 o_uint64Max: 18446744073709551613

@@ -1,17 +1,10 @@
-# ::corto::ast
+# /corto/ast
 The Corto scripting language parser.
-
 ### isOperatorAssignment(operatorKind operator)
 Test whether the specified operator results in an assignment.
-
 Operators that result in assignments are: ASSIGN, ASSIGN_ADD, ASSIGN_AND, ASSIGN_DIV, ASSIGN_MOD, ASSIGN_MUL, ASSIGN_OR, ASSIGN_SUB, ASSIGN_UPDATE, ASSIGN_XOR, 
-
 #### operator
-The operator.
-
 #### Returns
-TRUE if the operator results in an assignment, FALSE if it doesn't.
-
 ### report(string kind,string filename,uint32 line,uint32 column,string error,string token)
 #### kind
 #### filename
@@ -37,7 +30,6 @@ TRUE if the operator results in an assignment, FALSE if it doesn't.
 
 ## Binary
 A binary expression.
-
 ### construct()
 #### Returns
 ### deref
@@ -50,6 +42,9 @@ A binary expression.
 ### isScalar
 ### lvalue
 ### operator
+### resolve(type type)
+#### type
+#### Returns
 ### rvalue
 ### setOperator(operatorKind kind)
 #### kind
@@ -61,35 +56,20 @@ A binary expression.
 
 ## Binding
 A temporary type that binds an code block to a function object.
-
 ### function
 ### impl
 
 ## Block
 A code block.
-
 ### addStatement(ast::Node statement)
-Add a statement to a code block.
-
 #### statement
 ### declare(string id,type type,bool isParameter,bool isReference)
 Declare a variable in a code block.
-
 #### id
-The identifier of the variable.
-
 #### type
-The type of the variable.
-
 #### isParameter
-Should be TRUE if the variable represents a function parameter, otherwise parameter should be to FALSE.
-
 #### isReference
-TRUE when the variable represents a reference. This parameter should not be set to TRUE when the provided type is a reference.
-
 #### Returns
-Zero when success, non-zero if failed.
-
 ### declareReturnVariable(function function)
 #### function
 #### Returns
@@ -326,7 +306,12 @@ Zero when success, non-zero if failed.
 #### Returns
 ### hasSideEffects()
 #### Returns
+### id()
+#### Returns
 ### isReference
+### resolve(type type)
+#### type
+#### Returns
 ### serialize(type dstType,word dst)
 #### dstType
 #### dst
@@ -334,6 +319,7 @@ Zero when success, non-zero if failed.
 ### toList()
 #### Returns
 ### type
+### unresolved
 
 ## FloatingPoint
 ### init()
@@ -583,6 +569,8 @@ Zero when success, non-zero if failed.
 #### Returns
 ### getValue()
 #### Returns
+### id()
+#### Returns
 ### serialize(type dstType,word dst)
 #### dstType
 #### dst
@@ -695,8 +683,9 @@ Zero when success, non-zero if failed.
 #### falseBranch
 #### Returns
 ### initAnonymousId
-### initDeclareStaged(ast::Expression expr)
-#### expr
+### initDeclare(Expression ids)
+#### ids
+#### Returns
 ### initDynamic
 ### initializerCount
 ### initializers
@@ -721,9 +710,6 @@ Zero when success, non-zero if failed.
 #### Returns
 ### initPushStatic()
 #### Returns
-### initStage(string id,bool found)
-#### id
-#### found
 ### initValue(Expression expr)
 #### expr
 #### Returns
@@ -732,7 +718,6 @@ Zero when success, non-zero if failed.
 ### isErrSet()
 #### Returns
 ### isLocal
-### lastFailedResolve
 ### line
 ### lookup(string id)
 #### id
@@ -766,6 +751,10 @@ Zero when success, non-zero if failed.
 #### value
 #### Returns
 ### parseSingleExpr
+### parseType(string expr,object scope)
+#### expr
+#### scope
+#### Returns
 ### pass
 ### popComplexType()
 ### popLvalue()
@@ -793,10 +782,6 @@ Zero when success, non-zero if failed.
 ### scope
 ### singleExpr
 ### source
-### staged
-### stagedCount
-### stagedId
-### stagingAllowed
 ### ternaryExpr(ast::Expression cond,ast::Expression iftrue,ast::Expression iffalse)
 #### cond
 #### iftrue
@@ -825,12 +810,6 @@ Zero when success, non-zero if failed.
 #### trueBranch
 #### isUntil
 #### Returns
-
-## Parser::stagedId
-### column
-### found
-### line
-### name
 
 ## ParserDeclaration
 ### name
@@ -904,6 +883,7 @@ Zero when success, non-zero if failed.
 ### ObjectStorage
 ### TemplateStorage
 ### TemporaryStorage
+### UnresolvedReferenceStorage
 
 ## String
 ### block
@@ -976,6 +956,28 @@ Zero when success, non-zero if failed.
 #### Returns
 ### lvalue
 ### operator
+### resolve(type type)
+#### type
+#### Returns
+### toIc(ic::program program,ic::storage storage,bool stored)
+#### program
+#### storage
+#### stored
+#### Returns
+
+## UnresolvedReference
+### column
+### construct()
+#### Returns
+### error()
+### id()
+#### Returns
+### line
+### ref
+### resolve(type type)
+#### type
+#### Returns
+### scope
 ### toIc(ic::program program,ic::storage storage,bool stored)
 #### program
 #### storage

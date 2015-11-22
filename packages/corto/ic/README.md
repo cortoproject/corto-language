@@ -1,4 +1,4 @@
-# ::corto::ic
+# /corto/ic
 ### opKindFromOperator(operatorKind operator)
 #### operator
 #### Returns

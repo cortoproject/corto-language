@@ -24,7 +24,7 @@ corto_int16 _ast_SignedInteger_serialize(ast_SignedInteger this, corto_type dstT
     ast_valueKind kind;
 
     kind = ast_valueKindFromType(dstType);
-    
+
     memset((void*)dst, 0, corto_type_sizeof(dstType));
 
     switch(kind) {
@@ -34,6 +34,7 @@ corto_int16 _ast_SignedInteger_serialize(ast_SignedInteger this, corto_type dstT
     case Ast_Char:
     case Ast_Int:
     case Ast_SignedInt:
+    case Ast_Float:
     case Ast_Enum:
     case Ast_Text:
         corto_convert(corto_primitive(corto_int64_o), &this->value, corto_primitive(dstType), (void*)dst);
