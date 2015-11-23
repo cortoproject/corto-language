@@ -797,6 +797,24 @@ corto_void _ast_Parser_addStatement(ast_Parser this, ast_Node statement) {
         }
     }
 
+    /* If statement is an unresolved identifier by itself, it represents a
+     * declaration with the default type of a scope */
+    if (statement &&
+       (statement->kind == Ast_StorageExpr) &&
+       (ast_Storage(statement)->kind == Ast_UnresolvedReferenceStorage))
+    {
+        if (!this->pass) {
+            if (ast_Parser_initDeclare(this, statement)) {
+                goto error;
+            }
+            /* Don't add node to AST */
+            return;
+        } else {
+            /* Don't add node to AST */
+            return;
+        }
+    }
+
     if (statement) {
         if (this->block && (ast_Node(this->block->_while) != statement)) {
             if (this->block->_while) {

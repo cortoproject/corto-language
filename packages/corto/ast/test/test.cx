@@ -97,10 +97,24 @@ test::Suite Float::
 
 test::Suite Enum::
     void setup() method
-    void tc_t_Color()
-    void tc_t_Temperature()
-    void tc_t_Transportation()
-    void tc_o_color()
-    void tc_o_colorFullname()
-    void tc_o_temperature()
-    void tc_o_transportation()
+    void tc_t_OneLine()
+    void tc_t_MultiLine()
+    void tc_t_UserValues()
+    void tc_t_Explicit()
+    void tc_o_oneLine()
+    void tc_o_oneLineFullname()
+    void tc_o_oneLineFullnameSlash()
+    void tc_o_userValues()
+    void tc_o_explicit()
+
+test::Suite Bitmask::
+    void setup() method
+    void tc_t_OneLine()
+    void tc_t_MultiLine()
+    void tc_t_UserValues()
+    void tc_t_Explicit()
+    void tc_o_oneLine()
+    void tc_o_oneLineFullname()
+    void tc_o_oneLineFullnameSlash()
+    void tc_o_userValues()
+    void tc_o_explicit()
