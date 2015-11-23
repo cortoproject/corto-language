@@ -11,7 +11,7 @@
 /* $header() */
 #include "ast__private.h"
 
-#define ast_CHECK_ERRSET(parser) corto_assert(!parser->errSet, "%s:%d:%d: parser did not check error-status set on line %d", this->filename, this->line, this->column, this->errLine)
+#define ast_CHECK_ERRSET(parser) corto_assert(!parser->errSet, "%s:%d:%d: parser did not check error-status set on line %d (%s:%d)", this->filename, this->line, this->column, this->errLine, __FILE__, __LINE__)
 /*#define ast_PARSER_DEBUG*/
 #define fast_err this->errSet = TRUE; this->errLine = __LINE__;
 
@@ -805,7 +805,8 @@ corto_void _ast_Parser_addStatement(ast_Parser this, ast_Node statement) {
     {
         if (!this->pass) {
             if (ast_Parser_initDeclare(this, statement)) {
-                goto error;
+                /* This will eventually trigger an unresolved reference error */
+                ast_Block_addStatement(this->block, statement);
             }
             /* Don't add node to AST */
             return;
@@ -1752,6 +1753,10 @@ corto_int16 _ast_Parser_initDeclare(ast_Parser this, ast_Expression ids) {
                 type = corto_typeof(scope)->defaultType;
             } else {
                 type = corto_typeof(this->scope)->defaultType;
+            }
+
+            if (!type) {
+                goto error;
             }
 
             /* Declare object */
