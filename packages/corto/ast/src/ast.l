@@ -6,6 +6,7 @@
 #include "stdio.h"
 #include "string.h"
 #include "ast_Parser.h"
+#include "ast__private.h"
 #define MAX_DEPTH (72)
 
 static void comment(void);
@@ -120,7 +121,7 @@ static char *fast_charesc(char *in, corto_char *out) {
             *out = '?';
             break;
         default:
-            printf("invalid escape sequence '%c'",  *in);
+            ast_Parser_error(yparser(), "invalid escape sequence '%c'",  *in);
             goto error;
             break;
         }

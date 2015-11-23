@@ -118,3 +118,13 @@ test::Suite Bitmask::
     void tc_o_oneLineFullnameSlash()
     void tc_o_userValues()
     void tc_o_explicit()
+
+test::Suite Text::
+    void setup() method
+    void tc_o_alphanum()
+    void tc_o_specialchars()
+    void tc_o_newline()
+    void tc_o_slash()
+    void tc_o_quote()
+    void tc_o_empty()
+    void tc_o_null()
