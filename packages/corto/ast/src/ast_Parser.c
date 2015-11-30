@@ -19,7 +19,7 @@ extern corto_threadKey ast_PARSER_KEY;
 
 void ast_Parser_error(ast_Parser this, char* fmt, ... ) {
     va_list args;
-    char msgbuff[1024];
+    char *err = NULL;
     corto_id token;
     int line = this->line;
 
@@ -35,11 +35,12 @@ void ast_Parser_error(ast_Parser this, char* fmt, ... ) {
     }
 
     va_start(args, fmt);
-    vsprintf(msgbuff, fmt, args);
+    corto_vasprintf(&err, fmt, args);
     va_end(args);
 
-    ast_reportError(this->filename, this->column ? line : line - 1, this->column, msgbuff, token);
+    ast_reportError(this->filename, this->column ? line : line - 1, this->column, err, token);
 
+    corto_dealloc(err);
     this->errors++;
 }
 
@@ -1548,11 +1549,16 @@ ast_Expression _ast_Parser_elementExpr(ast_Parser this, ast_Expression lvalue, a
 
     /* Expand element expression with comma-expressions */
     if (this->pass) {
-        corto_type t = ast_Expression_getType(lvalue);
+        ast_Expression expr = ast_Expression_resolve(lvalue, NULL);
+        if (!expr) {
+            goto error;
+        }
+
+        corto_type t = ast_Expression_getType(expr);
         /* If the left value is a composite type then translate element expression to members */
         if (t) {
             if (t->kind == CORTO_COMPOSITE) {
-                if (!(result = ast_Parser_explodeComma(this, lvalue, rvalue, ast_Parser_expandMember, NULL))) {
+                if (!(result = ast_Parser_explodeComma(this, expr, rvalue, ast_Parser_expandMember, NULL))) {
                     goto error;
                 }
             } else {
@@ -1763,6 +1769,10 @@ corto_int16 _ast_Parser_initDeclare(ast_Parser this, ast_Expression ids) {
             }
 
             if (!type) {
+                corto_id id;
+                ast_Parser_error(this,
+                  "invalid declaration, no default type for scope '%s'",
+                  corto_fullname(scope, id));
                 goto error;
             }
 
@@ -2112,9 +2122,14 @@ ast_Expression _ast_Parser_memberExpr(ast_Parser this, ast_Expression lvalue, as
     ast_Expression result = NULL;
 
     if (this->pass) {
-        corto_type t = ast_Expression_getType(lvalue);
+        ast_Expression expr = ast_Expression_resolve(lvalue, NULL);
+        if (!expr) {
+            goto error;
+        }
+
+        corto_type t = ast_Expression_getType(expr);
         if (t) {
-            if (!(result = ast_Parser_explodeComma(this, lvalue, rvalue, ast_Parser_expandMember, NULL))) {
+            if (!(result = ast_Parser_explodeComma(this, expr, rvalue, ast_Parser_expandMember, NULL))) {
                 goto error;
             }
         } else {
@@ -2654,6 +2669,11 @@ corto_object _ast_Parser_pushScope(ast_Parser this) {
     oldScope = this->scope;
     if (!this->variableCount) {
         /* This is the result of a previous error */
+        goto error;
+    }
+
+    if (!this->variables[0]) {
+        ast_Parser_error(this, "invalid scope expression");
         goto error;
     }
 

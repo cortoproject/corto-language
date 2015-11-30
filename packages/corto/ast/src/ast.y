@@ -13,6 +13,7 @@ int yy_scan_string(const char* str);
 #define PUSHLVALUE(l) ast_Parser_pushLvalue(yparser(), l, FALSE); fast_op;
 #define PUSHASSIGN(l) ast_Parser_pushLvalue(yparser(), l, TRUE); fast_op;
 #define POPLVALUE()   ast_Parser_popLvalue(yparser()); fast_op;
+#define YYERROR_VERBOSE
 
 #define PUSHCOMPLEX(l) ast_Parser_pushComplexType(yparser(), l); fast_op;
 #define POPCOMPLEX() ast_Parser_popComplexType(yparser()); fast_op;
@@ -842,7 +843,7 @@ int fast_yparse(ast_Parser parser, corto_uint32 line, corto_uint32 column) {
     yyparse();
 
     /* Destroy lexer resources */
-    /*yylex_destroy();*/
+    yylex_destroy();
 
     /* Set token to NULL - it points to lexer-memory */
     yparser()->token = NULL;
