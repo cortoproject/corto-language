@@ -1711,7 +1711,14 @@ error:
 
 corto_int16 _ast_Parser_initDeclare(ast_Parser this, ast_Expression ids) {
 /* $begin(corto/ast/Parser/initDeclare) */
-    ast_ExpressionList expressions = ast_Expression_toList(ids);
+    ast_ExpressionList expressions;
+
+    if (!ids) {
+        ast_Parser_error(this, "invalid initializer");
+        goto error;
+    }
+
+    expressions = ast_Expression_toList(ids);
 
     /* Comma expression is encountered in the first pass. If this expression
      * contains out of UnresolvedReference nodes, declare objects */
@@ -1778,6 +1785,7 @@ corto_int16 _ast_Parser_initDeclare(ast_Parser this, ast_Expression ids) {
 
     return 0;
 error:
+    fast_err;
     return -1;
 /* $end */
 }
@@ -2639,12 +2647,23 @@ error:
 corto_object _ast_Parser_pushScope(ast_Parser this) {
 /* $begin(corto/ast/Parser/pushScope) */
     corto_object oldScope = NULL;
+    ast_Expression scope;
 
     ast_CHECK_ERRSET(this);
 
     oldScope = this->scope;
     if (!this->variableCount) {
         /* This is the result of a previous error */
+        goto error;
+    }
+
+    scope = ast_Expression_resolve(this->variables[0], NULL);
+    if (!scope) {
+        goto error;
+    }
+
+    if (!corto_instanceof(ast_Object_o, this->variables[0])) {
+        ast_Parser_error(this, "invalid scope expression (expected object)");
         goto error;
     }
 
