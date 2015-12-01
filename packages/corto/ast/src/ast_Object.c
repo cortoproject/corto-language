@@ -75,7 +75,7 @@ corto_int16 _ast_Object_serialize(ast_Object this, corto_type dstType, corto_wor
 
         /* Handle iterators */
         if ((dstType->kind == CORTO_ITERATOR) && (srcType->kind == CORTO_COLLECTION)) {
-            corto_iterator_set((void*)dst, obj, corto_collection(srcType));
+            /*corto_iterator_set((void*)dst, obj, corto_collection(srcType));*/
         } else if (dstIsDelegate) {
             if (srcIsDelegate) {
                 corto_value vDst, vSrc;

@@ -731,14 +731,14 @@ typedef union Di2f_t {
 #define ITER_SET(type,code)\
     ITER_SET_##code:\
         fetchOp3(ITER_SET, code##V);\
-        corto_iterator_set((void*)&op1_##code##V, (void*)&op2_##code##V, (void*)op3_##code##V);\
+        /* TODO */\
         next();\
 
 /* op1 is hasNext, op2 is the result of next and op3 is the iterator */
 #define ITER_NEXT(type,code)\
     ITER_NEXT_##code:\
         fetchOp2(ITER_NEXT, code);\
-        op1_##code = (W_t)corto_iterator_next((void*)op2_##code);\
+        /* TODO */\
         next();\
 
 #define JUMP(type, code)\
@@ -1273,4 +1273,3 @@ int vmMain(int argc, char* argv[]) {
     CORTO_PROCEDURE_VM = corto_callRegisterBinding(vm_call, NULL, NULL, (corto_callDestructHandler)vm_callDestruct);
     return 0;
 }
-
