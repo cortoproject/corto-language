@@ -42,18 +42,20 @@ corto_word ast_Initializer_offset(ast_StaticInitializer this, corto_uint32 varia
         break;
     case CORTO_COLLECTION: {
         if (fp) {
-            corto_uint32 elementSize = corto_type_sizeof(corto_collection(frame->type)->elementType);
-            switch(corto_collection(frame->type)->kind) {
+            corto_collection t = corto_collection(frame->type);
+            corto_type elementType = t->elementType;
+            corto_uint32 elementSize = corto_type_sizeof(elementType);
+            switch(t->kind) {
             case CORTO_SEQUENCE:
                 ((corto_objectseq*)base)->length++;
                 ((corto_objectseq*)base)->buffer = corto_realloc(((corto_objectseq*)base)->buffer, ((corto_objectseq*)base)->length * elementSize);
                 base = (corto_word)((corto_objectseq*)base)->buffer;
             case CORTO_ARRAY:
-                result = base + thisFrame->location * corto_type_sizeof(corto_collection(frame->type)->elementType);
+                result = base + thisFrame->location * corto_type_sizeof(elementType);
                 memset((void*)result, 0, elementSize);
                 break;
             case CORTO_LIST: {
-                if (corto_collection_elementRequiresAlloc(corto_collection(frame->type))) {
+                if (corto_collection_requiresAlloc(elementType)) {
                     result = (corto_word)corto_calloc(elementSize);
                 }
                 if (!*(corto_ll*)base) {
@@ -68,7 +70,7 @@ corto_word ast_Initializer_offset(ast_StaticInitializer this, corto_uint32 varia
             case CORTO_MAP: {
                 corto_type keyType = corto_map(frame->type)->keyType;
                 if (!thisFrame->isKey) {
-                    if (corto_collection_elementRequiresAlloc(corto_collection(frame->type))) {
+                    if (corto_collection_requiresAlloc(elementType)) {
                         result = (corto_word)corto_calloc(elementSize);
                     }
                     if (!*(corto_rbtree*)base) {
@@ -112,7 +114,7 @@ error:
 corto_int16 _ast_StaticInitializer_construct(ast_StaticInitializer this) {
 /* $begin(corto/ast/StaticInitializer/construct) */
     corto_int8 variable;
-    
+
     /* Copy offsets of variables into frames */
     for(variable=0; variable<ast_Initializer(this)->variableCount; variable++) {
          this->frames[0].ptr[variable] =
@@ -122,7 +124,7 @@ corto_int16 _ast_StaticInitializer_construct(ast_StaticInitializer this) {
             goto error;
         }
     }
-    
+
     return ast_Initializer_construct(ast_Initializer(this));
 error:
     return -1;
@@ -159,7 +161,7 @@ corto_int16 _ast_StaticInitializer_define(ast_StaticInitializer this) {
             ast_Parser_collect(yparser(), refVar);
         }
     }
-    
+
     ast_Initializer_define_v(ast_Initializer(this));
 
     return 0;
@@ -171,7 +173,7 @@ error:
 corto_int16 _ast_StaticInitializer_push(ast_StaticInitializer this) {
 /* $begin(corto/ast/StaticInitializer/push) */
     corto_uint8 variable;
-    
+
     /* Obtain offset for all that variables being initialized */
     for(variable=0; variable<ast_Initializer(this)->variableCount; variable++) {
         /* Calculate the offset for the current value */
@@ -196,10 +198,10 @@ corto_int16 _ast_StaticInitializer_value(ast_StaticInitializer this, ast_Express
     }
 
     corto_type vType = ast_Expression_getType_type(v, type);
-    
+
     if (!type) {
         corto_id id;
-        ast_Parser_error(yparser(), "excess elements in initializer of type '%s'", 
+        ast_Parser_error(yparser(), "excess elements in initializer of type '%s'",
             ast_Parser_id(ast_Expression(this)->type, id));
         goto error;
     }
@@ -211,7 +213,7 @@ corto_int16 _ast_StaticInitializer_value(ast_StaticInitializer this, ast_Express
     /* Validate whether expression type matches current type of initializer */
     if (vType && !corto_type_castable(type, vType)) {
         corto_id id, id2;
-        ast_Parser_error(yparser(), "type '%s' invalid here (expected '%s')", 
+        ast_Parser_error(yparser(), "type '%s' invalid here (expected '%s')",
             ast_Parser_id(vType, id), ast_Parser_id(type, id2));
         goto error;
     }
@@ -231,7 +233,7 @@ corto_int16 _ast_StaticInitializer_value(ast_StaticInitializer this, ast_Express
         if (!offset) {
             goto error;
         }
-        
+
         if (ast_Expression_serialize(v, type, offset)) {
             goto error;
         }

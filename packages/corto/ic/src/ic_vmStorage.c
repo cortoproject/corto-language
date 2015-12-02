@@ -87,7 +87,7 @@ ic_vmStorage *ic_vmStorageCreate(ic_vmProgram *program, ic_storage acc, corto_ui
 corto_bool ic_vmStorage_mustAllocate(ic_vmStorage *storage) {
     corto_bool result = FALSE;
 
-    if (!storage->reusable || 
+    if (!storage->reusable ||
        (storage->ic->kind == IC_ACCUMULATOR)) {
         result = TRUE;
         storage->allocated = result;
@@ -159,7 +159,7 @@ static vm_op *ic_vmStorageAssembleElement(
             ic_vmSetOp3Addr(program, vmOp, IC_VMTYPE_W, IC_VMOPERAND_R, indexKind, IC_VMOPERAND_V, ic_node(acc->ic), ic_element(storage->ic)->index, ic_elementSize);
             break;
         case CORTO_LIST:
-            if (corto_collection_elementRequiresAlloc(collection)) {
+            if (corto_collection_requiresAlloc(collection->elementType)) {
                 vmOp->op = ic_getVmELEML(type, IC_VMTYPE_W, IC_VMOPERAND_R, indexKind, 0);
             } else {
                 vmOp->op = ic_getVmELEMLX(type, IC_VMTYPE_W, IC_VMOPERAND_R, indexKind, 0);
@@ -167,7 +167,7 @@ static vm_op *ic_vmStorageAssembleElement(
             ic_vmSetOp2Addr(program, vmOp, IC_VMTYPE_W, IC_VMOPERAND_R, indexKind, ic_node(acc->ic), ((ic_element)storage->ic)->index);
             break;
         case CORTO_MAP:
-            if (corto_collection_elementRequiresAlloc(collection)) {
+            if (corto_collection_requiresAlloc(collection->elementType)) {
                 vmOp->op = ic_getVmELEMM(type, IC_VMTYPE_W, IC_VMOPERAND_R, indexKind, 0);
             } else {
                 vmOp->op = ic_getVmELEMMX(type, IC_VMTYPE_W, IC_VMOPERAND_R, indexKind, 0);
