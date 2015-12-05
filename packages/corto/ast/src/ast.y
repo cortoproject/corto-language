@@ -287,7 +287,11 @@ function_implementation
     | function_declaration {
         $<ast>$ = ast_Parser_declareFunctionParams(yparser(),$1); fast_op;
         ast_Parser_blockPush(yparser(), FALSE); fast_op;
-        ast_Parser_pushReturnAsLvalue(yparser(), ast_Object($1)->value); fast_op;
+        ast_Expression s = ast_Expression_resolve($1, NULL);
+        if (!s) {
+            YYERROR;
+        }
+        ast_Parser_pushReturnAsLvalue(yparser(), ast_Object(s)->value); fast_op;
     } '=' expr ENDL {
         ast_Parser_popLvalue(yparser()); fast_op;
         ast_Parser_bindOneliner(yparser(), $1, $<ast>2, $4); fast_op;
@@ -296,7 +300,23 @@ function_implementation
     ;
 
 function_declaration
-    : identifier any_id function_argumentList    {corto_id id; sprintf(id, "%s(%s)", $2, $3); corto_dealloc($3); $$ = ast_Parser_declareFunction(yparser(), $1 ? ast_Object($1)->value : NULL, id, NULL, FALSE); fast_op; }
+    : identifier any_id function_argumentList {
+        corto_id id;
+        ast_Expression e = ast_Expression_resolve($1, NULL);
+        if (!e) {
+            YYERROR;
+        }
+        sprintf(id, "%s(%s)", $2, $3);
+        corto_dealloc($3);
+        $$ = ast_Parser_declareFunction(
+            yparser(),
+            e ? ast_Object(e)->value : NULL,
+            id,
+            NULL,
+            FALSE
+        );
+        fast_op;
+    }
     | identifier any_id function_argumentList identifier_string  {
         corto_id id;
         corto_type kind = corto_resolve(NULL, $4);
@@ -339,10 +359,18 @@ function_arguments
 
 function_argument
     : identifier any_id {
-        $$=ast_Parser_argumentToString(yparser(), $1 ? ast_Object($1)->value : NULL, $2, FALSE); fast_op;
+        ast_Expression e = ast_Expression_resolve($1, NULL);
+        if (!e) {
+            YYERROR;
+        }
+        $$=ast_Parser_argumentToString(yparser(), $1 ? ast_Object(e)->value : NULL, $2, FALSE); fast_op;
     }
     | identifier '&' any_id {
-        $$=ast_Parser_argumentToString(yparser(), $1 ? ast_Object($1)->value : NULL, $3, TRUE); fast_op;
+        ast_Expression e = ast_Expression_resolve($1, NULL);
+        if (!e) {
+            YYERROR;
+        }
+        $$=ast_Parser_argumentToString(yparser(), $1 ? ast_Object(e)->value : NULL, $3, TRUE); fast_op;
     }
     | '$' any_id {
         corto_id argid;
