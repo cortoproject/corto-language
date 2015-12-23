@@ -691,7 +691,7 @@ any_id
     | '@' KW_UPDATE {$$ = "update";}
     | '@' KW_DECLARE {$$ = "declare";}
     | '@' KW_DEFINE {$$ = "define";}
-    | '@' KW_DESTRUCT {$$ = "destruct";}
+    | '@' KW_DESTRUCT {$$ = "delete";}
     | '@' KW_WAIT {$$ = "wait";}
     | '@' KW_ON {$$ = "on";}
     | '@' KW_SELF {$$ = "self";}

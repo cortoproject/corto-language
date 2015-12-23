@@ -1479,7 +1479,8 @@ corto_int16 _ast_Parser_defineScope(ast_Parser this) {
         if (corto_instanceof(corto_type(corto_type_o), this->scope)) {
             if (corto_define(this->scope)) {
                 corto_id id;
-                ast_Parser_error(this, "failed to define scope '%s' (%s)", ast_Parser_id(this->scope, id), corto_lasterr());
+                ast_Parser_error(this, "failed to define scope '%s' (%s)",
+                    ast_Parser_id(this->scope, id), corto_lasterr());
                 goto error;
             }
         } else {
@@ -1769,10 +1770,8 @@ corto_int16 _ast_Parser_initDeclare(ast_Parser this, ast_Expression ids) {
             }
 
             if (!type) {
-                corto_id id;
                 ast_Parser_error(this,
-                  "invalid declaration, no default type for scope '%s'",
-                  corto_fullname(scope, id));
+                  "unresolved identifier: %s", id);
                 goto error;
             }
 
@@ -2571,6 +2570,7 @@ corto_int16 _ast_Parser_pushPackage(ast_Parser this, corto_string name) {
 /* $begin(corto/ast/Parser/pushPackage) */
     char ch, *ptr, *bptr;
     corto_id buffer;
+    corto_id fullpath;
 
     if (this->scope && (this->scope != root_o)) {
         ast_Parser_error(this, "#package may only be used in the root scope");
@@ -2578,40 +2578,39 @@ corto_int16 _ast_Parser_pushPackage(ast_Parser this, corto_string name) {
     }
 
     corto_setref(&this->scope, root_o);
-    if (!memcmp(name, "::", 2)) {
-        name += 2;
+
+    if ((name[0] == ':') && (name[1] == ':')) {
+        strcpy(fullpath, name + 2);
+    } else if (name[0] == '/') {
+        strcpy(fullpath, name + 1);
     } else {
-        ast_Parser_error(this, "packages must be specified using fully qualified names");
-        goto error;
+        strcpy(fullpath, name);
     }
 
     /* Check for package nesting */
-    ptr = name;
+    ptr = fullpath;
     bptr = buffer;
     while ((ch = *ptr)) {
-        if (ch == ':') {
-            if (ptr[1] == ':') {
-                *bptr = '\0';
+        if (((ch == ':') && (ptr[1] == ':')) || (ch == '/')) {
+            *bptr = '\0';
+            if (ch == ':') {
                 ptr++;
-                corto_object o = corto_resolve(this->scope, buffer);
-                if (!o) {
-                    /* Declare package */
-                    ast_Parser_declaration(this, corto_type(corto_package_o), buffer, FALSE);
-
-                    /* Push package as scope */
-                    ast_Parser_pushScope(this);
-
-                    /* Define package */
-                    ast_Parser_defineScope(this);
-                } else {
-                    corto_setref(&this->scope, o);
-                    corto_release(o);
-                }
-                bptr = buffer;
-            } else {
-                ast_Parser_error(this, "invalid package name '%s'", name);
-                goto error;
             }
+            corto_object o = corto_resolve(this->scope, buffer);
+            if (!o) {
+                /* Declare package */
+                ast_Parser_declaration(this, corto_type(corto_package_o), buffer, FALSE);
+
+                /* Push package as scope */
+                ast_Parser_pushScope(this);
+
+                /* Define package */
+                ast_Parser_defineScope(this);
+            } else {
+                corto_setref(&this->scope, o);
+                corto_release(o);
+            }
+            bptr = buffer;
         } else {
             *bptr = ch;
             bptr++;
@@ -2621,7 +2620,14 @@ corto_int16 _ast_Parser_pushPackage(ast_Parser this, corto_string name) {
     *bptr = '\0';
 
     /* Declare package */
-    ast_Parser_declaration(this, corto_type(corto_package_o), buffer, FALSE);
+    if (!ast_Parser_declaration(
+        this,
+        corto_type(corto_package_o),
+        buffer,
+        FALSE))
+    {
+        goto error;
+    }
 
     /* Push package as scope */
     ast_Parser_pushScope(this);
