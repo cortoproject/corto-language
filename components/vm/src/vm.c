@@ -480,10 +480,9 @@ typedef union Di2f_t {
         fetchOp2(CAST,code)\
         if (op1_##code) {\
             if (!corto_instanceof((corto_type)op2_##code, (corto_object)op1_##code)) {\
-                corto_id id1,id2;\
                 printf("Exception: invalid cast from type '%s' to '%s'\n", \
-                    corto_fullname((corto_object)op2_##code, id1), \
-                    corto_fullname(corto_typeof((corto_object)op1_##code), id2));\
+                    corto_fullpath(NULL, (corto_object)op2_##code), \
+                    corto_fullpath(NULL, corto_typeof((corto_object)op1_##code)));\
                     goto STOP;\
             }\
         }\
@@ -907,7 +906,7 @@ static void corto_vm_sig(int sig) {
 
     /* Walk the stack, print frames */
     for(sp = programData->sp-1; sp>=0; sp--) {
-        corto_id id, file;
+        corto_id file;
         vm_program program = programData->stack[sp];
 
         corto_uint32 line = program->debugInfo[((corto_word)programData->c[sp]->pc - (corto_word)program->program)/sizeof(vm_op)].line;
@@ -918,7 +917,7 @@ static void corto_vm_sig(int sig) {
             *file = '\0';
         }
         if (program->function) {
-            printf("[%d] %s (%s%d)\n", sp+1, corto_fullname(program->function, id), file, line);
+            printf("[%d] %s (%s%d)\n", sp+1, corto_fullpath(NULL, program->function), file, line);
         } else {
             printf("[%d] <main> (%s%d)\n", sp+1, file, line);
         }
