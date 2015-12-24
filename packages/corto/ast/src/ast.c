@@ -6,15 +6,10 @@
  * when the file is regenerated.
  */
 
-#include "ast.h"
+#include "corto/ast/ast.h"
 
 /* $header() */
 #include "ast__private.h"
-#include "ast.h"
-#include "corto_util.h"
-#include "corto_loader.h"
-#include "corto_file.h"
-#include "corto_mm.h"
 
 corto_threadKey ast_PARSER_KEY;
 

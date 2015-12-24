@@ -5,23 +5,8 @@
  *      Author: sander
  */
 
-#include "corto.h"
-
 #include "vm.h"
 #include "vm_operands.h"
-#include "corto_convert.h"
-#include "corto_err.h"
-#include "corto_string.h"
-#include "corto_util.h"
-#include "corto_call.h"
-#include "corto_mem.h"
-#include "corto_type.h"
-#include "corto_async.h"
-#include "corto_def.h"
-#include "corto__meta.h"
-#include "inttypes.h"
-
-#include "alloca.h"
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-label"

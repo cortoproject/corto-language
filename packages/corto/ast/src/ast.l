@@ -1,12 +1,8 @@
 %{
 
-#include "corto.h"
-#include "ast__type.h"
-#include "y.tab.h"
-#include "stdio.h"
-#include "string.h"
-#include "ast_Parser.h"
+#include "corto/ast/ast__type.h"
 #include "ast__private.h"
+#include "y.tab.h"
 #define MAX_DEPTH (72)
 
 static void comment(void);

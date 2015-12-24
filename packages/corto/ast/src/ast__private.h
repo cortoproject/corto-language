@@ -1,7 +1,7 @@
 #ifndef ast__Private_H
 #define ast__Private_H
 
-#include "ast.h"
+#include "corto/ast/ast.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -1,7 +1,6 @@
 %{
 
-#include "corto.h"
-#include "ast.h"
+#include "corto/ast/ast.h"
 #include "ast__private.h"
 
 /* Forward declarations of yacc functions */
