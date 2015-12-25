@@ -6,7 +6,7 @@
 #ifndef vm_H
 #define vm_H
 
-#include "corto/lang/corto.h"
+#include "corto/corto.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
