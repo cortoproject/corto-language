@@ -2169,20 +2169,7 @@ ast_Storage _ast_Parser_observerDeclaration(ast_Parser this, corto_string id, as
     } else {
         ast_Block block;
         corto_observer observer;
-        corto_object observable = NULL;
         corto_uint32 i;
-
-        /* Find observable */
-        switch(ast_Storage(object)->kind) {
-        case Ast_ObjectStorage:
-            observable = ast_Object(object)->value;
-            break;
-        case Ast_TemplateStorage:
-            /* In case of template ('this') leave observable zero */
-            break;
-        default:
-            break;
-        }
 
         block = ast_Parser_blockPush(this, TRUE); /* Push new block on stack */
 
