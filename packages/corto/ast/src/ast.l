@@ -1,6 +1,6 @@
 %{
 
-#include "corto/ast/ast__type.h"
+#include "corto/ast/_type.h"
 #include "ast__private.h"
 #include "y.tab.h"
 #define MAX_DEPTH (72)

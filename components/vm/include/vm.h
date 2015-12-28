@@ -1,12 +1,14 @@
-/* include/vm.h
+/* vm.h
  *
  * This file is generated. Do not modify.
  */
 
-#ifndef vm_H
-#define vm_H
+#ifndef VM_H
+#define VM_H
 
 #include "corto/corto.h"
+#include "_interface.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif

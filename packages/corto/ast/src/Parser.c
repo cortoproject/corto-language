@@ -672,11 +672,6 @@ ast_Storage ast_Parser_observerCreate(ast_Parser this, corto_string id, ast_Expr
         corto_setref(&observer->observable, observable);
         observer->mask = mask;
         corto_setref(&observer->dispatcher, dispatcher);
-
-        /* If observer is a template observer, manually attach */
-        if (parent) {
-            corto_class_bindObserver(corto_class(parent), observer);
-        }
     } else {
         observer = corto_observerDeclareChild(this->scope, id);
         if (!observer) {
@@ -2189,24 +2184,14 @@ ast_Storage _ast_Parser_observerDeclaration(ast_Parser this, corto_string id, as
             break;
         }
 
-        /* Find or create observer depending on whether it is a template observer or not */
-        if (isTemplate) {
-            block = this->block; /* If observer is a template the block has already been pushed by Parser::observerPush */
-            /* Template observers have been created in the first pass. Look up the created observer */
-            observer = corto_class_findObserver(corto_class(this->scope), observable);
-            result = ast_Storage(ast_ObjectCreate(observer));
-            ast_Parser_collect(this, result);
-        } else {
-            block = ast_Parser_blockPush(this, TRUE); /* Push new block on stack */
+        block = ast_Parser_blockPush(this, TRUE); /* Push new block on stack */
 
-            /* If observer is not a template it has not yet been created, so create it now */
-            result = ast_Parser_observerCreate(this, id, object, mask, dispatcher);
-            if (!result) {
-                ast_Parser_error(this, "failed to create observer");
-                goto error;
-            }
-            observer = ast_Object(result)->value;
+        result = ast_Parser_observerCreate(this, id, object, mask, dispatcher);
+        if (!result) {
+            ast_Parser_error(this, "failed to create observer");
+            goto error;
         }
+        observer = ast_Object(result)->value;
 
         /* Declare this */
         if (!ast_Block_resolve(block, "this")) {
