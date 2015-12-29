@@ -2168,7 +2168,6 @@ ast_Storage _ast_Parser_observerDeclaration(ast_Parser this, corto_string id, as
         }
     } else {
         ast_Block block;
-        corto_observer observer;
         corto_uint32 i;
 
         block = ast_Parser_blockPush(this, TRUE); /* Push new block on stack */
@@ -2178,7 +2177,6 @@ ast_Storage _ast_Parser_observerDeclaration(ast_Parser this, corto_string id, as
             ast_Parser_error(this, "failed to create observer");
             goto error;
         }
-        observer = ast_Object(result)->value;
 
         /* Declare this */
         if (!ast_Block_resolve(block, "this")) {
