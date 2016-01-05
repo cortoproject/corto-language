@@ -1,8 +1,7 @@
 # /corto/ast
 The Corto scripting language parser.
+
 ### isOperatorAssignment(operatorKind operator)
-Test whether the specified operator results in an assignment.
-Operators that result in assignments are: ASSIGN, ASSIGN_ADD, ASSIGN_AND, ASSIGN_DIV, ASSIGN_MOD, ASSIGN_MUL, ASSIGN_OR, ASSIGN_SUB, ASSIGN_UPDATE, ASSIGN_XOR, 
 #### operator
 #### Returns
 ### report(string kind,string filename,uint32 line,uint32 column,string error,string token)
@@ -29,7 +28,6 @@ Operators that result in assignments are: ASSIGN, ASSIGN_ADD, ASSIGN_AND, ASSIGN
 #### Returns
 
 ## Binary
-A binary expression.
 ### construct()
 #### Returns
 ### deref
@@ -56,15 +54,16 @@ A binary expression.
 
 ## Binding
 A temporary type that binds an code block to a function object.
+
 ### function
 ### impl
 
 ## Block
 A code block.
+
 ### addStatement(ast::Node statement)
 #### statement
 ### declare(string id,type type,bool isParameter,bool isReference)
-Declare a variable in a code block.
 #### id
 #### type
 #### isParameter
