@@ -34,7 +34,7 @@ extern int CORTO_PROCEDURE_VM;
 
 #define CONST1_COND_LD(type, arg, op1)\
     CORTO_VM_##arg##L##_##type##op1,\
-    CORTO_VM_##arg##D##_##type##op1,     
+    CORTO_VM_##arg##D##_##type##op1,
 
 #define CONST2(type, arg, op1, op2)\
     CORTO_VM_##arg##_##type##op1##op2,
@@ -82,7 +82,7 @@ typedef struct vm_op {
 typedef struct vm_debugInfo {
     uint32_t line;
 }vm_debugInfo;
-    
+
 typedef struct vm_program_s *vm_program;
 typedef struct vm_program_s {
     vm_op *program;

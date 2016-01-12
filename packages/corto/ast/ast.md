@@ -1,6 +1,4 @@
 # /corto/ast
-The Corto scripting language parser.
-
 ### isOperatorAssignment(operatorKind operator)
 #### operator
 #### Returns
@@ -53,14 +51,10 @@ The Corto scripting language parser.
 #### Returns
 
 ## Binding
-A temporary type that binds an code block to a function object.
-
 ### function
 ### impl
 
 ## Block
-A code block.
-
 ### addStatement(ast::Node statement)
 #### statement
 ### declare(string id,type type,bool isParameter,bool isReference)
