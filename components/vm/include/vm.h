@@ -7,7 +7,7 @@
 #define VM_H
 
 #include "corto/corto.h"
-#include "_interface.h"
+#include "vm/_interface.h"
 
 #ifdef __cplusplus
 extern "C" {
