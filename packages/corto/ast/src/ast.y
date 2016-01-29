@@ -323,6 +323,10 @@ function_declaration
             ast_Parser_error(yparser(), "%s not found", $4);
             YYERROR;
         }
+        if (!corto_instanceof(ast_Object_o, $1)) {
+            ast_Parser_error(yparser(), "invalid type");
+            YYERROR;
+        }
         sprintf(id, "%s(%s)", $2, $3);
         corto_dealloc($3);
         $$ = ast_Parser_declareFunction(yparser(), $1 ? ast_Object($1)->value : NULL, id, kind, FALSE); fast_op;

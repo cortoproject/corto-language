@@ -13,7 +13,7 @@
 
 #define ast_CHECK_ERRSET(parser) corto_assert(!parser->errSet, "%s:%d:%d: parser did not check error-status set on line %d (%s:%d)", this->filename, this->line, this->column, this->errLine, __FILE__, __LINE__)
 /*#define ast_PARSER_DEBUG*/
-#define fast_err this->errSet = TRUE; this->errLine = __LINE__;
+#define fast_err ast_Parser_reset(this); this->errSet = TRUE; this->errLine = __LINE__;
 
 extern corto_threadKey ast_PARSER_KEY;
 
@@ -164,13 +164,15 @@ corto_object ast_Parser_combineConditionalExpr(ast_Parser this, ast_Expression l
         /* Fold expression where possible */
         result = ast_Expression_fold(result);
         if (!result) {
-            ast_Parser_error(this, "folding failed for expression");
+            goto error;
         }
     } else {
         result = rvalue;
     }
 
     return result;
+error:
+    return NULL;
 }
 
 /* Create binary expression with ternary operand */
@@ -406,7 +408,6 @@ corto_object ast_Parser_expandBinary(ast_Parser this, ast_Expression lvalue, ast
         if (result) {
             result = ast_Expression_fold(result);
             if (!result) {
-                ast_Parser_error(this, "folding failed for expression");
                 goto error;
             }
         }
@@ -571,7 +572,7 @@ ast_Expression ast_Parser_expandComma(ast_Parser this, ast_Expression lvalues, a
         if (localResult) {
             localResult = ast_Expression_fold(localResult);
             if (!localResult) {
-                ast_Parser_error(this, "folding failed for expression");
+                goto error;
             }
         }
 
@@ -1244,15 +1245,14 @@ ast_Storage _ast_Parser_declaration(ast_Parser this, corto_type type, corto_stri
             this->variableCount++;
         }
     } else {
-        corto_object o;
+        corto_object o = NULL;
 
         corto_assert(this->block != NULL, "no valid code-block set in parser context.");
 
         if (!this->pass) {
             o = corto_declareChild(this->scope, id, type);
             if (!o) {
-                ast_Parser_error(this, "%s",
-                        corto_lasterr());
+                ast_Parser_error(this, "%s", corto_lasterr());
                 goto error;
             }
         } else {
@@ -1291,7 +1291,7 @@ ast_Storage _ast_Parser_declareFunction(ast_Parser this, corto_type returnType, 
 
         /* Resolve identifier first to verify whether it is not already in use as non-function object */
         if ((o = corto_lookup(this->scope, functionName))) {
-            if (!corto_instanceof(corto_type(corto_function_o), o)) {
+            if (!corto_instanceof(corto_function_o, o)) {
                 corto_id id2;
                 // todo changed here
                 ast_Parser_error(this, "cannot redeclare '%s' of type '%s' as function",
@@ -1310,8 +1310,17 @@ ast_Storage _ast_Parser_declareFunction(ast_Parser this, corto_type returnType, 
                     kind = corto_type(corto_function_o);
                 }
             } else {
+                if (!corto_instanceof(corto_procedure_o, kind) &&
+                    !corto_interface_baseof(kind, corto_delegate_o))
+                {
+                    ast_Parser_error(
+                        this, "'%s' is not a valid procedure or delegate type",
+                        corto_fullpath(NULL, kind));
+                    goto error;
+                }
+
                 /* Check whether declaration is a delegate */
-                if(corto_interface_baseof(corto_interface(kind), corto_interface(corto_delegate_o))) {
+                if(corto_interface_baseof(kind, corto_delegate_o)) {
                     result = ast_Parser_declareDelegate(
                         this,
                         returnType,
@@ -1330,7 +1339,7 @@ ast_Storage _ast_Parser_declareFunction(ast_Parser this, corto_type returnType, 
                 function = corto_declareChild(this->scope, id, kind);
                 if (!function) {
                     ast_Parser_error(this, "declare of '%s' failed",
-                                      functionName);
+                        functionName);
                     goto error;
                 }
 
@@ -1467,7 +1476,6 @@ corto_int16 _ast_Parser_defineScope(ast_Parser this) {
 
     if (!this->pass) {
         if (!this->scope) {
-            ast_Parser_error(this, "invalid scope expression");
             goto error;
         }
 
@@ -2009,6 +2017,10 @@ corto_int16 _ast_Parser_initPushStatic(ast_Parser this) {
     this->initializerCount++;
 
     if (!isLocal && this->variableCount) {
+        if (!this->variables[0]) {
+            goto error;
+        }
+
         if (ast_Storage(this->variables[0])->kind != Ast_ObjectStorage) {
             isLocal = TRUE;
         }
@@ -2651,7 +2663,6 @@ corto_object _ast_Parser_pushScope(ast_Parser this) {
     }
 
     if (!this->variables[0]) {
-        ast_Parser_error(this, "invalid scope expression");
         goto error;
     }
 
