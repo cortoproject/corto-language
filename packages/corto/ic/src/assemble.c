@@ -1,6 +1,6 @@
 
 #include "corto/ic/ic.h"
-#include "vm_operands.h"
+#include "vm/vm_operands.h"
 #include "corto/ic/vmProgram.h"
 #include "corto/ic/vmStorage.h"
 

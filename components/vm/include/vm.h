@@ -15,7 +15,7 @@ extern "C" {
 
 /* $header() */
 #include "stdint.h"
-#include "vm_def.h"
+#include "vm/vm_def.h"
 
 extern int CORTO_PROCEDURE_VM;
 
@@ -126,4 +126,3 @@ vm_op *vm_programAddOp(vm_program program, uint32_t line);
 }
 #endif
 #endif
-

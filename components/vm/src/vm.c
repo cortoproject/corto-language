@@ -6,7 +6,7 @@
  */
 
 #include "vm.h"
-#include "vm_operands.h"
+#include "vm/vm_operands.h"
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-label"
