@@ -17,6 +17,10 @@ extern "C" {
 #endif
 
 
+/* $header() */
+#include "corto/vm/vm.h"
+/* $end */
+
 CORTO_IC_EXPORT ic_opKind _ic_opKindFromOperator(corto_operatorKind _operator);
 #define ic_opKindFromOperator(_operator) _ic_opKindFromOperator(_operator)
 #include "corto/ic/accumulator.h"
@@ -33,6 +37,7 @@ CORTO_IC_EXPORT ic_opKind _ic_opKindFromOperator(corto_operatorKind _operator);
 #include "corto/ic/scope.h"
 #include "corto/ic/storage.h"
 #include "corto/ic/variable.h"
+#include "corto/vm/vm.h"
 
 #ifdef __cplusplus
 }

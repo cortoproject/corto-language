@@ -5,8 +5,8 @@
  *      Author: sander
  */
 
-#include "vm.h"
-#include "vm/vm_operands.h"
+#include "corto/vm/vm.h"
+#include "corto/vm/vm_operands.h"
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-label"

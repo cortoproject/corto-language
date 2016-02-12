@@ -1,4 +1,4 @@
-PACKAGE = 'corto::ast'
+PACKAGE = 'corto/ast'
 
 YACC = "ast.y"
 LEX = "ast.l"

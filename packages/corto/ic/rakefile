@@ -1,4 +1,4 @@
-PACKAGE = 'corto::ic'
+PACKAGE = 'corto/ic'
 
 CFLAGS = ["-Wunused-parameter"]
 

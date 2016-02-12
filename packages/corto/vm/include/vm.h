@@ -7,7 +7,9 @@
 #define VM_H
 
 #include "corto/corto.h"
-#include "vm/_interface.h"
+#include "corto/vm/_interface.h"
+#include "corto/vm/vm_expansion.h"
+#include "corto/vm/vm_operands.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -126,4 +128,3 @@ vm_op *vm_programAddOp(vm_program program, uint32_t line);
 }
 #endif
 #endif
-

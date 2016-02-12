@@ -546,7 +546,6 @@ ast_Expression _ast_Binary_fold(ast_Binary this) {
 
             /* Perform operation */
             if (corto_binaryOperator(type, this->_operator, lptr, rptr, resultPtr)) {
-                corto_id id;
                 ast_Parser_error(yparser(), "operator failed: %s", corto_lasterr());
                 goto error;
             }

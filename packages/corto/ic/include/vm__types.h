@@ -3,7 +3,6 @@
 #define ic_vm__types_H
 
 #include "ic.h"
-#include "vm.h"
 
 #ifdef __cplusplus
 extern "C" {

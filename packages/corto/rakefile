@@ -1,5 +1,6 @@
 
 COMPONENTS = %w(
+    vm
     ic
     ast
 )
