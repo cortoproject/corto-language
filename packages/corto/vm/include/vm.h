@@ -17,7 +17,7 @@ extern "C" {
 
 /* $header() */
 #include "stdint.h"
-#include "vm/vm_def.h"
+#include "corto/vm/vm_def.h"
 
 extern int CORTO_PROCEDURE_VM;
 
