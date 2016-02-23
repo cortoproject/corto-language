@@ -147,9 +147,9 @@ corto_int16 _ast_StaticInitializer_define(ast_StaticInitializer this) {
                 || (corto_checkAttr(o, CORTO_ATTR_SCOPED) && corto_instanceof(corto_type(corto_type_o), corto_parentof(o)))) {
             if (corto_define(o)) {
                 corto_id id1, id2;
-                ast_Parser_error(yparser(), "define of variable '%s' of type '%s' failed",
+                ast_Parser_error(yparser(), "failed to define '%s': %s",
                         ast_Parser_id(o, id1),
-                        ast_Parser_id(corto_typeof(o), id2));
+                        corto_lasterr());
                 goto error;
             }
         } else {

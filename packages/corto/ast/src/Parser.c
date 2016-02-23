@@ -1509,9 +1509,9 @@ corto_int16 _ast_Parser_defineVariable(ast_Parser this, ast_Storage object) {
     if ((ast_Node(object)->kind == Ast_StorageExpr) && (ast_Storage(object)->kind == Ast_ObjectStorage)) {
         if (corto_define(ast_Object(object)->value)) {
             corto_id id1, id2;
-            ast_Parser_error(this, "define of variable '%s' of type '%s' failed",
+            ast_Parser_error(this, "failed to define '%s': %s",
                     ast_Parser_id(ast_Object(object)->value, id1),
-                    ast_Parser_id(corto_typeof(ast_Object(object)->value), id2));
+                    corto_lasterr());
             goto error;
         }
     } else {
