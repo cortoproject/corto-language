@@ -8,7 +8,9 @@
 
 #include "test.h"
 
-corto_void _test_Character_setup(test_Character this) {
+corto_void _test_Character_setup(
+    test_Character this)
+{
 /* $begin(test/Character/setup) */
 
     corto_load("cx/types/character.cx", 0, NULL);
@@ -16,7 +18,9 @@ corto_void _test_Character_setup(test_Character this) {
 /* $end */
 }
 
-corto_void _test_Character_tc_o_charAlpha(test_Character this) {
+corto_void _test_Character_tc_o_charAlpha(
+    test_Character this)
+{
 /* $begin(test/Character/tc_o_charAlpha) */
 
     corto_object o = corto_resolve(root_o, "o_charAlpha");
@@ -38,7 +42,9 @@ corto_void _test_Character_tc_o_charAlpha(test_Character this) {
 /* $end */
 }
 
-corto_void _test_Character_tc_o_charNewline(test_Character this) {
+corto_void _test_Character_tc_o_charNewline(
+    test_Character this)
+{
 /* $begin(test/Character/tc_o_charNewline) */
 
     corto_object o = corto_resolve(root_o, "o_charNewline");
@@ -60,7 +66,9 @@ corto_void _test_Character_tc_o_charNewline(test_Character this) {
 /* $end */
 }
 
-corto_void _test_Character_tc_o_charNull(test_Character this) {
+corto_void _test_Character_tc_o_charNull(
+    test_Character this)
+{
 /* $begin(test/Character/tc_o_charNull) */
 
     corto_object o = corto_resolve(root_o, "o_charNull");
@@ -82,7 +90,9 @@ corto_void _test_Character_tc_o_charNull(test_Character this) {
 /* $end */
 }
 
-corto_void _test_Character_tc_o_charNum(test_Character this) {
+corto_void _test_Character_tc_o_charNum(
+    test_Character this)
+{
 /* $begin(test/Character/tc_o_charNum) */
 
     corto_object o = corto_resolve(root_o, "o_charNum");
@@ -104,7 +114,9 @@ corto_void _test_Character_tc_o_charNum(test_Character this) {
 /* $end */
 }
 
-corto_void _test_Character_tc_o_charQuote(test_Character this) {
+corto_void _test_Character_tc_o_charQuote(
+    test_Character this)
+{
 /* $begin(test/Character/tc_o_charQuote) */
 
     corto_object o = corto_resolve(root_o, "o_charQuote");
@@ -126,7 +138,9 @@ corto_void _test_Character_tc_o_charQuote(test_Character this) {
 /* $end */
 }
 
-corto_void _test_Character_tc_o_charSlash(test_Character this) {
+corto_void _test_Character_tc_o_charSlash(
+    test_Character this)
+{
 /* $begin(test/Character/tc_o_charSlash) */
 
     corto_object o = corto_resolve(root_o, "o_charSlash");
@@ -148,7 +162,9 @@ corto_void _test_Character_tc_o_charSlash(test_Character this) {
 /* $end */
 }
 
-corto_void _test_Character_tc_t_mychar(test_Character this) {
+corto_void _test_Character_tc_t_mychar(
+    test_Character this)
+{
 /* $begin(test/Character/tc_t_mychar) */
 
     corto_object t = corto_resolve(root_o, "t_mychar");

@@ -50,7 +50,9 @@ ast_If ast_Ternary_createIf(ast_Expression condition, ast_Node ifTrue, ast_Node 
 
 /* $end */
 
-corto_int16 _ast_Ternary_construct(ast_Ternary this) {
+corto_int16 _ast_Ternary_construct(
+    ast_Ternary this)
+{
 /* $begin(corto/ast/Ternary/construct) */
     ast_Node trueBranch=NULL, falseBranch=NULL;
     ast_Expression trueExpr, falseExpr;
@@ -82,7 +84,9 @@ corto_int16 _ast_Ternary_construct(ast_Ternary this) {
 /* $end */
 }
 
-corto_bool _ast_Ternary_hasReturnedResource_v(ast_Ternary this) {
+corto_bool _ast_Ternary_hasReturnedResource_v(
+    ast_Ternary this)
+{
 /* $begin(corto/ast/Ternary/hasReturnedResource) */
     return ast_Expression_hasReturnedResource(this->condition) ||
            ast_Expression_hasReturnedResource(this->ifTrue) ||
@@ -90,7 +94,9 @@ corto_bool _ast_Ternary_hasReturnedResource_v(ast_Ternary this) {
 /* $end */
 }
 
-corto_bool _ast_Ternary_hasSideEffects_v(ast_Ternary this) {
+corto_bool _ast_Ternary_hasSideEffects_v(
+    ast_Ternary this)
+{
 /* $begin(corto/ast/Ternary/hasSideEffects) */
     return ast_Expression_hasSideEffects(this->condition) ||
            ast_Expression_hasSideEffects(this->ifTrue) ||
@@ -98,7 +104,10 @@ corto_bool _ast_Ternary_hasSideEffects_v(ast_Ternary this) {
 /* $end */
 }
 
-corto_void _ast_Ternary_setOperator(ast_Ternary this, corto_operatorKind kind) {
+corto_void _ast_Ternary_setOperator(
+    ast_Ternary this,
+    corto_operatorKind kind)
+{
 /* $begin(corto/ast/Ternary/setOperator) */
 
     if (this->ifTrueExpr && corto_instanceof(corto_type(ast_Binary_o), this->ifTrueExpr)) {
@@ -111,7 +120,12 @@ corto_void _ast_Ternary_setOperator(ast_Ternary this, corto_operatorKind kind) {
 /* $end */
 }
 
-ic_node _ast_Ternary_toIc_v(ast_Ternary this, ic_program program, ic_storage storage, corto_bool stored) {
+ic_node _ast_Ternary_toIc_v(
+    ast_Ternary this,
+    ic_program program,
+    ic_storage storage,
+    corto_bool stored)
+{
 /* $begin(corto/ast/Ternary/toIc) */
     ast_If_toIc(this->ifstmt, program, storage, stored);
     return ast_Node_toIc(ast_Node(this->result), program, storage, stored);

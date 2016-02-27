@@ -12,7 +12,9 @@
 #include "ast__private.h"
 /* $end */
 
-corto_int16 _ast_StaticCall_construct(ast_StaticCall this) {
+corto_int16 _ast_StaticCall_construct(
+    ast_StaticCall this)
+{
 /* $begin(corto/ast/StaticCall/construct) */
     ast_Object fExpr;
 

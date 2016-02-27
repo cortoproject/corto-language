@@ -190,7 +190,11 @@ ast_Expression ast_Expression_narrow(ast_Expression expr, corto_type target) {
 
 /* $end */
 
-ast_Expression _ast_Expression_cast(ast_Expression this, corto_type type, corto_bool isReference) {
+ast_Expression _ast_Expression_cast(
+    ast_Expression this,
+    corto_type type,
+    corto_bool isReference)
+{
 /* $begin(corto/ast/Expression/cast) */
     corto_type exprType, refType;
     ast_Expression result = NULL;
@@ -371,7 +375,9 @@ error:
 /* $end */
 }
 
-corto_void _ast_Expression_cleanList(ast_ExpressionList list) {
+corto_void _ast_Expression_cleanList(
+    ast_ExpressionList list)
+{
 /* $begin(corto/ast/Expression/cleanList) */
     if (list) {
         corto_iter iter = corto_llIter(list);
@@ -383,14 +389,18 @@ corto_void _ast_Expression_cleanList(ast_ExpressionList list) {
 /* $end */
 }
 
-ast_Expression _ast_Expression_fold_v(ast_Expression this) {
+ast_Expression _ast_Expression_fold_v(
+    ast_Expression this)
+{
 /* $begin(corto/ast/Expression/fold) */
     CORTO_UNUSED(this);
     return this;
 /* $end */
 }
 
-ast_Expression _ast_Expression_fromList(ast_ExpressionList list) {
+ast_Expression _ast_Expression_fromList(
+    ast_ExpressionList list)
+{
 /* $begin(corto/ast/Expression/fromList) */
     ast_Expression result = NULL;
 
@@ -419,7 +429,9 @@ ast_Expression _ast_Expression_fromList(ast_ExpressionList list) {
 /* $end */
 }
 
-corto_type _ast_Expression_getType(ast_Expression this) {
+corto_type _ast_Expression_getType(
+    ast_Expression this)
+{
 /* $begin(corto/ast/Expression/getType) */
     return this->type;
 /* $end */
@@ -461,7 +473,10 @@ error:
     return NULL;
 }
 /* $end */
-corto_type _ast_Expression_getType_expr(ast_Expression this, ast_Expression target) {
+corto_type _ast_Expression_getType_expr(
+    ast_Expression this,
+    ast_Expression target)
+{
 /* $begin(corto/ast/Expression/getType_expr) */
     corto_type type,result;
 
@@ -482,48 +497,66 @@ corto_type _ast_Expression_getType_expr(ast_Expression this, ast_Expression targ
 /* $end */
 }
 
-corto_type _ast_Expression_getType_type(ast_Expression this, corto_type target) {
+corto_type _ast_Expression_getType_type(
+    ast_Expression this,
+    corto_type target)
+{
 /* $begin(corto/ast/Expression/getType_type) */
     return ast_Expression_getType_intern(this, target, NULL);
 /* $end */
 }
 
-corto_word _ast_Expression_getValue_v(ast_Expression this) {
+corto_word _ast_Expression_getValue_v(
+    ast_Expression this)
+{
 /* $begin(corto/ast/Expression/getValue) */
     CORTO_UNUSED(this);
     return 0;
 /* $end */
 }
 
-corto_bool _ast_Expression_hasReturnedResource_v(ast_Expression this) {
+corto_bool _ast_Expression_hasReturnedResource_v(
+    ast_Expression this)
+{
 /* $begin(corto/ast/Expression/hasReturnedResource) */
     CORTO_UNUSED(this);
     return FALSE;
 /* $end */
 }
 
-corto_bool _ast_Expression_hasSideEffects_v(ast_Expression this) {
+corto_bool _ast_Expression_hasSideEffects_v(
+    ast_Expression this)
+{
 /* $begin(corto/ast/Expression/hasSideEffects) */
     CORTO_UNUSED(this);
     return FALSE;
 /* $end */
 }
 
-corto_string _ast_Expression_id_v(ast_Expression this) {
+corto_string _ast_Expression_id_v(
+    ast_Expression this)
+{
 /* $begin(corto/ast/Expression/id) */
     CORTO_UNUSED(this);
     return NULL;
 /* $end */
 }
 
-ast_Expression _ast_Expression_resolve_v(ast_Expression this, corto_type type) {
+ast_Expression _ast_Expression_resolve_v(
+    ast_Expression this,
+    corto_type type)
+{
 /* $begin(corto/ast/Expression/resolve) */
     CORTO_UNUSED(type);
     return this;
 /* $end */
 }
 
-corto_int16 _ast_Expression_serialize_v(ast_Expression this, corto_type dstType, corto_word dst) {
+corto_int16 _ast_Expression_serialize_v(
+    ast_Expression this,
+    corto_type dstType,
+    corto_word dst)
+{
 /* $begin(corto/ast/Expression/serialize) */
     CORTO_UNUSED(this);
     CORTO_UNUSED(dstType);
@@ -533,7 +566,9 @@ corto_int16 _ast_Expression_serialize_v(ast_Expression this, corto_type dstType,
 /* $end */
 }
 
-ast_ExpressionList _ast_Expression_toList_v(ast_Expression this) {
+ast_ExpressionList _ast_Expression_toList_v(
+    ast_Expression this)
+{
 /* $begin(corto/ast/Expression/toList) */
     ast_NodeList result = NULL;
 

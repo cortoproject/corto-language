@@ -12,7 +12,9 @@
 #include "ast__private.h"
 /* $end */
 
-corto_int16 _ast_Local_construct(ast_Local this) {
+corto_int16 _ast_Local_construct(
+    ast_Local this)
+{
 /* $begin(corto/ast/Local/construct) */
 
     ast_Node(this)->kind = Ast_StorageExpr;
@@ -24,7 +26,12 @@ corto_int16 _ast_Local_construct(ast_Local this) {
 /* $end */
 }
 
-ic_node _ast_Local_toIc_v(ast_Local this, ic_program program, ic_storage storage, corto_bool stored) {
+ic_node _ast_Local_toIc_v(
+    ast_Local this,
+    ic_program program,
+    ic_storage storage,
+    corto_bool stored)
+{
 /* $begin(corto/ast/Local/toIc) */
     ic_node result;
     CORTO_UNUSED(storage);

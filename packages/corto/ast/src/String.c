@@ -154,7 +154,9 @@ error:
 
 /* $end */
 
-corto_int16 _ast_String_construct(ast_String this) {
+corto_int16 _ast_String_construct(
+    ast_String this)
+{
 /* $begin(corto/ast/String/construct) */
     
     if (!yparser()->block || !yparser()->scope) {
@@ -170,7 +172,9 @@ error:
 /* $end */
 }
 
-corto_word _ast_String_getValue(ast_String this) {
+corto_word _ast_String_getValue(
+    ast_String this)
+{
 /* $begin(corto/ast/String/getValue) */
     corto_char *ptr, ch = '\0';
     corto_word result;
@@ -200,14 +204,20 @@ corto_word _ast_String_getValue(ast_String this) {
 /* $end */
 }
 
-corto_int16 _ast_String_init(ast_String this) {
+corto_int16 _ast_String_init(
+    ast_String this)
+{
 /* $begin(corto/ast/String/init) */
     ast_Literal(this)->kind = Ast_Text;
     return ast_Literal_init((ast_Literal)this);
 /* $end */
 }
 
-corto_int16 _ast_String_serialize(ast_String this, corto_type dstType, corto_word dst) {
+corto_int16 _ast_String_serialize(
+    ast_String this,
+    corto_type dstType,
+    corto_word dst)
+{
 /* $begin(corto/ast/String/serialize) */
     ast_valueKind kind;
 
@@ -240,7 +250,12 @@ error:
 /* $end */
 }
 
-ic_node _ast_String_toIc_v(ast_String this, ic_program program, ic_storage storage, corto_bool stored) {
+ic_node _ast_String_toIc_v(
+    ast_String this,
+    ic_program program,
+    ic_storage storage,
+    corto_bool stored)
+{
 /* $begin(corto/ast/String/toIc) */
     ic_node result = NULL;
     CORTO_UNUSED(storage);

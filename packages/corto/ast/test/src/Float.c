@@ -8,7 +8,9 @@
 
 #include "test.h"
 
-corto_void _test_Float_setup(test_Float this) {
+corto_void _test_Float_setup(
+    test_Float this)
+{
 /* $begin(test/Float/setup) */
 
     corto_load("cx/types/float.cx", 0, NULL);
@@ -16,7 +18,9 @@ corto_void _test_Float_setup(test_Float this) {
 /* $end */
 }
 
-corto_void _test_Float_tc_o_float32(test_Float this) {
+corto_void _test_Float_tc_o_float32(
+    test_Float this)
+{
 /* $begin(test/Float/tc_o_float32) */
 
     corto_object o = corto_resolve(root_o, "o_float32");
@@ -38,7 +42,9 @@ corto_void _test_Float_tc_o_float32(test_Float this) {
 /* $end */
 }
 
-corto_void _test_Float_tc_o_float32e(test_Float this) {
+corto_void _test_Float_tc_o_float32e(
+    test_Float this)
+{
 /* $begin(test/Float/tc_o_float32e) */
 
     corto_object o = corto_resolve(root_o, "o_float32e");
@@ -60,7 +66,9 @@ corto_void _test_Float_tc_o_float32e(test_Float this) {
 /* $end */
 }
 
-corto_void _test_Float_tc_o_float32eMin(test_Float this) {
+corto_void _test_Float_tc_o_float32eMin(
+    test_Float this)
+{
 /* $begin(test/Float/tc_o_float32eMin) */
 
     corto_object o = corto_resolve(root_o, "o_float32eMin");
@@ -82,7 +90,9 @@ corto_void _test_Float_tc_o_float32eMin(test_Float this) {
 /* $end */
 }
 
-corto_void _test_Float_tc_o_float32eMinPt(test_Float this) {
+corto_void _test_Float_tc_o_float32eMinPt(
+    test_Float this)
+{
 /* $begin(test/Float/tc_o_float32eMinPt) */
 
     corto_object o = corto_resolve(root_o, "o_float32eMinPt");
@@ -104,7 +114,9 @@ corto_void _test_Float_tc_o_float32eMinPt(test_Float this) {
 /* $end */
 }
 
-corto_void _test_Float_tc_o_float32ePt(test_Float this) {
+corto_void _test_Float_tc_o_float32ePt(
+    test_Float this)
+{
 /* $begin(test/Float/tc_o_float32ePt) */
 
     corto_object o = corto_resolve(root_o, "o_float32ePt");
@@ -126,7 +138,9 @@ corto_void _test_Float_tc_o_float32ePt(test_Float this) {
 /* $end */
 }
 
-corto_void _test_Float_tc_o_float32Min(test_Float this) {
+corto_void _test_Float_tc_o_float32Min(
+    test_Float this)
+{
 /* $begin(test/Float/tc_o_float32Min) */
 
     corto_object o = corto_resolve(root_o, "o_float32Min");
@@ -148,7 +162,9 @@ corto_void _test_Float_tc_o_float32Min(test_Float this) {
 /* $end */
 }
 
-corto_void _test_Float_tc_o_float32MinPt(test_Float this) {
+corto_void _test_Float_tc_o_float32MinPt(
+    test_Float this)
+{
 /* $begin(test/Float/tc_o_float32MinPt) */
 
     corto_object o = corto_resolve(root_o, "o_float32MinPt");
@@ -170,7 +186,9 @@ corto_void _test_Float_tc_o_float32MinPt(test_Float this) {
 /* $end */
 }
 
-corto_void _test_Float_tc_o_float32Pt(test_Float this) {
+corto_void _test_Float_tc_o_float32Pt(
+    test_Float this)
+{
 /* $begin(test/Float/tc_o_float32Pt) */
 
     corto_object o = corto_resolve(root_o, "o_float32Pt");
@@ -192,7 +210,9 @@ corto_void _test_Float_tc_o_float32Pt(test_Float this) {
 /* $end */
 }
 
-corto_void _test_Float_tc_o_float64(test_Float this) {
+corto_void _test_Float_tc_o_float64(
+    test_Float this)
+{
 /* $begin(test/Float/tc_o_float64) */
 
     corto_object o = corto_resolve(root_o, "o_float64");
@@ -214,7 +234,9 @@ corto_void _test_Float_tc_o_float64(test_Float this) {
 /* $end */
 }
 
-corto_void _test_Float_tc_o_float64e(test_Float this) {
+corto_void _test_Float_tc_o_float64e(
+    test_Float this)
+{
 /* $begin(test/Float/tc_o_float64e) */
 
     corto_object o = corto_resolve(root_o, "o_float64e");
@@ -236,7 +258,9 @@ corto_void _test_Float_tc_o_float64e(test_Float this) {
 /* $end */
 }
 
-corto_void _test_Float_tc_o_float64eMin(test_Float this) {
+corto_void _test_Float_tc_o_float64eMin(
+    test_Float this)
+{
 /* $begin(test/Float/tc_o_float64eMin) */
 
     corto_object o = corto_resolve(root_o, "o_float64eMin");
@@ -258,7 +282,9 @@ corto_void _test_Float_tc_o_float64eMin(test_Float this) {
 /* $end */
 }
 
-corto_void _test_Float_tc_o_float64eMinPt(test_Float this) {
+corto_void _test_Float_tc_o_float64eMinPt(
+    test_Float this)
+{
 /* $begin(test/Float/tc_o_float64eMinPt) */
 
     corto_object o = corto_resolve(root_o, "o_float64eMinPt");
@@ -280,7 +306,9 @@ corto_void _test_Float_tc_o_float64eMinPt(test_Float this) {
 /* $end */
 }
 
-corto_void _test_Float_tc_o_float64ePt(test_Float this) {
+corto_void _test_Float_tc_o_float64ePt(
+    test_Float this)
+{
 /* $begin(test/Float/tc_o_float64ePt) */
 
     corto_object o = corto_resolve(root_o, "o_float64ePt");
@@ -302,7 +330,9 @@ corto_void _test_Float_tc_o_float64ePt(test_Float this) {
 /* $end */
 }
 
-corto_void _test_Float_tc_o_float64Min(test_Float this) {
+corto_void _test_Float_tc_o_float64Min(
+    test_Float this)
+{
 /* $begin(test/Float/tc_o_float64Min) */
 
     corto_object o = corto_resolve(root_o, "o_float64Min");
@@ -324,7 +354,9 @@ corto_void _test_Float_tc_o_float64Min(test_Float this) {
 /* $end */
 }
 
-corto_void _test_Float_tc_o_float64MinPt(test_Float this) {
+corto_void _test_Float_tc_o_float64MinPt(
+    test_Float this)
+{
 /* $begin(test/Float/tc_o_float64MinPt) */
 
     corto_object o = corto_resolve(root_o, "o_float64MinPt");
@@ -346,7 +378,9 @@ corto_void _test_Float_tc_o_float64MinPt(test_Float this) {
 /* $end */
 }
 
-corto_void _test_Float_tc_o_float64Pt(test_Float this) {
+corto_void _test_Float_tc_o_float64Pt(
+    test_Float this)
+{
 /* $begin(test/Float/tc_o_float64Pt) */
 
     corto_object o = corto_resolve(root_o, "o_float64Pt");

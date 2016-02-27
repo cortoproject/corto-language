@@ -12,7 +12,9 @@
 #include "ast__private.h"
 /* $end */
 
-corto_int16 _ast_PostFix_construct(ast_PostFix this) {
+corto_int16 _ast_PostFix_construct(
+    ast_PostFix this)
+{
 /* $begin(corto/ast/PostFix/construct) */
     corto_type lvalueType = ast_Expression_getType(this->lvalue);
 
@@ -69,13 +71,20 @@ error:
 /* $end */
 }
 
-corto_bool _ast_PostFix_hasReturnedResource_v(ast_PostFix this) {
+corto_bool _ast_PostFix_hasReturnedResource_v(
+    ast_PostFix this)
+{
 /* $begin(corto/ast/PostFix/hasReturnedResource) */
     return ast_Expression_hasReturnedResource(this->lvalue);
 /* $end */
 }
 
-ic_node _ast_PostFix_toIc_v(ast_PostFix this, ic_program program, ic_storage storage, corto_bool stored) {
+ic_node _ast_PostFix_toIc_v(
+    ast_PostFix this,
+    ic_program program,
+    ic_storage storage,
+    corto_bool stored)
+{
 /* $begin(corto/ast/PostFix/toIc) */
     ic_storage result;
     ic_node lvalue;

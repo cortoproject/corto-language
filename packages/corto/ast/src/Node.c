@@ -66,7 +66,9 @@ error:
 
 /* $end */
 
-corto_int16 _ast_Node_init(ast_Node this) {
+corto_int16 _ast_Node_init(
+    ast_Node this)
+{
 /* $begin(corto/ast/Node/init) */
     this->line = yparser()->line;
     this->column = yparser()->column;
@@ -74,7 +76,12 @@ corto_int16 _ast_Node_init(ast_Node this) {
 /* $end */
 }
 
-ic_node _ast_Node_toIc_v(ast_Node this, ic_program program, ic_storage storage, corto_bool stored) {
+ic_node _ast_Node_toIc_v(
+    ast_Node this,
+    ic_program program,
+    ic_storage storage,
+    corto_bool stored)
+{
 /* $begin(corto/ast/Node/toIc) */
     CORTO_UNUSED(this);
     CORTO_UNUSED(program);

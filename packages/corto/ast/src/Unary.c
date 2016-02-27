@@ -39,7 +39,9 @@ error:
 } 
 /* $end */
 
-corto_int16 _ast_Unary_construct(ast_Unary this) {
+corto_int16 _ast_Unary_construct(
+    ast_Unary this)
+{
 /* $begin(corto/ast/Unary/construct) */
     ast_Node(this)->kind = Ast_UnaryExpr;
 
@@ -57,19 +59,26 @@ error:
 /* $end */
 }
 
-corto_bool _ast_Unary_hasReturnedResource_v(ast_Unary this) {
+corto_bool _ast_Unary_hasReturnedResource_v(
+    ast_Unary this)
+{
 /* $begin(corto/ast/Unary/hasReturnedResource) */
     return ast_Expression_hasReturnedResource(this->lvalue);
 /* $end */
 }
 
-corto_bool _ast_Unary_hasSideEffects_v(ast_Unary this) {
+corto_bool _ast_Unary_hasSideEffects_v(
+    ast_Unary this)
+{
 /* $begin(corto/ast/Unary/hasSideEffects) */
     return ast_Expression_hasSideEffects(this->lvalue);
 /* $end */
 }
 
-ast_Expression _ast_Unary_resolve_v(ast_Unary this, corto_type type) {
+ast_Expression _ast_Unary_resolve_v(
+    ast_Unary this,
+    corto_type type)
+{
 /* $begin(corto/ast/Unary/resolve) */
 
     if (ast_Expression(this)->unresolved) {
@@ -92,7 +101,12 @@ error:
 /* $end */
 }
 
-ic_node _ast_Unary_toIc_v(ast_Unary this, ic_program program, ic_storage storage, corto_bool stored) {
+ic_node _ast_Unary_toIc_v(
+    ast_Unary this,
+    ic_program program,
+    ic_storage storage,
+    corto_bool stored)
+{
 /* $begin(corto/ast/Unary/toIc) */
     ic_storage result;
     ic_node lvalue;

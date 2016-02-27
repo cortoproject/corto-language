@@ -112,7 +112,9 @@ error:
 
 /* $end */
 
-corto_int16 _ast_DynamicInitializer_construct(ast_DynamicInitializer this) {
+corto_int16 _ast_DynamicInitializer_construct(
+    ast_DynamicInitializer this)
+{
 /* $begin(corto/ast/DynamicInitializer/construct) */
     corto_int8 variable;
     
@@ -126,7 +128,9 @@ corto_int16 _ast_DynamicInitializer_construct(ast_DynamicInitializer this) {
 /* $end */
 }
 
-corto_int16 _ast_DynamicInitializer_define(ast_DynamicInitializer this) {
+corto_int16 _ast_DynamicInitializer_define(
+    ast_DynamicInitializer this)
+{
 /* $begin(corto/ast/DynamicInitializer/define) */
     corto_int8 variable;
     
@@ -144,14 +148,18 @@ corto_int16 _ast_DynamicInitializer_define(ast_DynamicInitializer this) {
 /* $end */
 }
 
-corto_bool _ast_DynamicInitializer_hasReturnedResource_v(ast_DynamicInitializer this) {
+corto_bool _ast_DynamicInitializer_hasReturnedResource_v(
+    ast_DynamicInitializer this)
+{
 /* $begin(corto/ast/DynamicInitializer/hasReturnedResource) */
     CORTO_UNUSED(this);
     return FALSE;
 /* $end */
 }
 
-corto_int16 _ast_DynamicInitializer_pop(ast_DynamicInitializer this) {
+corto_int16 _ast_DynamicInitializer_pop(
+    ast_DynamicInitializer this)
+{
 /* $begin(corto/ast/DynamicInitializer/pop) */
     corto_uint8 fp = ast_Initializer(this)->fp;
 
@@ -163,7 +171,9 @@ corto_int16 _ast_DynamicInitializer_pop(ast_DynamicInitializer this) {
 /* $end */
 }
 
-corto_int16 _ast_DynamicInitializer_push(ast_DynamicInitializer this) {
+corto_int16 _ast_DynamicInitializer_push(
+    ast_DynamicInitializer this)
+{
 /* $begin(corto/ast/DynamicInitializer/push) */
     corto_uint8 variable;
     corto_type t = ast_Initializer_currentType(ast_Initializer(this));
@@ -228,7 +238,10 @@ error:
 /* $end */
 }
 
-corto_int16 _ast_DynamicInitializer_value(ast_DynamicInitializer this, ast_Expression v) {
+corto_int16 _ast_DynamicInitializer_value(
+    ast_DynamicInitializer this,
+    ast_Expression v)
+{
 /* $begin(corto/ast/DynamicInitializer/value) */
     corto_uint32 variable;
     corto_uint32 fp = ast_Initializer(this)->fp;

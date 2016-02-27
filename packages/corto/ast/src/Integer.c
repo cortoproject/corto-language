@@ -12,14 +12,20 @@
 #include "ast__private.h"
 /* $end */
 
-corto_int16 _ast_Integer_init(ast_Integer this) {
+corto_int16 _ast_Integer_init(
+    ast_Integer this)
+{
 /* $begin(corto/ast/Integer/init) */
     ast_Literal(this)->kind = Ast_Int;
     return ast_Literal_init((ast_Literal)this);
 /* $end */
 }
 
-corto_int16 _ast_Integer_serialize(ast_Integer this, corto_type dstType, corto_word dst) {
+corto_int16 _ast_Integer_serialize(
+    ast_Integer this,
+    corto_type dstType,
+    corto_word dst)
+{
 /* $begin(corto/ast/Integer/serialize) */
     ast_valueKind kind;
 
@@ -52,7 +58,12 @@ error:
 /* $end */
 }
 
-ic_node _ast_Integer_toIc_v(ast_Integer this, ic_program program, ic_storage storage, corto_bool stored) {
+ic_node _ast_Integer_toIc_v(
+    ast_Integer this,
+    ic_program program,
+    ic_storage storage,
+    corto_bool stored)
+{
 /* $begin(corto/ast/Integer/toIc) */
     ic_node result;
     CORTO_UNUSED(program);

@@ -8,7 +8,9 @@
 
 #include "corto/ast/ast.h"
 
-corto_int16 _ast_Temporary_construct(ast_Temporary this) {
+corto_int16 _ast_Temporary_construct(
+    ast_Temporary this)
+{
 /* $begin(corto/ast/Temporary/construct) */
 
     ast_Storage(this)->kind = Ast_TemporaryStorage;
@@ -19,13 +21,21 @@ corto_int16 _ast_Temporary_construct(ast_Temporary this) {
 /* $end */
 }
 
-corto_void _ast_Temporary_setProxy(ast_Temporary this, ast_Temporary proxy) {
+corto_void _ast_Temporary_setProxy(
+    ast_Temporary this,
+    ast_Temporary proxy)
+{
 /* $begin(corto/ast/Temporary/setProxy) */
     corto_setref(&this->proxy, proxy);
 /* $end */
 }
 
-ic_node _ast_Temporary_toIc_v(ast_Temporary this, ic_program program, ic_storage storage, corto_bool stored) {
+ic_node _ast_Temporary_toIc_v(
+    ast_Temporary this,
+    ic_program program,
+    ic_storage storage,
+    corto_bool stored)
+{
 /* $begin(corto/ast/Temporary/toIc) */
     CORTO_UNUSED(storage);
     CORTO_UNUSED(stored);

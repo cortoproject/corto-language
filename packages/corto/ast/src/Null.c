@@ -12,7 +12,9 @@
 #include "ast__private.h"
 /* $end */
 
-corto_int16 _ast_Null_init(ast_Null this) {
+corto_int16 _ast_Null_init(
+    ast_Null this)
+{
 /* $begin(corto/ast/Null/init) */
     ast_Literal(this)->kind = Ast_Nothing;
     ast_Expression(this)->type = NULL;
@@ -20,7 +22,11 @@ corto_int16 _ast_Null_init(ast_Null this) {
 /* $end */
 }
 
-corto_int16 _ast_Null_serialize(ast_Null this, corto_type dstType, corto_word dst) {
+corto_int16 _ast_Null_serialize(
+    ast_Null this,
+    corto_type dstType,
+    corto_word dst)
+{
 /* $begin(corto/ast/Null/serialize) */
     ast_valueKind kind;
     CORTO_UNUSED(this);
@@ -57,7 +63,12 @@ error:
 /* $end */
 }
 
-ic_node _ast_Null_toIc_v(ast_Null this, ic_program program, ic_storage storage, corto_bool stored) {
+ic_node _ast_Null_toIc_v(
+    ast_Null this,
+    ic_program program,
+    ic_storage storage,
+    corto_bool stored)
+{
 /* $begin(corto/ast/Null/toIc) */
     CORTO_UNUSED(storage);
     CORTO_UNUSED(stored);

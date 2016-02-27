@@ -21,7 +21,8 @@ extern "C" {
 #include "corto/vm/vm.h"
 /* $end */
 
-CORTO_IC_EXPORT ic_opKind _ic_opKindFromOperator(corto_operatorKind _operator);
+CORTO_IC_EXPORT ic_opKind _ic_opKindFromOperator(
+    corto_operatorKind _operator);
 #define ic_opKindFromOperator(_operator) _ic_opKindFromOperator(_operator)
 #include "corto/ic/accumulator.h"
 #include "corto/ic/address.h"

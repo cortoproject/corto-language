@@ -8,7 +8,9 @@
 
 #include "test.h"
 
-corto_void _test_Text_setup(test_Text this) {
+corto_void _test_Text_setup(
+    test_Text this)
+{
 /* $begin(test/Text/setup) */
 
     corto_load("cx/types/text.cx", 0, NULL);
@@ -16,7 +18,9 @@ corto_void _test_Text_setup(test_Text this) {
 /* $end */
 }
 
-corto_void _test_Text_tc_o_alphanum(test_Text this) {
+corto_void _test_Text_tc_o_alphanum(
+    test_Text this)
+{
 /* $begin(test/Text/tc_o_alphanum) */
 
     corto_object o = corto_resolve(root_o, "o_alphanum");
@@ -38,7 +42,9 @@ corto_void _test_Text_tc_o_alphanum(test_Text this) {
 /* $end */
 }
 
-corto_void _test_Text_tc_o_empty(test_Text this) {
+corto_void _test_Text_tc_o_empty(
+    test_Text this)
+{
 /* $begin(test/Text/tc_o_empty) */
 
     corto_object o = corto_resolve(root_o, "o_empty");
@@ -60,7 +66,9 @@ corto_void _test_Text_tc_o_empty(test_Text this) {
 /* $end */
 }
 
-corto_void _test_Text_tc_o_newline(test_Text this) {
+corto_void _test_Text_tc_o_newline(
+    test_Text this)
+{
 /* $begin(test/Text/tc_o_newline) */
 
     corto_object o = corto_resolve(root_o, "o_newline");
@@ -82,7 +90,9 @@ corto_void _test_Text_tc_o_newline(test_Text this) {
 /* $end */
 }
 
-corto_void _test_Text_tc_o_null(test_Text this) {
+corto_void _test_Text_tc_o_null(
+    test_Text this)
+{
 /* $begin(test/Text/tc_o_null) */
 
     corto_object o = corto_resolve(root_o, "o_null");
@@ -104,7 +114,9 @@ corto_void _test_Text_tc_o_null(test_Text this) {
 /* $end */
 }
 
-corto_void _test_Text_tc_o_quote(test_Text this) {
+corto_void _test_Text_tc_o_quote(
+    test_Text this)
+{
 /* $begin(test/Text/tc_o_quote) */
 
     corto_object o = corto_resolve(root_o, "o_quote");
@@ -126,7 +138,9 @@ corto_void _test_Text_tc_o_quote(test_Text this) {
 /* $end */
 }
 
-corto_void _test_Text_tc_o_slash(test_Text this) {
+corto_void _test_Text_tc_o_slash(
+    test_Text this)
+{
 /* $begin(test/Text/tc_o_slash) */
 
     corto_object o = corto_resolve(root_o, "o_slash");
@@ -148,7 +162,9 @@ corto_void _test_Text_tc_o_slash(test_Text this) {
 /* $end */
 }
 
-corto_void _test_Text_tc_o_specialchars(test_Text this) {
+corto_void _test_Text_tc_o_specialchars(
+    test_Text this)
+{
 /* $begin(test/Text/tc_o_specialchars) */
 
     corto_object o = corto_resolve(root_o, "o_specialchars");

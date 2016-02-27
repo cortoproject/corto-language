@@ -12,7 +12,10 @@
 #include "ast__private.h"
 /* $end */
 
-corto_void _ast_Block_addStatement(ast_Block this, ast_Node statement) {
+corto_void _ast_Block_addStatement(
+    ast_Block this,
+    ast_Node statement)
+{
 /* $begin(corto/ast/Block/addStatement) */
     if (statement) {
         corto_assert(this->statements != NULL, "initialization failed");
@@ -21,7 +24,13 @@ corto_void _ast_Block_addStatement(ast_Block this, ast_Node statement) {
 /* $end */
 }
 
-ast_Local _ast_Block_declare(ast_Block this, corto_string id, corto_type type, corto_bool isParameter, corto_bool isReference) {
+ast_Local _ast_Block_declare(
+    ast_Block this,
+    corto_string id,
+    corto_type type,
+    corto_bool isParameter,
+    corto_bool isReference)
+{
 /* $begin(corto/ast/Block/declare) */
     ast_Local result;
     ast_LocalKind kind = 0;
@@ -50,7 +59,10 @@ error:
 /* $end */
 }
 
-ast_Local _ast_Block_declareReturnVariable(ast_Block this, corto_function function) {
+ast_Local _ast_Block_declareReturnVariable(
+    ast_Block this,
+    corto_function function)
+{
 /* $begin(corto/ast/Block/declareReturnVariable) */
     ast_Local result;
     corto_id id;
@@ -70,7 +82,13 @@ ast_Local _ast_Block_declareReturnVariable(ast_Block this, corto_function functi
 /* $end */
 }
 
-ast_Template _ast_Block_declareTemplate(ast_Block this, corto_string id, corto_type type, corto_bool isParameter, corto_bool isReference) {
+ast_Template _ast_Block_declareTemplate(
+    ast_Block this,
+    corto_string id,
+    corto_type type,
+    corto_bool isParameter,
+    corto_bool isReference)
+{
 /* $begin(corto/ast/Block/declareTemplate) */
     ast_Template result;
 
@@ -94,7 +112,10 @@ error:
 /* $end */
 }
 
-ast_Expression _ast_Block_lookup(ast_Block this, corto_string id) {
+ast_Expression _ast_Block_lookup(
+    ast_Block this,
+    corto_string id)
+{
 /* $begin(corto/ast/Block/lookup) */
     ast_Expression result = NULL;
 
@@ -178,7 +199,10 @@ error:
 /* $end */
 }
 
-ast_Local _ast_Block_lookupLocal(ast_Block this, corto_string id) {
+ast_Local _ast_Block_lookupLocal(
+    ast_Block this,
+    corto_string id)
+{
 /* $begin(corto/ast/Block/lookupLocal) */
     ast_Local result = NULL;
 
@@ -199,7 +223,10 @@ ast_Local _ast_Block_lookupLocal(ast_Block this, corto_string id) {
 /* $end */
 }
 
-ast_Expression _ast_Block_resolve(ast_Block this, corto_string id) {
+ast_Expression _ast_Block_resolve(
+    ast_Block this,
+    corto_string id)
+{
 /* $begin(corto/ast/Block/resolve) */
     ast_Expression result = NULL;
 
@@ -213,7 +240,10 @@ ast_Expression _ast_Block_resolve(ast_Block this, corto_string id) {
 /* $end */
 }
 
-ast_Local _ast_Block_resolveLocal(ast_Block this, corto_string id) {
+ast_Local _ast_Block_resolveLocal(
+    ast_Block this,
+    corto_string id)
+{
 /* $begin(corto/ast/Block/resolveLocal) */
     ast_Local result = NULL;
 
@@ -227,13 +257,21 @@ ast_Local _ast_Block_resolveLocal(ast_Block this, corto_string id) {
 /* $end */
 }
 
-corto_void _ast_Block_setFunction(ast_Block this, corto_function function) {
+corto_void _ast_Block_setFunction(
+    ast_Block this,
+    corto_function function)
+{
 /* $begin(corto/ast/Block/setFunction) */
     corto_setref(&this->function, function);
 /* $end */
 }
 
-ic_node _ast_Block_toIc_v(ast_Block this, ic_program program, ic_storage storage, corto_bool stored) {
+ic_node _ast_Block_toIc_v(
+    ast_Block this,
+    ic_program program,
+    ic_storage storage,
+    corto_bool stored)
+{
 /* $begin(corto/ast/Block/toIc) */
     ic_scope scope;
     CORTO_UNUSED(storage);
@@ -253,7 +291,12 @@ ic_node _ast_Block_toIc_v(ast_Block this, ic_program program, ic_storage storage
 /* $end */
 }
 
-ic_node _ast_Block_toIcBody_v(ast_Block this, ic_program program, ic_storage storage, corto_bool stored) {
+ic_node _ast_Block_toIcBody_v(
+    ast_Block this,
+    ic_program program,
+    ic_storage storage,
+    corto_bool stored)
+{
 /* $begin(corto/ast/Block/toIcBody) */
     ast_Node statement;
     corto_iter statementIter;

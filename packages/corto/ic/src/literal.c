@@ -8,14 +8,19 @@
 
 #include "corto/ic/ic.h"
 
-corto_int16 _ic_literal_construct(ic_literal this) {
+corto_int16 _ic_literal_construct(
+    ic_literal this)
+{
 /* $begin(corto/ic/literal/construct) */
     ic_node(this)->kind = IC_LITERAL;
     return ic_node_construct(ic_node(this));
 /* $end */
 }
 
-corto_string _ic_literal_str(ic_literal this, corto_string in) {
+corto_string _ic_literal_str(
+    ic_literal this,
+    corto_string in)
+{
 /* $begin(corto/ic/literal/str) */
     corto_string result = NULL;
 

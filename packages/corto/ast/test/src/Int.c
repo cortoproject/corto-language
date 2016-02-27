@@ -8,7 +8,9 @@
 
 #include "test.h"
 
-corto_void _test_Int_setup(test_Int this) {
+corto_void _test_Int_setup(
+    test_Int this)
+{
 /* $begin(test/Int/setup) */
 
     corto_load("cx/types/int.cx", 0, NULL);
@@ -16,7 +18,9 @@ corto_void _test_Int_setup(test_Int this) {
 /* $end */
 }
 
-corto_void _test_Int_tc_o_int16(test_Int this) {
+corto_void _test_Int_tc_o_int16(
+    test_Int this)
+{
 /* $begin(test/Int/tc_o_int16) */
 
     corto_object o = corto_resolve(root_o, "o_int16");
@@ -38,7 +42,9 @@ corto_void _test_Int_tc_o_int16(test_Int this) {
 /* $end */
 }
 
-corto_void _test_Int_tc_o_int16Max(test_Int this) {
+corto_void _test_Int_tc_o_int16Max(
+    test_Int this)
+{
 /* $begin(test/Int/tc_o_int16Max) */
 
     corto_object o = corto_resolve(root_o, "o_int16Max");
@@ -60,7 +66,9 @@ corto_void _test_Int_tc_o_int16Max(test_Int this) {
 /* $end */
 }
 
-corto_void _test_Int_tc_o_int16Min(test_Int this) {
+corto_void _test_Int_tc_o_int16Min(
+    test_Int this)
+{
 /* $begin(test/Int/tc_o_int16Min) */
 
     corto_object o = corto_resolve(root_o, "o_int16Min");
@@ -82,7 +90,9 @@ corto_void _test_Int_tc_o_int16Min(test_Int this) {
 /* $end */
 }
 
-corto_void _test_Int_tc_o_int32(test_Int this) {
+corto_void _test_Int_tc_o_int32(
+    test_Int this)
+{
 /* $begin(test/Int/tc_o_int32) */
 
     corto_object o = corto_resolve(root_o, "o_int32");
@@ -104,7 +114,9 @@ corto_void _test_Int_tc_o_int32(test_Int this) {
 /* $end */
 }
 
-corto_void _test_Int_tc_o_int32Max(test_Int this) {
+corto_void _test_Int_tc_o_int32Max(
+    test_Int this)
+{
 /* $begin(test/Int/tc_o_int32Max) */
 
     corto_object o = corto_resolve(root_o, "o_int32Max");
@@ -126,7 +138,9 @@ corto_void _test_Int_tc_o_int32Max(test_Int this) {
 /* $end */
 }
 
-corto_void _test_Int_tc_o_int32Min(test_Int this) {
+corto_void _test_Int_tc_o_int32Min(
+    test_Int this)
+{
 /* $begin(test/Int/tc_o_int32Min) */
 
     corto_object o = corto_resolve(root_o, "o_int32Min");
@@ -148,7 +162,9 @@ corto_void _test_Int_tc_o_int32Min(test_Int this) {
 /* $end */
 }
 
-corto_void _test_Int_tc_o_int64(test_Int this) {
+corto_void _test_Int_tc_o_int64(
+    test_Int this)
+{
 /* $begin(test/Int/tc_o_int64) */
 
     corto_object o = corto_resolve(root_o, "o_int64");
@@ -170,7 +186,9 @@ corto_void _test_Int_tc_o_int64(test_Int this) {
 /* $end */
 }
 
-corto_void _test_Int_tc_o_int64Max(test_Int this) {
+corto_void _test_Int_tc_o_int64Max(
+    test_Int this)
+{
 /* $begin(test/Int/tc_o_int64Max) */
 
     corto_object o = corto_resolve(root_o, "o_int64Max");
@@ -192,7 +210,9 @@ corto_void _test_Int_tc_o_int64Max(test_Int this) {
 /* $end */
 }
 
-corto_void _test_Int_tc_o_int64Min(test_Int this) {
+corto_void _test_Int_tc_o_int64Min(
+    test_Int this)
+{
 /* $begin(test/Int/tc_o_int64Min) */
 
     corto_object o = corto_resolve(root_o, "o_int64Min");
@@ -214,7 +234,9 @@ corto_void _test_Int_tc_o_int64Min(test_Int this) {
 /* $end */
 }
 
-corto_void _test_Int_tc_o_int8(test_Int this) {
+corto_void _test_Int_tc_o_int8(
+    test_Int this)
+{
 /* $begin(test/Int/tc_o_int8) */
 
     corto_object o = corto_resolve(root_o, "o_int8");
@@ -236,7 +258,9 @@ corto_void _test_Int_tc_o_int8(test_Int this) {
 /* $end */
 }
 
-corto_void _test_Int_tc_o_int8Max(test_Int this) {
+corto_void _test_Int_tc_o_int8Max(
+    test_Int this)
+{
 /* $begin(test/Int/tc_o_int8Max) */
 
     corto_object o = corto_resolve(root_o, "o_int8Max");
@@ -258,7 +282,9 @@ corto_void _test_Int_tc_o_int8Max(test_Int this) {
 /* $end */
 }
 
-corto_void _test_Int_tc_o_int8Min(test_Int this) {
+corto_void _test_Int_tc_o_int8Min(
+    test_Int this)
+{
 /* $begin(test/Int/tc_o_int8Min) */
 
     corto_object o = corto_resolve(root_o, "o_int8Min");
@@ -280,7 +306,9 @@ corto_void _test_Int_tc_o_int8Min(test_Int this) {
 /* $end */
 }
 
-corto_void _test_Int_tc_t_myInt16(test_Int this) {
+corto_void _test_Int_tc_t_myInt16(
+    test_Int this)
+{
 /* $begin(test/Int/tc_t_myInt16) */
 
     corto_object t = corto_resolve(root_o, "t_myInt16");
@@ -303,7 +331,9 @@ corto_void _test_Int_tc_t_myInt16(test_Int this) {
 /* $end */
 }
 
-corto_void _test_Int_tc_t_myInt32(test_Int this) {
+corto_void _test_Int_tc_t_myInt32(
+    test_Int this)
+{
 /* $begin(test/Int/tc_t_myInt32) */
 
     corto_object t = corto_resolve(root_o, "t_myInt32");
@@ -326,7 +356,9 @@ corto_void _test_Int_tc_t_myInt32(test_Int this) {
 /* $end */
 }
 
-corto_void _test_Int_tc_t_myInt64(test_Int this) {
+corto_void _test_Int_tc_t_myInt64(
+    test_Int this)
+{
 /* $begin(test/Int/tc_t_myInt64) */
 
     corto_object t = corto_resolve(root_o, "t_myInt64");
@@ -349,7 +381,9 @@ corto_void _test_Int_tc_t_myInt64(test_Int this) {
 /* $end */
 }
 
-corto_void _test_Int_tc_t_myInt8(test_Int this) {
+corto_void _test_Int_tc_t_myInt8(
+    test_Int this)
+{
 /* $begin(test/Int/tc_t_myInt8) */
 
     corto_object t = corto_resolve(root_o, "t_myInt8");

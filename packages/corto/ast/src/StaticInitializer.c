@@ -111,7 +111,9 @@ error:
 }
 /* $end */
 
-corto_int16 _ast_StaticInitializer_construct(ast_StaticInitializer this) {
+corto_int16 _ast_StaticInitializer_construct(
+    ast_StaticInitializer this)
+{
 /* $begin(corto/ast/StaticInitializer/construct) */
     corto_int8 variable;
 
@@ -131,7 +133,9 @@ error:
 /* $end */
 }
 
-corto_int16 _ast_StaticInitializer_define(ast_StaticInitializer this) {
+corto_int16 _ast_StaticInitializer_define(
+    ast_StaticInitializer this)
+{
 /* $begin(corto/ast/StaticInitializer/define) */
     corto_uint32 variable;
     corto_object o;
@@ -146,7 +150,7 @@ corto_int16 _ast_StaticInitializer_define(ast_StaticInitializer this) {
         if (corto_instanceof(corto_type(corto_type_o), o)
                 || (corto_checkAttr(o, CORTO_ATTR_SCOPED) && corto_instanceof(corto_type(corto_type_o), corto_parentof(o)))) {
             if (corto_define(o)) {
-                corto_id id1, id2;
+                corto_id id1;
                 ast_Parser_error(yparser(), "failed to define '%s': %s",
                         ast_Parser_id(o, id1),
                         corto_lasterr());
@@ -170,7 +174,9 @@ error:
 /* $end */
 }
 
-corto_int16 _ast_StaticInitializer_push(ast_StaticInitializer this) {
+corto_int16 _ast_StaticInitializer_push(
+    ast_StaticInitializer this)
+{
 /* $begin(corto/ast/StaticInitializer/push) */
     corto_uint8 variable;
 
@@ -184,7 +190,10 @@ corto_int16 _ast_StaticInitializer_push(ast_StaticInitializer this) {
 /* $end */
 }
 
-corto_int16 _ast_StaticInitializer_value(ast_StaticInitializer this, ast_Expression v) {
+corto_int16 _ast_StaticInitializer_value(
+    ast_StaticInitializer this,
+    ast_Expression v)
+{
 /* $begin(corto/ast/StaticInitializer/value) */
     corto_word offset;
     corto_uint32 variable;

@@ -12,14 +12,20 @@
 #include "ast__private.h"
 /* $end */
 
-corto_int16 _ast_SignedInteger_init(ast_SignedInteger this) {
+corto_int16 _ast_SignedInteger_init(
+    ast_SignedInteger this)
+{
 /* $begin(corto/ast/SignedInteger/init) */
     ast_Literal(this)->kind = Ast_SignedInt;
     return ast_Literal_init(ast_Literal(this));
 /* $end */
 }
 
-corto_int16 _ast_SignedInteger_serialize(ast_SignedInteger this, corto_type dstType, corto_word dst) {
+corto_int16 _ast_SignedInteger_serialize(
+    ast_SignedInteger this,
+    corto_type dstType,
+    corto_word dst)
+{
 /* $begin(corto/ast/SignedInteger/serialize) */
     ast_valueKind kind;
 
@@ -53,7 +59,12 @@ error:
 /* $end */
 }
 
-ic_node _ast_SignedInteger_toIc_v(ast_SignedInteger this, ic_program program, ic_storage storage, corto_bool stored) {
+ic_node _ast_SignedInteger_toIc_v(
+    ast_SignedInteger this,
+    ic_program program,
+    ic_storage storage,
+    corto_bool stored)
+{
 /* $begin(corto/ast/SignedInteger/toIc) */
     ic_node result;
     CORTO_UNUSED(storage);

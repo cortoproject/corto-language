@@ -12,7 +12,9 @@
 corto_threadKey IC_PROGRAM_KEY;
 /* $end */
 
-ic_opKind _ic_opKindFromOperator(corto_operatorKind _operator) {
+ic_opKind _ic_opKindFromOperator(
+    corto_operatorKind _operator)
+{
 /* $begin(corto/ic/opKindFromOperator) */
 
     switch(_operator) {

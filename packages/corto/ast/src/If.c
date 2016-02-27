@@ -12,7 +12,9 @@
 #include "ast__private.h"
 /* $end */
 
-corto_int16 _ast_If_construct(ast_If this) {
+corto_int16 _ast_If_construct(
+    ast_If this)
+{
 /* $begin(corto/ast/If/construct) */
     corto_type conditionType;
 
@@ -37,13 +39,20 @@ error:
 /* $end */
 }
 
-corto_void _ast_If_noWarnUnreachable(ast_If this) {
+corto_void _ast_If_noWarnUnreachable(
+    ast_If this)
+{
 /* $begin(corto/ast/If/noWarnUnreachable) */
     this->warnUnreachable = FALSE;
 /* $end */
 }
 
-ic_node _ast_If_toIc_v(ast_If this, ic_program program, ic_storage storage, corto_bool stored) {
+ic_node _ast_If_toIc_v(
+    ast_If this,
+    ic_program program,
+    ic_storage storage,
+    corto_bool stored)
+{
 /* $begin(corto/ast/If/toIc) */
     ic_storage accumulator;
     ic_label labelEval = NULL, labelEnd = NULL;

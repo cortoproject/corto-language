@@ -8,7 +8,9 @@
 
 #include "test.h"
 
-corto_void _test_Enum_setup(test_Enum this) {
+corto_void _test_Enum_setup(
+    test_Enum this)
+{
 /* $begin(test/Enum/setup) */
 
     corto_load("cx/types/enum.cx", 0, NULL);
@@ -16,7 +18,9 @@ corto_void _test_Enum_setup(test_Enum this) {
 /* $end */
 }
 
-corto_void _test_Enum_tc_o_explicit(test_Enum this) {
+corto_void _test_Enum_tc_o_explicit(
+    test_Enum this)
+{
 /* $begin(test/Enum/tc_o_explicit) */
 
     corto_object t = corto_resolve(root_o, "Explicit");
@@ -86,7 +90,9 @@ corto_void _test_Enum_tc_o_explicit(test_Enum this) {
 /* $end */
 }
 
-corto_void _test_Enum_tc_o_oneLine(test_Enum this) {
+corto_void _test_Enum_tc_o_oneLine(
+    test_Enum this)
+{
 /* $begin(test/Enum/tc_o_oneLine) */
 
     corto_object t = corto_resolve(root_o, "OneLine");
@@ -156,7 +162,9 @@ corto_void _test_Enum_tc_o_oneLine(test_Enum this) {
 /* $end */
 }
 
-corto_void _test_Enum_tc_o_oneLineFullname(test_Enum this) {
+corto_void _test_Enum_tc_o_oneLineFullname(
+    test_Enum this)
+{
 /* $begin(test/Enum/tc_o_oneLineFullname) */
 
     corto_object t = corto_resolve(root_o, "OneLine");
@@ -226,7 +234,9 @@ corto_void _test_Enum_tc_o_oneLineFullname(test_Enum this) {
 /* $end */
 }
 
-corto_void _test_Enum_tc_o_oneLineFullnameSlash(test_Enum this) {
+corto_void _test_Enum_tc_o_oneLineFullnameSlash(
+    test_Enum this)
+{
 /* $begin(test/Enum/tc_o_oneLineFullnameSlash) */
 
     corto_object t = corto_resolve(root_o, "OneLine");
@@ -296,7 +306,9 @@ corto_void _test_Enum_tc_o_oneLineFullnameSlash(test_Enum this) {
 /* $end */
 }
 
-corto_void _test_Enum_tc_o_userValues(test_Enum this) {
+corto_void _test_Enum_tc_o_userValues(
+    test_Enum this)
+{
 /* $begin(test/Enum/tc_o_userValues) */
 
     corto_object t = corto_resolve(root_o, "UserValues");
@@ -366,7 +378,9 @@ corto_void _test_Enum_tc_o_userValues(test_Enum this) {
 /* $end */
 }
 
-corto_void _test_Enum_tc_t_Explicit(test_Enum this) {
+corto_void _test_Enum_tc_t_Explicit(
+    test_Enum this)
+{
 /* $begin(test/Enum/tc_t_Explicit) */
 
     corto_object t = corto_resolve(root_o, "Explicit");
@@ -433,7 +447,9 @@ corto_void _test_Enum_tc_t_Explicit(test_Enum this) {
 /* $end */
 }
 
-corto_void _test_Enum_tc_t_MultiLine(test_Enum this) {
+corto_void _test_Enum_tc_t_MultiLine(
+    test_Enum this)
+{
 /* $begin(test/Enum/tc_t_MultiLine) */
 
     corto_object t = corto_resolve(root_o, "MultiLine");
@@ -500,7 +516,9 @@ corto_void _test_Enum_tc_t_MultiLine(test_Enum this) {
 /* $end */
 }
 
-corto_void _test_Enum_tc_t_OneLine(test_Enum this) {
+corto_void _test_Enum_tc_t_OneLine(
+    test_Enum this)
+{
 /* $begin(test/Enum/tc_t_OneLine) */
 
     corto_object t = corto_resolve(root_o, "OneLine");
@@ -567,7 +585,9 @@ corto_void _test_Enum_tc_t_OneLine(test_Enum this) {
 /* $end */
 }
 
-corto_void _test_Enum_tc_t_UserValues(test_Enum this) {
+corto_void _test_Enum_tc_t_UserValues(
+    test_Enum this)
+{
 /* $begin(test/Enum/tc_t_UserValues) */
 
     corto_object t = corto_resolve(root_o, "UserValues");

@@ -8,7 +8,9 @@
 
 #include "corto/ic/ic.h"
 
-corto_int16 _ic_accumulator_construct(ic_accumulator this) {
+corto_int16 _ic_accumulator_construct(
+    ic_accumulator this)
+{
 /* $begin(corto/ic/accumulator/construct) */
     char name[15];
     ic_storage(this)->kind = IC_ACCUMULATOR;

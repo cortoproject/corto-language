@@ -8,7 +8,9 @@
 
 #include "test.h"
 
-corto_void _test_Void_setup(test_Void this) {
+corto_void _test_Void_setup(
+    test_Void this)
+{
 /* $begin(test/Void/setup) */
 
     corto_load("cx/types/void.cx", 0, NULL);
@@ -16,7 +18,9 @@ corto_void _test_Void_setup(test_Void this) {
 /* $end */
 }
 
-corto_void _test_Void_tc_object(test_Void this) {
+corto_void _test_Void_tc_object(
+    test_Void this)
+{
 /* $begin(test/Void/tc_object) */
 
     corto_object o = corto_resolve(root_o, "o_object");
@@ -34,7 +38,9 @@ corto_void _test_Void_tc_object(test_Void this) {
 /* $end */
 }
 
-corto_void _test_Void_tc_void(test_Void this) {
+corto_void _test_Void_tc_void(
+    test_Void this)
+{
 /* $begin(test/Void/tc_void) */
 
     corto_object o = corto_resolve(root_o, "o_void");

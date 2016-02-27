@@ -8,7 +8,9 @@
 
 #include "test.h"
 
-corto_void _test_Binary_setup(test_Binary this) {
+corto_void _test_Binary_setup(
+    test_Binary this)
+{
 /* $begin(test/Binary/setup) */
 
     corto_load("cx/types/binary.cx", 0, NULL);
@@ -16,7 +18,9 @@ corto_void _test_Binary_setup(test_Binary this) {
 /* $end */
 }
 
-corto_void _test_Binary_tc_o_b16(test_Binary this) {
+corto_void _test_Binary_tc_o_b16(
+    test_Binary this)
+{
 /* $begin(test/Binary/tc_o_b16) */
 
     corto_object t = corto_resolve(root_o, "t_b16");
@@ -43,7 +47,9 @@ corto_void _test_Binary_tc_o_b16(test_Binary this) {
 /* $end */
 }
 
-corto_void _test_Binary_tc_o_b32(test_Binary this) {
+corto_void _test_Binary_tc_o_b32(
+    test_Binary this)
+{
 /* $begin(test/Binary/tc_o_b32) */
 
     corto_object t = corto_resolve(root_o, "t_b32");
@@ -70,7 +76,9 @@ corto_void _test_Binary_tc_o_b32(test_Binary this) {
 /* $end */
 }
 
-corto_void _test_Binary_tc_o_b64(test_Binary this) {
+corto_void _test_Binary_tc_o_b64(
+    test_Binary this)
+{
 /* $begin(test/Binary/tc_o_b64) */
 
     corto_object t = corto_resolve(root_o, "t_b64");
@@ -97,7 +105,9 @@ corto_void _test_Binary_tc_o_b64(test_Binary this) {
 /* $end */
 }
 
-corto_void _test_Binary_tc_o_b8(test_Binary this) {
+corto_void _test_Binary_tc_o_b8(
+    test_Binary this)
+{
 /* $begin(test/Binary/tc_o_b8) */
 
     corto_object t = corto_resolve(root_o, "t_b8");
@@ -124,7 +134,9 @@ corto_void _test_Binary_tc_o_b8(test_Binary this) {
 /* $end */
 }
 
-corto_void _test_Binary_tc_o_bword(test_Binary this) {
+corto_void _test_Binary_tc_o_bword(
+    test_Binary this)
+{
 /* $begin(test/Binary/tc_o_bword) */
 
     corto_object t = corto_resolve(root_o, "t_word");
@@ -151,7 +163,9 @@ corto_void _test_Binary_tc_o_bword(test_Binary this) {
 /* $end */
 }
 
-corto_void _test_Binary_tc_o_octet(test_Binary this) {
+corto_void _test_Binary_tc_o_octet(
+    test_Binary this)
+{
 /* $begin(test/Binary/tc_o_octet) */
 
     corto_object o = corto_resolve(root_o, "o_octet");
@@ -173,7 +187,9 @@ corto_void _test_Binary_tc_o_octet(test_Binary this) {
 /* $end */
 }
 
-corto_void _test_Binary_tc_o_word(test_Binary this) {
+corto_void _test_Binary_tc_o_word(
+    test_Binary this)
+{
 /* $begin(test/Binary/tc_o_word) */
 
     corto_object o = corto_resolve(root_o, "o_word");
@@ -195,7 +211,9 @@ corto_void _test_Binary_tc_o_word(test_Binary this) {
 /* $end */
 }
 
-corto_void _test_Binary_tc_t_b16(test_Binary this) {
+corto_void _test_Binary_tc_t_b16(
+    test_Binary this)
+{
 /* $begin(test/Binary/tc_t_b16) */
 
     corto_object t = corto_resolve(root_o, "t_b16");
@@ -218,7 +236,9 @@ corto_void _test_Binary_tc_t_b16(test_Binary this) {
 /* $end */
 }
 
-corto_void _test_Binary_tc_t_b32(test_Binary this) {
+corto_void _test_Binary_tc_t_b32(
+    test_Binary this)
+{
 /* $begin(test/Binary/tc_t_b32) */
 
     corto_object t = corto_resolve(root_o, "t_b32");
@@ -241,7 +261,9 @@ corto_void _test_Binary_tc_t_b32(test_Binary this) {
 /* $end */
 }
 
-corto_void _test_Binary_tc_t_b64(test_Binary this) {
+corto_void _test_Binary_tc_t_b64(
+    test_Binary this)
+{
 /* $begin(test/Binary/tc_t_b64) */
 
     corto_object t = corto_resolve(root_o, "t_b64");
@@ -264,7 +286,9 @@ corto_void _test_Binary_tc_t_b64(test_Binary this) {
 /* $end */
 }
 
-corto_void _test_Binary_tc_t_b8(test_Binary this) {
+corto_void _test_Binary_tc_t_b8(
+    test_Binary this)
+{
 /* $begin(test/Binary/tc_t_b8) */
 
     corto_object t = corto_resolve(root_o, "t_b8");
@@ -287,7 +311,9 @@ corto_void _test_Binary_tc_t_b8(test_Binary this) {
 /* $end */
 }
 
-corto_void _test_Binary_tc_t_bword(test_Binary this) {
+corto_void _test_Binary_tc_t_bword(
+    test_Binary this)
+{
 /* $begin(test/Binary/tc_t_bword) */
 
     corto_object t = corto_resolve(root_o, "t_word");

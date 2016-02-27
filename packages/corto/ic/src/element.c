@@ -8,7 +8,9 @@
 
 #include "corto/ic/ic.h"
 
-corto_int16 _ic_element_construct(ic_element this) {
+corto_int16 _ic_element_construct(
+    ic_element this)
+{
 /* $begin(corto/ic/element/construct) */
     corto_id name;
     corto_collection type = corto_collection(this->base->type);

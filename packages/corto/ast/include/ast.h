@@ -17,19 +17,37 @@ extern "C" {
 #endif
 
 
-CORTO_AST_EXPORT corto_bool _ast_isOperatorAssignment(corto_operatorKind _operator);
+CORTO_AST_EXPORT corto_bool _ast_isOperatorAssignment(
+    corto_operatorKind _operator);
 #define ast_isOperatorAssignment(_operator) _ast_isOperatorAssignment(_operator)
 
-CORTO_AST_EXPORT corto_void _ast_report(corto_string kind, corto_string filename, corto_uint32 line, corto_uint32 column, corto_string error, corto_string token);
+CORTO_AST_EXPORT corto_void _ast_report(
+    corto_string kind,
+    corto_string filename,
+    corto_uint32 line,
+    corto_uint32 column,
+    corto_string error,
+    corto_string token);
 #define ast_report(kind, filename, line, column, error, token) _ast_report(kind, filename, line, column, error, token)
 
-CORTO_AST_EXPORT corto_void _ast_reportError(corto_string filename, corto_uint32 line, corto_uint32 column, corto_string error, corto_string token);
+CORTO_AST_EXPORT corto_void _ast_reportError(
+    corto_string filename,
+    corto_uint32 line,
+    corto_uint32 column,
+    corto_string error,
+    corto_string token);
 #define ast_reportError(filename, line, column, error, token) _ast_reportError(filename, line, column, error, token)
 
-CORTO_AST_EXPORT corto_void _ast_reportWarning(corto_string filename, corto_uint32 line, corto_uint32 column, corto_string error, corto_string token);
+CORTO_AST_EXPORT corto_void _ast_reportWarning(
+    corto_string filename,
+    corto_uint32 line,
+    corto_uint32 column,
+    corto_string error,
+    corto_string token);
 #define ast_reportWarning(filename, line, column, error, token) _ast_reportWarning(filename, line, column, error, token)
 
-CORTO_AST_EXPORT ast_valueKind _ast_valueKindFromType(corto_type type);
+CORTO_AST_EXPORT ast_valueKind _ast_valueKindFromType(
+    corto_type type);
 #define ast_valueKindFromType(type) _ast_valueKindFromType(corto_type(type))
 #include "corto/ast/Binary.h"
 #include "corto/ast/Binding.h"

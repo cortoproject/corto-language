@@ -12,7 +12,10 @@
 #include "corto/ic/assemble.h"
 /* $end */
 
-corto_void _ic_program_add(ic_program this, ic_node n) {
+corto_void _ic_program_add(
+    ic_program this,
+    ic_node n)
+{
 /* $begin(corto/ic/program/add) */
 
     if (n->kind == IC_OP) {
@@ -30,7 +33,9 @@ corto_void _ic_program_add(ic_program this, ic_node n) {
 /* $end */
 }
 
-corto_int16 _ic_program_assemble(ic_program this) {
+corto_int16 _ic_program_assemble(
+    ic_program this)
+{
 /* $begin(corto/ic/program/assemble) */
 
     if (CORTO_DEBUG_ENABLED) {
@@ -52,7 +57,9 @@ error:
 /* $end */
 }
 
-corto_int16 _ic_program_construct(ic_program this) {
+corto_int16 _ic_program_construct(
+    ic_program this)
+{
 /* $begin(corto/ic/program/construct) */
     extern corto_threadKey IC_PROGRAM_KEY;
     corto_threadTlsSet(IC_PROGRAM_KEY, this);
@@ -60,7 +67,15 @@ corto_int16 _ic_program_construct(ic_program this) {
 /* $end */
 }
 
-ic_variable _ic_program_declareVariable(ic_program this, corto_string name, corto_type type, corto_bool isReference, corto_bool holdsReturn, corto_bool isParameter, corto_bool isReturn) {
+ic_variable _ic_program_declareVariable(
+    ic_program this,
+    corto_string name,
+    corto_type type,
+    corto_bool isReference,
+    corto_bool holdsReturn,
+    corto_bool isParameter,
+    corto_bool isReturn)
+{
 /* $begin(corto/ic/program/declareVariable) */
     ic_variable result = ic_variable(ic_scope_lookupStorage(this->scope, name, FALSE));
     if (!result) {
@@ -71,20 +86,27 @@ ic_variable _ic_program_declareVariable(ic_program this, corto_string name, cort
 /* $end */
 }
 
-ic_program _ic_program_get(void) {
+ic_program _ic_program_get(void)
+{
 /* $begin(corto/ic/program/get) */
     extern corto_threadKey IC_PROGRAM_KEY;
     return (ic_program)corto_threadTlsGet(IC_PROGRAM_KEY);
 /* $end */
 }
 
-corto_uint32 _ic_program_getAccId(ic_program this) {
+corto_uint32 _ic_program_getAccId(
+    ic_program this)
+{
 /* $begin(corto/ic/program/getAccId) */
     return ++this->autoAccId;
 /* $end */
 }
 
-ic_element _ic_program_getElement(ic_program this, ic_storage base, ic_node index) {
+ic_element _ic_program_getElement(
+    ic_program this,
+    ic_storage base,
+    ic_node index)
+{
 /* $begin(corto/ic/program/getElement) */
     corto_id name;
     ic_element result;
@@ -104,13 +126,19 @@ ic_element _ic_program_getElement(ic_program this, ic_storage base, ic_node inde
 /* $end */
 }
 
-corto_uint32 _ic_program_getLabel(ic_program this) {
+corto_uint32 _ic_program_getLabel(
+    ic_program this)
+{
 /* $begin(corto/ic/program/getLabel) */
     return ++this->labelCount;
 /* $end */
 }
 
-ic_member _ic_program_getMember(ic_program this, ic_storage base, corto_member m) {
+ic_member _ic_program_getMember(
+    ic_program this,
+    ic_storage base,
+    corto_member m)
+{
 /* $begin(corto/ic/program/getMember) */
     corto_id name;
     ic_member result;
@@ -124,7 +152,10 @@ ic_member _ic_program_getMember(ic_program this, ic_storage base, corto_member m
 /* $end */
 }
 
-ic_object _ic_program_getObject(ic_program this, corto_object o) {
+ic_object _ic_program_getObject(
+    ic_program this,
+    corto_object o)
+{
 /* $begin(corto/ic/program/getObject) */
     ic_scope root = this->scope;
     ic_object result = NULL;
@@ -140,13 +171,18 @@ ic_object _ic_program_getObject(ic_program this, corto_object o) {
 /* $end */
 }
 
-ic_variable _ic_program_getVariable(ic_program this, corto_string name) {
+ic_variable _ic_program_getVariable(
+    ic_program this,
+    corto_string name)
+{
 /* $begin(corto/ic/program/getVariable) */
     return ic_variable(ic_scope_lookupStorage(this->scope, name, TRUE));
 /* $end */
 }
 
-corto_void _ic_program_popAccumulator(ic_program this) {
+corto_void _ic_program_popAccumulator(
+    ic_program this)
+{
 /* $begin(corto/ic/program/popAccumulator) */
     ic_storage acc;
 
@@ -159,7 +195,9 @@ corto_void _ic_program_popAccumulator(ic_program this) {
 /* $end */
 }
 
-corto_void _ic_program_popScope(ic_program this) {
+corto_void _ic_program_popScope(
+    ic_program this)
+{
 /* $begin(corto/ic/program/popScope) */
     if (this->scope->storages) {
         corto_iter storageIter;
@@ -180,7 +218,12 @@ corto_void _ic_program_popScope(ic_program this) {
 /* $end */
 }
 
-ic_accumulator _ic_program_pushAccumulator(ic_program this, corto_type type, corto_bool isReference, corto_bool holdsReturn) {
+ic_accumulator _ic_program_pushAccumulator(
+    ic_program this,
+    corto_type type,
+    corto_bool isReference,
+    corto_bool holdsReturn)
+{
 /* $begin(corto/ic/program/pushAccumulator) */
     corto_id name;
 
@@ -195,7 +238,10 @@ ic_accumulator _ic_program_pushAccumulator(ic_program this, corto_type type, cor
 /* $end */
 }
 
-ic_scope _ic_program_pushFunction(ic_program this, corto_function function) {
+ic_scope _ic_program_pushFunction(
+    ic_program this,
+    corto_function function)
+{
 /* $begin(corto/ic/program/pushFunction) */
     ic_function label;
     ic_scope scope;
@@ -212,7 +258,9 @@ ic_scope _ic_program_pushFunction(ic_program this, corto_function function) {
 /* $end */
 }
 
-ic_scope _ic_program_pushScope(ic_program this) {
+ic_scope _ic_program_pushScope(
+    ic_program this)
+{
 /* $begin(corto/ic/program/pushScope) */
     this->scope = ic_scopeCreate(this->scope, FALSE);
 
@@ -224,7 +272,11 @@ ic_scope _ic_program_pushScope(ic_program this) {
 /* $end */
 }
 
-corto_int16 _ic_program_run(ic_program this, corto_word result, corto_stringSeq argv) {
+corto_int16 _ic_program_run(
+    ic_program this,
+    corto_word result,
+    corto_stringSeq argv)
+{
 /* $begin(corto/ic/program/run) */
     vm_program program = (vm_program)this->vmprogram;
     vm_run(program, argv, (void*)result);
@@ -232,7 +284,9 @@ corto_int16 _ic_program_run(ic_program this, corto_word result, corto_stringSeq 
 /* $end */
 }
 
-corto_string _ic_program_str(ic_program this) {
+corto_string _ic_program_str(
+    ic_program this)
+{
 /* $begin(corto/ic/program/str) */
     corto_string result = NULL;
 

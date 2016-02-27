@@ -12,7 +12,9 @@
 #include "ast__private.h"
  /* $end */
 
-corto_int16 _ast_UnresolvedReference_construct(ast_UnresolvedReference this) {
+corto_int16 _ast_UnresolvedReference_construct(
+    ast_UnresolvedReference this)
+{
 /* $begin(corto/ast/UnresolvedReference/construct) */
 
     ast_Storage(this)->kind = Ast_UnresolvedReferenceStorage;
@@ -23,7 +25,9 @@ corto_int16 _ast_UnresolvedReference_construct(ast_UnresolvedReference this) {
 /* $end */
 }
 
-corto_void _ast_UnresolvedReference_error(ast_UnresolvedReference this) {
+corto_void _ast_UnresolvedReference_error(
+    ast_UnresolvedReference this)
+{
 /* $begin(corto/ast/UnresolvedReference/error) */
     corto_id errMsg;
 
@@ -40,7 +44,9 @@ corto_void _ast_UnresolvedReference_error(ast_UnresolvedReference this) {
 /* $end */
 }
 
-corto_string _ast_UnresolvedReference_id_v(ast_UnresolvedReference this) {
+corto_string _ast_UnresolvedReference_id_v(
+    ast_UnresolvedReference this)
+{
 /* $begin(corto/ast/UnresolvedReference/id) */
 
     return this->ref;
@@ -48,7 +54,10 @@ corto_string _ast_UnresolvedReference_id_v(ast_UnresolvedReference this) {
 /* $end */
 }
 
-ast_Expression _ast_UnresolvedReference_resolve_v(ast_UnresolvedReference this, corto_type type) {
+ast_Expression _ast_UnresolvedReference_resolve_v(
+    ast_UnresolvedReference this,
+    corto_type type)
+{
 /* $begin(corto/ast/UnresolvedReference/resolve) */
     ast_Expression result = NULL;
     corto_object o = NULL;
@@ -72,7 +81,12 @@ ast_Expression _ast_UnresolvedReference_resolve_v(ast_UnresolvedReference this, 
 /* $end */
 }
 
-ic_node _ast_UnresolvedReference_toIc_v(ast_UnresolvedReference this, ic_program program, ic_storage storage, corto_bool stored) {
+ic_node _ast_UnresolvedReference_toIc_v(
+    ast_UnresolvedReference this,
+    ic_program program,
+    ic_storage storage,
+    corto_bool stored)
+{
 /* $begin(corto/ast/UnresolvedReference/toIc) */
 
     CORTO_UNUSED(this);

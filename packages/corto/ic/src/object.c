@@ -8,7 +8,9 @@
 
 #include "corto/ic/ic.h"
 
-corto_int16 _ic_object_construct(ic_object this) {
+corto_int16 _ic_object_construct(
+    ic_object this)
+{
 /* $begin(corto/ic/object/construct) */
     ic_storage(this)->kind = IC_OBJECT;
     ic_storage(this)->name = corto_strdup(corto_fullpath(NULL, this->ptr));

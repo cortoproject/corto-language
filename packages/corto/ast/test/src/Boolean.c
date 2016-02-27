@@ -8,7 +8,9 @@
 
 #include "test.h"
 
-corto_void _test_Boolean_setup(test_Boolean this) {
+corto_void _test_Boolean_setup(
+    test_Boolean this)
+{
 /* $begin(test/Boolean/setup) */
 
     corto_load("cx/types/boolean.cx", 0, NULL);
@@ -16,7 +18,9 @@ corto_void _test_Boolean_setup(test_Boolean this) {
 /* $end */
 }
 
-corto_void _test_Boolean_tc_o_boolFalse(test_Boolean this) {
+corto_void _test_Boolean_tc_o_boolFalse(
+    test_Boolean this)
+{
 /* $begin(test/Boolean/tc_o_boolFalse) */
 
     corto_object o = corto_resolve(root_o, "o_boolFalse");
@@ -38,7 +42,9 @@ corto_void _test_Boolean_tc_o_boolFalse(test_Boolean this) {
 /* $end */
 }
 
-corto_void _test_Boolean_tc_o_boolTrue(test_Boolean this) {
+corto_void _test_Boolean_tc_o_boolTrue(
+    test_Boolean this)
+{
 /* $begin(test/Boolean/tc_o_boolTrue) */
 
     corto_object o = corto_resolve(root_o, "o_boolTrue");
@@ -60,7 +66,9 @@ corto_void _test_Boolean_tc_o_boolTrue(test_Boolean this) {
 /* $end */
 }
 
-corto_void _test_Boolean_tc_o_myboolFalse(test_Boolean this) {
+corto_void _test_Boolean_tc_o_myboolFalse(
+    test_Boolean this)
+{
 /* $begin(test/Boolean/tc_o_myboolFalse) */
 
     corto_object t = corto_resolve(root_o, "t_mybool");
@@ -87,7 +95,9 @@ corto_void _test_Boolean_tc_o_myboolFalse(test_Boolean this) {
 /* $end */
 }
 
-corto_void _test_Boolean_tc_o_myboolTrue(test_Boolean this) {
+corto_void _test_Boolean_tc_o_myboolTrue(
+    test_Boolean this)
+{
 /* $begin(test/Boolean/tc_o_myboolTrue) */
 
     corto_object t = corto_resolve(root_o, "t_mybool");
@@ -114,7 +124,9 @@ corto_void _test_Boolean_tc_o_myboolTrue(test_Boolean this) {
 /* $end */
 }
 
-corto_void _test_Boolean_tc_t_mybool(test_Boolean this) {
+corto_void _test_Boolean_tc_t_mybool(
+    test_Boolean this)
+{
 /* $begin(test/Boolean/tc_t_mybool) */
 
     corto_object t = corto_resolve(root_o, "t_mybool");

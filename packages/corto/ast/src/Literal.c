@@ -12,7 +12,9 @@
 #include "ast__private.h"
 /* $end */
 
-corto_word _ast_Literal_getValue_v(ast_Literal this) {
+corto_word _ast_Literal_getValue_v(
+    ast_Literal this)
+{
 /* $begin(corto/ast/Literal/getValue) */
     corto_word result = 0;
 
@@ -29,7 +31,9 @@ corto_word _ast_Literal_getValue_v(ast_Literal this) {
 /* $end */
 }
 
-corto_int16 _ast_Literal_init(ast_Literal this) {
+corto_int16 _ast_Literal_init(
+    ast_Literal this)
+{
 /* $begin(corto/ast/Literal/init) */
     if (!ast_Expression(this)->type) {
         switch(this->kind) {

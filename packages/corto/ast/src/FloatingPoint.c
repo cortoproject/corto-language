@@ -12,14 +12,20 @@
 #include "ast__private.h"
 /* $end */
 
-corto_int16 _ast_FloatingPoint_init(ast_FloatingPoint this) {
+corto_int16 _ast_FloatingPoint_init(
+    ast_FloatingPoint this)
+{
 /* $begin(corto/ast/FloatingPoint/init) */
     ast_Literal(this)->kind = Ast_Float;
     return ast_Literal_init(ast_Literal(this));
 /* $end */
 }
 
-corto_int16 _ast_FloatingPoint_serialize(ast_FloatingPoint this, corto_type dstType, corto_word dst) {
+corto_int16 _ast_FloatingPoint_serialize(
+    ast_FloatingPoint this,
+    corto_type dstType,
+    corto_word dst)
+{
 /* $begin(corto/ast/FloatingPoint/serialize) */
     ast_valueKind kind;
 
@@ -50,7 +56,12 @@ error:
 /* $end */
 }
 
-ic_node _ast_FloatingPoint_toIc_v(ast_FloatingPoint this, ic_program program, ic_storage storage, corto_bool stored) {
+ic_node _ast_FloatingPoint_toIc_v(
+    ast_FloatingPoint this,
+    ic_program program,
+    ic_storage storage,
+    corto_bool stored)
+{
 /* $begin(corto/ast/FloatingPoint/toIc) */
     ic_node result;
     CORTO_UNUSED(program);
