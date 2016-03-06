@@ -563,7 +563,10 @@ typedef union Di2f_t {
             corto_error("Exception: null dereference in define");\
             goto STOP;\
         }\
-        corto_define((corto_object)op1_##code);\
+        if (corto_define((corto_object)op1_##code)) {\
+            exception = -1;\
+            goto STOP;\
+        };\
         next();\
 
 #define UPDATE(type,code)\
@@ -745,7 +748,7 @@ typedef union Di2f_t {
 #define STOP()\
     STOP:\
         corto_vm_popSignalHandler();\
-        return 0;\
+        return exception;\
 
 /* ---- */
 
@@ -1007,6 +1010,7 @@ static void corto_vm_popSignalHandler(void) {
 static int32_t corto_vm_run_w_storage(vm_program program, void* reg, void *result) {
     corto_vm_context c;
     c.strcache = corto_threadTlsGet(corto_stringConcatCacheKey);
+    int exception = 0;
 
     /* The signal handler will catch any exceptions and report when (and where)
      * an error is occurring */

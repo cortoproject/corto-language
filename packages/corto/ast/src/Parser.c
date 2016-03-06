@@ -123,7 +123,10 @@ corto_int16 ast_Parser_toIc(ast_Parser this, corto_stringSeq argv) {
 #endif
 
     ic_program_assemble(program);
-    ic_program_run(program, 0, argv);
+    if (ic_program_run(program, 0, argv)) {
+        corto_release(program);
+        goto error;
+    }
 
     /* Free program */
     corto_release(program);
@@ -2545,7 +2548,9 @@ corto_int16 _ast_Parser_parseLine(
         /* Run vm program */
         if (result && result->isReference) {
             corto_object o = NULL;
-            ic_program_run(program, (corto_word)&o, CORTO_SEQUENCE_EMPTY(corto_stringSeq));
+            if (ic_program_run(program, (corto_word)&o, CORTO_SEQUENCE_EMPTY(corto_stringSeq))) {
+                goto error;
+            }
             if (v) {
                 if (o) {
                     corto_valueObjectInit(v, o, NULL);
@@ -2558,13 +2563,19 @@ corto_int16 _ast_Parser_parseLine(
             if(returnType->kind == CORTO_PRIMITIVE) {
                 if (v) {
                     corto_valueValueInit(v, NULL, returnType, &v->is.value.storage);
-                    ic_program_run(program, (corto_word)&v->is.value.storage, CORTO_SEQUENCE_EMPTY(corto_stringSeq));
+                    if (ic_program_run(program, (corto_word)&v->is.value.storage, CORTO_SEQUENCE_EMPTY(corto_stringSeq))) {
+                        goto error;
+                    }
                 } else {
-                    ic_program_run(program, 0, CORTO_SEQUENCE_EMPTY(corto_stringSeq));
+                    if (ic_program_run(program, 0, CORTO_SEQUENCE_EMPTY(corto_stringSeq))) {
+                        goto error;
+                    }
                 }
             } else {
                 void *ptr = corto_alloc(corto_type_sizeof(returnType));
-                ic_program_run(program, (corto_word)&ptr, CORTO_SEQUENCE_EMPTY(corto_stringSeq));
+                if (ic_program_run(program, (corto_word)&ptr, CORTO_SEQUENCE_EMPTY(corto_stringSeq))) {
+                    goto error;
+                }
                 if (v) {
                     if (ptr) {
                         corto_valueValueInit(v, NULL, returnType, ptr);
@@ -2576,7 +2587,9 @@ corto_int16 _ast_Parser_parseLine(
             }
         }
     } else {
-        ic_program_run(program, 0, CORTO_SEQUENCE_EMPTY(corto_stringSeq));
+        if (ic_program_run(program, 0, CORTO_SEQUENCE_EMPTY(corto_stringSeq))) {
+            goto error;
+        }
         if (v) {
             corto_valueValueInit(v, NULL, corto_type(corto_void_o), NULL);
         }

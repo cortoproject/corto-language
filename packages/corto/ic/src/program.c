@@ -279,8 +279,7 @@ corto_int16 _ic_program_run(
 {
 /* $begin(corto/ic/program/run) */
     vm_program program = (vm_program)this->vmprogram;
-    vm_run(program, argv, (void*)result);
-    return 0;
+    return vm_run(program, argv, (void*)result);
 /* $end */
 }
 
