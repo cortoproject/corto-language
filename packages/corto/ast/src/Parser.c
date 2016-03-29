@@ -138,7 +138,7 @@ error:
 }
 
 /* Use corto_object as returntype as the actual type (ast_Expression) causes macro-expansion */
-typedef corto_object (*ast_ExpandAction)(ast_Parser this, ast_Expression lvalue, ast_Expression rvalue, void *userData);
+typedef corto_object ___ (*ast_ExpandAction)(ast_Parser this, ast_Expression lvalue, ast_Expression rvalue, void *userData);
 
 /* Combine results in new comma expression */
 corto_object ast_Parser_combineComma(ast_Parser this, ast_Expression lvalue, ast_Expression rvalue, void *userData) {
