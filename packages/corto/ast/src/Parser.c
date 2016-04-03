@@ -84,9 +84,9 @@ corto_string ast_Parser_id(corto_object o, corto_id buffer) {
         corto_id tmp;
         corto_string_ser_t serData;
         struct corto_serializer_s s;
-        serData.buffer = tmp;
-        serData.length = sizeof(corto_id);
-        serData.maxlength = sizeof(corto_id)-strlen("<anonymous>");
+        serData.buffer.str = tmp;
+        serData.buffer.len = sizeof(corto_id);
+        serData.buffer.max = sizeof(corto_id)-strlen("<anonymous>");
         serData.compactNotation=TRUE;
         serData.prefixType = TRUE;
         serData.enableColors = FALSE;
@@ -891,7 +891,7 @@ corto_string _ast_Parser_argumentToString(
         if (corto_serialize(&s, type, &walkData)) {
             goto error;
         }
-        str = walkData.buffer;
+        str = walkData.buffer.str;
     }
 
     result = corto_alloc(strlen(str) + 1 + strlen(id) + 1 + 1);
