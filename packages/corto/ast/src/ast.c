@@ -104,7 +104,7 @@ ast_Call ast_createCallFromExpr(ast_Expression f, ast_Expression arguments) {
 
         case Ast_ObjectStorage: {
             corto_object o = ast_Object(f)->value;
-            corto_signatureName(corto_nameof(o), name);
+            corto_signatureName(corto_idof(o), name);
             scope = corto_parentof(o);
             break;
         }
@@ -131,7 +131,7 @@ ast_Call ast_createCallFromExpr(ast_Expression f, ast_Expression arguments) {
 
         default:
             ast_Parser_error(yparser(), "'%s' expression is not callable",
-                corto_nameof(corto_enum_constant(ast_storageKind_o, ast_Storage(f)->kind)));
+                corto_idof(corto_enum_constant(ast_storageKind_o, ast_Storage(f)->kind)));
             goto error;
         }
     }

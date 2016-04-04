@@ -284,7 +284,7 @@ ic_node _ast_String_toIc_v(
                 ast_Parser_error(yparser(),
                         "storage for string-expression '%s' has invalid type (%s)",
                         this->value,
-                        corto_nameof(storage->type));
+                        corto_idof(storage->type));
                 goto error;
             }
 

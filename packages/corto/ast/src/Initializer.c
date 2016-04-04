@@ -42,7 +42,7 @@ corto_int16 ast_Initializer_findMember(corto_serializer s, corto_value* v, void*
                 data->m = v->is.member.t;
                 data->id = data->count;
                 goto found;
-            } else if (data->lookForString && !strcmp(data->lookForString, corto_nameof(v->is.member.t))) {
+            } else if (data->lookForString && !strcmp(data->lookForString, corto_idof(v->is.member.t))) {
                 data->m = v->is.member.t;
                 data->id = data->count;
                 if (data->current >= data->count) {
@@ -334,7 +334,7 @@ corto_int16 _ast_Initializer_next_v(
                indent, " ", yparser()->line, ast_Parser_id(corto_typeof(this), id), this, this->fp, 
                this->frames[this->fp].location,
                this->frames[this->fp].type?ast_Parser_id(this->frames[this->fp].type, id2):NULL,
-               this->frames[this->fp].member?corto_nameof(this->frames[this->fp].member):NULL);
+               this->frames[this->fp].member?corto_idof(this->frames[this->fp].member):NULL);
     }
 #endif
     
@@ -393,7 +393,7 @@ corto_int16 _ast_Initializer_push_v(
                    indent, " ", yparser()->line, ast_Parser_id(corto_typeof(this), id), this, this->fp,
                    this->frames[this->fp].location, 
                    this->frames[this->fp].type ? ast_Parser_id(this->frames[this->fp].type, id2) : NULL,
-                   this->frames[this->fp].member?corto_nameof(this->frames[this->fp].member):NULL);
+                   this->frames[this->fp].member?corto_idof(this->frames[this->fp].member):NULL);
             indent++;
         }
 #endif

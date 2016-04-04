@@ -18,7 +18,7 @@ corto_int16 _ic_member_construct(
     corto_setref(&ic_storage(this)->type, this->member->type);
     corto_setref(&ic_storage(this)->base, this->base);
     ic_storage(this)->isReference = this->member->type->reference;
-    sprintf(name, "%s.%s", this->base->name, corto_nameof(this->member));
+    sprintf(name, "%s.%s", this->base->name, corto_idof(this->member));
     ic_storage(this)->name = corto_strdup(name);
 
     return ic_storage_construct(ic_storage(this));

@@ -48,7 +48,7 @@ ast_Expression ast_Initializer_expr(ast_DynamicInitializer this, corto_uint8 var
             break;
         case CORTO_COMPOSITE:
             if (fp) {
-                ast_String memberString = ast_StringCreate(corto_nameof(thisFrame->member));
+                ast_String memberString = ast_StringCreate(corto_idof(thisFrame->member));
                 result = ast_Expression(ast_MemberCreate(base, ast_Expression(memberString)));
                 ast_Parser_collect(yparser(), result);
                 ast_Parser_collect(yparser(), memberString);

@@ -142,7 +142,7 @@ ic_member _ic_program_getMember(
 /* $begin(corto/ic/program/getMember) */
     corto_id name;
     ic_member result;
-    sprintf(name, "%s.%s", base->name, corto_nameof(m));
+    sprintf(name, "%s.%s", base->name, corto_idof(m));
     result = ic_member(ic_scope_lookupStorage(base->scope, name, FALSE));
     if (!result) {
         result = ic_memberCreate(base, m);

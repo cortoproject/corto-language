@@ -178,7 +178,7 @@ void ic_vmProgram_finalize(ic_vmProgram *vmProgram) {
         {
             corto_string programStr = vm_programToString(vmProgram->program, NULL);
             printf("%s %s\n%s\n",
-                corto_nameof(corto_typeof(function)),
+                corto_idof(corto_typeof(function)),
                 corto_fullpath(NULL, function),
                 programStr);
             corto_dealloc(programStr);

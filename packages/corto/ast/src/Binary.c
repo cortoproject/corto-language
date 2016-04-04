@@ -96,7 +96,7 @@ corto_int16 ast_Binary_getDerefKind(ast_Binary this, corto_type lvalueType, cort
                 corto_id id;
                 ast_Parser_error(yparser(), "cannot access right operand by reference (type = '%s', kind = '%s')",
                     ast_Parser_id(rvalueType, id),
-                        corto_nameof(corto_enum_constant(ast_nodeKind_o, ast_Node(this->rvalue)->kind)));
+                        corto_idof(corto_enum_constant(ast_nodeKind_o, ast_Node(this->rvalue)->kind)));
                 goto error;
             }
 
@@ -394,7 +394,7 @@ corto_int16 ast_Binary_toIc_strOp(
         break;
     default:
         ast_Parser_error(yparser(), "operator '%s' invalid for strings",
-            corto_nameof(corto_enum_constant(corto_operatorKind_o, this->_operator)));
+            corto_idof(corto_enum_constant(corto_operatorKind_o, this->_operator)));
         goto error;
     }
 

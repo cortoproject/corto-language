@@ -76,7 +76,7 @@ corto_string ast_Parser_id(corto_object o, corto_id buffer) {
         sprintf(buffer, "null");
     } else if (corto_checkAttr(o, CORTO_ATTR_SCOPED)) {
         if (corto_parentof(o) == corto_lang_o) {
-            strcpy(buffer, corto_nameof(o));
+            strcpy(buffer, corto_idof(o));
         } else {
             corto_fullpath(buffer, o);
         }
@@ -251,7 +251,7 @@ ast_Expression ast_Parser_delegateAssignment(ast_Parser this, ast_Expression lva
 
     /* Validate whether rvalue is an object */
     if ((ast_Node(rvalue)->kind == Ast_StorageExpr) && (ast_Storage(rvalue)->kind == Ast_ObjectStorage)) {
-        corto_signatureName(corto_nameof(ast_Object(rvalue)->value), functionName);
+        corto_signatureName(corto_idof(ast_Object(rvalue)->value), functionName);
     } else if ((ast_Node(rvalue)->kind == Ast_StorageExpr) && (ast_Storage(rvalue)->kind == Ast_MemberStorage)) {
         instance = ast_Member(rvalue)->lvalue;
         strcpy(functionName, ast_String(ast_Member(rvalue)->rvalue)->value);
@@ -829,7 +829,7 @@ corto_void _ast_Parser_addStatement(
                 ast_Block_addStatement(this->block, statement);
                 if (corto_instanceof(corto_type(ast_Expression_o), statement)) {
                     if (!ast_Expression_hasSideEffects(ast_Expression(statement))) {
-                        /* TODO: ast_Parser_warning(this, "computed value is not used (%s)", corto_nameof(corto_typeof(statement))); */
+                        /* TODO: ast_Parser_warning(this, "computed value is not used (%s)", corto_idof(corto_typeof(statement))); */
                     }
                 }
             } else if (this->pass) {
@@ -874,7 +874,7 @@ corto_string _ast_Parser_argumentToString(
     if (corto_checkAttr(type, CORTO_ATTR_SCOPED)) {
         corto_id id;
         if ((corto_parentof(type) == corto_o) || (corto_parentof(type) == corto_lang_o)) {
-            str = strdup(corto_nameof(type));
+            str = strdup(corto_idof(type));
         } else {
             str = strdup(ast_Parser_id(type, id));
         }
@@ -1014,7 +1014,7 @@ corto_int16 _ast_Parser_bindOneliner(
         corto_id functionName;
 
         /* Add oneliner to block */
-        corto_signatureName(corto_nameof(ast_Object(function)->value), functionName);
+        corto_signatureName(corto_idof(ast_Object(function)->value), functionName);
         returnLocal = ast_Block_lookup(block, functionName);
          if (returnLocal) {
             ast_Expression returnAssign;
@@ -1404,9 +1404,9 @@ ast_Storage _ast_Parser_declareFunction(
                 function->returnsReference = returnsReference;
             }
         } else {
-            if (strcmp(id, corto_nameof(function))) {
+            if (strcmp(id, corto_idof(function))) {
                 ast_Parser_error(this, "overloaded function '%s' conflicts with '%s'",
-                    id, corto_nameof(function));
+                    id, corto_idof(function));
                 goto error;
             }
             corto_release(function);
@@ -1679,7 +1679,7 @@ corto_int16 _ast_Parser_finalize(
             }
             if (binding->function->returnType && ((binding->function->returnType->kind != CORTO_VOID) || (binding->function->returnType->reference))) {
                 corto_id name;
-                corto_signatureName(corto_nameof(binding->function), name);
+                corto_signatureName(corto_idof(binding->function), name);
                 returnValue = ic_scope_lookupStorage(scope, name, TRUE);
                 ret = IC_1_OP(this->line, ic_ret, returnValue, IC_DEREF_VALUE, FALSE);
                 if (binding->function->returnsReference || binding->function->returnType->reference) {
@@ -1846,7 +1846,7 @@ corto_int16 _ast_Parser_initDeclare(
             } else if (ast_Storage(s)->kind == Ast_ObjectStorage) {
                 corto_object o = ast_Object(s)->value;
                 if (o && corto_checkAttr(o, CORTO_ATTR_SCOPED)) {
-                    id = corto_nameof(o);
+                    id = corto_idof(o);
                 }
             } else if (ast_Storage(s)->kind == Ast_LocalStorage) {
                 id = ast_Local(s)->name;
@@ -2822,7 +2822,7 @@ corto_void _ast_Parser_pushReturnAsLvalue(
     if (this->pass) {
         if (function->returnType) {
             corto_id id;
-            corto_signatureName(corto_nameof(function), id);
+            corto_signatureName(corto_idof(function), id);
             result = ast_Expression(ast_Block_resolve(this->block, id));
             if (!result) {
                 ast_Parser_error(this, "parser error: can't find result variable '%s'", id);

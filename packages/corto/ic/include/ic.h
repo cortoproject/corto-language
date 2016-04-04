@@ -12,6 +12,8 @@
 #include "corto/ic/_meta.h"
 #include "corto/ic/_interface.h"
 
+#include "corto/vm/vm.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -38,7 +40,6 @@ CORTO_IC_EXPORT ic_opKind _ic_opKindFromOperator(
 #include "corto/ic/scope.h"
 #include "corto/ic/storage.h"
 #include "corto/ic/variable.h"
-#include "corto/vm/vm.h"
 
 #ifdef __cplusplus
 }

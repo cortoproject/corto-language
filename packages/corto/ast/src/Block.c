@@ -68,7 +68,7 @@ ast_Local _ast_Block_declareReturnVariable(
     corto_id id;
 
     /* Get name of function from signature */
-    corto_signatureName(corto_nameof(function), id);
+    corto_signatureName(corto_idof(function), id);
 
     corto_assert(this->locals != NULL, "initialization failed");
 

@@ -12,6 +12,9 @@
 #include "_meta.h"
 #include "_interface.h"
 
+#include "corto/test/test.h"
+#include "corto/ast/ast.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -26,8 +29,6 @@ extern "C" {
 #include "Text.h"
 #include "Uint.h"
 #include "Void.h"
-#include "corto/test/test.h"
-#include "corto/ast/ast.h"
 
 #ifdef __cplusplus
 }

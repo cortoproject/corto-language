@@ -12,6 +12,8 @@
 #include "corto/ast/_meta.h"
 #include "corto/ast/_interface.h"
 
+#include "corto/ic/ic.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -100,7 +102,6 @@ CORTO_AST_EXPORT ast_valueKind _ast_valueKindFromType(
 #include "corto/ast/Update.h"
 #include "corto/ast/Wait.h"
 #include "corto/ast/While.h"
-#include "corto/ic/ic.h"
 
 #ifdef __cplusplus
 }

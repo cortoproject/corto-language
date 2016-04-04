@@ -57,7 +57,7 @@ corto_int16 _ast_Update_construct(
         if (!expr->isReference) {
             ast_Parser_error(yparser(), 
                 "one or more expressions in the update statement are not references (%s)",
-                corto_nameof(corto_typeof(expr)));
+                corto_idof(corto_typeof(expr)));
             goto error;            
         }
     }

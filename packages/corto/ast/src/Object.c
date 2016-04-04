@@ -55,7 +55,7 @@ corto_string _ast_Object_id_v(
     corto_string result = NULL;
 
     if (o && corto_checkAttr(o, CORTO_ATTR_SCOPED)) {
-        result = corto_nameof(o);
+        result = corto_idof(o);
     }
 
     return result;
