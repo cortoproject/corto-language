@@ -84,8 +84,8 @@ corto_string ast_Parser_id(corto_object o, corto_id buffer) {
         corto_id tmp;
         corto_string_ser_t serData;
         struct corto_serializer_s s;
-        serData.buffer.str = tmp;
-        serData.buffer.len = sizeof(corto_id);
+        serData.buffer = CORTO_BUFFER_INIT;
+        serData.buffer.buf = tmp;
         serData.buffer.max = sizeof(corto_id)-strlen("<anonymous>");
         serData.compactNotation=TRUE;
         serData.prefixType = TRUE;
@@ -124,7 +124,6 @@ corto_int16 ast_Parser_toIc(ast_Parser this, corto_stringSeq argv) {
 
     ic_program_assemble(program);
     if (ic_program_run(program, 0, argv)) {
-        corto_release(program);
         goto error;
     }
 
@@ -885,13 +884,19 @@ corto_string _ast_Parser_argumentToString(
         memset(&walkData, 0, sizeof(walkData));
         s = corto_string_ser(CORTO_LOCAL, CORTO_NOT, CORTO_SERIALIZER_TRACE_NEVER);
 
+        walkData.buffer = CORTO_BUFFER_INIT;
         walkData.compactNotation = TRUE;
         walkData.prefixType = TRUE;
 
         if (corto_serialize(&s, type, &walkData)) {
             goto error;
         }
-        str = walkData.buffer.str;
+        str = corto_buffer_str(&walkData.buffer);
+        if (!str) {
+            corto_seterr("failed to serialize anonymous type to string");
+            goto error;
+        }
+        printf("param %s => %s\n", id, str);
     }
 
     result = corto_alloc(strlen(str) + 1 + strlen(id) + 1 + 1);
@@ -1437,7 +1442,9 @@ ast_Storage _ast_Parser_declareFunction(
             *bptr = '\0';
 
             corto_object function = corto_resolve(this->scope, query);
-            corto_assert(function != NULL, "object should still be there in 2nd pass (%s)", corto_lasterr());
+            corto_assert(function != NULL,
+                "object '%s' should still be in '%s' in 2nd pass (%s)",
+                query, corto_fullpath(NULL, this->scope), corto_lasterr());
 
             result = ast_Storage(ast_ObjectCreate(function));
             ast_Parser_collect(this, result);

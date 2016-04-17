@@ -6,6 +6,10 @@
 #ifndef CORTO_IC_H
 #define CORTO_IC_H
 
+/* $header() */
+#include "corto/vm/vm.h"
+/* $end */
+
 #include "corto/corto.h"
 #include "corto/ic/_type.h"
 #include "corto/ic/_api.h"
@@ -18,10 +22,6 @@
 extern "C" {
 #endif
 
-
-/* $header() */
-#include "corto/vm/vm.h"
-/* $end */
 
 CORTO_IC_EXPORT ic_opKind _ic_opKindFromOperator(
     corto_operatorKind _operator);
