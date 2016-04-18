@@ -896,7 +896,6 @@ corto_string _ast_Parser_argumentToString(
             corto_seterr("failed to serialize anonymous type to string");
             goto error;
         }
-        printf("param %s => %s\n", id, str);
     }
 
     result = corto_alloc(strlen(str) + 1 + strlen(id) + 1 + 1);
