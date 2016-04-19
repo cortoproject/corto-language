@@ -6,7 +6,7 @@
  * when the file is regenerated.
  */
 
-#include "corto/ic/ic.h"
+#include <corto/ic/ic.h>
 
 /* $header() */
 #include "corto/ic/assemble.h"

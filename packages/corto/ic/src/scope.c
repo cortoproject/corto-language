@@ -6,7 +6,7 @@
  * when the file is regenerated.
  */
 
-#include "corto/ic/ic.h"
+#include <corto/ic/ic.h>
 
 corto_void _ic_scope_add(
     ic_scope this,

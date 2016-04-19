@@ -6,7 +6,7 @@
  * when the file is regenerated.
  */
 
-#include "corto/ast/ast.h"
+#include <corto/ast/ast.h>
 
 corto_int16 _ast_Storage_construct(
     ast_Storage this)

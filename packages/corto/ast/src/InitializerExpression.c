@@ -6,7 +6,7 @@
  * when the file is regenerated.
  */
 
-#include "corto/ast/ast.h"
+#include <corto/ast/ast.h>
 
 /* $header() */
 #include "ast__private.h"

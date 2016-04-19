@@ -6,7 +6,7 @@
  * when the file is regenerated.
  */
 
-#include "corto/ic/ic.h"
+#include <corto/ic/ic.h>
 
 corto_int16 _ic_member_construct(
     ic_member this)

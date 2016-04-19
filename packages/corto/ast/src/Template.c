@@ -6,7 +6,7 @@
  * when the file is regenerated.
  */
 
-#include "corto/ast/ast.h"
+#include <corto/ast/ast.h>
 
 corto_int16 _ast_Template_construct(
     ast_Template this)

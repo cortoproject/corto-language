@@ -6,7 +6,7 @@
  * when the file is regenerated.
  */
 
-#include "corto/ic/ic.h"
+#include <corto/ic/ic.h>
 
 /* $header() */
 static corto_bool ic_validateSet(ic_op op) {
