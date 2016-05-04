@@ -12,8 +12,8 @@
 #include <_meta.h>
 #include <_interface.h>
 
-#include "corto/test/test.h"
-#include "corto/ast/ast.h"
+#include <corto/test/test.h>
+#include <corto/ast/ast.h>
 
 #ifdef __cplusplus
 extern "C" {

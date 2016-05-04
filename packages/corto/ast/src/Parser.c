@@ -598,7 +598,7 @@ ast_Expression ast_Parser_resolve(ast_Parser this, corto_id id) {
 
     corto_object rvalueType = ast_Parser_getLvalueType(this, FALSE);
     if (rvalueType && corto_checkAttr(rvalueType, CORTO_ATTR_SCOPED)) {
-        object = corto_resolve(rvalueType, id);
+        object = corto_lookup(rvalueType, id);
     }
 
     if (!object){

@@ -16,7 +16,7 @@
 #include <corto/ic/_meta.h>
 #include <corto/ic/_interface.h>
 
-#include "corto/vm/vm.h"
+#include <corto/vm/vm.h>
 
 #ifdef __cplusplus
 extern "C" {
