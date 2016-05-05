@@ -2559,16 +2559,16 @@ corto_int16 _ast_Parser_parseLine(
             }
             if (v) {
                 if (o) {
-                    corto_valueObjectInit(v, o, NULL);
+                    *v = corto_value_object(o, NULL);
                 } else {
                     v->is.value.storage = 0;
-                    corto_valueValueInit(v, NULL, corto_object_o, &v->is.value.storage);
+                    *v = corto_value_value(corto_object_o, &v->is.value.storage);
                 }
             }
         } else if (result) {
             if(returnType->kind == CORTO_PRIMITIVE) {
                 if (v) {
-                    corto_valueValueInit(v, NULL, returnType, &v->is.value.storage);
+                    *v = corto_value_value(returnType, &v->is.value.storage);
                     if (ic_program_run(program, (corto_word)&v->is.value.storage, CORTO_SEQUENCE_EMPTY(corto_stringSeq))) {
                         goto error;
                     }
@@ -2584,10 +2584,10 @@ corto_int16 _ast_Parser_parseLine(
                 }
                 if (v) {
                     if (ptr) {
-                        corto_valueValueInit(v, NULL, returnType, ptr);
+                        *v = corto_value_value(returnType, ptr);
                     } else {
                         v->is.value.storage = 0;
-                        corto_valueValueInit(v, NULL, corto_object_o, &v->is.value.storage);
+                        *v = corto_value_value(corto_object_o, &v->is.value.storage);
                     }
                 }
             }
@@ -2597,7 +2597,7 @@ corto_int16 _ast_Parser_parseLine(
             goto error;
         }
         if (v) {
-            corto_valueValueInit(v, NULL, corto_type(corto_void_o), NULL);
+            *v = corto_value_value(corto_type(corto_void_o), NULL);
         }
     }
 
