@@ -15,6 +15,8 @@ test::Suite TestCortoLanguage::
     void test_logicOrExpr()
     void test_commaExpr()
     void test_assignmentExpr()
+    void test_waitExpr()
+
 
     void test_declaration1()
     void test_declaration2()

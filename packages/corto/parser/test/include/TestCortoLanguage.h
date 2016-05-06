@@ -101,6 +101,10 @@ TEST_EXPORT corto_void _test_TestCortoLanguage_test_unary(
     test_TestCortoLanguage _this);
 #define test_TestCortoLanguage_test_unary(_this) _test_TestCortoLanguage_test_unary(test_TestCortoLanguage(_this))
 
+TEST_EXPORT corto_void _test_TestCortoLanguage_test_waitExpr(
+    test_TestCortoLanguage _this);
+#define test_TestCortoLanguage_test_waitExpr(_this) _test_TestCortoLanguage_test_waitExpr(test_TestCortoLanguage(_this))
+
 #ifdef __cplusplus
 }
 #endif

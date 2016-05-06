@@ -111,8 +111,6 @@ corto_void _test_TestCortoLanguage_test_functionDeclaration1(
 {
 /* $begin(test/TestCortoLanguage/test_functionDeclaration1) */
     test_assert(parser_BaseParser_parse(_this->parser, "void myfunction()\n") == 0);
-    test_assert(parser_BaseParser_parse(_this->parser, "void myfunction(int8 a)\n") == 0);
-    test_assert(parser_BaseParser_parse(_this->parser, "void myfunction(int8 a, string b)\n") == 0);
 /* $end */
 }
 
@@ -120,9 +118,7 @@ corto_void _test_TestCortoLanguage_test_functionDeclaration2(
     test_TestCortoLanguage _this)
 {
 /* $begin(test/TestCortoLanguage/test_functionDeclaration2) */
-
-    test_assert(TRUE);
-
+    test_assert(parser_BaseParser_parse(_this->parser, "void myfunction(int8 a)\n") == 0);
 /* $end */
 }
 
@@ -130,9 +126,7 @@ corto_void _test_TestCortoLanguage_test_functionDeclaration3(
     test_TestCortoLanguage _this)
 {
 /* $begin(test/TestCortoLanguage/test_functionDeclaration3) */
-
-    test_assert(TRUE);
-
+    test_assert(parser_BaseParser_parse(_this->parser, "void myfunction(int8 a, string b)\n") == 0);
 /* $end */
 }
 
@@ -168,10 +162,7 @@ corto_void _test_TestCortoLanguage_test_scope1(
 {
 /* $begin(test/TestCortoLanguage/test_scope1) */
     test_assert(parser_BaseParser_parse(_this->parser,
-        "class MyClass:: INDENT a = b\n DEDENT\n"
-    ) == 0);
-    test_assert(parser_BaseParser_parse(_this->parser,
-        "class MyClass:: INDENT a = b\n c = 1 + d\n DEDENT\n"
+        "class MyClass:: INDENT a = b\n d + 3\nDEDENT\n"
     ) == 0);
 /* $end */
 }
@@ -205,5 +196,14 @@ corto_void _test_TestCortoLanguage_test_unary(
 /* $begin(test/TestCortoLanguage/test_unary) */
     test_assert(parser_BaseParser_parse(_this->parser, "-8\n") == 0);
     test_assert(parser_BaseParser_parse(_this->parser, "~2\n") == 0);
+/* $end */
+}
+
+corto_void _test_TestCortoLanguage_test_waitExpr(
+    test_TestCortoLanguage _this)
+{
+/* $begin(test/TestCortoLanguage/test_waitExpr) */
+    test_assert(parser_BaseParser_parse(_this->parser, "wait a = 0\n") == 0);
+    test_assert(parser_BaseParser_parse(_this->parser, "wait a = 0 for true or false\n") == 0);
 /* $end */
 }

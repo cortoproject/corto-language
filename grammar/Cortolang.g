@@ -22,78 +22,75 @@ ctx->parser_data = NULL;
 PARSER->super = ctx;
 }
 
-program :
+program
+    :
     statement+
     ;
 
-statement :
-    scopeStatement NEWLINE
+statement
+    :
+    (declarativeStatement) =>
+    declarativeStatement
     |
+    simpleStatement
+    ;
+
+declarativeStatement
+    :
+    (functionDeclaration) =>
     functionDeclaration NEWLINE
     |
+    (declarationExt) =>
+    declarationExt NEWLINE
+    ;
+
+simpleStatement
+    :
     expression NEWLINE
     ;
 
+// Declaration
 
-// SCOPES
-
-scopeStatement :
-    scopeExpression ((scopeOperator | preScopeOperator) suite)?
+declarationExt
+    :
+    typeLabel validNameList declarationInitializer? (scopeOp scopeBlock)?
     ;
 
-scopeExpression :
-    definitionOrDeclaration
+declarationInitializer
+    :
+    COLON initializer
+    |
+    initializerBraces
     ;
 
-suite :
-    statement
+validNameList
+    :
+    VALID_NAME (COMMA VALID_NAME)* COMMA?
+    ;
+
+scopeBlock
+    :
+    simpleStatement
     |
     INDENT statement+ DEDENT
-    ; 
-
-// DECLARATION AND DEFINITION
-
-definitionOrDeclaration :
-    declaration (
-        COLON initializer
-        |
-        LBRACE initializer RBRACE 
-    )?
     ;
 
-declaration :
-    typeLabel VALID_NAME (COMMA VALID_NAME)*
-    // |
-    /* This rule is ambiguous with a statement-level comma expression */
-    // { /* check if we're inside a type's scope */ 1 }?
-    // defaultTypeDeclaration { puts("\n\nDEFAULT TYPE DECLARATION\n\n"); }
-    ;
-
-// defaultTypeDeclaration :
-//     VALID_NAME (COMMA VALID_NAME)*
-//     ;
-
-typeLabel :
-    identifier
+scopeOp
+    :
+    preScopeOperator
     |
-    anonymousTypeLabel
+    postScopeOperator
     ;
 
-anonymousTypeLabel :
-    identifier initializerBraces+
-    ;
+// Initializer
 
-compileTimeConstant :
-    identifier
-    |
-    literal
-    ;
-
-initializer :
+initializer
+    :
     initializerValue ( COMMA initializerValue )*
     ;
 
-initializerValue :
+initializerValue
+    :
     logicOrExpression
     |
     initializerBraces
@@ -101,31 +98,35 @@ initializerValue :
     initializerKeyValue
     ;
 
-initializerBraces :
+initializerBraces
+    :
     LBRACE initializer RBRACE // TODO this should be an expression instead?
     ;
 
-initializerKeyValue :
+initializerKeyValue
+    :
     initializerKey EQUAL initializerValue
     ;
 
-initializerKey :
+initializerKey
+    :
     VALID_NAME
     ;
 
-
 // FUNCTION DECLARATION
 
-functionDeclaration :
-    typeLabel VALID_NAME LPAREN RPAREN
+functionDeclaration
+    :
+    typeLabel VALID_NAME LPAREN functionArguments RPAREN
     ;
 
-
-functionArguments :
-    (functionArgument (COMMA functionArgument))?
+functionArguments
+    :
+    (functionArgument (COMMA functionArgument)*)?
     ;
 
-functionArgument :
+functionArgument
+    :
     typeLabel VALID_NAME
     ;
 
@@ -133,65 +134,95 @@ functionArgument :
 // EXPRESSIONS
 // They are described from *lower* to *higher* precedence.
 
-expression :
+expression
+    :
+    waitExpression
+    ;
+
+waitExpression
+    :
+    KW_WAIT assignmentExpression (KW_FOR logicOrExpression)?
+    |
     assignmentExpression
     ;
 
-assignmentExpression :
+assignmentExpression
+    :
     commaExpression ( assignmentOp commaExpression )?
     ;
 
-commaExpression :
+commaExpression
+    :
     conditionalExpression ( COMMA conditionalExpression )*
     ;
 
-conditionalExpression :
-    initializerExpression ( QMARK conditionalExpression COLON QMARK )?
+conditionalExpression
+    :
+    logicOrExpression ( QMARK logicOrExpression COLON QMARK )?
     ;
 
-initializerExpression :
-    initializerBraces
-    |
-    logicOrExpression
-    ;
-
-logicOrExpression :
+logicOrExpression
+    :
     logicAndExpression ( LOGIC_OR logicAndExpression )*
     ;
 
-logicAndExpression :
+logicAndExpression
+    :
     equalityExpression ( LOGIC_AND equalityExpression )*
     ;
 
-
-equalityExpression :
-    shiftExpression ( eqOp shiftExpression )*
+equalityExpression
+    :
+    comparisonExpression ( eqOp comparisonExpression )*
     ;
 
-// comparison (boolean_expr)
-// bitwise or
-// bitwise xor
-// bitwise and
+comparisonExpression
+    :
+    shiftExpression ( comparisonOp shiftExpression)*
+    ;
 
-shiftExpression :
+bitOrExpression
+    :
+    bitXorExpression (PIPE bitXorExpression)*
+    ;
+
+bitXorExpression
+    :
+    bitAndExpression (CIRCUMFLEX bitAndExpression)*
+    ;
+
+bitAndExpression
+    :
+    shiftExpression (AMPERSAND shiftExpression)*
+    ;
+
+shiftExpression
+    :
     addExpression ( shiftOp addExpression )*
     ;
 
-addExpression :
+addExpression
+    :
     multExpression ( addOp multExpression )*
     ;
 
-multExpression :
+multExpression
+    :
     unaryExpression ( multOp unaryExpression )*
     ;
 
-/* TODO other kinds of operators, e.g. bitwise */
-
-unaryExpression :
-    unaryOp? atomExpression
+unaryExpression
+    :
+    unaryOp? postfixExpression
     ;
 
-atomExpression :
+postfixExpression
+    :
+    atomExpression postfixOperation+
+    ;
+
+atomExpression
+    :
     literal
     |
     identifier
@@ -199,10 +230,14 @@ atomExpression :
     LPAREN expression RPAREN
     ;
 
-// OPERATOR GROUPS
+// ============================================================
+// Operators
+// ============================================================
 
-assignmentOp :
+assignmentOp
+    :
     EQUAL
+    | PLUS_EQUAL | MINUS_EQUAL | TIMES_EQUAL | DIV_EQUAL
     ;
 
 eqOp :
@@ -211,25 +246,33 @@ eqOp :
     NOT_EQUALS
     ;
 
-shiftOp :
+comparisonOp:
+    GREATER_THAN | LESS_THAN | GREATER_THAN_EQUAL | LESS_THAN_EQUAL
+    ;
+
+shiftOp
+    :
     LSHIFT
     |
     RSHIFT
     ;
 
-addOp :
+addOp
+    :
     PLUS
     |
     MINUS
     ;
 
-multOp :
+multOp
+    :
     ASTERISK
     |
     SLASH
     ;
 
-unaryOp :
+unaryOp
+    :
     TILDE
     |
     MINUS
@@ -237,10 +280,29 @@ unaryOp :
     PLUS
     ;
 
+postfixOperation
+    :
+    memberAccess
+    |
+    methodCall
+    ;
 
-// IDENTIFIER
+memberAccess
+    :
+    VALID_NAME
+    ;
 
-constant :
+methodCall
+    :
+    VALID_NAME LPAREN RPAREN // TODO ADD PARAMETERS
+    ;
+
+// ============================================================
+// Identifiers, Types, Names
+// ============================================================
+
+constant
+    :
     VALID_NAME
     |
     GID
@@ -248,15 +310,27 @@ constant :
     literal
     ;
 
-identifier :
+identifier
+    :
     VALID_NAME
     |
     GID
     ;
 
-// LITERALS
+typeLabel
+    :
+    identifier
+    |
+    anonymousTypeLabel
+    ;
 
-literal :
+anonymousTypeLabel
+    :
+    identifier initializerBraces+
+    ;
+
+literal
+    :
     BOOLEAN
     |
     CHARACTER
@@ -266,14 +340,20 @@ literal :
     STRING
     ;
 
+anonymousObject
+    :
+    initializerBraces
+    ;
+
 // Other
 
-scopeOperator : DOUBLE_COLON ;
+postScopeOperator : DOUBLE_COLON ;
 preScopeOperator : TRIPLE_COLON ;
 
 // LEXER
 
-WHITESPACE :
+WHITESPACE
+    :
     (
         ' '+
         // |
@@ -305,10 +385,10 @@ NOT_EQUALS : '!=' ;
 RSHIFT : '<<' ;
 LSHIFT : '>>' ;
 
-GT : '>' ;
-LT : '<' ;
-GEQ : '>=' ;
-LEQ : '<=' ;
+GREATER_THAN : '>' ;
+LESS_THAN : '<' ;
+GREATER_THAN_EQUAL : '>=' ;
+LESS_THAN_EQUAL : '<=' ;
 
 QMARK : '?' ;
 COLON : ':' ;
@@ -317,10 +397,18 @@ COMMA : ',' ;
 TILDE : '~' ;
 MINUS : '-' ;
 PLUS : '+' ;
-ASTERISK : '*';
+ASTERISK : '*' ;
 SLASH : '/' ;
 EQUAL : '=' ;
-AMPERSAND : '&';
+AMPERSAND : '&' ;
+PLUS_EQUAL : '+=' ;
+MINUS_EQUAL : '-=' ;
+TIMES_EQUAL : '*=' ;
+DIV_EQUAL : '/=' ;
+
+PIPE : '|';
+
+CIRCUMFLEX : '^';
 
 INTEGER :
     '0'

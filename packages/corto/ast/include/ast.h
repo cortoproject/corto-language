@@ -12,7 +12,7 @@
 #include <corto/ast/_meta.h>
 #include <corto/ast/_interface.h>
 
-#include "corto/ic/ic.h"
+#include <corto/ic/ic.h>
 
 #ifdef __cplusplus
 extern "C" {

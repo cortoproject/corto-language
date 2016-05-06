@@ -30,6 +30,7 @@ test_Case test_TestCortoLanguage_test_scope1_o;
 test_Case test_TestCortoLanguage_test_scope2_o;
 test_Case test_TestCortoLanguage_test_scope3_o;
 test_Case test_TestCortoLanguage_test_unary_o;
+test_Case test_TestCortoLanguage_test_waitExpr_o;
 
 /* Load objects in object store. */
 int test_load(void) {
@@ -511,6 +512,26 @@ int test_load(void) {
         corto_function(test_TestCortoLanguage_test_unary_o)->impl = (corto_word)__test_TestCortoLanguage_test_unary;
         if (corto_define(test_TestCortoLanguage_test_unary_o)) {
             corto_error("test_load: failed to define 'test_TestCortoLanguage_test_unary_o' (%s)", corto_lasterr());
+            goto error;
+        }
+    }
+
+    test_TestCortoLanguage_test_waitExpr_o = test_Case(corto_declareChild(test_TestCortoLanguage_o, "test_waitExpr()", test_Case_o));
+    if (!test_TestCortoLanguage_test_waitExpr_o) {
+        corto_error("test_load: failed to declare 'test_TestCortoLanguage_test_waitExpr_o' (%s)", corto_lasterr());
+        goto error;
+    }
+
+    if (!corto_checkState(test_TestCortoLanguage_test_waitExpr_o, CORTO_DEFINED)) {
+        ((corto_function)test_TestCortoLanguage_test_waitExpr_o)->returnType = corto_type(corto_resolve(NULL, "void"));
+        ((corto_function)test_TestCortoLanguage_test_waitExpr_o)->returnsReference = FALSE;
+        ((corto_method)test_TestCortoLanguage_test_waitExpr_o)->_virtual = FALSE;
+        
+        corto_function(test_TestCortoLanguage_test_waitExpr_o)->kind = CORTO_PROCEDURE_CDECL;
+        void __test_TestCortoLanguage_test_waitExpr(corto_function f, void *args, void *result);
+        corto_function(test_TestCortoLanguage_test_waitExpr_o)->impl = (corto_word)__test_TestCortoLanguage_test_waitExpr;
+        if (corto_define(test_TestCortoLanguage_test_waitExpr_o)) {
+            corto_error("test_load: failed to define 'test_TestCortoLanguage_test_waitExpr_o' (%s)", corto_lasterr());
             goto error;
         }
     }

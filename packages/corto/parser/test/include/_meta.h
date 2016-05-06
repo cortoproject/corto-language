@@ -38,6 +38,7 @@ TEST_EXPORT extern test_Case test_TestCortoLanguage_test_scope1_o;
 TEST_EXPORT extern test_Case test_TestCortoLanguage_test_scope2_o;
 TEST_EXPORT extern test_Case test_TestCortoLanguage_test_scope3_o;
 TEST_EXPORT extern test_Case test_TestCortoLanguage_test_unary_o;
+TEST_EXPORT extern test_Case test_TestCortoLanguage_test_waitExpr_o;
 
 #ifdef __cplusplus
 }

@@ -173,3 +173,11 @@ void __test_TestCortoLanguage_test_unary(corto_function f, void *result, void *a
     _test_TestCortoLanguage_test_unary(
         test_TestCortoLanguage(*(void**)args));
 }
+
+void __test_TestCortoLanguage_test_waitExpr(corto_function f, void *result, void *args) {
+    CORTO_UNUSED(f);
+    CORTO_UNUSED(args);
+    CORTO_UNUSED(result);
+    _test_TestCortoLanguage_test_waitExpr(
+        test_TestCortoLanguage(*(void**)args));
+}
