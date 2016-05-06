@@ -1,0 +1,13 @@
+#package /corto/parser
+
+class BaseParser::
+
+    success: bool, readonly
+    int16 parse(string text)
+    int16 parseFile(string filename)
+    void displayRecognitionError(word recognizer, word tokenNames) virtual
+
+class SimpleParser: BaseParser::
+    errors: list{string}, hidden
+
+    void displayRecognitionError(word recognizer, word tokenNames)

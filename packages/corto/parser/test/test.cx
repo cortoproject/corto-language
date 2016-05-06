@@ -1,0 +1,32 @@
+#package ::test
+
+test::Suite TestCortoLanguage::
+
+    parser: /corto/parser/SimpleParser
+
+    void setup() method
+    void teardown() method
+
+    void test_atom()
+    void test_unary()
+    void test_multExpr()
+    void test_addExpr()
+    void test_logicAndExpr()
+    void test_logicOrExpr()
+    void test_commaExpr()
+    void test_assignmentExpr()
+
+    void test_declaration1()
+    void test_declaration2()
+    void test_declaration3()
+    void test_declaration4()
+
+    void test_scope1()
+    void test_scope2()
+    void test_scope3()
+
+    void test_functionDeclaration1()
+    void test_functionDeclaration2()
+    void test_functionDeclaration3()
+    
+    void test_badToken()

@@ -1,0 +1,25 @@
+require 'rake/clean'
+
+require 'pathname'
+
+PackagesPath = Pathname.new(__FILE__).dirname.dirname.join("packages", "corto")
+PackageName = "parser"
+PackagePath = PackagesPath.join(PackageName)
+GrammarName = "Cortolang"
+SupportingGrammars = ["CLBasicLexer"]
+GeneratedSuffixes = ["Lexer.h", "Lexer.c", "Parser.h", "Parser.c", ".tokens"]
+GeneratedFiles = GeneratedSuffixes.map do |suffix|
+  Pathname.new(PackagePath).join("src", "#{GrammarName}#{suffix}").to_s
+end
+
+CLEAN.include GeneratedFiles
+
+task :build => GeneratedFiles
+
+GeneratedFiles.each do |target|
+  file target => "#{GrammarName}.g" do
+    sh "java org.antlr.Tool #{GrammarName}.g -o #{PackagePath}/src"
+  end
+end
+
+task :default => :build
