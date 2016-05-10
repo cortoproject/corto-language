@@ -20,6 +20,7 @@ test_Case test_TestCortoLanguage_test_declaration1_o;
 test_Case test_TestCortoLanguage_test_declaration2_o;
 test_Case test_TestCortoLanguage_test_declaration3_o;
 test_Case test_TestCortoLanguage_test_declaration4_o;
+test_Case test_TestCortoLanguage_test_functionCall_o;
 test_Case test_TestCortoLanguage_test_functionDeclaration1_o;
 test_Case test_TestCortoLanguage_test_functionDeclaration2_o;
 test_Case test_TestCortoLanguage_test_functionDeclaration3_o;
@@ -312,6 +313,26 @@ int test_load(void) {
         corto_function(test_TestCortoLanguage_test_declaration4_o)->impl = (corto_word)__test_TestCortoLanguage_test_declaration4;
         if (corto_define(test_TestCortoLanguage_test_declaration4_o)) {
             corto_error("test_load: failed to define 'test_TestCortoLanguage_test_declaration4_o' (%s)", corto_lasterr());
+            goto error;
+        }
+    }
+
+    test_TestCortoLanguage_test_functionCall_o = test_Case(corto_declareChild(test_TestCortoLanguage_o, "test_functionCall()", test_Case_o));
+    if (!test_TestCortoLanguage_test_functionCall_o) {
+        corto_error("test_load: failed to declare 'test_TestCortoLanguage_test_functionCall_o' (%s)", corto_lasterr());
+        goto error;
+    }
+
+    if (!corto_checkState(test_TestCortoLanguage_test_functionCall_o, CORTO_DEFINED)) {
+        ((corto_function)test_TestCortoLanguage_test_functionCall_o)->returnType = corto_type(corto_resolve(NULL, "void"));
+        ((corto_function)test_TestCortoLanguage_test_functionCall_o)->returnsReference = FALSE;
+        ((corto_method)test_TestCortoLanguage_test_functionCall_o)->_virtual = FALSE;
+        
+        corto_function(test_TestCortoLanguage_test_functionCall_o)->kind = CORTO_PROCEDURE_CDECL;
+        void __test_TestCortoLanguage_test_functionCall(corto_function f, void *args, void *result);
+        corto_function(test_TestCortoLanguage_test_functionCall_o)->impl = (corto_word)__test_TestCortoLanguage_test_functionCall;
+        if (corto_define(test_TestCortoLanguage_test_functionCall_o)) {
+            corto_error("test_load: failed to define 'test_TestCortoLanguage_test_functionCall_o' (%s)", corto_lasterr());
             goto error;
         }
     }

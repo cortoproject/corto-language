@@ -1,5 +1,5 @@
-#ifndef PARSER_CORTOLANG_PARSER_CUSTOM
-#define PARSER_CORTOLANG_PARSER_CUSTOM
+#ifndef PARSER_CUSTOMPARSER_HPP
+#define PARSER_CUSTOMPARSER_HPP
 
 #include <corto/corto.h>
 #ifdef __cplusplus
@@ -8,8 +8,8 @@ extern "C" {
 
 #include <corto/parser/parser.h>
 
-#include "cortolangLexer.h"
-#include "cortolangParser.h"
+#include "CortolangLexer.h"
+#include "CortolangParser.h"
 
 void parser_DisplayRecognitionError(ANTLR3_BASE_RECOGNIZER_struct* recognizer, uint8_t**);
 

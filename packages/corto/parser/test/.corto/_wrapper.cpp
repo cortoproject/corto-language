@@ -94,6 +94,14 @@ void __test_TestCortoLanguage_test_declaration4(corto_function f, void *result, 
         test_TestCortoLanguage(*(void**)args));
 }
 
+void __test_TestCortoLanguage_test_functionCall(corto_function f, void *result, void *args) {
+    CORTO_UNUSED(f);
+    CORTO_UNUSED(args);
+    CORTO_UNUSED(result);
+    _test_TestCortoLanguage_test_functionCall(
+        test_TestCortoLanguage(*(void**)args));
+}
+
 void __test_TestCortoLanguage_test_functionDeclaration1(corto_function f, void *result, void *args) {
     CORTO_UNUSED(f);
     CORTO_UNUSED(args);

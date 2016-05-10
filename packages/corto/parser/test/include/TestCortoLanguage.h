@@ -61,6 +61,10 @@ TEST_EXPORT corto_void _test_TestCortoLanguage_test_declaration4(
     test_TestCortoLanguage _this);
 #define test_TestCortoLanguage_test_declaration4(_this) _test_TestCortoLanguage_test_declaration4(test_TestCortoLanguage(_this))
 
+TEST_EXPORT corto_void _test_TestCortoLanguage_test_functionCall(
+    test_TestCortoLanguage _this);
+#define test_TestCortoLanguage_test_functionCall(_this) _test_TestCortoLanguage_test_functionCall(test_TestCortoLanguage(_this))
+
 TEST_EXPORT corto_void _test_TestCortoLanguage_test_functionDeclaration1(
     test_TestCortoLanguage _this);
 #define test_TestCortoLanguage_test_functionDeclaration1(_this) _test_TestCortoLanguage_test_functionDeclaration1(test_TestCortoLanguage(_this))

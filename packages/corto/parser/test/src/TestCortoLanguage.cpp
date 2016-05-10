@@ -106,6 +106,17 @@ corto_void _test_TestCortoLanguage_test_declaration4(
 /* $end */
 }
 
+corto_void _test_TestCortoLanguage_test_functionCall(
+    test_TestCortoLanguage _this)
+{
+/* $begin(test/TestCortoLanguage/test_functionCall) */
+    test_assert(parser_BaseParser_parse(_this->parser, "a()\n") == 0);
+    test_assert(parser_BaseParser_parse(_this->parser, "a(b)\n") == 0);
+    test_assert(parser_BaseParser_parse(_this->parser, "a(b, 1, this or that, isReady ? 3 : 5)\n") == 0);
+    test_assert(parser_BaseParser_parse(_this->parser, "a(c, d, e,)\n") == 0);
+/* $end */
+}
+
 corto_void _test_TestCortoLanguage_test_functionDeclaration1(
     test_TestCortoLanguage _this)
 {
@@ -162,7 +173,11 @@ corto_void _test_TestCortoLanguage_test_scope1(
 {
 /* $begin(test/TestCortoLanguage/test_scope1) */
     test_assert(parser_BaseParser_parse(_this->parser,
-        "class MyClass:: INDENT a = b\n d + 3\nDEDENT\n"
+        "\n"
+        "class MyClass ::\n"
+        "    a = b\n"
+        "    d + 3\n"
+        "\n"
     ) == 0);
 /* $end */
 }

@@ -6,9 +6,38 @@ options {
     ASTLabelType=pANTLR3_BASE_TREE;
 }
 
+tokens {
+    INDENT;
+    DEDENT;
+}
+
+@lexer::includes
+{
+#include "CustomLexer.h"
+}
+
+@lexer::members {
+/** Handles context-sensitive lexing of implicit line joining such as
+ *  the case where newline is ignored in cases like this:
+ *  a = [3,
+ *       4]
+ */
+corto_int32 implicitLineJoiningLevel = 0;
+corto_int32 startPos = -1;
+}
+
+@lexer::context
+{
+struct CustomLexer_Data data;
+}
+
+@lexer::apifuncs {
+(LEXER); /* trial 1 2 3 */
+}
+
 @parser::includes
 {
-#include "cortolangParserCustom.hpp"
+#include "CustomParser.hpp"
 }
 
 @parser::context
@@ -22,6 +51,10 @@ ctx->parser_data = NULL;
 PARSER->super = ctx;
 }
 
+// ============================================================
+// Statement
+// ============================================================
+
 program
     :
     statement+
@@ -30,30 +63,46 @@ program
 statement
     :
     (declarativeStatement) =>
-    declarativeStatement
+    declarativeStatement NEWLINE
     |
-    simpleStatement
+    simpleStatement NEWLINE
+    |
+    compositeStatement NEWLINE
     ;
 
 declarativeStatement
     :
     (functionDeclaration) =>
-    functionDeclaration NEWLINE
+    functionDeclaration
     |
     (declarationExt) =>
-    declarationExt NEWLINE
+    declarationExt
     ;
 
 simpleStatement
     :
-    expression NEWLINE
+    expression
     ;
 
+compositeStatement
+    :
+    ifStatement
+    ;
+
+block
+    :
+    simpleStatement
+    |
+    INDENT statement+ DEDENT
+    ;
+
+// ============================================================
 // Declaration
+// ============================================================
 
 declarationExt
     :
-    typeLabel validNameList declarationInitializer? (scopeOp scopeBlock)?
+    typeLabel validNameList declarationInitializer? ( scopeOp block )?
     ;
 
 declarationInitializer
@@ -65,14 +114,7 @@ declarationInitializer
 
 validNameList
     :
-    VALID_NAME (COMMA VALID_NAME)* COMMA?
-    ;
-
-scopeBlock
-    :
-    simpleStatement
-    |
-    INDENT statement+ DEDENT
+    VALID_NAME ( COMMA VALID_NAME )* COMMA?
     ;
 
 scopeOp
@@ -82,7 +124,9 @@ scopeOp
     postScopeOperator
     ;
 
+// ============================================================
 // Initializer
+// ============================================================
 
 initializer
     :
@@ -122,7 +166,7 @@ functionDeclaration
 
 functionArguments
     :
-    (functionArgument (COMMA functionArgument)*)?
+    ( functionArgument ( COMMA functionArgument )* )?
     ;
 
 functionArgument
@@ -131,7 +175,26 @@ functionArgument
     ;
 
 
-// EXPRESSIONS
+// ============================================================
+// Flow Control
+// ============================================================
+
+ifStatement
+    :
+    KW_IF expression 'COLON' block (NEWLINE elseStatement)?
+    ;
+
+elseStatement
+    :
+    KW_ELSE (
+        block
+        /* Todo support more types of statements */
+    )
+    ;
+
+// ============================================================
+// Expression
+// ============================================================
 // They are described from *lower* to *higher* precedence.
 
 expression
@@ -139,9 +202,20 @@ expression
     waitExpression
     ;
 
+/* For use in comma-separated lists of expressions e.g. initializers and function arguments */
+nonCommaExpression
+    :
+    assignmentExpressionNoComma
+    ;
+
+assignmentExpressionNoComma
+    :
+    conditionalExpression ( assignmentOp conditionalExpression )?
+    ;
+
 waitExpression
     :
-    KW_WAIT assignmentExpression (KW_FOR logicOrExpression)?
+    KW_WAIT assignmentExpression ( KW_FOR logicOrExpression )?
     |
     assignmentExpression
     ;
@@ -158,17 +232,17 @@ commaExpression
 
 conditionalExpression
     :
-    logicOrExpression ( QMARK logicOrExpression COLON QMARK )?
+    logicOrExpression ( QMARK logicOrExpression COLON logicOrExpression)?
     ;
 
 logicOrExpression
     :
-    logicAndExpression ( LOGIC_OR logicAndExpression )*
+    logicAndExpression ( KW_OR logicAndExpression )*
     ;
 
 logicAndExpression
     :
-    equalityExpression ( LOGIC_AND equalityExpression )*
+    equalityExpression ( KW_AND equalityExpression )*
     ;
 
 equalityExpression
@@ -178,22 +252,22 @@ equalityExpression
 
 comparisonExpression
     :
-    shiftExpression ( comparisonOp shiftExpression)*
+    shiftExpression ( comparisonOp shiftExpression )*
     ;
 
 bitOrExpression
     :
-    bitXorExpression (PIPE bitXorExpression)*
+    bitXorExpression ( PIPE bitXorExpression )*
     ;
 
 bitXorExpression
     :
-    bitAndExpression (CIRCUMFLEX bitAndExpression)*
+    bitAndExpression ( CIRCUMFLEX bitAndExpression )*
     ;
 
 bitAndExpression
     :
-    shiftExpression (AMPERSAND shiftExpression)*
+    shiftExpression ( AMPERSAND shiftExpression )*
     ;
 
 shiftExpression
@@ -218,7 +292,7 @@ unaryExpression
 
 postfixExpression
     :
-    atomExpression postfixOperation+
+    atomExpression postfixOperation*
     ;
 
 atomExpression
@@ -282,20 +356,28 @@ unaryOp
 
 postfixOperation
     :
-    memberAccess
+    functionCall
     |
-    methodCall
+    memberAccess
     ;
 
 memberAccess
     :
-    VALID_NAME
+    DOT VALID_NAME
     ;
 
-methodCall
+functionCall
     :
-    VALID_NAME LPAREN RPAREN // TODO ADD PARAMETERS
+    LPAREN argumentList RPAREN
     ;
+
+argumentList
+    :
+    (nonCommaExpression ( COMMA nonCommaExpression )* COMMA? )?
+    ;
+
+postScopeOperator : DOUBLE_COLON ;
+preScopeOperator : TRIPLE_COLON ;
 
 // ============================================================
 // Identifiers, Types, Names
@@ -331,7 +413,7 @@ anonymousTypeLabel
 
 literal
     :
-    BOOLEAN
+    booleanLiteral
     |
     CHARACTER
     |
@@ -340,44 +422,68 @@ literal
     STRING
     ;
 
+booleanLiteral
+    :
+    KW_TRUE
+    |
+    KW_FALSE
+    ;
+
 anonymousObject
     :
     initializerBraces
     ;
 
-// Other
+// ============================================================
+// Lexer tokens
+// ============================================================
 
-postScopeOperator : DOUBLE_COLON ;
-preScopeOperator : TRIPLE_COLON ;
+IMPLICIT_LINE_WHITESPACE
+    :
+    { implicitLineJoiningLevel > 0 }?
+    (' ' | '\n')+
+    { $channel=HIDDEN; }
+    ;
 
-// LEXER
+LEADING_WHITESPACE
+@init {
+corto_uint32 spaces = 0;
+}
+    :
+    // TODO maybe optimize to not count spaces in the lexer but after the lexer
+    {CustomLexer_leadingWhitespaceGuard(ctx)}?=>
+    '\n' ( ' ' { spaces++; } )+
+    {CustomLexer_handleLeadingWhitespace(ctx, spaces);}
+    {!(ctx->data.indentationError)}?
+    ;
 
 WHITESPACE
     :
     (
         ' '+
-        // |
-        // ( ' ' | '\n' )+
-    ) { $channel = HIDDEN; }
+    ) { puts("whitespace!") ; $channel = HIDDEN; }
     ;
 
-INDENT : 'INDENT' ;
-DEDENT : 'DEDENT' ;
+NEWLINE : '\n' ;
 
-BOOLEAN : 'true' | 'false' ;
+// INDENT : 'INDENT' ;
+// DEDENT : 'DEDENT' ;
+
+// Keywords
+
+KW_TRUE : 'true' ;
+KW_FALSE : 'false' ;
 
 KW_WAIT : 'wait' ;
 KW_FOR : 'for' ;
+KW_IF : 'if' ;
+KW_ELSE : 'else' ;
+KW_WHILE : 'while' ;
 
-LOGIC_AND : 'and' ;
-LOGIC_OR : 'or' ;
+KW_AND : 'and' ;
+KW_OR : 'or' ;
 
-LPAREN : '(' ;
-RPAREN : ')' ;
-LBRACK : '[' ;
-RBRACK : ']' ;
-LBRACE : '{' ;
-RBRACE : '}' ;
+// Two-or-more character symbols
 
 EQUALS : '==' ;
 NOT_EQUALS : '!=' ;
@@ -385,30 +491,33 @@ NOT_EQUALS : '!=' ;
 RSHIFT : '<<' ;
 LSHIFT : '>>' ;
 
-GREATER_THAN : '>' ;
-LESS_THAN : '<' ;
 GREATER_THAN_EQUAL : '>=' ;
 LESS_THAN_EQUAL : '<=' ;
 
-QMARK : '?' ;
-COLON : ':' ;
-COMMA : ',' ;
-
-TILDE : '~' ;
-MINUS : '-' ;
-PLUS : '+' ;
-ASTERISK : '*' ;
-SLASH : '/' ;
-EQUAL : '=' ;
-AMPERSAND : '&' ;
 PLUS_EQUAL : '+=' ;
 MINUS_EQUAL : '-=' ;
 TIMES_EQUAL : '*=' ;
 DIV_EQUAL : '/=' ;
+LSHIFT_EQUALS : '<<=' ;
+RSHIFT_EQUALS : '>>=' ;
+BITAND_EQUALS : '&=' ;
+BITXOR_EQUALS : '^=' ;
+BITOR_EQUALS : '|=' ;
+DOUBLE_COLON : '::' ;
+TRIPLE_COLON : ':::' ;
 
-PIPE : '|';
+// Identifiers
 
-CIRCUMFLEX : '^';
+VALID_NAME :
+    LETTER_UNDERSCORE (LETTER_UNDERSCORE | DIGIT)*
+    ;
+
+GID
+    :
+    '/'? VALID_NAME ('/' VALID_NAME)*
+    ;
+
+// Literals
 
 INTEGER :
     '0'
@@ -424,23 +533,12 @@ STRING :
     '"' (ESC|~('\\'|'\n'|'"'))* '"'
     ;
 
-NEWLINE : '\n' ;
-
-DOUBLE_COLON : '::' ;
-
-TRIPLE_COLON : ':::' ;
-
 fragment
 ESC : '\\' . ;
 
-VALID_NAME :
-    LETTER_UNDERSCORE (LETTER_UNDERSCORE | DIGIT)*
-    ;
-
-GID : '/' VALID_NAME ('/' VALID_NAME)* ;
-
 fragment
-LETTER_UNDERSCORE :
+LETTER_UNDERSCORE
+    :
     ('a'..'z')
     |
     ('A'..'Z')
@@ -449,6 +547,32 @@ LETTER_UNDERSCORE :
     ;
 
 fragment
-DIGIT :
+DIGIT
+    :
     ('0'..'9')
     ;
+
+// Single-character operators
+
+LPAREN : '(' { implicitLineJoiningLevel++; } ;
+RPAREN : ')' { implicitLineJoiningLevel--; } ;
+LBRACK : '[' { implicitLineJoiningLevel++; } ;
+RBRACK : ']' { implicitLineJoiningLevel--; } ;
+LBRACE : '{' { implicitLineJoiningLevel++; } ;
+RBRACE : '}' { implicitLineJoiningLevel--; } ; 
+
+QMARK : '?' ;
+COLON : ':' ;
+COMMA : ',' ;
+GREATER_THAN : '>' ;
+LESS_THAN : '<' ;
+TILDE : '~' ;
+PLUS : '+' ;
+MINUS : '-' ;
+ASTERISK : '*' ;
+SLASH : '/' ;
+EQUAL : '=' ;
+AMPERSAND : '&' ;
+PIPE : '|' ;
+CIRCUMFLEX : '^' ;
+DOT : '.' ;

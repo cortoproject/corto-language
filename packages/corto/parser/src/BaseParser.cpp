@@ -24,7 +24,7 @@ static corto_int16 parseInputStream(
     pANTLR3_BASE_TREE tree;
     corto_int16 error = 0;
 
-    lexer = CortolangLexerNew(input);
+    lexer = CustomLexer_new(input);
     tokens = antlr3CommonTokenStreamSourceNew(
         ANTLR3_SIZE_HINT,
         TOKENSOURCE(lexer)
@@ -50,7 +50,8 @@ static corto_int16 parseInputStream(
 
     parser->free(parser);
     tokens->free(tokens);
-    lexer->free(lexer);
+    CustomLexer_free(lexer);
+    // lexer->free(lexer);
     input->close(input);
 
     return error;
