@@ -119,8 +119,7 @@ typedef struct corto_stringConcatCache {
 #define INIT(type, code)\
     INIT_##code: {\
         fetchOp2(INIT, code)\
-        corto_value v;\
-        corto_valueValueInit(&v, NULL, (corto_type)op2_##code, &op1_##code);\
+        corto_value v = corto_value_value((corto_type)op2_##code, &op1_##code);\
         corto_initv(&v);\
         next();\
     }
@@ -128,8 +127,7 @@ typedef struct corto_stringConcatCache {
 #define DEINIT(type, code)\
     DEINIT_##code: {\
         fetchOp2(DEINIT, code)\
-        corto_value v;\
-        corto_valueValueInit(&v, NULL, (corto_type)op2_##code, &op1_##code);\
+        corto_value v = corto_value_value((corto_type)op2_##code, &op1_##code);\
         corto_deinitv(&v);\
         next();\
     }

@@ -89,8 +89,8 @@ corto_int16 _ast_Object_serialize(
         } else if (dstIsDelegate) {
             if (srcIsDelegate) {
                 corto_value vDst, vSrc;
-                corto_valueValueInit(&vDst, NULL, corto_type(dstType), (void *)dst);
-                corto_valueValueInit(&vSrc, NULL, corto_type(srcType), ast_Object(this)->value);
+                vDst = corto_value_value(corto_type(dstType), (void *)dst);
+                vSrc = corto_value_value(corto_type(srcType), ast_Object(this)->value);
                 corto_copyv(&vDst, &vSrc);
             } else if ((srcType->kind == CORTO_COMPOSITE) && (corto_interface(srcType)->kind == CORTO_PROCEDURE)) {
                 corto_setref(&((corto_delegatedata *)dst)->procedure, ast_Object(this)->value);
@@ -100,8 +100,8 @@ corto_int16 _ast_Object_serialize(
         } else if (corto_instanceof((corto_type)dstType, ast_Object(this)->value)) {
             /* If object is not of a reference type and object is of dstType, copy value */
             corto_value vDst, vSrc;
-            corto_valueValueInit(&vDst, NULL, corto_type(dstType), (void *)dst);
-            corto_valueValueInit(&vSrc, NULL, corto_type(srcType), obj);
+            vDst = corto_value_value(corto_type(dstType), (void *)dst);
+            vSrc = corto_value_value(corto_type(srcType), obj);
             corto_copyv(&vDst, &vSrc);
 
         } else {

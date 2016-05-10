@@ -7,10 +7,10 @@
 #define CORTO_AST_H
 
 #include <corto/corto.h>
+#include <corto/ast/_interface.h>
 #include <corto/ast/_type.h>
 #include <corto/ast/_api.h>
 #include <corto/ast/_meta.h>
-#include <corto/ast/_interface.h>
 
 #include <corto/ic/ic.h>
 
