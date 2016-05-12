@@ -9,21 +9,12 @@ options {
 tokens {
     INDENT;
     DEDENT;
+    NEWLINE;
 }
 
 @lexer::includes
 {
 #include "CustomLexer.h"
-}
-
-@lexer::members {
-/** Handles context-sensitive lexing of implicit line joining such as
- *  the case where newline is ignored in cases like this:
- *  a = [3,
- *       4]
- */
-corto_int32 implicitLineJoiningLevel = 0;
-corto_int32 startPos = -1;
 }
 
 @lexer::context
@@ -32,7 +23,7 @@ struct CustomLexer_Data data;
 }
 
 @lexer::apifuncs {
-(LEXER); /* trial 1 2 3 */
+LEXER->super = ctx;
 }
 
 @parser::includes
@@ -68,6 +59,9 @@ statement
     simpleStatement NEWLINE
     |
     compositeStatement NEWLINE
+    |
+    /* empty statement */
+    NEWLINE
     ;
 
 declarativeStatement
@@ -181,7 +175,7 @@ functionArgument
 
 ifStatement
     :
-    KW_IF expression 'COLON' block (NEWLINE elseStatement)?
+    KW_IF expression COLON block (NEWLINE elseStatement)?
     ;
 
 elseStatement
@@ -440,19 +434,19 @@ anonymousObject
 
 IMPLICIT_LINE_WHITESPACE
     :
-    { implicitLineJoiningLevel > 0 }?
+    {CustomLexer_implicitLineWhitespaceGuard(ctx)}?=>
     (' ' | '\n')+
     { $channel=HIDDEN; }
     ;
 
 LEADING_WHITESPACE
 @init {
-corto_uint32 spaces = 0;
+corto_word spaces = 0;
 }
     :
     // TODO maybe optimize to not count spaces in the lexer but after the lexer
-    {CustomLexer_leadingWhitespaceGuard(ctx)}?=>
-    '\n' ( ' ' { spaces++; } )+
+    // {CustomLexer_leadingWhitespaceGuard(ctx)}?
+    '\n' ( ' ' { spaces++; } )*
     {CustomLexer_handleLeadingWhitespace(ctx, spaces);}
     {!(ctx->data.indentationError)}?
     ;
@@ -461,13 +455,8 @@ WHITESPACE
     :
     (
         ' '+
-    ) { puts("whitespace!") ; $channel = HIDDEN; }
+    ) { $channel = HIDDEN; }
     ;
-
-NEWLINE : '\n' ;
-
-// INDENT : 'INDENT' ;
-// DEDENT : 'DEDENT' ;
 
 // Keywords
 
@@ -554,12 +543,12 @@ DIGIT
 
 // Single-character operators
 
-LPAREN : '(' { implicitLineJoiningLevel++; } ;
-RPAREN : ')' { implicitLineJoiningLevel--; } ;
-LBRACK : '[' { implicitLineJoiningLevel++; } ;
-RBRACK : ']' { implicitLineJoiningLevel--; } ;
-LBRACE : '{' { implicitLineJoiningLevel++; } ;
-RBRACE : '}' { implicitLineJoiningLevel--; } ; 
+LPAREN : '(' {CustomLexer_increaseBracketStack(ctx);} ;
+RPAREN : ')' {CustomLexer_decreaseBracketStack(ctx);} ;
+LBRACK : '[' {CustomLexer_increaseBracketStack(ctx);} ;
+RBRACK : ']' {CustomLexer_decreaseBracketStack(ctx);} ;
+LBRACE : '{' {CustomLexer_increaseBracketStack(ctx);} ;
+RBRACE : '}' {CustomLexer_decreaseBracketStack(ctx);} ; 
 
 QMARK : '?' ;
 COLON : ':' ;

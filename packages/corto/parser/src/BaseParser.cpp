@@ -50,8 +50,7 @@ static corto_int16 parseInputStream(
 
     parser->free(parser);
     tokens->free(tokens);
-    CustomLexer_free(lexer);
-    // lexer->free(lexer);
+    lexer->free(lexer);
     input->close(input);
 
     return error;

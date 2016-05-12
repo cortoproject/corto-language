@@ -29,6 +29,7 @@ corto_void _test_TestCortoLanguage_test_addExpr(
     test_TestCortoLanguage _this)
 {
 /* $begin(test/TestCortoLanguage/test_addExpr) */
+    test_assert(parser_BaseParser_parse(_this->parser, "1, 3, 4") == 0);
     test_assert(parser_BaseParser_parse(_this->parser, "1, 3, 4\n") == 0);
     test_assert(parser_BaseParser_parse(_this->parser, "1, 3 + b, 4\n") == 0);
 /* $end */
@@ -172,12 +173,15 @@ corto_void _test_TestCortoLanguage_test_scope1(
     test_TestCortoLanguage _this)
 {
 /* $begin(test/TestCortoLanguage/test_scope1) */
+    /* Declaration */
     test_assert(parser_BaseParser_parse(_this->parser,
-        "\n"
-        "class MyClass ::\n"
+        "class MyClass::\n"
         "    a = b\n"
-        "    d + 3\n"
-        "\n"
+    ) == 0);
+    test_assert(parser_BaseParser_parse(_this->parser,
+        "class MyClass::\n"
+        "    a = b\n"
+        "    b = c + 4\n"
     ) == 0);
 /* $end */
 }
@@ -186,8 +190,16 @@ corto_void _test_TestCortoLanguage_test_scope2(
     test_TestCortoLanguage _this)
 {
 /* $begin(test/TestCortoLanguage/test_scope2) */
+    /* Definition */
     test_assert(parser_BaseParser_parse(_this->parser,
-        "class MyClass: BaseClass:: INDENT a = b\n DEDENT\n"
+        "class MyClass: BaseClass::\n"
+        "    a = b\n"
+        "    d + 3\n"
+    ) == 0);
+    /* No line break after last (scoped) statement */
+    test_assert(parser_BaseParser_parse(_this->parser,
+        "class MyClass: base=BaseClass::\n"
+        "    a = b\n"
     ) == 0);
 /* $end */
 }
@@ -196,11 +208,45 @@ corto_void _test_TestCortoLanguage_test_scope3(
     test_TestCortoLanguage _this)
 {
 /* $begin(test/TestCortoLanguage/test_scope3) */
+    /* Statements after block */
     test_assert(parser_BaseParser_parse(_this->parser,
-        "class MyClass: base=BaseClass:: INDENT a = b\n DEDENT\n"
+        "class MyClass: BaseClass:: \n"
+        "    a = b\n"
+        "print()"
+        "\n"
+    ) == 0);
+    
+/* $end */
+}
+
+corto_void _test_TestCortoLanguage_test_scope4(
+    test_TestCortoLanguage _this)
+{
+/* $begin(test/TestCortoLanguage/test_scope4) */
+    /* No newline at the end */
+    test_assert(parser_BaseParser_parse(_this->parser,
+        "class MyClass: base=BaseClass::\n"
+        "    a = b"
     ) == 0);
     test_assert(parser_BaseParser_parse(_this->parser,
-        "class MyClass: 1, base=BaseClass:: INDENT a = b\nc = d\n DEDENT\n"
+        "class MyClass: base=BaseClass::\n"
+        "    a = b\n"
+        "    6 + 5\n"
+        "    print()"
+    ) == 0);
+/* $end */
+}
+
+corto_void _test_TestCortoLanguage_test_scope5(
+    test_TestCortoLanguage _this)
+{
+/* $begin(test/TestCortoLanguage/test_scope5) */
+    /* Single statement in declaration */
+    test_assert(parser_BaseParser_parse(_this->parser,
+        "class MyClass: base=BaseClass:: print()\n"
+    ) == 0);
+    test_assert(parser_BaseParser_parse(_this->parser,
+        "class MyClass: base=BaseClass:: print"
     ) == 0);
 /* $end */
 }

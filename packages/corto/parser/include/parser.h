@@ -7,10 +7,10 @@
 #define CORTO_PARSER_H
 
 #include <corto/corto.h>
+#include <corto/parser/_interface.h>
 #include <corto/parser/_type.h>
 #include <corto/parser/_api.h>
 #include <corto/parser/_meta.h>
-#include <corto/parser/_interface.h>
 
 #include <corto/corto.h>
 
