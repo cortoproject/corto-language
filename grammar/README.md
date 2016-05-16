@@ -15,7 +15,7 @@ Then you need to build the C runtime for your computer as directed in [this guid
 
 0. `./configure`
 0. `make`
-0. `sude make install`
+0. `sudo make install`
 
 In my Ubuntu 14.04 64-bit VM I had to include the `--enable-64bit` flag to `configure`, so that is: `./configure --enable-64bit`
 
