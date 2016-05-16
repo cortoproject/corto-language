@@ -54,11 +54,11 @@ program
 statement
     :
     (declarativeStatement) =>
-    declarativeStatement NEWLINE
+    declarativeStatement
     |
     simpleStatement NEWLINE
     |
-    compositeStatement NEWLINE
+    compositeStatement
     |
     /* empty statement */
     NEWLINE
@@ -85,30 +85,51 @@ compositeStatement
 
 block
     :
-    simpleStatement
-    |
-    INDENT statement+ DEDENT
+    COLON
+    (
+        simpleStatement NEWLINE
+        |
+        INDENT statement+ DEDENT
+    )
     ;
 
 // ============================================================
 // Declaration
 // ============================================================
 
+/*
+
+All of the following are legal:
+member x, y, z
+member x, y, z: int8
+member x{int8}, y{int8}, z, w
+member x{int8}, y: int6a
+member (
+    x,
+    y{int64},
+    z,
+): int8, private
+
+*/
+
 declarationExt
     :
-    typeLabel validNameList declarationInitializer? ( scopeOp block )?
+    typeLabel declarationNameList initializer? (NEWLINE | scope_)
     ;
 
-declarationInitializer
+declarationNameList
     :
-    COLON initializer
-    |
-    initializerBraces
+    declarationName ( COMMA declarationName )*
     ;
 
-validNameList
+declarationName
     :
-    VALID_NAME ( COMMA VALID_NAME )* COMMA?
+    VALID_NAME anonymousObject?
+    ;
+
+initializer
+    :
+    COLON fullCommaExpression
     ;
 
 scopeOp
@@ -118,49 +139,36 @@ scopeOp
     postScopeOperator
     ;
 
+scope_
+    :
+    scopeOp
+    (
+        statement
+        |
+        INDENT statement+ DEDENT
+    )
+    ;
+
 // ============================================================
-// Initializer
+// Function Declaration
 // ============================================================
-
-initializer
-    :
-    initializerValue ( COMMA initializerValue )*
-    ;
-
-initializerValue
-    :
-    logicOrExpression
-    |
-    initializerBraces
-    |
-    initializerKeyValue
-    ;
-
-initializerBraces
-    :
-    LBRACE initializer RBRACE // TODO this should be an expression instead?
-    ;
-
-initializerKeyValue
-    :
-    initializerKey EQUAL initializerValue
-    ;
-
-initializerKey
-    :
-    VALID_NAME
-    ;
-
-// FUNCTION DECLARATION
 
 functionDeclaration
     :
     typeLabel VALID_NAME LPAREN functionArguments RPAREN
+    (
+        NEWLINE
+        |
+        EQUAL conditionalExpression NEWLINE
+        |
+        block
+    )
     ;
 
 functionArguments
     :
     ( functionArgument ( COMMA functionArgument )* )?
+    /* TODO add optional trailing comma */
     ;
 
 functionArgument
@@ -175,15 +183,12 @@ functionArgument
 
 ifStatement
     :
-    KW_IF expression COLON block (NEWLINE elseStatement)?
+    KW_IF expression block ( elseStatement )?
     ;
 
 elseStatement
     :
-    KW_ELSE (
-        block
-        /* Todo support more types of statements */
-    )
+    KW_ELSE block
     ;
 
 // ============================================================
@@ -193,40 +198,40 @@ elseStatement
 
 expression
     :
-    waitExpression
-    ;
-
-/* For use in comma-separated lists of expressions e.g. initializers and function arguments */
-nonCommaExpression
-    :
-    assignmentExpressionNoComma
-    ;
-
-assignmentExpressionNoComma
-    :
-    conditionalExpression ( assignmentOp conditionalExpression )?
-    ;
-
-waitExpression
-    :
-    KW_WAIT assignmentExpression ( KW_FOR logicOrExpression )?
-    |
     assignmentExpression
     ;
 
 assignmentExpression
     :
-    commaExpression ( assignmentOp commaExpression )?
+    simpleCommaExpression (assignmentOp simpleCommaExpression )?
     ;
 
-commaExpression
+simpleCommaExpression
     :
-    conditionalExpression ( COMMA conditionalExpression )*
+    conditionalExpression
+    ( COMMA conditionalExpression )*
+    COMMA?
+    ;
+
+/*
+ * Used in initializers {} and function calls ().
+ */
+fullCommaExpression
+    :
+    commaExpressionElem
+    ( COMMA commaExpressionElem )*
+    COMMA?
+    ;
+
+commaExpressionElem
+    :
+    conditionalExpression
+    ( EQUAL conditionalExpression )?
     ;
 
 conditionalExpression
     :
-    logicOrExpression ( QMARK logicOrExpression COLON logicOrExpression)?
+    logicOrExpression ( QMARK logicOrExpression COLON logicOrExpression )?
     ;
 
 logicOrExpression
@@ -271,7 +276,7 @@ shiftExpression
 
 addExpression
     :
-    multExpression ( addOp multExpression )*
+    multExpression ((addOp multExpression) => addOp multExpression )*
     ;
 
 multExpression
@@ -296,6 +301,13 @@ atomExpression
     identifier
     |
     LPAREN expression RPAREN
+    |
+    anonymousObject
+    ;
+
+anonymousObject
+    :
+    LBRACE fullCommaExpression? RBRACE
     ;
 
 // ============================================================
@@ -362,12 +374,7 @@ memberAccess
 
 functionCall
     :
-    LPAREN argumentList RPAREN
-    ;
-
-argumentList
-    :
-    (nonCommaExpression ( COMMA nonCommaExpression )* COMMA? )?
+    LPAREN fullCommaExpression? RPAREN
     ;
 
 postScopeOperator : DOUBLE_COLON ;
@@ -395,14 +402,7 @@ identifier
 
 typeLabel
     :
-    identifier
-    |
-    anonymousTypeLabel
-    ;
-
-anonymousTypeLabel
-    :
-    identifier initializerBraces+
+    identifier anonymousObject*
     ;
 
 literal
@@ -421,11 +421,6 @@ booleanLiteral
     KW_TRUE
     |
     KW_FALSE
-    ;
-
-anonymousObject
-    :
-    initializerBraces
     ;
 
 // ============================================================

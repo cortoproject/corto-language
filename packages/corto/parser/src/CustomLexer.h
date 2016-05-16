@@ -56,7 +56,12 @@ struct CustomLexer_Data {
     /*
      * Last token in the default channel, used by nextToken.
      */
-    pANTLR3_COMMON_TOKEN lastToken;
+    pANTLR3_COMMON_TOKEN bufferedSrcToken;
+
+    /*
+     * Type of last token, be from source or emmited.
+     */
+    ANTLR3_UINT32 lastTokenType;
 
     /*
      * super methods
@@ -64,9 +69,6 @@ struct CustomLexer_Data {
     struct {
         /* lexer->free */
         void (*free)(pCortolangLexer lexer);
-
-        /* lexer->emitNew */
-        void (*emitNew)(pANTLR3_LEXER lexer, pANTLR3_COMMON_TOKEN token);
 
         /* lexer->rec->state->tokSource->nextToken     =  nextToken; */
         pANTLR3_COMMON_TOKEN (*nextToken)(pANTLR3_TOKEN_SOURCE toksource);

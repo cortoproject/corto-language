@@ -50,7 +50,6 @@ corto_void _test_TestCortoLanguage_test_atom(
 /* $begin(test/TestCortoLanguage/test_atom) */
     test_assert(parser_BaseParser_parse(_this->parser, "1\n") == 0);
     test_assert(parser_BaseParser_parse(_this->parser, "\"hello world\"\n") == 0);
-    test_assert(parser_BaseParser_parse(_this->parser, "\"hello world\"\n") == 0);
 /* $end */
 }
 
@@ -139,6 +138,155 @@ corto_void _test_TestCortoLanguage_test_functionDeclaration3(
 {
 /* $begin(test/TestCortoLanguage/test_functionDeclaration3) */
     test_assert(parser_BaseParser_parse(_this->parser, "void myfunction(int8 a, string b)\n") == 0);
+/* $end */
+}
+
+corto_void _test_TestCortoLanguage_test_functionDeclaration4(
+    test_TestCortoLanguage _this)
+{
+/* $begin(test/TestCortoLanguage/test_functionDeclaration4) */
+    // test_assert(parser_BaseParser_parse(_this->parser, "int8 addTwoNumbers(int8 a, int8 b) = a + b") == 0);
+    test_assert(parser_BaseParser_parse(_this->parser, "int8 addTwoNumbers(int8 a, int8 b) = a + b\n") == 0);
+/* $end */
+}
+
+corto_void _test_TestCortoLanguage_test_functionDeclaration5(
+    test_TestCortoLanguage _this)
+{
+/* $begin(test/TestCortoLanguage/test_functionDeclaration5) */
+    test_assert(parser_BaseParser_parse(_this->parser, "list{int64} giveRandomNumbers(uint16 size)\n") == 0);
+/* $end */
+}
+
+corto_void _test_TestCortoLanguage_test_functionDeclaration6(
+    test_TestCortoLanguage _this)
+{
+/* $begin(test/TestCortoLanguage/test_functionDeclaration6) */
+    test_assert(parser_BaseParser_parse(_this->parser, "list{int64} copyList(list{int64} input)\n") == 0);
+/* $end */
+}
+
+corto_void _test_TestCortoLanguage_test_functionDeclaration7(
+    test_TestCortoLanguage _this)
+{
+/* $begin(test/TestCortoLanguage/test_functionDeclaration7) */
+    test_assert(parser_BaseParser_parse(_this->parser,
+        "int8 copyList(list{int64} input):\n"
+        "    1 + 1\n"
+    ) == 0);
+/* $end */
+}
+
+corto_void _test_TestCortoLanguage_test_ifStatement1(
+    test_TestCortoLanguage _this)
+{
+/* $begin(test/TestCortoLanguage/test_ifStatement1) */
+    test_assert(parser_BaseParser_parse(_this->parser,
+        "if finished():\n"
+        "    ready = true\n"
+        "    cleanUp()\n"
+    ) == 0);
+    test_assert(parser_BaseParser_parse(_this->parser,
+        "if finished():\n"
+        "    ready = true\n"
+        "    cleanUp()"
+    ) == 0);
+/* $end */
+}
+
+corto_void _test_TestCortoLanguage_test_ifStatement2(
+    test_TestCortoLanguage _this)
+{
+/* $begin(test/TestCortoLanguage/test_ifStatement2) */
+    test_assert(parser_BaseParser_parse(_this->parser,
+        "if ready == true and numberList.empty():\n"
+        "    finish()\n"
+        "else:\n"
+        "    unfinish()\n"
+    ) == 0);
+/* $end */
+}
+
+corto_void _test_TestCortoLanguage_test_ifStatement3(
+    test_TestCortoLanguage _this)
+{
+/* $begin(test/TestCortoLanguage/test_ifStatement3) */
+    test_assert(parser_BaseParser_parse(_this->parser,
+        "if finished(): cleanUp()\n"
+        "else: messUp()\n"
+    ) == 0);
+    test_assert(parser_BaseParser_parse(_this->parser,
+        "if finished(): cleanUp()\n"
+        "else:\n"
+        "    messUp()\n"
+        "    randomize()\n"
+    ) == 0);
+    test_assert(parser_BaseParser_parse(_this->parser,
+        "if finished():\n"
+        "    cleanUp()\n"
+        "    doubleCheck()\n"
+        "else: messUp()\n"
+    ) == 0);
+/* $end */
+}
+
+corto_void _test_TestCortoLanguage_test_ifStatement4(
+    test_TestCortoLanguage _this)
+{
+/* $begin(test/TestCortoLanguage/test_ifStatement4) */
+    test_assert(parser_BaseParser_parse(_this->parser,
+        "if test1():\n"
+        "    statement1()\n"
+        "    if test2():\n"
+        "        statement2()\n"
+    ) == 0);
+/* $end */
+}
+
+corto_void _test_TestCortoLanguage_test_ifStatement5(
+    test_TestCortoLanguage _this)
+{
+/* $begin(test/TestCortoLanguage/test_ifStatement5) */
+    test_assert(parser_BaseParser_parse(_this->parser,
+        "if test1():\n"
+        "    statement1()\n"
+        "    if test2():\n"
+        "        statement2()\n"
+        "    else:\n"
+        "        statement3()\n"
+    ) == 0);
+/* $end */
+}
+
+corto_void _test_TestCortoLanguage_test_ifStatement6(
+    test_TestCortoLanguage _this)
+{
+/* $begin(test/TestCortoLanguage/test_ifStatement6) */
+    test_assert(parser_BaseParser_parse(_this->parser,
+        "if test1():\n"
+        "    statement1()\n"
+        "    if test2():\n"
+        "        statement2()\n"
+        "    else:\n"
+        "        statement3()\n"
+        "else:\n"
+        "    statement4()\n"
+    ) == 0);
+/* $end */
+}
+
+corto_void _test_TestCortoLanguage_test_ifStatement7(
+    test_TestCortoLanguage _this)
+{
+/* $begin(test/TestCortoLanguage/test_ifStatement7) */
+    test_assert(parser_BaseParser_parse(_this->parser,
+        "if test1():\n"
+        "    statement1()\n"
+        "    if test2():\n"
+        "        statement2()\n"
+        "else:\n"
+        "    statement3()\n"
+    ) == 0);
 /* $end */
 }
 
@@ -257,14 +405,5 @@ corto_void _test_TestCortoLanguage_test_unary(
 /* $begin(test/TestCortoLanguage/test_unary) */
     test_assert(parser_BaseParser_parse(_this->parser, "-8\n") == 0);
     test_assert(parser_BaseParser_parse(_this->parser, "~2\n") == 0);
-/* $end */
-}
-
-corto_void _test_TestCortoLanguage_test_waitExpr(
-    test_TestCortoLanguage _this)
-{
-/* $begin(test/TestCortoLanguage/test_waitExpr) */
-    test_assert(parser_BaseParser_parse(_this->parser, "wait a = 0\n") == 0);
-    test_assert(parser_BaseParser_parse(_this->parser, "wait a = 0 for true or false\n") == 0);
 /* $end */
 }
