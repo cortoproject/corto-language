@@ -2,6 +2,14 @@
 
 Antlr3-based parser for Corto
 
+## Requirements
+
+Install Java, e.g.
+
+```
+sudo apt-get install default-jre
+```
+
 ## Installation
 
 This project has a dependency on antlr3 C runtime files for develpment and running, and antlr3 for development.

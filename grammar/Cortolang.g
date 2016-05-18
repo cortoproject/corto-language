@@ -76,18 +76,26 @@ declarativeStatement
 simpleStatement
     :
     expression
+    |
+    breakStatement
+    |
+    continueStatement
     ;
 
 compositeStatement
     :
     ifStatement
+    |
+    whileStatement
+    |
+    observerStatement
     ;
 
 block
     :
     COLON
     (
-        simpleStatement NEWLINE
+        statement
         |
         INDENT statement+ DEDENT
     )
@@ -183,12 +191,34 @@ functionArgument
 
 ifStatement
     :
-    KW_IF expression block ( elseStatement )?
+    KW_IF expression
+    (
+        block
+    )
+    (
+        ( KW_ELSE ) =>
+        ( elseStatement )
+    )?
     ;
 
 elseStatement
     :
     KW_ELSE block
+    ;
+
+whileStatement
+    :
+    KW_WHILE expression block
+    ;
+
+breakStatement
+    :
+    KW_BREAK
+    ;
+
+continueStatement
+    :
+    KW_CONTINUE
     ;
 
 // ============================================================
@@ -311,6 +341,28 @@ anonymousObject
     ;
 
 // ============================================================
+// Observers
+// ============================================================
+
+observerStatement
+    :
+    KW_ON eventMask expression ( block | NEWLINE )
+    ;
+
+eventMask
+    :
+    eventFlag ( PIPE eventFlag )*
+    ;
+
+eventFlag : eventBaseFlag | eventScopeFlag ;
+
+/* TODO we might need more flags */
+
+eventBaseFlag : KW_DECLARE | KW_DEFINE | KW_UPDATE | KW_DESTRUCT ;
+
+eventScopeFlag : KW_SELF | KW_SCOPE | KW_TREE | KW_SYNCHRONIZED ;
+
+// ============================================================
 // Operators
 // ============================================================
 
@@ -365,6 +417,13 @@ postfixOperation
     functionCall
     |
     memberAccess
+    |
+    elementAccess
+    ;
+
+functionCall
+    :
+    LPAREN fullCommaExpression? RPAREN
     ;
 
 memberAccess
@@ -372,9 +431,9 @@ memberAccess
     DOT VALID_NAME
     ;
 
-functionCall
+elementAccess
     :
-    LPAREN fullCommaExpression? RPAREN
+    LBRACK fullCommaExpression? RBRACK
     ;
 
 postScopeOperator : DOUBLE_COLON ;
@@ -463,9 +522,21 @@ KW_FOR : 'for' ;
 KW_IF : 'if' ;
 KW_ELSE : 'else' ;
 KW_WHILE : 'while' ;
+KW_BREAK : 'break' ;
+KW_CONTINUE : 'continue' ;
 
 KW_AND : 'and' ;
 KW_OR : 'or' ;
+
+KW_DECLARE : 'declare' ;
+KW_DEFINE : 'define' ;
+KW_UPDATE : 'update' ;
+KW_DESTRUCT : 'destruct' ;
+KW_SELF : 'self' ;
+KW_SCOPE : 'scope' ;
+KW_TREE : 'tree' ;
+KW_SYNCHRONIZED : 'synchronized' ;
+KW_ON : 'on' ;
 
 // Two-or-more character symbols
 

@@ -49,7 +49,6 @@ corto_void _test_TestCortoLanguage_test_atom(
 {
 /* $begin(test/TestCortoLanguage/test_atom) */
     test_assert(parser_BaseParser_parse(_this->parser, "1\n") == 0);
-    test_assert(parser_BaseParser_parse(_this->parser, "\"hello world\"\n") == 0);
 /* $end */
 }
 
@@ -106,14 +105,51 @@ corto_void _test_TestCortoLanguage_test_declaration4(
 /* $end */
 }
 
+corto_void _test_TestCortoLanguage_test_elementAccess(
+    test_TestCortoLanguage _this)
+{
+/* $begin(test/TestCortoLanguage/test_elementAccess) */
+    test_assert(parser_BaseParser_parse(_this->parser, "a[1]\n") == 0);
+    test_assert(parser_BaseParser_parse(_this->parser, "a[1, 2, 3]\n") == 0);
+/* $end */
+}
+
 corto_void _test_TestCortoLanguage_test_functionCall(
     test_TestCortoLanguage _this)
 {
 /* $begin(test/TestCortoLanguage/test_functionCall) */
     test_assert(parser_BaseParser_parse(_this->parser, "a()\n") == 0);
     test_assert(parser_BaseParser_parse(_this->parser, "a(b)\n") == 0);
+/* $end */
+}
+
+corto_void _test_TestCortoLanguage_test_functionCall2(
+    test_TestCortoLanguage _this)
+{
+/* $begin(test/TestCortoLanguage/test_functionCall2) */
     test_assert(parser_BaseParser_parse(_this->parser, "a(b, 1, this or that, isReady ? 3 : 5)\n") == 0);
+/* $end */
+}
+
+corto_void _test_TestCortoLanguage_test_functionCall3(
+    test_TestCortoLanguage _this)
+{
+/* $begin(test/TestCortoLanguage/test_functionCall3) */
     test_assert(parser_BaseParser_parse(_this->parser, "a(c, d, e,)\n") == 0);
+/* $end */
+}
+
+corto_void _test_TestCortoLanguage_test_functionCall4(
+    test_TestCortoLanguage _this)
+{
+/* $begin(test/TestCortoLanguage/test_functionCall4) */
+    test_assert(parser_BaseParser_parse(_this->parser,
+        "myFunctionCall("
+        "    c.a(), "
+        "    d.x.y,"
+        "    otherVariable,"
+        ")\n"
+    ) == 0);
 /* $end */
 }
 
@@ -317,6 +353,63 @@ corto_void _test_TestCortoLanguage_test_multExpr(
 /* $end */
 }
 
+corto_void _test_TestCortoLanguage_test_observer1(
+    test_TestCortoLanguage _this)
+{
+/* $begin(test/TestCortoLanguage/test_observer1) */
+    test_assert(parser_BaseParser_parse(_this->parser,
+        "on update this\n"
+    ) == 0);
+/* $end */
+}
+
+corto_void _test_TestCortoLanguage_test_observer2(
+    test_TestCortoLanguage _this)
+{
+/* $begin(test/TestCortoLanguage/test_observer2) */
+    test_assert(parser_BaseParser_parse(_this->parser,
+        "on update this: \"an update occurred\"\n"
+    ) == 0);
+/* $end */
+}
+
+corto_void _test_TestCortoLanguage_test_observer3(
+    test_TestCortoLanguage _this)
+{
+/* $begin(test/TestCortoLanguage/test_observer3) */
+    test_assert(parser_BaseParser_parse(_this->parser,
+        "on update this:\n"
+        "    \"an update occurred\""
+    ) == 0);
+/* $end */
+}
+
+corto_void _test_TestCortoLanguage_test_observer4(
+    test_TestCortoLanguage _this)
+{
+/* $begin(test/TestCortoLanguage/test_observer4) */
+    test_assert(parser_BaseParser_parse(_this->parser,
+        "on declare|update|scope object.member:\n"
+        "    if object.member == x:\n"
+        "        fun1()\n"
+        "    else:\n"
+        "        fun2()\n"
+    ) == 0);
+/* $end */
+}
+
+corto_void _test_TestCortoLanguage_test_observer5(
+    test_TestCortoLanguage _this)
+{
+/* $begin(test/TestCortoLanguage/test_observer5) */
+    test_assert(parser_BaseParser_parse(_this->parser,
+        "on declare|update|tree object:\n"
+        "    while !object.ready:\n"
+        "        object.count += 1\n"
+    ) == 0);
+/* $end */
+}
+
 corto_void _test_TestCortoLanguage_test_scope1(
     test_TestCortoLanguage _this)
 {
@@ -405,5 +498,54 @@ corto_void _test_TestCortoLanguage_test_unary(
 /* $begin(test/TestCortoLanguage/test_unary) */
     test_assert(parser_BaseParser_parse(_this->parser, "-8\n") == 0);
     test_assert(parser_BaseParser_parse(_this->parser, "~2\n") == 0);
+/* $end */
+}
+
+corto_void _test_TestCortoLanguage_testWhileStatement1(
+    test_TestCortoLanguage _this)
+{
+/* $begin(test/TestCortoLanguage/testWhileStatement1) */
+    test_assert(parser_BaseParser_parse(_this->parser,
+        "while this or that:\n"
+        "    1 + 1\n"
+        "    functioncall()\n"
+        "    if ready:\n"
+        "        break"
+    ) == 0);
+/* $end */
+}
+
+corto_void _test_TestCortoLanguage_testWhileStatement2(
+    test_TestCortoLanguage _this)
+{
+/* $begin(test/TestCortoLanguage/testWhileStatement2) */
+    test_assert(parser_BaseParser_parse(_this->parser,
+        "while this or that: a += 1\n"
+    ) == 0);
+/* $end */
+}
+
+corto_void _test_TestCortoLanguage_testWhileStatement3(
+    test_TestCortoLanguage _this)
+{
+/* $begin(test/TestCortoLanguage/testWhileStatement3) */
+    test_assert(parser_BaseParser_parse(_this->parser,
+        "while i -= 1:\n"
+        "    while j -= 1:\n"
+        "        a = b\n"
+        "        if mytest:\n"
+        "            continue\n"
+        "        b = c"
+    ) == 0);
+/* $end */
+}
+
+corto_void _test_TestCortoLanguage_testWhileStatement4(
+    test_TestCortoLanguage _this)
+{
+/* $begin(test/TestCortoLanguage/testWhileStatement4) */
+    test_assert(parser_BaseParser_parse(_this->parser,
+        "while i -= 1: while j -= 1: m[i][j] = 0\n"
+    ) == 0);
 /* $end */
 }

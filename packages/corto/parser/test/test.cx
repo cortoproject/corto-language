@@ -15,7 +15,12 @@ test::Suite TestCortoLanguage::
     void test_logicOrExpr()
     void test_commaExpr()
     void test_assignmentExpr()
+    void test_elementAccess()
+
     void test_functionCall()
+    void test_functionCall2()
+    void test_functionCall3()
+    void test_functionCall4()
 
     void test_declaration1()
     void test_declaration2()
@@ -37,6 +42,11 @@ test::Suite TestCortoLanguage::
     void test_ifStatement6()
     void test_ifStatement7()
 
+    void testWhileStatement1()
+    void testWhileStatement2()
+    void testWhileStatement3()
+    void testWhileStatement4()
+
     void test_functionDeclaration1()
     void test_functionDeclaration2()
     void test_functionDeclaration3()
@@ -44,5 +54,11 @@ test::Suite TestCortoLanguage::
     void test_functionDeclaration5()
     void test_functionDeclaration6()
     void test_functionDeclaration7()
+
+    void test_observer1()
+    void test_observer2()
+    void test_observer3()
+    void test_observer4()
+    void test_observer5()
     
     void test_badToken()
