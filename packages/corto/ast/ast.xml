@@ -44,7 +44,6 @@
                     <constant name="UnaryExpr"/>
                     <constant name="UpdateExpr"/>
                     <constant name="StorageExpr"/>
-                    <constant name="WaitExpr"/>
                     <constant name="WhileExpr"/>
                 </meta:scope>
             </enum>
@@ -539,17 +538,6 @@
                 </meta:scope>
             </class>
 
-            <!-- Wait expression -->
-            <class name="Wait" base="Expression" baseAccess="readonly">
-                <meta:scope>
-                    <method name="construct()" returnType="int16"/>
-                    <member name="exprList" type="list{ast::Expression}"/>
-                    <member name="timeout" type="ast::Expression"/>
-                    <virtual name="hasReturnedResource()" returnType="bool"/>
-                    <virtual name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
-                </meta:scope>
-            </class>
-
             <!-- Initializer -->
             <enum name="InitializerKind">
                 <meta:scope>
@@ -842,9 +830,6 @@
                     <method name="unaryExpr(ast::Expression lvalue,operatorKind operator)" returnType="ast::Expression"/>
                     <method name="binaryExpr(ast::Expression lvalues,ast::Expression rvalues,operatorKind operator)" returnType="ast::Node"/>
                     <method name="ternaryExpr(ast::Expression cond,ast::Expression iftrue,ast::Expression iffalse)" returnType="ast::Expression"/>
-
-                    <!-- Wait expression -->
-                    <method name="waitExpr(ast::Expression expr,ast::Expression timeout)" returnType="ast::Expression"/>
 
                     <!-- Loops and conditional statements -->
                     <method name="ifStatement(ast::Expression condition,ast::Block trueBranch,ast::If falseBranch)" returnType="ast::Node"/>

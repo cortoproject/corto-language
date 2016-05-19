@@ -188,7 +188,6 @@ gid (("::"|"/")*{id})+
 "declare"                       TOKEN; return KW_DECLARE;
 "define"                        TOKEN; return KW_DEFINE;
 "delete"                        TOKEN; return KW_DESTRUCT;
-"wait"                          TOKEN; return KW_WAIT;
 "on"                            TOKEN; return KW_ON;
 "self"                          TOKEN; return KW_SELF;
 "scope"                         TOKEN; return KW_SCOPE;

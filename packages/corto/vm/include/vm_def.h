@@ -123,8 +123,6 @@ extern "C" {
     OP2_EXP(expand##2, UPDATEFROM, W, PQR, PQRV, typeAction, opAction)\
     OP2_EXP(expand##2, UPDATEENDFROM, W, PQR, PQRV, typeAction, opAction)\
     OP1_EXP(expand##1, UPDATECANCEL, W, PQRV, typeAction, opAction)\
-    OP1_EXP(expand##1, WAITFOR, W, PQRV, typeAction, opAction)\
-    OP2_EXP(expand##2, WAIT, W, PQR, PQRV, typeAction, opAction)\
     OP0_EXP(expand##0, STOP)
 
 #ifdef __cplusplus

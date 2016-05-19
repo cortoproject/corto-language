@@ -414,7 +414,7 @@ typedef union Di2f_t {
     CALLVM_##code:\
         fetchOp1(CALLVM,code);\
         fetchHi();\
-        corto_vm_run_w_storage((vm_program)((corto_function)c.hi.w)->implData, c.stack, &op1_##code);\
+        corto_vm_run_w_storage((vm_program)((corto_function)c.hi.w)->fptr, c.stack, &op1_##code);\
         c.sp = c.stack; /* Reset stack pointer */\
         next();\
 
@@ -428,7 +428,7 @@ typedef union Di2f_t {
 #define CALLVMVOID()\
     CALLVMVOID:\
         fetchHi();\
-        corto_vm_run_w_storage((vm_program)((corto_function)c.hi.w)->implData, c.stack, NULL);\
+        corto_vm_run_w_storage((vm_program)((corto_function)c.hi.w)->fptr, c.stack, NULL);\
         c.sp = c.stack; /* Reset stack pointer */\
         next();\
 
@@ -641,23 +641,6 @@ typedef union Di2f_t {
             goto STOP;\
         }\
         corto_updateCancel((corto_object)op1_##code);\
-        next();\
-
-#define WAITFOR(type, code)\
-    WAITFOR_##code:\
-        fetchOp1(WAITFOR,code);\
-        if (!op1_##code) {\
-            printf("Exception: null dereference in waitfor");\
-            abort();\
-            goto STOP;\
-        }\
-        corto_waitfor((corto_object)op1_##code);\
-        next();\
-
-#define WAIT(type,code)\
-    WAIT_##code:\
-        fetchOp2(WAIT,code);\
-        op1_##code = (W_t)corto_wait(0,0);\
         next();\
 
 #ifdef CORTO_VM_BOUNDSCHECK
@@ -1233,7 +1216,7 @@ void vm_call(corto_function f, corto_void* result, void* args) {
     void *storage = NULL;
 
     /* Obtain instruction sequence */
-    program = (vm_program)f->implData;
+    program = (vm_program)f->fptr;
 
     /* Allocate a storage for a program. This memory will
      * store all local variables, and space required to
@@ -1250,12 +1233,12 @@ void vm_call(corto_function f, corto_void* result, void* args) {
 
 /* Language binding function that frees a VM function */
 void vm_callDestruct(corto_function f) {
-    vm_programFree((vm_program)f->implData);
+    vm_programFree((vm_program)f->fptr);
 }
 
 int vmMain(int argc, char* argv[]) {
     CORTO_UNUSED(argc);
     CORTO_UNUSED(argv);
-    CORTO_PROCEDURE_VM = corto_callRegisterBinding(vm_call, NULL, NULL, (corto_callDestructHandler)vm_callDestruct);
+    /*CORTO_PROCEDURE_VM = corto_callRegisterBinding(vm_call, NULL, NULL, (corto_callDestructHandler)vm_callDestruct);*/
     return 0;
 }

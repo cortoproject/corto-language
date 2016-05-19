@@ -132,7 +132,7 @@ error:
 
 /* Keywords */
 %token KW_UPDATE KW_DECLARE KW_DEFINE KW_DESTRUCT KW_ON KW_SCOPE KW_SELF KW_SYNCHRONIZED
-%token KW_IF KW_ELSE KW_WHILE KW_SWITCH KW_CASE KW_DEFAULT KW_BREAK KW_FOR KW_WAIT
+%token KW_IF KW_ELSE KW_WHILE KW_SWITCH KW_CASE KW_DEFAULT KW_BREAK KW_FOR
 %token KW_TRY KW_CATCH
 %token KW_IMPORT
 %token KW_LOCAL
@@ -179,7 +179,7 @@ error:
     statement statements
     expr literal_expr primary_expr iter_expr postfix_expr unary_expr multiplicative_expr additive_expr shift_expr
     boolean_expr equality_expr and_expr xor_expr or_expr logical_and_expr logical_or_expr assignment_expr
-    comma_expr bracket_expr conditional_expr wait_expr declaration declaration_expr declaration_ref
+    comma_expr bracket_expr conditional_expr declaration declaration_expr declaration_ref
     function_declaration
     block block_start
     initializer initializer_expr initializer_braces init_key
@@ -467,7 +467,7 @@ literal_expr
     ;
 
 bracket_expr
-    : '(' {PUSHLVALUE(NULL)} wait_expr ')' {POPLVALUE(); $$=$3;}
+    : '(' {PUSHLVALUE(NULL)} assignment_expr ')' {POPLVALUE(); $$=$3;}
     ;
 
 primary_expr
@@ -623,22 +623,16 @@ assignment_operator
     | UPDATE_ASSIGN {$$ = CORTO_ASSIGN_UPDATE;}
     ;
 
-wait_expr
-    : assignment_expr
-    | KW_WAIT assignment_expr                            {$$ = ast_Parser_waitExpr(yparser(), $2, NULL); fast_op;}
-    | KW_WAIT assignment_expr KW_FOR logical_or_expr    {$$ = ast_Parser_waitExpr(yparser(), $2, $4); fast_op;}
-    ;
-
 declaration_expr
-    : wait_expr
-    | wait_expr ':' {
+    : assignment_expr
+    | assignment_expr ':' {
         ast_Parser_initDeclare(yparser(), $1); fast_op;
         ast_Parser_initPushStatic(yparser()); fast_op;
     } initializer {
         ast_Parser_initPop(yparser()); fast_op;
         $$ = NULL;
     }
-    | wait_expr ':' {
+    | assignment_expr ':' {
         ast_Parser_initDeclare(yparser(), $1); fast_op;
         ast_Parser_initPushStatic(yparser()); fast_op;
         ast_Parser_initPop(yparser()); fast_op;
@@ -695,7 +689,6 @@ any_id
     | '@' KW_DECLARE {$$ = "declare";}
     | '@' KW_DEFINE {$$ = "define";}
     | '@' KW_DESTRUCT {$$ = "delete";}
-    | '@' KW_WAIT {$$ = "wait";}
     | '@' KW_ON {$$ = "on";}
     | '@' KW_SELF {$$ = "self";}
     | '@' KW_SYNCHRONIZED {$$ = "synchronized";}
@@ -729,7 +722,7 @@ if_statement
     ;
 
 if_start
-    : KW_IF wait_expr        {$$=$2;}
+    : KW_IF assignment_expr        {$$=$2;}
     ;
 
 /* ======================================================================== */
@@ -741,15 +734,15 @@ while_statement
     ;
 
 while_until
-    : KW_WHILE wait_expr {$$=$2;}
+    : KW_WHILE assignment_expr {$$=$2;}
     ;
 
 /* ======================================================================== */
 /* Switch statement */
 /* ======================================================================== */
 switch_statement
-    : KW_SWITCH wait_expr ':' case_list INDENT switch_statements DEDENT    {$$ = NULL;}
-    | KW_SWITCH wait_expr ':' switch_statements DEDENT                    {$$ = NULL;}
+    : KW_SWITCH assignment_expr ':' case_list INDENT switch_statements DEDENT    {$$ = NULL;}
+    | KW_SWITCH assignment_expr ':' switch_statements DEDENT                    {$$ = NULL;}
     ;
 
 switch_statements
@@ -769,7 +762,7 @@ case_list
     ;
 
 case_label
-    : KW_CASE wait_expr ':'
+    : KW_CASE assignment_expr ':'
     | KW_DEFAULT   ':'
     ;
 

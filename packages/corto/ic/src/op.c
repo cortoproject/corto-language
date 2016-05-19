@@ -133,8 +133,6 @@ corto_bool _ic_op_validate(
     case ic_updatecancel: result = TRUE; break;
     case ic_init: result = TRUE; break;
     case ic_deinit: result = TRUE; break;
-    case ic_waitfor: result = TRUE; break;
-    case ic_wait: result = TRUE; break;
     case ic_add: result = ic_validateBinary(this); break;
     case ic_sub: result = ic_validateBinary(this); break;
     case ic_mul: result = ic_validateBinary(this); break;
@@ -182,7 +180,7 @@ corto_bool _ic_op_validate(
            ic_program_get()->filename,
            this->line);
     }
-#endif    
+#endif
     return result;
 /* $end */
 }

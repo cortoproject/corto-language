@@ -3072,25 +3072,6 @@ error:
 /* $end */
 }
 
-ast_Expression _ast_Parser_waitExpr(
-    ast_Parser this,
-    ast_Expression expr,
-    ast_Expression timeout)
-{
-/* $begin(corto/ast/Parser/waitExpr) */
-    ast_Expression result = NULL;
-
-    if (this->pass) {
-        corto_ll exprList = ast_Expression_toList(expr);
-
-        result = ast_Expression(ast_WaitCreate(exprList, timeout));
-        ast_Parser_collect(this, result);
-    }
-
-    return result;
-/* $end */
-}
-
 ast_Node _ast_Parser_whileStatement(
     ast_Parser this,
     ast_Expression condition,

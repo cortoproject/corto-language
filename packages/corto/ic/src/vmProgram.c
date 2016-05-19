@@ -170,7 +170,7 @@ void ic_vmProgram_finalize(ic_vmProgram *vmProgram) {
     if (vmProgram->function) {
         corto_function function = vmProgram->function->function;
         function->impl = (corto_word)vm_call;
-        function->implData = (corto_word)vmProgram->program;
+        function->fptr = (corto_word)vmProgram->program;
         corto_define(function);
 
 #ifdef CORTO_IC_TRACING
