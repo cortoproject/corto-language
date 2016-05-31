@@ -2,8 +2,6 @@ grammar Cortolang;
 
 options {
     language=C;
-    output=AST;
-    ASTLabelType=pANTLR3_BASE_TREE;
 }
 
 tokens {
@@ -47,16 +45,36 @@ PARSER->super = ctx;
 // ============================================================
 
 program
+returns [ parser_ProgramNode ___ node ]
+@init
+{
+    node = parser_ProgramNodeCreate(0, 0, corto_llNew());
+}
     :
-    statement+
+    (
+        statement
+        {
+            if ($statement.node) {
+                corto_llAppend(node->statements, $statement.node);
+            }
+        }
+    )+
     ;
 
 statement
+returns [ parser_StatementNode ___ node ]
+@init
+{
+    node = NULL;
+}
     :
     (declarativeStatement) =>
     declarativeStatement
     |
     simpleStatement NEWLINE
+    {
+        node = $simpleStatement.node;
+    }
     |
     compositeStatement
     |
@@ -74,8 +92,20 @@ declarativeStatement
     ;
 
 simpleStatement
+returns [ parser_StatementNode ___ node ]
+@init
+{
+    node = NULL;
+}
     :
-    expression
+    e=expression
+    {
+        // TODO line and column
+        parser_ExpressionStatementNode _node = parser_ExpressionStatementNodeCreate(
+            0, 0, $e.node
+        );
+        node = parser_StatementNode(_node);
+    }
     |
     breakStatement
     |
@@ -226,20 +256,74 @@ continueStatement
 // ============================================================
 // They are described from *lower* to *higher* precedence.
 
+
 expression
+returns [ parser_ExpressionNode ___ node ]
+@init {
+    node = NULL;
+}
     :
     assignmentExpression
+    {
+        node = $assignmentExpression.node;
+    }
     ;
+
 
 assignmentExpression
+returns [ parser_ExpressionNode ___ node ]
+@init {
+    node = NULL;
+}
     :
-    simpleCommaExpression (assignmentOp simpleCommaExpression )?
+    (
+        e1=simpleCommaExpression
+        {
+            node = $e1.node;
+        }
+    )
+    (
+        (
+            assignmentOp
+        )
+        e2=simpleCommaExpression
+        {
+            node = parser_createBinaryExpression($e1.node, "assignmentOp", $e2.node);
+        }
+    )?
     ;
 
+
 simpleCommaExpression
+returns [ parser_ExpressionNode ___ node ]
+@init {
+    node = NULL;
+}
     :
-    conditionalExpression
-    ( COMMA conditionalExpression )*
+    (
+        e1=conditionalExpression
+        {
+            node = $e1.node;
+        }
+    )
+    (
+        COMMA
+        e2=conditionalExpression
+        {
+            // TODO would move this method to CustomParser.cpp
+            parser_CommaExpressionNode _node;
+            if (!corto_instanceof(parser_CommaExpressionNode_o, node)) {
+                _node = parser_CommaExpressionNodeCreate(
+                    0, 0, corto_llNew()
+                );
+                corto_llAppend(_node->expressions, node);
+                node = parser_ExpressionNode(_node);
+            } else {
+                _node = parser_CommaExpressionNode(node);
+            }
+            corto_llAppend(_node->expressions, $e2.node);
+        }
+    )*
     COMMA?
     ;
 
@@ -259,62 +343,251 @@ commaExpressionElem
     ( EQUAL conditionalExpression )?
     ;
 
+
 conditionalExpression
+returns [ parser_ExpressionNode ___ node ]
+@init {
+    node = parser_ExpressionNodeCreate(0, 0);
+}
     :
-    logicOrExpression ( QMARK logicOrExpression COLON logicOrExpression )?
+    (
+        e1=logicOrExpression
+        {
+            node = $e1.node;
+        }
+    )
+    (
+        QMARK
+        e2=logicOrExpression
+        COLON
+        e3=logicOrExpression
+        {
+            parser_ConditionalExpressionNode _node = parser_ConditionalExpressionNodeCreate(
+                0, 0, node, $e2.node, $e3.node
+            );
+            node = parser_ExpressionNode(_node);
+        }
+    )?
     ;
+
 
 logicOrExpression
+returns [ parser_ExpressionNode ___ node ]
+@init {
+    node = NULL;
+}
     :
-    logicAndExpression ( KW_OR logicAndExpression )*
+    (
+        e1=logicAndExpression
+        {
+            node = $e1.node;
+        }
+    )
+    (
+        KW_OR
+        e2=logicAndExpression
+        {
+            node = parser_createBinaryExpression($e1.node, "KW_OR", $e2.node);
+        }
+    )*
     ;
 
+
 logicAndExpression
+returns [ parser_ExpressionNode ___ node ]
+@init {
+    node = NULL;
+}
     :
-    equalityExpression ( KW_AND equalityExpression )*
+    (
+        e1=equalityExpression
+        {
+            node = $e1.node;
+        }
+    )
+    (
+        KW_AND
+        e2=equalityExpression
+        {
+            node = parser_createBinaryExpression($e1.node, "KW_AND", $e2.node);
+        }
+    )*
     ;
 
 equalityExpression
+returns [ parser_ExpressionNode ___ node ]
+@init {
+    node = NULL;
+}
     :
-    comparisonExpression ( eqOp comparisonExpression )*
+    (
+        e1=comparisonExpression
+        {
+            node = $e1.node;
+        }
+    )
+    (
+        eqOp
+        e2=comparisonExpression
+        {
+            node = parser_createBinaryExpression($e1.node, "eqOp", $e2.node);
+        }
+    )?
     ;
 
 comparisonExpression
+returns [ parser_ExpressionNode ___ node ]
+@init {
+    node = NULL;
+}
     :
-    shiftExpression ( comparisonOp shiftExpression )*
+    (
+        e1=bitOrExpression
+        {
+            node = $e1.node;
+        }
+    )
+    (
+        comparisonOp
+        e2=bitOrExpression
+        {
+            node = parser_createBinaryExpression($e1.node, "comparisonOp", $e2.node);
+        }
+    )?
     ;
 
 bitOrExpression
+returns [ parser_ExpressionNode ___ node ]
+@init {
+    node = NULL;
+}
     :
-    bitXorExpression ( PIPE bitXorExpression )*
+    (
+        e1=bitXorExpression
+        {
+            node = $e1.node;
+        }
+    )
+    (
+        PIPE
+        e2=bitXorExpression
+        {
+            node = parser_createBinaryExpression($e1.node, "PIPE", $e2.node);
+        }
+    )*
     ;
 
 bitXorExpression
+returns [ parser_ExpressionNode ___ node ]
+@init {
+    node = NULL;
+}
     :
-    bitAndExpression ( CIRCUMFLEX bitAndExpression )*
+    (
+        e1=bitAndExpression
+        {
+            node = $e1.node;
+        }
+    )
+    (
+        CIRCUMFLEX
+        e2=bitAndExpression
+        {
+            node = parser_createBinaryExpression($e1.node, "CIRCUMFLEX", $e2.node);
+        }
+    )*
     ;
 
 bitAndExpression
+returns [ parser_ExpressionNode ___ node ]
+@init {
+    node = NULL;
+}
     :
-    shiftExpression ( AMPERSAND shiftExpression )*
+    (
+        e1=shiftExpression
+        {
+            node = $e1.node;
+        }
+    )
+    (
+        AMPERSAND
+        e2=shiftExpression
+        {
+            node = parser_createBinaryExpression($e1.node, "AMPERSAND", $e2.node);
+        }
+    )*
     ;
 
 shiftExpression
+returns [ parser_ExpressionNode ___ node ]
+@init {
+    node = NULL;
+}
     :
-    addExpression ( shiftOp addExpression )*
+    (
+        e1=addExpression
+        {
+            node = $e1.node;
+        }
+    )
+    (
+        shiftOp
+        e2=addExpression
+        {
+            node = parser_createBinaryExpression($e1.node, "shiftOp", $e2.node);
+        }
+    )*
     ;
 
 addExpression
+returns [ parser_ExpressionNode ___ node ]
+@init {
+    node = parser_ExpressionNodeCreate(0, 0);
+}
     :
-    multExpression ((addOp multExpression) => addOp multExpression )*
+    (
+        e1=multExpression
+        {
+            node = $e1.node;
+        }
+    )
+    (
+        (addOp multExpression) =>
+        addOp
+        e2=multExpression
+        {
+            node = parser_createBinaryExpression($e1.node, "addOp", $e2.node);
+        }
+    )*
     ;
 
 multExpression
+returns [ parser_ExpressionNode ___ node ]
+@init {
+    node = NULL;
+}
     :
-    unaryExpression ( multOp unaryExpression )*
+    (
+        e1=unaryExpression
+        {
+            node = $e1.node;
+        }
+    )
+    (
+        multOp
+        e2=unaryExpression
+        {
+            node = parser_createBinaryExpression($e1.node, "multOp", $e2.node);
+        }
+    )*
     ;
 
 unaryExpression
+returns [ parser_ExpressionNode ___ node ]
+@init {
+    node = parser_ExpressionNodeCreate(0, 0);
+}
     :
     unaryOp? postfixExpression
     ;
@@ -369,7 +642,8 @@ eventScopeFlag : KW_SELF | KW_SCOPE | KW_TREE | KW_SYNCHRONIZED ;
 assignmentOp
     :
     EQUAL
-    | PLUS_EQUAL | MINUS_EQUAL | TIMES_EQUAL | DIV_EQUAL
+    |
+    PLUS_EQUAL | MINUS_EQUAL | TIMES_EQUAL | DIV_EQUAL
     ;
 
 eqOp :
@@ -410,6 +684,10 @@ unaryOp
     MINUS
     |
     PLUS
+    |
+    EMARK
+    |
+    KW_NOT
     ;
 
 postfixOperation
@@ -527,6 +805,7 @@ KW_CONTINUE : 'continue' ;
 
 KW_AND : 'and' ;
 KW_OR : 'or' ;
+KW_NOT : 'not' ;
 
 KW_DECLARE : 'declare' ;
 KW_DEFINE : 'define' ;
@@ -617,6 +896,7 @@ LBRACE : '{' {CustomLexer_increaseBracketStack(ctx);} ;
 RBRACE : '}' {CustomLexer_decreaseBracketStack(ctx);} ; 
 
 QMARK : '?' ;
+EMARK : '!' ;
 COLON : ':' ;
 COMMA : ',' ;
 GREATER_THAN : '>' ;

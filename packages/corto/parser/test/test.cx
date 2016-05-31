@@ -62,3 +62,17 @@ test::Suite TestCortoLanguage::
     void test_observer5()
     
     void test_badToken()
+
+
+test::Suite TestVisitor::
+    void test_visitorAtom()
+    void test_visitorAssignment()
+    void test_visitorCommaExpression1()
+    void test_ConditionalExpression1()
+    void test_ConditionalExpression2()
+    void test_logicOrExpression1()
+    void test_logicOrExpression2()
+    void test_logicAndExpression1()
+    void test_logicAndExpression2()
+    void test_equalityExpression1()
+    void test_equalityExpression2()

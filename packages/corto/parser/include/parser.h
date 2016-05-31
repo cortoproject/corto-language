@@ -19,7 +19,17 @@ extern "C" {
 #endif
 
 #include <corto/parser/BaseParser.h>
+#include <corto/parser/BaseVisitor.h>
+#include <corto/parser/BinaryExpressionNode.h>
+#include <corto/parser/CommaExpressionNode.h>
+#include <corto/parser/ConditionalExpressionNode.h>
+#include <corto/parser/ExpressionNode.h>
+#include <corto/parser/ExpressionStatementNode.h>
+#include <corto/parser/Node.h>
+#include <corto/parser/PrintVisitor.h>
+#include <corto/parser/ProgramNode.h>
 #include <corto/parser/SimpleParser.h>
+#include <corto/parser/StatementNode.h>
 
 #ifdef __cplusplus
 }

@@ -336,3 +336,17 @@ void parser_parserDataDel(parser_data* data)
     corto_release(data->parser);
     data->parser = NULL;
 }
+
+
+parser_ExpressionNode parser_createBinaryExpression(
+    parser_ExpressionNode left,
+    char* _operator,
+    parser_ExpressionNode right)
+{
+    parser_BinaryExpressionNode _node = parser_BinaryExpressionNodeCreate(
+        0, 0, left, "eqOp", right
+    );
+    return parser_ExpressionNode(_node);
+    
+}
+

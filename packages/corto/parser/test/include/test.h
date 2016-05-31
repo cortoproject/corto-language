@@ -20,6 +20,7 @@ extern "C" {
 #endif
 
 #include <TestCortoLanguage.h>
+#include <TestVisitor.h>
 
 #ifdef __cplusplus
 }

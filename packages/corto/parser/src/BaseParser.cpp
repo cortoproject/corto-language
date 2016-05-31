@@ -20,7 +20,7 @@ static corto_int16 parseInputStream(
     pCortolangLexer lexer;
     pANTLR3_COMMON_TOKEN_STREAM tokens;
     pCortolangParser parser;
-    CortolangParser_program_return_struct prog_return;
+    // CortolangParser_program_return_struct prog_return;
     pANTLR3_BASE_TREE tree;
     corto_int16 error = 0;
 
@@ -43,10 +43,11 @@ static corto_int16 parseInputStream(
     }
 
     _this->success = TRUE;
-    prog_return = parser->program(parser);
+    // prog_return = parser->program(parser);
+    _this->programReturn = parser->program(parser);
     error = _this->success ? 0 : -1;
     
-    CORTO_UNUSED((tree = prog_return.tree));
+    // CORTO_UNUSED((tree = prog_return.tree));
 
     parser->free(parser);
     tokens->free(tokens);

@@ -17,8 +17,9 @@
 
 int parserMain(int argc, char* argv[]) {
 /* $begin(main) */
-    CORTO_UNUSED(argc);
-    CORTO_UNUSED(argv);
+
+    /* Insert code that must be run when component is loaded */
+
     return 0;
 /* $end */
 }

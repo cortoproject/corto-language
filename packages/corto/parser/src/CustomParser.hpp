@@ -21,6 +21,12 @@ parser_data* parser_parserDataNew(parser_BaseParser parser);
 
 void parser_parserDataDel(parser_data* data);
 
+parser_ExpressionNode parser_createBinaryExpression(
+    parser_ExpressionNode left,
+    char* _operator,
+    parser_ExpressionNode right
+);
+
 #ifdef __cplusplus
 }
 #endif
