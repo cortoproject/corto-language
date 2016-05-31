@@ -30,8 +30,6 @@
                     <constant name="updatebegin"/>
                     <constant name="updateend"/>
                     <constant name="updatecancel"/>
-                    <constant name="waitfor"/>
-                    <constant name="wait"/>
                     <constant name="add"/>
                     <constant name="sub"/>
                     <constant name="mul"/>

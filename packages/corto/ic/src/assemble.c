@@ -725,8 +725,6 @@ static corto_bool ic_supportsVmWordType(ic_opKind kind) {
     case ic_updateend:
     case ic_updatebegin:
     case ic_updatecancel:
-    case ic_waitfor:
-    case ic_wait:
         result = TRUE;
         break;
     default:
@@ -1088,8 +1086,6 @@ static vm_opKind ic_getVmOpKind(ic_vmProgram *program, ic_op op, ic_node storage
 
     case ic_updatebegin: result = ic_getVmUPDATEBEGIN(t, typeKind, op1, 0, 0); break;
     case ic_updatecancel: result = ic_getVmUPDATECANCEL(t, typeKind, op1, 0, 0); break;
-    case ic_waitfor: result = ic_getVmWAITFOR(t, typeKind, op1, 0, 0); break;
-    case ic_wait: result = ic_getVmWAIT(t, typeKind, op1, op2, 0); break;
     case ic_init: result = ic_getVmINIT(t, IC_VMTYPE_W, op1, op2, 0); break;
     case ic_deinit: result = ic_getVmDEINIT(t, IC_VMTYPE_W, op1, op2, 0); break;
     default:
@@ -1429,7 +1425,6 @@ static void ic_getVmOp(ic_vmProgram *program, ic_op op) {
     case ic_keep:
     case ic_updatebegin:
     case ic_updatecancel:
-    case ic_waitfor:
         op1 = op->s1;
         storage = NULL;
         opDeref1 = op->s1Deref;
@@ -1449,7 +1444,6 @@ static void ic_getVmOp(ic_vmProgram *program, ic_op op) {
     case ic_jeq:
     case ic_jneq:
     case ic_new:
-    case ic_wait:
         op1 = op->s1;
         op2 = op->s2;
         storage = NULL;
@@ -1614,7 +1608,7 @@ static corto_int16 ic_op_toVm(ic_op op, ic_vmProgram *program) {
                 f = o;
                 if (f->kind == CORTO_PROCEDURE_VM) {
                     if (corto_checkState(f, CORTO_DEFINED)) {
-                        vm_program inlineProgram = (vm_program)f->implData;
+                        vm_program inlineProgram = (vm_program)f->fptr;
                         if (inlineProgram->storage > program->maxStackSize) {
                             program->maxStackSize = inlineProgram->storage;
                         }
@@ -1841,7 +1835,7 @@ vm_program ic_vmAssemble(ic_program program) {
             while(corto_iterHasNext(&inlineFunctionIter)) {
                 vm_program program;
                 inlineFunction = corto_iterNext(&inlineFunctionIter);
-                program = (vm_program)inlineFunction->function->implData;
+                program = (vm_program)inlineFunction->function->fptr;
                 if (program->storage > inlineFunction->program->stack) {
                     inlineFunction->program->stack = program->storage;
                 }

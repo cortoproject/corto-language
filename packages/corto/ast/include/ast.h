@@ -100,7 +100,6 @@ CORTO_AST_EXPORT ast_valueKind _ast_valueKindFromType(
 #include <corto/ast/Unary.h>
 #include <corto/ast/UnresolvedReference.h>
 #include <corto/ast/Update.h>
-#include <corto/ast/Wait.h>
 #include <corto/ast/While.h>
 
 #ifdef __cplusplus
