@@ -1,5 +1,5 @@
-#ifndef PARSER_CUSTOMPARSER_HPP
-#define PARSER_CUSTOMPARSER_HPP
+#ifndef PARSER_CORTOLANG_PARSER_WRAPPER_H
+#define PARSER_CORTOLANG_PARSER_WRAPPER_H
 
 #include <corto/corto.h>
 #ifdef __cplusplus

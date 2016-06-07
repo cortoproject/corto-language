@@ -12,7 +12,7 @@ tokens {
 
 @lexer::includes
 {
-#include "CustomLexer.h"
+#include "CortolangLexerWrapper.h"
 }
 
 @lexer::context

@@ -1,5 +1,5 @@
-#ifndef PARSER_CUSTOMLEXER_HPP
-#define PARSER_CUSTOMLEXER_HPP
+#ifndef PARSER_CORTOLANG_LEXER_WRAPPER_H
+#define PARSER_CORTOLANG_LEXER_WRAPPER_H
 
 #include <corto/corto.h>
 #ifdef __cplusplus
@@ -80,4 +80,3 @@ struct CustomLexer_Data {
 }
 #endif
 #endif
-

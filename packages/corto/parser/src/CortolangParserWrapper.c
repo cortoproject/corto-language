@@ -1,5 +1,5 @@
 #include <corto/parser/parser.h>
-#include "CustomParser.hpp"
+#include "CortolangParserWrapper.h"
 
 extern corto_threadKey PARSER_KEY_PARSER;
 

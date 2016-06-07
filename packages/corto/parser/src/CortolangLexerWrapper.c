@@ -1,6 +1,6 @@
 #include "CortolangLexer.h"
 
-#include "CustomLexer.h"
+#include "CortolangLexerWrapper.h"
 
 #define EOF_STR ("<EOF>")
 #define NEWLINE_STR ("<NEWLINE>")
@@ -134,7 +134,7 @@ void CustomLexer_handleLeadingWhitespace(pCortolangLexer ctx, corto_word current
         }
     }
 
-    ctx->pLexer->rec->state->channel = HIDDEN; 
+    ctx->pLexer->rec->state->channel = HIDDEN;
 }
 
 
