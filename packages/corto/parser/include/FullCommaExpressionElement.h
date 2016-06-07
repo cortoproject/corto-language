@@ -1,10 +1,10 @@
-/* StatementNode.h
+/* FullCommaExpressionElement.h
  *
  * This file contains generated code. Do not modify!
  */
 
-#ifndef CORTO_PARSER_STATEMENTNODE_H
-#define CORTO_PARSER_STATEMENTNODE_H
+#ifndef CORTO_PARSER_FULLCOMMAEXPRESSIONELEMENT_H
+#define CORTO_PARSER_FULLCOMMAEXPRESSIONELEMENT_H
 
 #include <corto/corto.h>
 #include <corto/parser/_interface.h>

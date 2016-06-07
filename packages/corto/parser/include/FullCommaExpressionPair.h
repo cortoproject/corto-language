@@ -1,10 +1,10 @@
-/* Node.h
+/* FullCommaExpressionPair.h
  *
  * This file contains generated code. Do not modify!
  */
 
-#ifndef CORTO_PARSER_NODE_H
-#define CORTO_PARSER_NODE_H
+#ifndef CORTO_PARSER_FULLCOMMAEXPRESSIONPAIR_H
+#define CORTO_PARSER_FULLCOMMAEXPRESSIONPAIR_H
 
 #include <corto/corto.h>
 #include <corto/parser/_interface.h>

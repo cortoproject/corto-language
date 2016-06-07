@@ -1,10 +1,10 @@
-/* ConditionalExpressionNode.h
+/* FullCommaExpressionAtom.h
  *
  * This file contains generated code. Do not modify!
  */
 
-#ifndef CORTO_PARSER_CONDITIONALEXPRESSIONNODE_H
-#define CORTO_PARSER_CONDITIONALEXPRESSIONNODE_H
+#ifndef CORTO_PARSER_FULLCOMMAEXPRESSIONATOM_H
+#define CORTO_PARSER_FULLCOMMAEXPRESSIONATOM_H
 
 #include <corto/corto.h>
 #include <corto/parser/_interface.h>
