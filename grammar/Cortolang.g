@@ -17,7 +17,7 @@ tokens {
 
 @lexer::context
 {
-struct CustomLexer_Data data;
+struct parser_lw_data data;
 }
 
 @lexer::apifuncs {
@@ -26,7 +26,7 @@ LEXER->super = ctx;
 
 @parser::includes
 {
-#include "CustomParser.hpp"
+#include "CortolangParserWrapper.h"
 
 #define CHARS(text) ((char*)text->chars)
 }
@@ -37,7 +37,7 @@ struct parser_data* parser_data;
 }
 
 @parser::apifuncs {
-RECOGNIZER->displayRecognitionError = parser_DisplayRecognitionError;
+RECOGNIZER->displayRecognitionError = parser_pw_displayRecognitionError;
 ctx->parser_data = NULL;
 PARSER->super = ctx;
 }
@@ -368,7 +368,7 @@ returns [ parser_StatementNode ___ node ]
         );
         if ($e.node) {
             // TODO create block from single expression
-            _node->block = parser_createBlockFromExpression($e.node);
+            _node->block = parser_pw_createBlockFromExpression($e.node);
         } else {
             _node->block = parser_BlockNode($b.node);
         }
@@ -495,7 +495,7 @@ returns [ parser_ExpressionNode ___ node ]
         )
         e2=simpleCommaExpression
         {
-            node = parser_createBinaryExpression(node, $op.kind, $e2.node);
+            node = parser_pw_createBinaryExpression(node, $op.kind, $e2.node);
         }
     )?
     ;
@@ -639,7 +639,7 @@ returns [ parser_ExpressionNode ___ node ]
         KW_OR
         e2=logicAndExpression
         {
-            node = parser_createBinaryExpression(node, CORTO_COND_OR, $e2.node);
+            node = parser_pw_createBinaryExpression(node, CORTO_COND_OR, $e2.node);
         }
     )*
     ;
@@ -661,7 +661,7 @@ returns [ parser_ExpressionNode ___ node ]
         KW_AND
         e2=equalityExpression
         {
-            node = parser_createBinaryExpression(node, CORTO_COND_AND, $e2.node);
+            node = parser_pw_createBinaryExpression(node, CORTO_COND_AND, $e2.node);
         }
     )*
     ;
@@ -683,7 +683,7 @@ returns [ parser_ExpressionNode ___ node ]
         op=eqOp
         e2=comparisonExpression
         {
-            node = parser_createBinaryExpression(node, $op.kind, $e2.node);
+            node = parser_pw_createBinaryExpression(node, $op.kind, $e2.node);
         }
     )?
     ;
@@ -705,7 +705,7 @@ returns [ parser_ExpressionNode ___ node ]
         op=comparisonOp
         e2=bitOrExpression
         {
-            node = parser_createBinaryExpression(node, $op.kind, $e2.node);
+            node = parser_pw_createBinaryExpression(node, $op.kind, $e2.node);
         }
     )?
     ;
@@ -727,7 +727,7 @@ returns [ parser_ExpressionNode ___ node ]
         PIPE
         e2=bitXorExpression
         {
-            node = parser_createBinaryExpression(node, CORTO_OR, $e2.node);
+            node = parser_pw_createBinaryExpression(node, CORTO_OR, $e2.node);
         }
     )*
     ;
@@ -749,7 +749,7 @@ returns [ parser_ExpressionNode ___ node ]
         HAT
         e2=bitAndExpression
         {
-            node = parser_createBinaryExpression(node, CORTO_XOR, $e2.node);
+            node = parser_pw_createBinaryExpression(node, CORTO_XOR, $e2.node);
         }
     )*
     ;
@@ -771,7 +771,7 @@ returns [ parser_ExpressionNode ___ node ]
         AMPERSAND
         e2=shiftExpression
         {
-            node = parser_createBinaryExpression(node, CORTO_AND, $e2.node);
+            node = parser_pw_createBinaryExpression(node, CORTO_AND, $e2.node);
         }
     )*
     ;
@@ -793,7 +793,7 @@ returns [ parser_ExpressionNode ___ node ]
         op=shiftOp
         e2=addExpression
         {
-            node = parser_createBinaryExpression(node, $op.kind, $e2.node);
+            node = parser_pw_createBinaryExpression(node, $op.kind, $e2.node);
         }
     )*
     ;
@@ -816,7 +816,7 @@ returns [ parser_ExpressionNode ___ node ]
         op=addOp
         e2=multExpression
         {
-            node = parser_createBinaryExpression(node, $op.kind, $e2.node);
+            node = parser_pw_createBinaryExpression(node, $op.kind, $e2.node);
         }
     )*
     ;
@@ -838,7 +838,7 @@ returns [ parser_ExpressionNode ___ node ]
         op=multOp
         e2=unaryExpression
         {
-            node = parser_createBinaryExpression(node, $op.kind, $e2.node);
+            node = parser_pw_createBinaryExpression(node, $op.kind, $e2.node);
         }
     )*
     ;
@@ -1128,7 +1128,7 @@ returns [ parser_ExpressionNode ___ node ]
     e=fullCommaExpression
     RPAREN
     {
-        node = parser_createCallExpression(_node, $e.node);
+        node = parser_pw_createCallExpression(_node, $e.node);
     }
     ;
 
@@ -1142,7 +1142,7 @@ returns [ parser_ExpressionNode ___ node ]
     :
     DOT VALID_NAME
     {
-        node = parser_createMemberExpression(_node, CHARS($VALID_NAME.text));
+        node = parser_pw_createMemberExpression(_node, CHARS($VALID_NAME.text));
     }
     ;
 
@@ -1156,7 +1156,7 @@ returns [ parser_ExpressionNode ___ node ]
     :
     LBRACK fullCommaExpression RBRACK
     {
-        node = parser_createElementExpression(_node, $fullCommaExpression.node);
+        node = parser_pw_createElementExpression(_node, $fullCommaExpression.node);
     }
     ;
 
@@ -1263,7 +1263,7 @@ returns [ parser_LiteralNode ___ node ]
     :
     INTEGER
     {
-        node = parser_IntegerLiteralNodeCreate_wrapper(CHARS($INTEGER.text));
+        node = parser_pw_createIntegerLiteralNode(CHARS($INTEGER.text));
     }
     ;
 
@@ -1274,7 +1274,7 @@ returns [ parser_LiteralNode ___ node ]
 
 IMPLICIT_LINE_WHITESPACE
     :
-    {CustomLexer_implicitLineWhitespaceGuard(ctx)}?=>
+    {parser_lw_nestingWhitespaceGuard(ctx)}?=>
     (' ' | '\n')+
     { $channel=HIDDEN; }
     ;
@@ -1287,8 +1287,8 @@ corto_word spaces = 0;
     // TODO maybe optimize to not count spaces in the lexer but after the lexer
     // {CustomLexer_leadingWhitespaceGuard(ctx)}?
     '\n' ( ' ' { spaces++; } )*
-    {CustomLexer_handleLeadingWhitespace(ctx, spaces);}
-    {!(ctx->data.indentationError)}?
+    { parser_lw_handleLeadingWhitespace(ctx, spaces); }
+    { !(ctx->data.indentationError) }?
     ;
 
 WHITESPACE
@@ -1400,12 +1400,12 @@ DIGIT
 
 // Single-character operators
 
-LPAREN : '(' {CustomLexer_increaseBracketStack(ctx);} ;
-RPAREN : ')' {CustomLexer_decreaseBracketStack(ctx);} ;
-LBRACK : '[' {CustomLexer_increaseBracketStack(ctx);} ;
-RBRACK : ']' {CustomLexer_decreaseBracketStack(ctx);} ;
-LBRACE : '{' {CustomLexer_increaseBracketStack(ctx);} ;
-RBRACE : '}' {CustomLexer_decreaseBracketStack(ctx);} ;
+LPAREN : '(' {parser_lw_increaseNesting(ctx);} ;
+RPAREN : ')' {parser_lw_decreaseNesting(ctx);} ;
+LBRACK : '[' {parser_lw_increaseNesting(ctx);} ;
+RBRACK : ']' {parser_lw_decreaseNesting(ctx);} ;
+LBRACE : '{' {parser_lw_increaseNesting(ctx);} ;
+RBRACE : '}' {parser_lw_decreaseNesting(ctx);} ;
 
 QMARK : '?' ;
 EMARK : '!' ;

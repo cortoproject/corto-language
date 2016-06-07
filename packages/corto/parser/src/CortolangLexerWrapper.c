@@ -100,7 +100,7 @@ static pANTLR3_COMMON_TOKEN nextToken(pANTLR3_TOKEN_SOURCE toksource)
 }
 
 
-void CustomLexer_handleLeadingWhitespace(pCortolangLexer ctx, corto_word currentSpaces)
+void parser_lw_handleLeadingWhitespace(pCortolangLexer ctx, corto_word currentSpaces)
 {
     corto_ll indentationStack = ctx->data.indentationStack;
 
@@ -139,7 +139,7 @@ void CustomLexer_handleLeadingWhitespace(pCortolangLexer ctx, corto_word current
 
 
 
-static void CustomLexer_free(pCortolangLexer ctx)
+static void _parser_lw_free(pCortolangLexer ctx)
 {
     while (corto_llTakeFirst(ctx->data.indentationStack));
     corto_llFree(ctx->data.indentationStack);
@@ -151,7 +151,7 @@ static void CustomLexer_free(pCortolangLexer ctx)
 }
 
 
-pCortolangLexer CustomLexer_new(pANTLR3_INPUT_STREAM input)
+pCortolangLexer parser_lw_new(pANTLR3_INPUT_STREAM input)
 {
     pCortolangLexer lexer = CortolangLexerNew(input);
 
@@ -176,7 +176,7 @@ pCortolangLexer CustomLexer_new(pANTLR3_INPUT_STREAM input)
 
     /* Override methods */
     lexer->data.super.free = lexer->free;
-    lexer->free = CustomLexer_free;
+    lexer->free = _parser_lw_free;
 
     lexer->data.super.nextToken = lexer->pLexer->rec->state->tokSource->nextToken;
     lexer->pLexer->rec->state->tokSource->nextToken = nextToken;
@@ -193,19 +193,19 @@ errorCortolangLexerNew:
 }
 
 
-corto_bool CustomLexer_implicitLineWhitespaceGuard(pCortolangLexer ctx)
+corto_bool parser_lw_nestingWhitespaceGuard(pCortolangLexer ctx)
 {
     return ctx->data.implicitLineJoiningLevel > 0;
 }
 
 
-void CustomLexer_increaseBracketStack(pCortolangLexer ctx)
+void parser_lw_increaseNesting(pCortolangLexer ctx)
 {
     ctx->data.implicitLineJoiningLevel++;
 }
 
 
-void CustomLexer_decreaseBracketStack(pCortolangLexer ctx)
+void parser_lw_decreaseNesting(pCortolangLexer ctx)
 {
     ctx->data.implicitLineJoiningLevel--;
 }

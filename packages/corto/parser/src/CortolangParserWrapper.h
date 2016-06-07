@@ -11,7 +11,7 @@ extern "C" {
 #include "CortolangLexer.h"
 #include "CortolangParser.h"
 
-void parser_DisplayRecognitionError(ANTLR3_BASE_RECOGNIZER_struct* recognizer, uint8_t**);
+void parser_pw_displayRecognitionError(ANTLR3_BASE_RECOGNIZER_struct* recognizer, uint8_t**);
 
 typedef struct parser_data {
     parser_BaseParser parser;
@@ -26,28 +26,28 @@ void parser_parserDataDel(parser_data* data);
  * return type needs to be parser_ExpressionNode to unclutter the grammar file.
  */
 
-parser_BlockNode parser_createBlockFromExpression(
+parser_BlockNode parser_pw_createBlockFromExpression(
     parser_ExpressionNode expression
     );
 
-parser_ExpressionNode parser_createBinaryExpression(
+parser_ExpressionNode parser_pw_createBinaryExpression(
     parser_ExpressionNode left,
     corto_operatorKind operator_,
     parser_ExpressionNode right);
 
-parser_ExpressionNode parser_createCallExpression(
+parser_ExpressionNode parser_pw_createCallExpression(
     parser_ExpressionNode caller,
     parser_FullCommaExpressionNode arguments);
 
-parser_ExpressionNode parser_createMemberExpression(
+parser_ExpressionNode parser_pw_createMemberExpression(
     parser_ExpressionNode owner,
     char* memberName);
 
-parser_ExpressionNode parser_createElementExpression(
+parser_ExpressionNode parser_pw_createElementExpression(
     parser_ExpressionNode owner,
     parser_FullCommaExpressionNode elements);
 
-parser_LiteralNode parser_IntegerLiteralNodeCreate_wrapper(
+parser_LiteralNode parser_pw_createIntegerLiteralNode(
     char* text);
 
 #ifdef __cplusplus
