@@ -1,0 +1,13 @@
+
+PACKAGE = 'test'
+
+LOCAL = true
+
+COVERAGE = false
+
+LANGUAGE = "c4cpp"
+
+LIBPATH = ["/usr/local/lib"]
+LIB = ["antlr3c"]
+
+require "#{ENV['CORTO_BUILD']}/package"

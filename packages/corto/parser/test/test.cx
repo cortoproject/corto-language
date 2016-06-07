@@ -1,0 +1,110 @@
+#package ::test
+
+test::Suite TestCortoLanguage::
+
+    parser: /corto/parser/SimpleParser
+
+    void setup() method
+    void teardown() method
+
+    void test_atom()
+    void test_unary()
+    void test_multExpr()
+    void test_addExpr()
+    void test_logicAndExpr()
+    void test_logicOrExpr()
+    void test_commaExpr()
+    void test_assignmentExpr()
+    void test_elementAccess()
+
+    void test_functionCall()
+    void test_functionCall2()
+    void test_functionCall3()
+    void test_functionCall4()
+
+    void test_declaration1()
+    void test_declaration2()
+    void test_declaration3()
+    void test_declaration4()
+
+    void test_scope1()
+    void test_scope2()
+    void test_scope3()
+    void test_scope4()
+    void test_scope5()
+
+    void test_ifStatement1()
+    void test_ifStatement2()
+    void test_ifStatement3()
+    void test_ifStatement4()
+    void test_ifStatement5()
+    void test_ifStatement6()
+    void test_ifStatement7()
+
+    void testWhileStatement1()
+    void testWhileStatement2()
+    void testWhileStatement3()
+    void testWhileStatement4()
+
+    void test_functionDeclaration1()
+    void test_functionDeclaration2()
+    void test_functionDeclaration3()
+    void test_functionDeclaration4()
+    void test_functionDeclaration5()
+    void test_functionDeclaration6()
+    void test_functionDeclaration7()
+
+    void test_observer1()
+    void test_observer2()
+    void test_observer3()
+    void test_observer4()
+    void test_observer5()
+    
+    void test_badToken()
+
+
+test::Suite TestVisitor::
+    void test_visitorAtom()
+    void test_visitorAssignment()
+    void test_visitorCommaExpression1()
+    void test_ConditionalExpression1()
+    void test_ConditionalExpression2()
+    void test_logicOrExpression1()
+    void test_logicOrExpression2()
+    void test_logicAndExpression1()
+    void test_logicAndExpression2()
+    void test_equalityExpression1()
+    void test_equalityExpression2()
+    void test_comparisonExpression1()
+    void test_comparisonExpression2()
+    void test_bitOrExpression1()
+    void test_bitOrExpression2()
+    void test_bitAndExpression1()
+    void test_bitAndExpression1()
+    void test_shiftExpression1()
+    void test_addExpression1()
+    void test_multExpression1()
+    void test_unaryExpression1()
+    void test_unaryExpression2()
+    void test_memberExpression1()
+    void test_memberExpression2()
+    void test_callExpression1()
+    void test_callExpression2()
+    void test_elementExpression1()
+    void test_elementExpression2()
+
+    void test_functionDeclaration1()
+    void test_functionDeclaration2()
+    void test_functionDeclaration3()
+
+    void test_objectDeclaration1()
+    void test_objectDeclaration2()
+    void test_objectDeclaration3()
+    void test_objectDeclaration4()
+    void test_objectDeclaration5()
+    void test_objectDeclaration6()
+    void test_objectDeclaration7()
+    void test_objectDeclaration8()
+    void test_objectDeclaration9()
+    void test_objectDeclaration10()
+    void test_objectDeclaration11()
