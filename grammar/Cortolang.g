@@ -27,6 +27,8 @@ LEXER->super = ctx;
 @parser::includes
 {
 #include "CustomParser.hpp"
+
+#define CHARS(text) ((char*)text->chars)
 }
 
 @parser::context
@@ -40,9 +42,11 @@ ctx->parser_data = NULL;
 PARSER->super = ctx;
 }
 
+
 // ============================================================
 // Statement
 // ============================================================
+
 
 program
 returns [ parser_ProgramNode ___ node ]
@@ -61,6 +65,7 @@ returns [ parser_ProgramNode ___ node ]
     )+
     ;
 
+
 statement
 returns [ parser_StatementNode ___ node ]
 @init
@@ -70,6 +75,9 @@ returns [ parser_StatementNode ___ node ]
     :
     (declarativeStatement) =>
     declarativeStatement
+    {
+        node = $declarativeStatement.node;
+    }
     |
     simpleStatement NEWLINE
     {
@@ -82,14 +90,27 @@ returns [ parser_StatementNode ___ node ]
     NEWLINE
     ;
 
+
 declarativeStatement
+returns [ parser_StatementNode ___ node ]
+@init
+{
+    node = NULL;
+}
     :
     (functionDeclaration) =>
     functionDeclaration
+    {
+        node = $functionDeclaration.node;
+    }
     |
     (declarationExt) =>
     declarationExt
+    {
+        node = $declarationExt.node;
+    }
     ;
+
 
 simpleStatement
 returns [ parser_StatementNode ___ node ]
@@ -112,6 +133,7 @@ returns [ parser_StatementNode ___ node ]
     continueStatement
     ;
 
+
 compositeStatement
     :
     ifStatement
@@ -121,14 +143,36 @@ compositeStatement
     observerStatement
     ;
 
+
 block
+returns [ parser_StatementNode ___ node ]
+@init
+{
+    parser_BlockNode _node = parser_BlockNodeCreate(0, 0, corto_llNew());
+    node = NULL;
+}
     :
     COLON
     (
-        statement
+        (
+            s1=statement
+            {
+                corto_llAppend(_node->statements, $s1.node);
+            }
+        )
         |
-        INDENT statement+ DEDENT
+        INDENT
+        (
+            s2=statement
+            {
+                corto_llAppend(_node->statements, $s2.node);
+            }
+        )+
+        DEDENT
     )
+    {
+        node = parser_StatementNode(_node);
+    }
     ;
 
 // ============================================================
@@ -151,73 +195,236 @@ member (
 */
 
 declarationExt
+returns [ parser_StatementNode ___ node ]
+@init {
+    parser_ObjectDeclarationNode _node = parser_ObjectDeclarationNodeDeclare();
+    tl = NULL;
+    node = parser_StatementNode(_node);
+    ini = NULL;
+}
     :
-    typeLabel declarationNameList initializer? (NEWLINE | scope_)
+
+    (
+        (typeLabel declarationNameList) =>
+        tl=typeLabel
+    )?
+    dnl=declarationNameList
+    ini=initializer?
+    (
+        NEWLINE
+        |
+        s=scope_
+        {
+            _node->scope_ = $s.node;
+        }
+    )
+    {
+        _node->typeLabel = $tl.node;
+        _node->declarations = $dnl.nodes;
+        _node->initializer = $ini.node ? $ini.node : NULL;
+        corto_define(_node);
+    }
     ;
+
 
 declarationNameList
+returns [ corto_ll ___ nodes ]
+@init
+{
+    nodes = corto_llNew();
+}
     :
-    declarationName ( COMMA declarationName )*
+    (
+        e1=declarationName
+        {
+            corto_llAppend(nodes, $e1.node);
+        }
+    )
+    (
+        COMMA
+        e2=declarationName
+        {
+            corto_llAppend(nodes, $e2.node);
+        }
+    )*
     ;
+
 
 declarationName
+returns [ parser_ObjectDeclarationNameNode ___ node ]
+@init
+{
+    node = NULL;
+    fce = NULL;
+}
     :
-    VALID_NAME anonymousObject?
+    VALID_NAME
+    (
+        LBRACE
+        fce=fullCommaExpression
+        RBRACE
+    )?
+    {
+        node = parser_ObjectDeclarationNameNodeCreate(
+            0, 0, CHARS($VALID_NAME.text), $fce.node
+        );
+    }
     ;
+
 
 initializer
+returns [ parser_FullCommaExpressionNode ___ node ]
+@init
+{
+    node = NULL;
+}
     :
-    COLON fullCommaExpression
+    COLON
+    (
+        fullCommaExpression
+        {
+            node = $fullCommaExpression.node;
+        }
+    )
     ;
+
 
 scopeOp
+returns [ corto_bool ___ isPostScope ]
+@init {
+    isPostScope = TRUE;
+}
     :
-    preScopeOperator
+    TRIPLE_COLON
+    {
+        isPostScope = FALSE;
+    }
     |
-    postScopeOperator
+    DOUBLE_COLON
     ;
 
+
 scope_
+returns [ parser_ScopeNode ___ node ]
+@init
+{
+    node = parser_ScopeNodeDeclare();
+}
     :
     scopeOp
     (
-        statement
+        (
+            s1=statement
+            {
+                corto_llAppend(node->statements, $s1.node);
+            }
+        )
         |
-        INDENT statement+ DEDENT
+        INDENT
+        (
+            s2=statement
+            {
+                corto_llAppend(node->statements, $s2.node);
+            }
+        )+
+        DEDENT
     )
+    {
+        node->isPostScope = $scopeOp.isPostScope;
+        corto_define(node);
+    }
     ;
+
 
 // ============================================================
 // Function Declaration
 // ============================================================
 
+
 functionDeclaration
+returns [ parser_StatementNode ___ node ]
+@init
+{
+    node = NULL;
+    e = NULL;
+    b = NULL;
+}
     :
-    typeLabel VALID_NAME LPAREN functionArguments RPAREN
+    tl=typeLabel
+    name=VALID_NAME
+    LPAREN
+    params=functionParameters
+    RPAREN
     (
         NEWLINE
         |
-        EQUAL conditionalExpression NEWLINE
+        EQUAL e=conditionalExpression NEWLINE
         |
-        block
+        b=block
     )
+    {
+        parser_FunctionDeclarationNode _node = parser_FunctionDeclarationNodeCreate(
+            0, 0, $tl.node, CHARS($name.text), $params.parameters, NULL
+        );
+        if ($e.node) {
+            // TODO create block from single expression
+            _node->block = parser_createBlockFromExpression($e.node);
+        } else {
+            _node->block = parser_BlockNode($b.node);
+        }
+        node = parser_StatementNode(_node);
+    }
     ;
 
-functionArguments
+
+functionParameters
+returns [ corto_ll ___ parameters ]
+@init
+{
+    parameters = corto_llNew();
+}
     :
-    ( functionArgument ( COMMA functionArgument )* )?
+    (
+        (
+            p1=functionParameter
+            {
+                corto_llAppend(parameters, $p1.node);
+            }
+        )
+        (
+            COMMA
+            p2=functionParameter
+            {
+                corto_llAppend(parameters, $p2.node);
+            }
+        )*
+    )?
     /* TODO add optional trailing comma */
     ;
 
-functionArgument
+
+functionParameter
+returns [ parser_FunctionParameterNode ___ node ]
+@init
+{
+    node = NULL;
+}
     :
-    typeLabel VALID_NAME
+    typeLabel
+    VALID_NAME
+    {
+        node = parser_FunctionParameterNodeCreate(
+            0, 0, $typeLabel.node, CHARS($VALID_NAME.text)
+        );
+        corto_claim(node);
+    }
     ;
 
 
 // ============================================================
 // Flow Control
 // ============================================================
+
 
 ifStatement
     :
@@ -284,11 +491,11 @@ returns [ parser_ExpressionNode ___ node ]
     )
     (
         (
-            assignmentOp
+            op=assignmentOp
         )
         e2=simpleCommaExpression
         {
-            node = parser_createBinaryExpression($e1.node, "assignmentOp", $e2.node);
+            node = parser_createBinaryExpression(node, $op.kind, $e2.node);
         }
     )?
     ;
@@ -327,20 +534,65 @@ returns [ parser_ExpressionNode ___ node ]
     COMMA?
     ;
 
+
 /*
  * Used in initializers {} and function calls ().
  */
 fullCommaExpression
+returns [ parser_FullCommaExpressionNode ___ node ]
+@init {
+    node = parser_FullCommaExpressionNodeDeclare();
+    node->elements = corto_llNew();
+}
     :
-    commaExpressionElem
-    ( COMMA commaExpressionElem )*
-    COMMA?
+    (
+        (
+            e1=commaExpressionElem
+            {
+                corto_llAppend(node->elements, $e1.node);
+            }
+        )
+        (
+            COMMA
+            e2=commaExpressionElem
+            {
+                corto_llAppend(node->elements, $e2.node);
+            }
+        )*
+        COMMA?
+    )?
+    {
+        corto_define(node);
+    }
     ;
 
+
 commaExpressionElem
+returns [ parser_FullCommaExpressionElementNode ___ node ]
+@init {
+    node = NULL;
+    e1 = NULL;
+    e2 = NULL;
+}
     :
-    conditionalExpression
-    ( EQUAL conditionalExpression )?
+    (
+        e1=conditionalExpression
+    )
+    (
+        EQUAL
+        e2=conditionalExpression
+    )?
+    {
+        if ($e2.node) {
+            node = parser_FullCommaExpressionElementNodeCreate(
+                0, 0, $e1.node, $e2.node
+            );
+        } else {
+            node = parser_FullCommaExpressionElementNodeCreate(
+                0, 0, NULL, $e1.node
+            );
+        }
+    }
     ;
 
 
@@ -387,7 +639,7 @@ returns [ parser_ExpressionNode ___ node ]
         KW_OR
         e2=logicAndExpression
         {
-            node = parser_createBinaryExpression($e1.node, "KW_OR", $e2.node);
+            node = parser_createBinaryExpression(node, CORTO_COND_OR, $e2.node);
         }
     )*
     ;
@@ -409,10 +661,11 @@ returns [ parser_ExpressionNode ___ node ]
         KW_AND
         e2=equalityExpression
         {
-            node = parser_createBinaryExpression($e1.node, "KW_AND", $e2.node);
+            node = parser_createBinaryExpression(node, CORTO_COND_AND, $e2.node);
         }
     )*
     ;
+
 
 equalityExpression
 returns [ parser_ExpressionNode ___ node ]
@@ -427,13 +680,14 @@ returns [ parser_ExpressionNode ___ node ]
         }
     )
     (
-        eqOp
+        op=eqOp
         e2=comparisonExpression
         {
-            node = parser_createBinaryExpression($e1.node, "eqOp", $e2.node);
+            node = parser_createBinaryExpression(node, $op.kind, $e2.node);
         }
     )?
     ;
+
 
 comparisonExpression
 returns [ parser_ExpressionNode ___ node ]
@@ -448,13 +702,14 @@ returns [ parser_ExpressionNode ___ node ]
         }
     )
     (
-        comparisonOp
+        op=comparisonOp
         e2=bitOrExpression
         {
-            node = parser_createBinaryExpression($e1.node, "comparisonOp", $e2.node);
+            node = parser_createBinaryExpression(node, $op.kind, $e2.node);
         }
     )?
     ;
+
 
 bitOrExpression
 returns [ parser_ExpressionNode ___ node ]
@@ -472,10 +727,11 @@ returns [ parser_ExpressionNode ___ node ]
         PIPE
         e2=bitXorExpression
         {
-            node = parser_createBinaryExpression($e1.node, "PIPE", $e2.node);
+            node = parser_createBinaryExpression(node, CORTO_OR, $e2.node);
         }
     )*
     ;
+
 
 bitXorExpression
 returns [ parser_ExpressionNode ___ node ]
@@ -490,13 +746,14 @@ returns [ parser_ExpressionNode ___ node ]
         }
     )
     (
-        CIRCUMFLEX
+        HAT
         e2=bitAndExpression
         {
-            node = parser_createBinaryExpression($e1.node, "CIRCUMFLEX", $e2.node);
+            node = parser_createBinaryExpression(node, CORTO_XOR, $e2.node);
         }
     )*
     ;
+
 
 bitAndExpression
 returns [ parser_ExpressionNode ___ node ]
@@ -514,10 +771,11 @@ returns [ parser_ExpressionNode ___ node ]
         AMPERSAND
         e2=shiftExpression
         {
-            node = parser_createBinaryExpression($e1.node, "AMPERSAND", $e2.node);
+            node = parser_createBinaryExpression(node, CORTO_AND, $e2.node);
         }
     )*
     ;
+
 
 shiftExpression
 returns [ parser_ExpressionNode ___ node ]
@@ -532,13 +790,14 @@ returns [ parser_ExpressionNode ___ node ]
         }
     )
     (
-        shiftOp
+        op=shiftOp
         e2=addExpression
         {
-            node = parser_createBinaryExpression($e1.node, "shiftOp", $e2.node);
+            node = parser_createBinaryExpression(node, $op.kind, $e2.node);
         }
     )*
     ;
+
 
 addExpression
 returns [ parser_ExpressionNode ___ node ]
@@ -554,13 +813,14 @@ returns [ parser_ExpressionNode ___ node ]
     )
     (
         (addOp multExpression) =>
-        addOp
+        op=addOp
         e2=multExpression
         {
-            node = parser_createBinaryExpression($e1.node, "addOp", $e2.node);
+            node = parser_createBinaryExpression(node, $op.kind, $e2.node);
         }
     )*
     ;
+
 
 multExpression
 returns [ parser_ExpressionNode ___ node ]
@@ -575,42 +835,89 @@ returns [ parser_ExpressionNode ___ node ]
         }
     )
     (
-        multOp
+        op=multOp
         e2=unaryExpression
         {
-            node = parser_createBinaryExpression($e1.node, "multOp", $e2.node);
+            node = parser_createBinaryExpression(node, $op.kind, $e2.node);
         }
     )*
     ;
 
+
 unaryExpression
 returns [ parser_ExpressionNode ___ node ]
-@init {
-    node = parser_ExpressionNodeCreate(0, 0);
+@init
+{
+    node = NULL;
+    op = (corto_operatorKind)0; /* 0 is CORTO_ASSIGN, which doesn't otherwise make sense here */
+    e = NULL;
 }
     :
-    unaryOp? postfixExpression
+    op=unaryOp? e=postfixExpression
+    {
+        if ($op.kind) {
+            parser_UnaryExpressionNode _node = parser_UnaryExpressionNodeCreate(
+                0, 0, $op.kind, $e.node
+            );
+            node = parser_ExpressionNode(_node);
+        } else {
+            node = $e.node;
+        }
+    }
     ;
+
 
 postfixExpression
+returns [ parser_ExpressionNode ___ node ]
+@init
+{
+    node = NULL;
+}
     :
-    atomExpression postfixOperation*
+    (
+        e=atomExpression
+        {
+            node = $e.node;
+        }
+    )
+    (
+        postfixOperation [ node ]
+        {
+            node = $postfixOperation.node;
+        }
+    )*
     ;
 
+
 atomExpression
+returns [ parser_ExpressionNode ___ node ]
+@init
+{
+    node = NULL;
+}
     :
     literal
+    {
+        node = parser_ExpressionNode($literal.node);
+    }
     |
     identifier
+    {
+        parser_IdentifierNode _node = parser_IdentifierNodeCreate(0, 0, CHARS($identifier.text));
+        node = parser_ExpressionNode(_node);
+    }
     |
-    LPAREN expression RPAREN
+    LPAREN e=expression RPAREN
+    {
+        node = $e.node;
+    }
     |
     anonymousObject
     ;
 
 anonymousObject
     :
-    LBRACE fullCommaExpression? RBRACE
+    LBRACE fullCommaExpression RBRACE
     ;
 
 // ============================================================
@@ -635,91 +942,229 @@ eventBaseFlag : KW_DECLARE | KW_DEFINE | KW_UPDATE | KW_DESTRUCT ;
 
 eventScopeFlag : KW_SELF | KW_SCOPE | KW_TREE | KW_SYNCHRONIZED ;
 
+
 // ============================================================
 // Operators
 // ============================================================
 
+
 assignmentOp
+returns [ corto_operatorKind ___ ___ kind ]
+@init
+{
+    kind = CORTO_ASSIGN;
+}
     :
     EQUAL
+    { kind = CORTO_ASSIGN; }
     |
-    PLUS_EQUAL | MINUS_EQUAL | TIMES_EQUAL | DIV_EQUAL
+    PLUS_EQUAL
+    { kind = CORTO_ASSIGN_ADD; }
+    |
+    MINUS_EQUAL
+    { kind = CORTO_ASSIGN_SUB; }
+    |
+    TIMES_EQUAL
+    { kind = CORTO_ASSIGN_MUL; }
+    |
+    DIV_EQUAL
+    { kind = CORTO_ASSIGN_DIV; }
+    |
+    MOD_EQUAL
+    { kind = CORTO_ASSIGN_MOD; }
+    |
+    HAT_EQUAL
+    { kind = CORTO_ASSIGN_XOR; }
+    |
+    PIPE_EQUAL
+    { kind = CORTO_ASSIGN_OR; }
+    |
+    AMP_EQUAL
+    { kind = CORTO_ASSIGN_AND; }
+    |
+    COLON_EQUAL
+    { kind = CORTO_ASSIGN_UPDATE; }
     ;
 
-eqOp :
+
+eqOp
+returns [ corto_operatorKind ___ kind ]
+@init
+{
+    kind = (corto_operatorKind)0;
+}
+    :
     EQUALS
+    { kind = CORTO_COND_EQ; }
     |
     NOT_EQUALS
+    { kind = CORTO_COND_NEQ; }
     ;
 
-comparisonOp:
-    GREATER_THAN | LESS_THAN | GREATER_THAN_EQUAL | LESS_THAN_EQUAL
+
+comparisonOp
+returns [ corto_operatorKind ___ kind ]
+@init
+{
+    kind = (corto_operatorKind)0;
+}
+    :
+    GREATER_THAN
+    { kind = CORTO_COND_GT; }
+    |
+    LESS_THAN
+    { kind = CORTO_COND_LT; }
+    |
+    GREATER_THAN_EQUAL
+    { kind = CORTO_COND_GTEQ; }
+    |
+    LESS_THAN_EQUAL
+    { kind = CORTO_COND_LTEQ; }
     ;
+
 
 shiftOp
+returns [ corto_operatorKind ___ kind ]
+@init
+{
+    kind = (corto_operatorKind)0;
+}
     :
     LSHIFT
+    { kind = CORTO_SHIFT_LEFT; }
     |
     RSHIFT
+    { kind = CORTO_SHIFT_RIGHT; }
     ;
+
 
 addOp
+returns [ corto_operatorKind ___ kind ]
+@init
+{
+    kind = (corto_operatorKind)0;
+}
     :
     PLUS
+    { kind = CORTO_ADD; }
     |
     MINUS
+    { kind = CORTO_SUB; }
     ;
+
 
 multOp
+returns [ corto_operatorKind ___ kind ]
+@init
+{
+    kind = (corto_operatorKind)0;
+}
     :
     ASTERISK
+    { kind = CORTO_MUL; }
     |
     SLASH
+    { kind = CORTO_DIV; }
     ;
+
 
 unaryOp
+returns [ corto_operatorKind ___ kind ]
+@init
+{
+    kind = (corto_operatorKind)0;
+}
     :
     TILDE
+    { kind = CORTO_NOT; }
     |
     MINUS
-    |
-    PLUS
+    { kind = CORTO_SUB; }
+    // |
+    // PLUS
+    // /* What operator goes here? */
+    // /* Still, we probably *do* validate that the expression is numeric */
+    // { kind = (corto_operatorKind)0; }
     |
     EMARK
+    { kind = CORTO_COND_NOT; }
     |
     KW_NOT
+    { kind = CORTO_COND_NOT; }
     ;
 
-postfixOperation
+postfixOperation [ parser_ExpressionNode ___ _node ]
+returns [ parser_ExpressionNode ___ node ]
+@init
+{
+    node = NULL;
+}
     :
-    functionCall
+    functionCall [ _node ]
+    {
+        node = $functionCall.node;
+    }
     |
-    memberAccess
+    memberAccess [ _node ]
+    {
+        node = $memberAccess.node;
+    }
     |
-    elementAccess
+    elementAccess [ _node ]
+    {
+        node = $elementAccess.node;
+    }
     ;
 
-functionCall
+
+functionCall [ parser_ExpressionNode ___ _node ]
+returns [ parser_ExpressionNode ___ node ]
+@init
+{
+    node = NULL;
+}
     :
-    LPAREN fullCommaExpression? RPAREN
+    LPAREN
+    e=fullCommaExpression
+    RPAREN
+    {
+        node = parser_createCallExpression(_node, $e.node);
+    }
     ;
 
-memberAccess
+
+memberAccess [ parser_ExpressionNode ___ _node ]
+returns [ parser_ExpressionNode ___ node ]
+@init
+{
+    node = NULL;
+}
     :
     DOT VALID_NAME
+    {
+        node = parser_createMemberExpression(_node, CHARS($VALID_NAME.text));
+    }
     ;
 
-elementAccess
+
+elementAccess  [ parser_ExpressionNode ___ _node ]
+returns [ parser_ExpressionNode ___ node ]
+@init
+{
+    node = NULL;
+}
     :
-    LBRACK fullCommaExpression? RBRACK
+    LBRACK fullCommaExpression RBRACK
+    {
+        node = parser_createElementExpression(_node, $fullCommaExpression.node);
+    }
     ;
 
-postScopeOperator : DOUBLE_COLON ;
-preScopeOperator : TRIPLE_COLON ;
 
 // ============================================================
 // Identifiers, Types, Names
 // ============================================================
+
 
 constant
     :
@@ -737,28 +1182,91 @@ identifier
     GID
     ;
 
+
 typeLabel
+returns [ parser_BaseTypeExpressionNode ___ node ]
+@init
+{
+    parser_SimpleTypeExpressionNode ste = NULL;
+    parser_InitializerTypeExpressionNode ite = NULL;
+    node = NULL;
+}
     :
-    identifier anonymousObject*
+    (
+        identifier
+        {
+
+            ste = parser_SimpleTypeExpressionNodeCreate(0, 0, CHARS($identifier.text));
+            node = parser_BaseTypeExpressionNode(ste);
+        }
+    )
+    (
+        LBRACE
+        fullCommaExpression
+        RBRACE
+        {
+            ite = parser_InitializerTypeExpressionNodeCreate(
+                0, 0, node, $fullCommaExpression.node
+            );
+            node = parser_BaseTypeExpressionNode(ite);
+        }
+    )*
     ;
 
+
 literal
+returns [ parser_LiteralNode ___ node ]
+@init
+{
+    node = NULL;
+}
     :
     booleanLiteral
+    { node = $booleanLiteral.node; }
     |
     CHARACTER
     |
-    INTEGER
+    integerLiteral
+    { node = $integerLiteral.node; }
     |
     STRING
     ;
 
+
 booleanLiteral
+returns [ parser_LiteralNode ___ node ]
+@init
+{
+    node = NULL;
+    parser_BooleanLiteralNode _node = parser_BooleanLiteralNodeCreate(0, 0, TRUE);
+}
     :
-    KW_TRUE
-    |
-    KW_FALSE
+    (
+        KW_TRUE
+        { _node = parser_BooleanLiteralNodeCreate(0, 0, TRUE); }
+        |
+        KW_FALSE
+        { _node = parser_BooleanLiteralNodeCreate(0, 0, FALSE); }
+    )
+    {
+        node = parser_LiteralNode(_node);
+    }
     ;
+
+
+integerLiteral
+returns [ parser_LiteralNode ___ node ]
+@init
+{
+    node = NULL;
+}
+    :
+    INTEGER
+    {
+        node = parser_IntegerLiteralNodeCreate_wrapper(CHARS($INTEGER.text));
+    }
+    ;
+
 
 // ============================================================
 // Lexer tokens
@@ -822,8 +1330,8 @@ KW_ON : 'on' ;
 EQUALS : '==' ;
 NOT_EQUALS : '!=' ;
 
-RSHIFT : '<<' ;
-LSHIFT : '>>' ;
+RSHIFT : '>>' ;
+LSHIFT : '<<' ;
 
 GREATER_THAN_EQUAL : '>=' ;
 LESS_THAN_EQUAL : '<=' ;
@@ -832,11 +1340,14 @@ PLUS_EQUAL : '+=' ;
 MINUS_EQUAL : '-=' ;
 TIMES_EQUAL : '*=' ;
 DIV_EQUAL : '/=' ;
+MOD_EQUAL : '%=' ;
+HAT_EQUAL : '^=' ;
+PIPE_EQUAL : '|=' ;
+AMP_EQUAL : '&=' ;
+COLON_EQUAL : ':=' ;
+
 LSHIFT_EQUALS : '<<=' ;
 RSHIFT_EQUALS : '>>=' ;
-BITAND_EQUALS : '&=' ;
-BITXOR_EQUALS : '^=' ;
-BITOR_EQUALS : '|=' ;
 DOUBLE_COLON : '::' ;
 TRIPLE_COLON : ':::' ;
 
@@ -853,7 +1364,8 @@ GID
 
 // Literals
 
-INTEGER :
+INTEGER
+    :
     '0'
     |
     ('1'..'9') ('0'..'9')*
@@ -893,7 +1405,7 @@ RPAREN : ')' {CustomLexer_decreaseBracketStack(ctx);} ;
 LBRACK : '[' {CustomLexer_increaseBracketStack(ctx);} ;
 RBRACK : ']' {CustomLexer_decreaseBracketStack(ctx);} ;
 LBRACE : '{' {CustomLexer_increaseBracketStack(ctx);} ;
-RBRACE : '}' {CustomLexer_decreaseBracketStack(ctx);} ; 
+RBRACE : '}' {CustomLexer_decreaseBracketStack(ctx);} ;
 
 QMARK : '?' ;
 EMARK : '!' ;
@@ -909,5 +1421,5 @@ SLASH : '/' ;
 EQUAL : '=' ;
 AMPERSAND : '&' ;
 PIPE : '|' ;
-CIRCUMFLEX : '^' ;
+HAT : '^' ;
 DOT : '.' ;

@@ -12,7 +12,7 @@ sudo apt-get install default-jre
 
 ## Installation
 
-This project has a dependency on antlr3 C runtime files for develpment and running, and antlr3 for development.
+This project has a dependency on antlr3 C runtime files for development and running, and antlr3 for development of the grammar.
 
 Note: the following files have already been included in the repo; you don't need to download them, but instructions are kept for the record.
 

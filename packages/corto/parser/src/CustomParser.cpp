@@ -3,7 +3,7 @@
 
 extern corto_threadKey PARSER_KEY_PARSER;
 
-static void         
+static void
 displayRecognitionError (pANTLR3_BASE_RECOGNIZER recognizer, pANTLR3_UINT8 * tokenNames)
 {
     pANTLR3_PARSER          parser;
@@ -44,7 +44,7 @@ displayRecognitionError (pANTLR3_BASE_RECOGNIZER recognizer, pANTLR3_UINT8 * tok
     //
 
     ANTLR3_FPRINTF(stderr, "%d) ", recognizer->state->exception->line);
-    ANTLR3_FPRINTF(stderr, " : error %d : %s", 
+    ANTLR3_FPRINTF(stderr, " : error %d : %s",
                                         recognizer->state->exception->type,
                     (pANTLR3_UINT8)    (recognizer->state->exception->message));
 
@@ -150,7 +150,7 @@ displayRecognitionError (pANTLR3_BASE_RECOGNIZER recognizer, pANTLR3_UINT8 * tok
     case    ANTLR3_MISSING_TOKEN_EXCEPTION:
 
         // Indicates that the recognizer detected that the token we just
-        // hit would be valid syntactically if preceeded by a particular 
+        // hit would be valid syntactically if preceeded by a particular
         // token. Perhaps a missing ';' at line end or a missing ',' in an
         // expression list, and such like.
         //
@@ -174,12 +174,12 @@ displayRecognitionError (pANTLR3_BASE_RECOGNIZER recognizer, pANTLR3_UINT8 * tok
     case    ANTLR3_RECOGNITION_EXCEPTION:
 
         // Indicates that the recognizer received a token
-        // in the input that was not predicted. This is the basic exception type 
+        // in the input that was not predicted. This is the basic exception type
         // from which all others are derived. So we assume it was a syntax error.
         // You may get this if there are not more tokens and more are needed
         // to complete a parse for instance.
         //
-        ANTLR3_FPRINTF(stderr, " : syntax error...\n");    
+        ANTLR3_FPRINTF(stderr, " : syntax error...\n");
         break;
 
     case    ANTLR3_MISMATCHED_TOKEN_EXCEPTION:
@@ -257,7 +257,7 @@ displayRecognitionError (pANTLR3_BASE_RECOGNIZER recognizer, pANTLR3_UINT8 * tok
                     //
                     if  (tokenNames[bit])
                     {
-                        ANTLR3_FPRINTF(stderr, "%s%s", count > 0 ? ", " : "", tokenNames[bit]); 
+                        ANTLR3_FPRINTF(stderr, "%s%s", count > 0 ? ", " : "", tokenNames[bit]);
                         count++;
                     }
                 }
@@ -338,15 +338,67 @@ void parser_parserDataDel(parser_data* data)
 }
 
 
-parser_ExpressionNode parser_createBinaryExpression(
-    parser_ExpressionNode left,
-    char* _operator,
-    parser_ExpressionNode right)
+/* Node creation wrappers */
+
+parser_BlockNode parser_createBlockFromExpression(
+    parser_ExpressionNode expression)
 {
-    parser_BinaryExpressionNode _node = parser_BinaryExpressionNodeCreate(
-        0, 0, left, "eqOp", right
+    parser_BlockNode node = parser_BlockNodeCreate(
+        0, 0, corto_llNew()
     );
-    return parser_ExpressionNode(_node);
-    
+    // TODO put a return statement with the expression given
+    corto_llAppend(node->statements, NULL);
+    return node;
 }
 
+parser_ExpressionNode parser_createBinaryExpression(
+    parser_ExpressionNode left,
+    corto_operatorKind operator_,
+    parser_ExpressionNode right)
+{
+    parser_BinaryExpressionNode node = parser_BinaryExpressionNodeCreate(
+        0, 0, left, operator_, right
+    );
+    return parser_ExpressionNode(node);
+
+}
+
+parser_ExpressionNode parser_createCallExpression(
+    parser_ExpressionNode caller,
+    parser_FullCommaExpressionNode arguments)
+{
+    parser_CallExpressionNode node = parser_CallExpressionNodeCreate(
+        0, 0, caller, arguments
+    );
+    return parser_ExpressionNode(node);
+}
+
+parser_ExpressionNode parser_createMemberExpression(
+    parser_ExpressionNode owner,
+    char* memberName)
+{
+    parser_MemberExpressionNode node = parser_MemberExpressionNodeCreate(
+        0, 0, owner, memberName
+    );
+    return parser_ExpressionNode(node);
+}
+
+parser_ExpressionNode parser_createElementExpression(
+    parser_ExpressionNode owner,
+    parser_FullCommaExpressionNode elements)
+{
+    parser_ElementExpressionNode node = parser_ElementExpressionNodeCreate(
+        0, 0, owner, elements
+    );
+    return parser_ExpressionNode(node);
+}
+
+parser_LiteralNode parser_IntegerLiteralNodeCreate_wrapper(
+    char* text)
+{
+    corto_uint64 value;
+    parser_IntegerLiteralNode _node;
+    sscanf(text, "%" PRIu64, &value);
+    parser_IntegerLiteralNode node = parser_IntegerLiteralNodeCreate(0, 0, value);
+    return parser_LiteralNode(node);
+}

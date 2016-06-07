@@ -21,14 +21,36 @@ parser_data* parser_parserDataNew(parser_BaseParser parser);
 
 void parser_parserDataDel(parser_data* data);
 
+/*
+ * The following functions are wrappers around <TypeName>Create because the
+ * return type needs to be parser_ExpressionNode to unclutter the grammar file.
+ */
+
+parser_BlockNode parser_createBlockFromExpression(
+    parser_ExpressionNode expression
+    );
+
 parser_ExpressionNode parser_createBinaryExpression(
     parser_ExpressionNode left,
-    char* _operator,
-    parser_ExpressionNode right
-);
+    corto_operatorKind operator_,
+    parser_ExpressionNode right);
+
+parser_ExpressionNode parser_createCallExpression(
+    parser_ExpressionNode caller,
+    parser_FullCommaExpressionNode arguments);
+
+parser_ExpressionNode parser_createMemberExpression(
+    parser_ExpressionNode owner,
+    char* memberName);
+
+parser_ExpressionNode parser_createElementExpression(
+    parser_ExpressionNode owner,
+    parser_FullCommaExpressionNode elements);
+
+parser_LiteralNode parser_IntegerLiteralNodeCreate_wrapper(
+    char* text);
 
 #ifdef __cplusplus
 }
 #endif
 #endif
-
