@@ -166,7 +166,8 @@ class FullCommaExpressionNode: Node::
 
 
 // E.g. MyType; MyType{a}, MyType{a}{b}
-class BaseTypeExpressionNode: Node
+class BaseTypeExpressionNode: Node::
+    type_: corto/lang/type, readonly
 
 
 class SimpleTypeExpressionNode: BaseTypeExpressionNode::
@@ -272,3 +273,16 @@ class PrintVisitor: BaseVisitor::
     object visitIdentifierNode(IdentifierNode node) virtual
 
     string getText()
+
+
+class DeclarationVisitor: BaseVisitor::
+    currentScope: object, private
+    currentType: object, private
+    // TODO this must be passed as an extra "data" parameter
+
+    int16 construct()
+
+    object visit()
+    object visitObjectDeclarationNode(ObjectDeclarationNode node) virtual
+    object visitSimpleTypeExpressionNode(SimpleTypeExpressionNode node) virtual
+    object visitObjectDeclarationNameNode(ObjectDeclarationNameNode node) virtual

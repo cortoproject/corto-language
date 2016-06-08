@@ -12,8 +12,6 @@ corto_word _parser_LiteralNode_getValue_v(
     parser_LiteralNode _this)
 {
 /* $begin(corto/parser/LiteralNode/getValue) */
-
-    /* << Insert implementation >> */
-
+    return (corto_word)NULL;
 /* $end */
 }
