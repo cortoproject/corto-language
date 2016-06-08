@@ -16,6 +16,7 @@ Antlr3-based parser for Corto
 ### success
 
 ## BaseTypeExpressionNode
+### type_
 
 ## BaseVisitor
 ### construct()
@@ -121,6 +122,23 @@ Antlr3-based parser for Corto
 ### condition
 ### falseValue
 ### trueValue
+
+## DeclarationVisitor
+### construct()
+#### Returns
+### currentScope
+### currentType
+### visit()
+#### Returns
+### visitObjectDeclarationNameNode(/corto/parser/ObjectDeclarationNameNode node)
+#### node
+#### Returns
+### visitObjectDeclarationNode(/corto/parser/ObjectDeclarationNode node)
+#### node
+#### Returns
+### visitSimpleTypeExpressionNode(/corto/parser/SimpleTypeExpressionNode node)
+#### node
+#### Returns
 
 ## ElementExpressionNode
 ### elements
