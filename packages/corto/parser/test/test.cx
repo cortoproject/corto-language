@@ -1,5 +1,9 @@
 #package ::test
 
+
+class Point:: x, y: int32
+
+
 test::Suite TestCortoLanguage::
 
     parser: /corto/parser/SimpleParser
@@ -111,4 +115,9 @@ test::Suite TestPrintVisitor::
 
 
 test::Suite TestDeclarationVisitor::
+
     void testInt8Declaration()
+    void testMultipleInt8Declaration()
+    void testInt8DeclarationAndDefinition()
+    void testMultipleInt8DeclarationAndDefinition()
+
