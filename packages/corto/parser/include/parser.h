@@ -36,6 +36,7 @@ extern "C" {
 #include <corto/parser/FunctionDeclarationNode.h>
 #include <corto/parser/FunctionParameterNode.h>
 #include <corto/parser/IdentifierNode.h>
+#include <corto/parser/InitializerCommaExpressionNode.h>
 #include <corto/parser/InitializerTypeExpressionNode.h>
 #include <corto/parser/IntegerLiteralNode.h>
 #include <corto/parser/LiteralNode.h>
