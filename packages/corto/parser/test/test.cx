@@ -115,9 +115,10 @@ test::Suite TestPrintVisitor::
 
 
 test::Suite TestDeclarationVisitor::
+    void test_Int8Declaration()
+    void test_MultipleInt8Declaration()
+    void test_Int8DeclarationAndDefinition()
+    void test_MultipleInt8DeclarationAndDefinition()
 
-    void testInt8Declaration()
-    void testMultipleInt8Declaration()
-    void testInt8DeclarationAndDefinition()
-    void testMultipleInt8DeclarationAndDefinition()
-
+    void test_PointDeclaration()
+    void test_PointDeclarationDefinition()

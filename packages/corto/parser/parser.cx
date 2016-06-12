@@ -296,6 +296,4 @@ class DeclarationVisitor: BaseVisitor::
     object visitInitializerTypeExpressionNode(InitializerTypeExpressionNode node, word data) virtual
     object visitObjectDeclarationNameNode(ObjectDeclarationNameNode node, word data) virtual
 
-    // TODO separate different types of full comma expressions
-    object visitFullCommaExpressionNode(FullCommaExpressionNode node, word data) virtual
     object visitFullCommaExpressionElementNode(FullCommaExpressionElementNode node, word data) virtual

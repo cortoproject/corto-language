@@ -9,6 +9,27 @@
 #include <corto/parser/parser.h>
 
 /* $header() */
+
+typedef corto_object ___ (*_visitAction)(parser_BaseVisitor, parser_Node, corto_word);
+
+struct BaseVisitorData
+{
+    parser_BaseVisitor _this;
+    corto_word data;
+    _visitAction visit;
+    corto_class elemClass;
+};
+
+static int _visit(void* _node, void* _data)
+{
+    BaseVisitorData* data = (BaseVisitorData*)_data;
+    corto_assert(data->_this != NULL);
+    corto_assert(data->visit != NULL);
+    corto_assert(data->elemClass != NULL);
+    parser_Node node = parser_Node(corto_assertType((corto_type)data->elemClass, _node));
+    data->visit(data->_this, node, data->data);
+    return -1;
+}
 /* $end */
 
 corto_int16 _parser_BaseVisitor_construct(
@@ -216,13 +237,12 @@ corto_object _parser_BaseVisitor_visitFullCommaExpressionNode_v(
     corto_word data)
 {
 /* $begin(corto/parser/BaseVisitor/visitFullCommaExpressionNode) */
-    corto_iter i = corto_llIter(node->elements);
-    while (corto_iterHasNext(&i)) {
-        parser_FullCommaExpressionElementNode childNode = parser_FullCommaExpressionElementNode(
-            corto_iterNext(&i)
-        );
-        parser_BaseVisitor_visitFullCommaExpressionElementNode(_this, childNode, data);
-    }
+    BaseVisitorData _data = {0};
+    _data._this = _this;
+    _data.data = data;
+    _data.visit = (_visitAction)_parser_BaseVisitor_visitFullCommaExpressionElementNode;
+    _data.elemClass = parser_FullCommaExpressionElementNode_o;
+    corto_llWalk(node->elements, _visit, &_data);
     return NULL;
 /* $end */
 }
@@ -334,11 +354,13 @@ corto_object _parser_BaseVisitor_visitProgramNode_v(
     corto_word data)
 {
 /* $begin(corto/parser/BaseVisitor/visitProgramNode) */
-    int size = corto_llSize(node->statements);
-    for (int i = 0; i < size; i++) {
-        // TODO iterate with iterator
-        parser_BaseVisitor_visitStatementNode(_this, corto_llGet(node->statements, i), data);
-    }
+
+    BaseVisitorData _data = {0};
+    _data._this = _this;
+    _data.data = data;
+    _data.visit = (_visitAction)_parser_BaseVisitor_visitStatementNode;
+    _data.elemClass = parser_StatementNode_o;
+    corto_llWalk(node->statements, _visit, &_data);
     return NULL;
 /* $end */
 }

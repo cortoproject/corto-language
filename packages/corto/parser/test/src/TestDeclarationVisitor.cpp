@@ -22,10 +22,10 @@ static corto_void _run(corto_string code)
 
 /* $end */
 
-corto_void _test_TestDeclarationVisitor_testInt8Declaration(
+corto_void _test_TestDeclarationVisitor_test_Int8Declaration(
     test_TestDeclarationVisitor _this)
 {
-/* $begin(test/TestDeclarationVisitor/testInt8Declaration) */
+/* $begin(test/TestDeclarationVisitor/test_Int8Declaration) */
     _run(
         "int8 a"
     );
@@ -36,10 +36,10 @@ corto_void _test_TestDeclarationVisitor_testInt8Declaration(
 /* $end */
 }
 
-corto_void _test_TestDeclarationVisitor_testInt8DeclarationAndDefinition(
+corto_void _test_TestDeclarationVisitor_test_Int8DeclarationAndDefinition(
     test_TestDeclarationVisitor _this)
 {
-/* $begin(test/TestDeclarationVisitor/testInt8DeclarationAndDefinition) */
+/* $begin(test/TestDeclarationVisitor/test_Int8DeclarationAndDefinition) */
     _run(
         "int8 a: 11"
     );
@@ -51,10 +51,10 @@ corto_void _test_TestDeclarationVisitor_testInt8DeclarationAndDefinition(
 /* $end */
 }
 
-corto_void _test_TestDeclarationVisitor_testMultipleInt8Declaration(
+corto_void _test_TestDeclarationVisitor_test_MultipleInt8Declaration(
     test_TestDeclarationVisitor _this)
 {
-/* $begin(test/TestDeclarationVisitor/testMultipleInt8Declaration) */
+/* $begin(test/TestDeclarationVisitor/test_MultipleInt8Declaration) */
     _run(
         "int8 a, b"
     );
@@ -72,10 +72,10 @@ corto_void _test_TestDeclarationVisitor_testMultipleInt8Declaration(
 /* $end */
 }
 
-corto_void _test_TestDeclarationVisitor_testMultipleInt8DeclarationAndDefinition(
+corto_void _test_TestDeclarationVisitor_test_MultipleInt8DeclarationAndDefinition(
     test_TestDeclarationVisitor _this)
 {
-/* $begin(test/TestDeclarationVisitor/testMultipleInt8DeclarationAndDefinition) */
+/* $begin(test/TestDeclarationVisitor/test_MultipleInt8DeclarationAndDefinition) */
     _run(
         "int8 a, b: 33"
     );
@@ -90,5 +90,33 @@ corto_void _test_TestDeclarationVisitor_testMultipleInt8DeclarationAndDefinition
     test_assert(*b == 33);
     test_assert(corto_checkState(b, CORTO_DECLARED));
     test_assert(corto_checkState(b, CORTO_DEFINED));
+/* $end */
+}
+
+corto_void _test_TestDeclarationVisitor_test_PointDeclaration(
+    test_TestDeclarationVisitor _this)
+{
+/* $begin(test/TestDeclarationVisitor/test_PointDeclaration) */
+    _run(
+        "test/Point a"
+    );
+    test_Point a = test_Point(corto_resolve(NULL, "a"));
+    test_assert(corto_checkState(a, CORTO_DECLARED));
+    test_assert(!corto_checkState(a, CORTO_DEFINED));
+/* $end */
+}
+
+corto_void _test_TestDeclarationVisitor_test_PointDeclarationDefinition(
+    test_TestDeclarationVisitor _this)
+{
+/* $begin(test/TestDeclarationVisitor/test_PointDeclarationDefinition) */
+    _run(
+        "test/Point a: 5, 7"
+    );
+    test_Point a = test_Point(corto_resolve(NULL, "a"));
+    test_assert(corto_checkState(a, CORTO_DECLARED));
+    test_assert(corto_checkState(a, CORTO_DEFINED));
+    test_assert(a->x == 5);
+    test_assert(a->y == 7);
 /* $end */
 }
