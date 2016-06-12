@@ -160,10 +160,6 @@ Antlr3-based parser for Corto
 #### node
 #### data
 #### Returns
-### visitFullCommaExpressionNode(/corto/parser/FullCommaExpressionNode node,word data)
-#### node
-#### data
-#### Returns
 ### visitInitializerTypeExpressionNode(/corto/parser/InitializerTypeExpressionNode node,word data)
 #### node
 #### data
