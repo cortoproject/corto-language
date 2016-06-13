@@ -412,17 +412,18 @@ corto_void _test_TestPrintVisitor_test_functionDeclaration1(
     test_TestPrintVisitor _this)
 {
 /* $begin(test/TestPrintVisitor/test_functionDeclaration1) */
-//     char* input =
-//         "void myFunction()\n"
-//         ;
-//     char* expected =
-// "program"
-// "|   statement"
-// "|   |   function declaration: myFunction"
-//     ;
-    corto_warning("unimplemented test: test/TestPrintVisitor/test_functionDeclaration1");
-    test_assert(1);
-    // _testExpectedBuffer(input, expected);
+    char* input =
+        "void myFunction()\n"
+        ;
+    char* expected =
+"program\n"
+"|   statement\n"
+"|   |   function declaration: myFunction\n"
+"|   |   |   type: void\n"
+"|   |   |   myFunction\n"
+"|   |   |   parameters\n"
+    ;
+    _testExpectedBuffer(input, expected);
 /* $end */
 }
 
@@ -430,15 +431,24 @@ corto_void _test_TestPrintVisitor_test_functionDeclaration2(
     test_TestPrintVisitor _this)
 {
 /* $begin(test/TestPrintVisitor/test_functionDeclaration2) */
-//     char* input =
-//         "void myFunction(int8 a, string b)\n"
-//         ;
-//     char* expected =
-// ""
-//     ;
-    corto_warning("unimplemented test: test/TestPrintVisitor/test_functionDeclaration2");
-    test_assert(1);
-    // _testExpectedBuffer(input, expected);
+    char* input =
+        "void myFunction(int8 a, string b)\n"
+        ;
+    char* expected =
+"program\n"
+"|   statement\n"
+"|   |   function declaration: myFunction\n"
+"|   |   |   type: void\n"
+"|   |   |   myFunction\n"
+"|   |   |   parameters\n"
+"|   |   |   |   parameter\n"
+"|   |   |   |   |   type: int8\n"
+"|   |   |   |   |   name: a\n"
+"|   |   |   |   parameter\n"
+"|   |   |   |   |   type: string\n"
+"|   |   |   |   |   name: b\n"
+    ;
+    _testExpectedBuffer(input, expected);
 /* $end */
 }
 
@@ -446,15 +456,27 @@ corto_void _test_TestPrintVisitor_test_functionDeclaration3(
     test_TestPrintVisitor _this)
 {
 /* $begin(test/TestPrintVisitor/test_functionDeclaration3) */
-//     char* input =
-//         "list{int32} duplicate(list{int32} input)\n"
-//         ;
-//     char* expected =
-// ""
-//     ;
-    corto_warning("unimplemented test: test/TestPrintVisitor/test_functionDeclaration3");
-    test_assert(1);
-    // _testExpectedBuffer(input, expected);
+    char* input =
+        "list{int32} duplicate(list{int32} input)\n"
+        ;
+    char* expected =
+"program\n"
+"|   statement\n"
+"|   |   function declaration: duplicate\n"
+"|   |   |   initializer type expression node\n"
+"|   |   |   |   type: list\n"
+"|   |   |   |   full comma expression\n"
+"|   |   |   |   |   identifier: int32\n"
+"|   |   |   duplicate\n"
+"|   |   |   parameters\n"
+"|   |   |   |   parameter\n"
+"|   |   |   |   |   initializer type expression node\n"
+"|   |   |   |   |   |   type: list\n"
+"|   |   |   |   |   |   full comma expression\n"
+"|   |   |   |   |   |   |   identifier: int32\n"
+"|   |   |   |   |   name: input\n"
+    ;
+    _testExpectedBuffer(input, expected);
 /* $end */
 }
 

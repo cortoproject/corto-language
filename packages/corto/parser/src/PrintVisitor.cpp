@@ -222,27 +222,19 @@ corto_object _parser_PrintVisitor_visitFunctionDeclarationNode_v(
     }
     _appendIndentation(_this);
     corto_buffer_append(THIS_BUFFER, "%s\n", node->name);
-    printf("parameters: %p\n", node->parameters);
     _appendIndentation(_this);
     corto_buffer_append(THIS_BUFFER, "parameters\n");
     _this->level++;
     {
-        puts("parser_PrintVisitor_visitFunctionDeclarationNode (before getting corto_llIter)");
         corto_iter i = corto_llIter(node->parameters);
-        puts("parser_PrintVisitor_visitFunctionDeclarationNode (before while)");
-        while (printf("while condition\n"), corto_iterHasNext(&i)) {
-            puts("parser_PrintVisitor_visitFunctionDeclarationNode (before iterNext)");
+        while (corto_iterHasNext(&i)) {
             void *iterNext = corto_iterNext(&i);
-            printf("iterNext: %p\n", iterNext);
             parser_FunctionParameterNode childNode = parser_FunctionParameterNode(iterNext);
-            puts("parser_PrintVisitor_visitFunctionDeclarationNode (before visiting childNode)");
             parser_BaseVisitor_visitFunctionParameterNode(_this, childNode, 0);
-            puts("parser_PrintVisitor_visitFunctionDeclarationNode (after visiting childNode)");
         }
     }
     _this->level--;
 
-    parser_PrintVisitor_visitFullCommaExpressionNode(_this, node->parameters, 0);
     if (node->block) {
         parser_BaseVisitor_visitBlockNode_v(_this, node->block, 0);
     }
@@ -261,6 +253,7 @@ corto_object _parser_PrintVisitor_visitFunctionParameterNode_v(
     corto_buffer_append(THIS_BUFFER, "parameter\n");
     _this->level++;
     parser_BaseVisitor_visitBaseTypeExpressionNode(_this, node->typeLabel, 0);
+    _appendIndentation(_this);
     corto_buffer_append(THIS_BUFFER, "name: %s\n", node->name);
     _this->level--;
     return NULL;
