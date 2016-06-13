@@ -1,5 +1,5 @@
 #include <corto/parser/parser.h>
-#include "CustomParser.hpp"
+#include "CortolangParserWrapper.h"
 
 extern corto_threadKey PARSER_KEY_PARSER;
 
@@ -303,7 +303,7 @@ displayRecognitionError (pANTLR3_BASE_RECOGNIZER recognizer, pANTLR3_UINT8 * tok
     //
 }
 
-void parser_DisplayRecognitionError(ANTLR3_BASE_RECOGNIZER_struct* recognizer, uint8_t** tokens)
+void parser_pw_displayRecognitionError(ANTLR3_BASE_RECOGNIZER_struct* recognizer, uint8_t** tokens)
 {
     /*
      * Let the error be handled by the corto/parser/BaseParser's
@@ -340,7 +340,7 @@ void parser_parserDataDel(parser_data* data)
 
 /* Node creation wrappers */
 
-parser_BlockNode parser_createBlockFromExpression(
+parser_BlockNode parser_pw_createBlockFromExpression(
     parser_ExpressionNode expression)
 {
     parser_BlockNode node = parser_BlockNodeCreate(
@@ -351,7 +351,7 @@ parser_BlockNode parser_createBlockFromExpression(
     return node;
 }
 
-parser_ExpressionNode parser_createBinaryExpression(
+parser_ExpressionNode parser_pw_createBinaryExpression(
     parser_ExpressionNode left,
     corto_operatorKind operator_,
     parser_ExpressionNode right)
@@ -363,7 +363,7 @@ parser_ExpressionNode parser_createBinaryExpression(
 
 }
 
-parser_ExpressionNode parser_createCallExpression(
+parser_ExpressionNode parser_pw_createCallExpression(
     parser_ExpressionNode caller,
     parser_FullCommaExpressionNode arguments)
 {
@@ -373,7 +373,7 @@ parser_ExpressionNode parser_createCallExpression(
     return parser_ExpressionNode(node);
 }
 
-parser_ExpressionNode parser_createMemberExpression(
+parser_ExpressionNode parser_pw_createMemberExpression(
     parser_ExpressionNode owner,
     char* memberName)
 {
@@ -383,7 +383,7 @@ parser_ExpressionNode parser_createMemberExpression(
     return parser_ExpressionNode(node);
 }
 
-parser_ExpressionNode parser_createElementExpression(
+parser_ExpressionNode parser_pw_createElementExpression(
     parser_ExpressionNode owner,
     parser_FullCommaExpressionNode elements)
 {
@@ -393,7 +393,7 @@ parser_ExpressionNode parser_createElementExpression(
     return parser_ExpressionNode(node);
 }
 
-parser_LiteralNode parser_IntegerLiteralNodeCreate_wrapper(
+parser_LiteralNode parser_pw_createIntegerLiteralNode(
     char* text)
 {
     corto_uint64 value;

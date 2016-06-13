@@ -16,6 +16,7 @@ Antlr3-based parser for Corto
 ### success
 
 ## BaseTypeExpressionNode
+### type_
 
 ## BaseVisitor
 ### construct()
@@ -24,77 +25,101 @@ Antlr3-based parser for Corto
 ### parser
 ### visit()
 #### Returns
-### visitBaseTypeExpressionNode(/corto/parser/BaseTypeExpressionNode node)
+### visitBaseTypeExpressionNode(/corto/parser/BaseTypeExpressionNode node,word data)
 #### node
+#### data
 #### Returns
-### visitBinaryExpressionNode(/corto/parser/BinaryExpressionNode node)
+### visitBinaryExpressionNode(/corto/parser/BinaryExpressionNode node,word data)
 #### node
+#### data
 #### Returns
-### visitBlockNode(/corto/parser/BlockNode node)
+### visitBlockNode(/corto/parser/BlockNode node,word data)
 #### node
+#### data
 #### Returns
-### visitCallExpressionNode(/corto/parser/CallExpressionNode node)
+### visitCallExpressionNode(/corto/parser/CallExpressionNode node,word data)
 #### node
+#### data
 #### Returns
-### visitCommaExpressionNode(/corto/parser/CommaExpressionNode node)
+### visitCommaExpressionNode(/corto/parser/CommaExpressionNode node,word data)
 #### node
+#### data
 #### Returns
-### visitConditionalExpressionNode(/corto/parser/ConditionalExpressionNode node)
+### visitConditionalExpressionNode(/corto/parser/ConditionalExpressionNode node,word data)
 #### node
+#### data
 #### Returns
-### visitElementExpressionNode(/corto/parser/ElementExpressionNode node)
+### visitElementExpressionNode(/corto/parser/ElementExpressionNode node,word data)
 #### node
+#### data
 #### Returns
-### visitExpressionNode(/corto/parser/ExpressionNode node)
+### visitExpressionNode(/corto/parser/ExpressionNode node,word data)
 #### node
+#### data
 #### Returns
-### visitExpressionStatementNode(/corto/parser/ExpressionStatementNode node)
+### visitExpressionStatementNode(/corto/parser/ExpressionStatementNode node,word data)
 #### node
+#### data
 #### Returns
-### visitFullCommaExpressionElementNode(/corto/parser/FullCommaExpressionElementNode node)
+### visitFullCommaExpressionElementNode(/corto/parser/FullCommaExpressionElementNode node,word data)
 #### node
+#### data
 #### Returns
-### visitFullCommaExpressionNode(/corto/parser/FullCommaExpressionNode node)
+### visitFullCommaExpressionNode(/corto/parser/FullCommaExpressionNode node,word data)
 #### node
+#### data
 #### Returns
-### visitFunctionDeclarationNode(/corto/parser/FunctionDeclarationNode node)
+### visitFunctionDeclarationNode(/corto/parser/FunctionDeclarationNode node,word data)
 #### node
+#### data
 #### Returns
-### visitFunctionParameterNode(/corto/parser/FunctionParameterNode node)
+### visitFunctionParameterNode(/corto/parser/FunctionParameterNode node,word data)
 #### node
+#### data
 #### Returns
-### visitIdentifierNode(/corto/parser/IdentifierNode node)
+### visitIdentifierNode(/corto/parser/IdentifierNode node,word data)
 #### node
+#### data
 #### Returns
-### visitInitializerTypeExpressionNode(/corto/parser/InitializerTypeExpressionNode node)
+### visitInitializerTypeExpressionNode(/corto/parser/InitializerTypeExpressionNode node,word data)
 #### node
+#### data
 #### Returns
-### visitLiteralNode(/corto/parser/LiteralNode node)
+### visitLiteralNode(/corto/parser/LiteralNode node,word data)
 #### node
+#### data
 #### Returns
-### visitMemberExpressionNode(/corto/parser/MemberExpressionNode node)
+### visitMemberExpressionNode(/corto/parser/MemberExpressionNode node,word data)
 #### node
+#### data
 #### Returns
-### visitObjectDeclarationNameNode(/corto/parser/ObjectDeclarationNameNode node)
+### visitObjectDeclarationNameNode(/corto/parser/ObjectDeclarationNameNode node,word data)
 #### node
+#### data
 #### Returns
-### visitObjectDeclarationNode(/corto/parser/ObjectDeclarationNode node)
+### visitObjectDeclarationNode(/corto/parser/ObjectDeclarationNode node,word data)
 #### node
+#### data
 #### Returns
-### visitProgramNode(/corto/parser/ProgramNode node)
+### visitProgramNode(/corto/parser/ProgramNode node,word data)
 #### node
+#### data
 #### Returns
-### visitScopeNode(/corto/parser/ScopeNode node)
+### visitScopeNode(/corto/parser/ScopeNode node,word data)
 #### node
+#### data
 #### Returns
-### visitSimpleTypeExpressionNode(/corto/parser/SimpleTypeExpressionNode node)
+### visitSimpleTypeExpressionNode(/corto/parser/SimpleTypeExpressionNode node,word data)
 #### node
+#### data
 #### Returns
-### visitStatementNode(/corto/parser/StatementNode node)
+### visitStatementNode(/corto/parser/StatementNode node,word data)
 #### node
+#### data
 #### Returns
-### visitUnaryExpressionNode(/corto/parser/UnaryExpressionNode node)
+### visitUnaryExpressionNode(/corto/parser/UnaryExpressionNode node,word data)
 #### node
+#### data
 #### Returns
 
 ## BinaryExpressionNode
@@ -106,6 +131,8 @@ Antlr3-based parser for Corto
 ### statements
 
 ## BooleanLiteralNode
+### construct()
+#### Returns
 ### getValue()
 #### Returns
 ### value
@@ -122,6 +149,34 @@ Antlr3-based parser for Corto
 ### falseValue
 ### trueValue
 
+## DeclarationVisitor
+### construct()
+#### Returns
+### currentScope
+### currentType
+### visit()
+#### Returns
+### visitFullCommaExpressionElementNode(/corto/parser/FullCommaExpressionElementNode node,word data)
+#### node
+#### data
+#### Returns
+### visitInitializerTypeExpressionNode(/corto/parser/InitializerTypeExpressionNode node,word data)
+#### node
+#### data
+#### Returns
+### visitObjectDeclarationNameNode(/corto/parser/ObjectDeclarationNameNode node,word data)
+#### node
+#### data
+#### Returns
+### visitObjectDeclarationNode(/corto/parser/ObjectDeclarationNode node,word data)
+#### node
+#### data
+#### Returns
+### visitSimpleTypeExpressionNode(/corto/parser/SimpleTypeExpressionNode node,word data)
+#### node
+#### data
+#### Returns
+
 ## ElementExpressionNode
 ### elements
 ### owner
@@ -129,6 +184,8 @@ Antlr3-based parser for Corto
 ## ExpressionList
 
 ## ExpressionNode
+### getValue()
+#### Returns
 ### isReference
 ### type_
 
@@ -159,11 +216,15 @@ Antlr3-based parser for Corto
 ## IdentifierNode
 ### name
 
+## InitializerCommaExpressionNode
+
 ## InitializerTypeExpressionNode
 ### arguments
 ### type
 
 ## IntegerLiteralNode
+### construct()
+#### Returns
 ### getValue()
 #### Returns
 ### value
@@ -185,6 +246,7 @@ Antlr3-based parser for Corto
 ## ObjectDeclarationNameNode
 ### arguments
 ### name
+### o
 
 ## ObjectDeclarationNode
 ### declarations
@@ -202,71 +264,93 @@ Antlr3-based parser for Corto
 ### getText()
 #### Returns
 ### level
-### visitBinaryExpressionNode(/corto/parser/BinaryExpressionNode node)
+### visitBinaryExpressionNode(/corto/parser/BinaryExpressionNode node,word data)
 #### node
+#### data
 #### Returns
-### visitBlockNode(/corto/parser/BlockNode node)
+### visitBlockNode(/corto/parser/BlockNode node,word data)
 #### node
+#### data
 #### Returns
-### visitCallExpressionNode(/corto/parser/CallExpressionNode node)
+### visitCallExpressionNode(/corto/parser/CallExpressionNode node,word data)
 #### node
+#### data
 #### Returns
-### visitCommaExpressionNode(/corto/parser/CommaExpressionNode node)
+### visitCommaExpressionNode(/corto/parser/CommaExpressionNode node,word data)
 #### node
+#### data
 #### Returns
-### visitConditionalExpressionNode(/corto/parser/ConditionalExpressionNode node)
+### visitConditionalExpressionNode(/corto/parser/ConditionalExpressionNode node,word data)
 #### node
+#### data
 #### Returns
-### visitElementExpressionNode(/corto/parser/ElementExpressionNode node)
+### visitElementExpressionNode(/corto/parser/ElementExpressionNode node,word data)
 #### node
+#### data
 #### Returns
-### visitExpressionNode(/corto/parser/ExpressionNode node)
+### visitExpressionNode(/corto/parser/ExpressionNode node,word data)
 #### node
+#### data
 #### Returns
-### visitFullCommaExpressionElementNode(/corto/parser/FullCommaExpressionElementNode node)
+### visitFullCommaExpressionElementNode(/corto/parser/FullCommaExpressionElementNode node,word data)
 #### node
+#### data
 #### Returns
-### visitFullCommaExpressionNode(/corto/parser/FullCommaExpressionNode node)
+### visitFullCommaExpressionNode(/corto/parser/FullCommaExpressionNode node,word data)
 #### node
+#### data
 #### Returns
-### visitFunctionDeclarationNode(/corto/parser/FunctionDeclarationNode node)
+### visitFunctionDeclarationNode(/corto/parser/FunctionDeclarationNode node,word data)
 #### node
+#### data
 #### Returns
-### visitFunctionParameterNode(/corto/parser/FunctionParameterNode node)
+### visitFunctionParameterNode(/corto/parser/FunctionParameterNode node,word data)
 #### node
+#### data
 #### Returns
-### visitIdentifierNode(/corto/parser/IdentifierNode node)
+### visitIdentifierNode(/corto/parser/IdentifierNode node,word data)
 #### node
+#### data
 #### Returns
-### visitInitializerTypeExpressionNode(/corto/parser/InitializerTypeExpressionNode node)
+### visitInitializerTypeExpressionNode(/corto/parser/InitializerTypeExpressionNode node,word data)
 #### node
+#### data
 #### Returns
-### visitLiteralNode(/corto/parser/LiteralNode node)
+### visitLiteralNode(/corto/parser/LiteralNode node,word data)
 #### node
+#### data
 #### Returns
-### visitMemberExpressionNode(/corto/parser/MemberExpressionNode node)
+### visitMemberExpressionNode(/corto/parser/MemberExpressionNode node,word data)
 #### node
+#### data
 #### Returns
-### visitObjectDeclarationNameNode(/corto/parser/ObjectDeclarationNameNode node)
+### visitObjectDeclarationNameNode(/corto/parser/ObjectDeclarationNameNode node,word data)
 #### node
+#### data
 #### Returns
-### visitObjectDeclarationNode(/corto/parser/ObjectDeclarationNode node)
+### visitObjectDeclarationNode(/corto/parser/ObjectDeclarationNode node,word data)
 #### node
+#### data
 #### Returns
-### visitProgramNode(/corto/parser/ProgramNode node)
+### visitProgramNode(/corto/parser/ProgramNode node,word data)
 #### node
+#### data
 #### Returns
-### visitScopeNode(/corto/parser/ScopeNode node)
+### visitScopeNode(/corto/parser/ScopeNode node,word data)
 #### node
+#### data
 #### Returns
-### visitSimpleTypeExpressionNode(/corto/parser/SimpleTypeExpressionNode node)
+### visitSimpleTypeExpressionNode(/corto/parser/SimpleTypeExpressionNode node,word data)
 #### node
+#### data
 #### Returns
-### visitStatementNode(/corto/parser/StatementNode node)
+### visitStatementNode(/corto/parser/StatementNode node,word data)
 #### node
+#### data
 #### Returns
-### visitUnaryExpressionNode(/corto/parser/UnaryExpressionNode node)
+### visitUnaryExpressionNode(/corto/parser/UnaryExpressionNode node,word data)
 #### node
+#### data
 #### Returns
 
 ## ProgramNode

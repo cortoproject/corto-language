@@ -19,8 +19,10 @@
 extern "C" {
 #endif
 
+#include <Point.h>
 #include <TestCortoLanguage.h>
-#include <TestVisitor.h>
+#include <TestDeclarationVisitor.h>
+#include <TestPrintVisitor.h>
 
 #ifdef __cplusplus
 }

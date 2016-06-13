@@ -1,5 +1,5 @@
-#ifndef PARSER_CUSTOMLEXER_HPP
-#define PARSER_CUSTOMLEXER_HPP
+#ifndef PARSER_CORTOLANG_LEXER_WRAPPER_H
+#define PARSER_CORTOLANG_LEXER_WRAPPER_H
 
 #include <corto/corto.h>
 #ifdef __cplusplus
@@ -9,21 +9,20 @@ extern "C" {
 #include <corto/parser/parser.h>
 
 /*
- * This class represents a wrapper around CortolangLexer. You can see it as
- * a "subclass".
+ * This class represents a wrapper around CortolangLexer. See it as a "subclass".
  */
 typedef struct CortolangLexer_Ctx_struct CortolangLexer, * pCortolangLexer;
 
 
-void CustomLexer_handleLeadingWhitespace(pCortolangLexer ctx, corto_word spaces);
+void parser_lw_handleLeadingWhitespace(pCortolangLexer ctx, corto_word spaces);
 
-pCortolangLexer CustomLexer_new(pANTLR3_INPUT_STREAM input);
+pCortolangLexer parser_lw_new(pANTLR3_INPUT_STREAM input);
 
-corto_bool CustomLexer_implicitLineWhitespaceGuard(pCortolangLexer ctx);
-void CustomLexer_increaseBracketStack(pCortolangLexer ctx);
-void CustomLexer_decreaseBracketStack(pCortolangLexer ctx);
+corto_bool parser_lw_nestingWhitespaceGuard(pCortolangLexer ctx);
+void parser_lw_increaseNesting(pCortolangLexer ctx);
+void parser_lw_decreaseNesting(pCortolangLexer ctx);
 
-struct CustomLexer_Data {
+struct parser_lw_data {
     /*
      * This is a list wherein each element is a corto_word representing the
      * number of spaces for each indentation level. When appending, it is not
@@ -80,4 +79,3 @@ struct CustomLexer_Data {
 }
 #endif
 #endif
-

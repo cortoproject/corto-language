@@ -99,6 +99,7 @@ class FunctionDeclarationNode: StatementNode::
 class ExpressionNode: Node::
     type_: /corto/lang/type, readonly
     isReference: bool, readonly
+    word getValue() virtual
 
 
 class BinaryExpressionNode: ExpressionNode::
@@ -143,11 +144,14 @@ class ElementExpressionNode: ExpressionNode::
 class LiteralNode: ExpressionNode::
     word getValue() virtual
 
+
 class BooleanLiteralNode: LiteralNode::
+    int16 construct()
     value: bool
     word getValue()
 
 class IntegerLiteralNode: LiteralNode::
+    int16 construct()
     value: uint64
     word getValue()
 
@@ -165,8 +169,12 @@ class FullCommaExpressionNode: Node::
     elements: FullCommaExpressionElementList
 
 
+class InitializerCommaExpressionNode: FullCommaExpressionNode
+
+
 // E.g. MyType; MyType{a}, MyType{a}{b}
-class BaseTypeExpressionNode: Node
+class BaseTypeExpressionNode: Node::
+    type_: corto/lang/type, readonly
 
 
 class SimpleTypeExpressionNode: BaseTypeExpressionNode::
@@ -181,6 +189,7 @@ class InitializerTypeExpressionNode: BaseTypeExpressionNode::
 class ObjectDeclarationNameNode: Node::
     name: string
     arguments: FullCommaExpressionNode
+    o: object, readonly
 
 
 list ObjectDeclarationNameList: ObjectDeclarationNameNode
@@ -206,35 +215,35 @@ class BaseVisitor::
 
     object visit() virtual
 
-    object visitProgramNode(ProgramNode node) virtual
+    object visitProgramNode(ProgramNode node, word data) virtual
 
-    object visitStatementNode(StatementNode node) virtual
-    object visitExpressionStatementNode(ExpressionStatementNode node) virtual
-    object visitFunctionDeclarationNode(FunctionDeclarationNode node) virtual
-    object visitBlockNode(BlockNode node) virtual
-    object visitObjectDeclarationNode(ObjectDeclarationNode node) virtual
-    object visitObjectDeclarationNameNode(ObjectDeclarationNameNode node) virtual
-    object visitBaseTypeExpressionNode(BaseTypeExpressionNode node) virtual
-    object visitSimpleTypeExpressionNode(SimpleTypeExpressionNode node) virtual
-    object visitInitializerTypeExpressionNode(InitializerTypeExpressionNode node) virtual
-    object visitFunctionParameterNode(FunctionParameterNode node) virtual
+    object visitStatementNode(StatementNode node, word data) virtual
+    object visitExpressionStatementNode(ExpressionStatementNode node, word data) virtual
+    object visitFunctionDeclarationNode(FunctionDeclarationNode node, word data) virtual
+    object visitBlockNode(BlockNode node, word data) virtual
+    object visitObjectDeclarationNode(ObjectDeclarationNode node, word data) virtual
+    object visitObjectDeclarationNameNode(ObjectDeclarationNameNode node, word data) virtual
+    object visitBaseTypeExpressionNode(BaseTypeExpressionNode node, word data) virtual
+    object visitSimpleTypeExpressionNode(SimpleTypeExpressionNode node, word data) virtual
+    object visitInitializerTypeExpressionNode(InitializerTypeExpressionNode node, word data) virtual
+    object visitFunctionParameterNode(FunctionParameterNode node, word data) virtual
 
-    object visitScopeNode(ScopeNode node) virtual
+    object visitScopeNode(ScopeNode node, word data) virtual
 
-    object visitExpressionNode(ExpressionNode node) virtual
-    object visitBinaryExpressionNode(BinaryExpressionNode node) virtual
-    object visitCommaExpressionNode(CommaExpressionNode node) virtual
-    object visitConditionalExpressionNode(ConditionalExpressionNode node) virtual
-    object visitUnaryExpressionNode(UnaryExpressionNode node) virtual
-    object visitMemberExpressionNode(MemberExpressionNode node) virtual
-    object visitCallExpressionNode(CallExpressionNode node) virtual
-    object visitElementExpressionNode(ElementExpressionNode node) virtual
+    object visitExpressionNode(ExpressionNode node, word data) virtual
+    object visitBinaryExpressionNode(BinaryExpressionNode node, word data) virtual
+    object visitCommaExpressionNode(CommaExpressionNode node, word data) virtual
+    object visitConditionalExpressionNode(ConditionalExpressionNode node, word data) virtual
+    object visitUnaryExpressionNode(UnaryExpressionNode node, word data) virtual
+    object visitMemberExpressionNode(MemberExpressionNode node, word data) virtual
+    object visitCallExpressionNode(CallExpressionNode node, word data) virtual
+    object visitElementExpressionNode(ElementExpressionNode node, word data) virtual
 
-    object visitFullCommaExpressionNode(FullCommaExpressionNode node) virtual
-    object visitFullCommaExpressionElementNode(FullCommaExpressionElementNode node) virtual
+    object visitFullCommaExpressionNode(FullCommaExpressionNode node, word data) virtual
+    object visitFullCommaExpressionElementNode(FullCommaExpressionElementNode node, word data) virtual
 
-    object visitLiteralNode(LiteralNode node) virtual
-    object visitIdentifierNode(IdentifierNode node) virtual
+    object visitLiteralNode(LiteralNode node, word data) virtual
+    object visitIdentifierNode(IdentifierNode node, word data) virtual
 
 
 class PrintVisitor: BaseVisitor::
@@ -244,31 +253,47 @@ class PrintVisitor: BaseVisitor::
     int16 construct()
     void destruct()
 
-    object visitProgramNode(ProgramNode node) virtual
+    object visitProgramNode(ProgramNode node, word data) virtual
 
-    object visitStatementNode(StatementNode node) virtual
-    object visitFunctionDeclarationNode(FunctionDeclarationNode node) virtual
-    object visitBlockNode(BlockNode node) virtual
-    object visitObjectDeclarationNode(ObjectDeclarationNode node) virtual
-    object visitObjectDeclarationNameNode(ObjectDeclarationNameNode node) virtual
-    object visitSimpleTypeExpressionNode(SimpleTypeExpressionNode node) virtual
-    object visitInitializerTypeExpressionNode(InitializerTypeExpressionNode node) virtual
-    object visitFunctionParameterNode(FunctionParameterNode node) virtual
-    object visitScopeNode(ScopeNode node) virtual
+    object visitStatementNode(StatementNode node, word data) virtual
+    object visitFunctionDeclarationNode(FunctionDeclarationNode node, word data) virtual
+    object visitBlockNode(BlockNode node, word data) virtual
+    object visitObjectDeclarationNode(ObjectDeclarationNode node, word data) virtual
+    object visitObjectDeclarationNameNode(ObjectDeclarationNameNode node, word data) virtual
+    object visitSimpleTypeExpressionNode(SimpleTypeExpressionNode node, word data) virtual
+    object visitInitializerTypeExpressionNode(InitializerTypeExpressionNode node, word data) virtual
+    object visitFunctionParameterNode(FunctionParameterNode node, word data) virtual
+    object visitScopeNode(ScopeNode node, word data) virtual
 
-    object visitExpressionNode(ExpressionNode node) virtual
-    object visitBinaryExpressionNode(BinaryExpressionNode node) virtual
-    object visitCommaExpressionNode(CommaExpressionNode node) virtual
-    object visitConditionalExpressionNode(ConditionalExpressionNode node) virtual
-    object visitUnaryExpressionNode(UnaryExpressionNode node) virtual
-    object visitMemberExpressionNode(MemberExpressionNode node) virtual
-    object visitCallExpressionNode(CallExpressionNode node) virtual
-    object visitElementExpressionNode(ElementExpressionNode node) virtual
+    object visitExpressionNode(ExpressionNode node, word data) virtual
+    object visitBinaryExpressionNode(BinaryExpressionNode node, word data) virtual
+    object visitCommaExpressionNode(CommaExpressionNode node, word data) virtual
+    object visitConditionalExpressionNode(ConditionalExpressionNode node, word data) virtual
+    object visitUnaryExpressionNode(UnaryExpressionNode node, word data) virtual
+    object visitMemberExpressionNode(MemberExpressionNode node, word data) virtual
+    object visitCallExpressionNode(CallExpressionNode node, word data) virtual
+    object visitElementExpressionNode(ElementExpressionNode node, word data) virtual
 
-    object visitFullCommaExpressionNode(FullCommaExpressionNode node) virtual
-    object visitFullCommaExpressionElementNode(FullCommaExpressionElementNode node) virtual
+    object visitFullCommaExpressionNode(FullCommaExpressionNode node, word data) virtual
+    object visitFullCommaExpressionElementNode(FullCommaExpressionElementNode node, word data) virtual
 
-    object visitLiteralNode(LiteralNode node) virtual
-    object visitIdentifierNode(IdentifierNode node) virtual
+    object visitLiteralNode(LiteralNode node, word data) virtual
+    object visitIdentifierNode(IdentifierNode node, word data) virtual
 
     string getText()
+
+
+class DeclarationVisitor: BaseVisitor::
+    currentScope: object, private
+    currentType: object, private
+    // TODO this must be passed as an extra "data" parameter
+
+    int16 construct()
+
+    object visit()
+    object visitObjectDeclarationNode(ObjectDeclarationNode node, word data) virtual
+    object visitSimpleTypeExpressionNode(SimpleTypeExpressionNode node, word data) virtual
+    object visitInitializerTypeExpressionNode(InitializerTypeExpressionNode node, word data) virtual
+    object visitObjectDeclarationNameNode(ObjectDeclarationNameNode node, word data) virtual
+
+    object visitFullCommaExpressionElementNode(FullCommaExpressionElementNode node, word data) virtual

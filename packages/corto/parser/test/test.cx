@@ -1,5 +1,9 @@
 #package ::test
 
+
+class Point:: x, y: int32
+
+
 test::Suite TestCortoLanguage::
 
     parser: /corto/parser/SimpleParser
@@ -59,11 +63,11 @@ test::Suite TestCortoLanguage::
     void test_observer3()
     void test_observer4()
     void test_observer5()
-    
+
     void test_badToken()
 
 
-test::Suite TestVisitor::
+test::Suite TestPrintVisitor::
     void test_visitorAtom()
     void test_visitorAssignment()
     void test_visitorCommaExpression1()
@@ -108,3 +112,13 @@ test::Suite TestVisitor::
     void test_objectDeclaration9()
     void test_objectDeclaration10()
     void test_objectDeclaration11()
+
+
+test::Suite TestDeclarationVisitor::
+    void test_Int8Declaration()
+    void test_MultipleInt8Declaration()
+    void test_Int8DeclarationAndDefinition()
+    void test_MultipleInt8DeclarationAndDefinition()
+
+    void test_PointDeclaration()
+    void test_PointDeclarationDefinition()

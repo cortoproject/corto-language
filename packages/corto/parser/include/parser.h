@@ -27,6 +27,7 @@ extern "C" {
 #include <corto/parser/CallExpressionNode.h>
 #include <corto/parser/CommaExpressionNode.h>
 #include <corto/parser/ConditionalExpressionNode.h>
+#include <corto/parser/DeclarationVisitor.h>
 #include <corto/parser/ElementExpressionNode.h>
 #include <corto/parser/ExpressionNode.h>
 #include <corto/parser/ExpressionStatementNode.h>
@@ -35,6 +36,7 @@ extern "C" {
 #include <corto/parser/FunctionDeclarationNode.h>
 #include <corto/parser/FunctionParameterNode.h>
 #include <corto/parser/IdentifierNode.h>
+#include <corto/parser/InitializerCommaExpressionNode.h>
 #include <corto/parser/InitializerTypeExpressionNode.h>
 #include <corto/parser/IntegerLiteralNode.h>
 #include <corto/parser/LiteralNode.h>
