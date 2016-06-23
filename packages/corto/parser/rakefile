@@ -1,9 +1,7 @@
+require 'rake/clean'
 
 PACKAGE = 'corto/parser'
 
 LANGUAGE = "c4cpp"
-
-LIBPATH = ["/usr/local/lib"]
-LIB = ["antlr3c"]
 
 require "#{ENV['CORTO_BUILD']}/package"
