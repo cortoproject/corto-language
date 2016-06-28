@@ -1,3 +1,5 @@
+require 'pathname'
+
 PACKAGE = 'corto/ast'
 
 YACC = "ast.y"
@@ -5,5 +7,7 @@ LEX = "ast.l"
 
 CFLAGS = ["-Wunused-parameter"]
 
-require "#{ENV['CORTO_BUILD']}/lexyacc"
+lexyacc_dir = Pathname.new(__FILE__).dirname
+
+require "#{lexyacc_dir}/lexyacc"
 require "#{ENV['CORTO_BUILD']}/package"
