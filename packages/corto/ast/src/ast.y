@@ -176,14 +176,14 @@ error:
 
 /* Syntax tree nodes */
 %type <ast>
-    statement statements
+    statement statements statement_nodecl
     expr literal_expr primary_expr iter_expr postfix_expr unary_expr multiplicative_expr additive_expr shift_expr
     boolean_expr equality_expr and_expr xor_expr or_expr logical_and_expr logical_or_expr assignment_expr
     comma_expr bracket_expr conditional_expr declaration declaration_expr declaration_ref
     function_declaration
     block block_start
     initializer initializer_expr initializer_braces init_key
-    if_start if_statement switch_statement case_statement observer_statement observer_declaration update_statement
+    if_start if_statement observer_statement observer_declaration update_statement
     while_statement while_until package_declaration
 
 /* Operators */
@@ -228,21 +228,24 @@ statements
     }
     ;
 
-statement
+statement_nodecl
     : expr ENDL                 {ast_Parser_addStatement(yparser(), $1); fast_op; ast_Parser_define(yparser()); fast_op;}
     | if_statement              {ast_Parser_addStatement(yparser(), $1); fast_op;}
     | while_statement           {ast_Parser_addStatement(yparser(), $1); fast_op;}
-    | switch_statement          {ast_Parser_addStatement(yparser(), $1); fast_op;}
-    | declaration ENDL          {$$ = NULL;}
     | scope_statement           {$<Variable>$ = ast_Parser_pushScope(yparser()); ast_Parser_pushLvalue(yparser(),NULL, FALSE); fast_op;} scope {ast_Parser_popScope(yparser(),$<Variable>2); fast_op;}
+    | update_statement          {ast_Parser_addStatement(yparser(), $1); fast_op;}
+    | block                     {ast_Parser_addStatement(yparser(), $1); fast_op;}
+    | ENDL                      {$$ = NULL;}
+    | TAB                       {ast_Parser_error(yparser(), "usage of tabs is not allowed");}
+    ;
+
+statement
+    : statement_nodecl
+    | package_declaration ENDL
+    | declaration ENDL {$$ = NULL;}
     | function_declaration ENDL {$$ = NULL;}
     | function_implementation   {$$ = NULL;}
     | observer_statement        {$$ = NULL;}
-    | update_statement          {ast_Parser_addStatement(yparser(), $1); fast_op;}
-    | block                     {ast_Parser_addStatement(yparser(), $1); fast_op;}
-    | package_declaration ENDL
-    | ENDL                      {$$ = NULL;}
-    | TAB                       {ast_Parser_error(yparser(), "usage of tabs is not allowed");}
     ;
 
 /* ======================================================================== */
@@ -398,6 +401,10 @@ package_declaration
 
 declaration
     : identifier declaration_list { $$ = ast_declarationSeqDo($1, &$2, FALSE); fast_op; $$ = NULL; }
+    | KW_DEFAULT declaration_list {
+        corto_object type = ast_Parser_lookup(yparser(), "default");
+        $$ = ast_declarationSeqDo(type, &$2, FALSE); fast_op; $$ = NULL;
+    }
     | KW_LOCAL {yparser()->isLocal = TRUE;} declaration_ref     {$$=$3;}
     ;
 
@@ -735,35 +742,6 @@ while_statement
 
 while_until
     : KW_WHILE assignment_expr {$$=$2;}
-    ;
-
-/* ======================================================================== */
-/* Switch statement */
-/* ======================================================================== */
-switch_statement
-    : KW_SWITCH assignment_expr ':' case_list INDENT switch_statements DEDENT    {$$ = NULL;}
-    | KW_SWITCH assignment_expr ':' switch_statements DEDENT                    {$$ = NULL;}
-    ;
-
-switch_statements
-    : statement
-    | case_statement
-    | switch_statements statement
-    | switch_statements case_statement
-    ;
-
-case_statement
-    : DEDENT case_list INDENT    {$$ = NULL;}
-    ;
-
-case_list
-    : case_label
-    | case_list case_label
-    ;
-
-case_label
-    : KW_CASE assignment_expr ':'
-    | KW_DEFAULT   ':'
     ;
 
 /* ======================================================================== */

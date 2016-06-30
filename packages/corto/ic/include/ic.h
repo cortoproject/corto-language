@@ -12,11 +12,11 @@
 #include "corto/vm/vm.h"
 /* $end */
 
+#include <corto/vm/vm.h>
+
 #include <corto/ic/_type.h>
 #include <corto/ic/_api.h>
 #include <corto/ic/_meta.h>
-
-#include <corto/vm/vm.h>
 
 #ifdef __cplusplus
 extern "C" {

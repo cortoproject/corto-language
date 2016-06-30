@@ -1399,8 +1399,7 @@ ast_Storage _ast_Parser_declareFunction(
 
                 function = corto_declareChild(this->scope, id, kind);
                 if (!function) {
-                    ast_Parser_error(this, "declare of '%s' failed",
-                        functionName);
+                    ast_Parser_error(this, "%s", corto_lasterr());
                     goto error;
                 }
 

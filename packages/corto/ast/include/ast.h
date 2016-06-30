@@ -8,11 +8,11 @@
 
 #include <corto/corto.h>
 #include <corto/ast/_interface.h>
+#include <corto/ic/ic.h>
+
 #include <corto/ast/_type.h>
 #include <corto/ast/_api.h>
 #include <corto/ast/_meta.h>
-
-#include <corto/ic/ic.h>
 
 #ifdef __cplusplus
 extern "C" {
