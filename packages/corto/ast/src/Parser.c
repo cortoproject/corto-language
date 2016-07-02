@@ -271,7 +271,7 @@ ast_Expression ast_Parser_delegateAssignment(ast_Parser this, ast_Expression lva
 
     /* Resolve function */
     ast_CallBuilderInit(&builder);
-    ast_CallBuilderSet(
+    ast_CallBuilderAssign(
         &builder,
         signature,
         NULL,

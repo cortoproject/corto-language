@@ -74,6 +74,7 @@ struct corto_serializer_s ast_findMemberSerializer(corto_bool findHidden) {
     s.accessKind = CORTO_NOT;
     s.traceKind = CORTO_SERIALIZER_TRACE_NEVER;
     s.aliasAction = CORTO_SERIALIZER_ALIAS_FOLLOW;
+    s.optionalAction = CORTO_SERIALIZER_OPTIONAL_ALWAYS;
     return s;
 }
 
@@ -133,7 +134,7 @@ corto_type ast_Parser_initGetType(ast_Initializer this, corto_member *m_out) {
                 } else {
                     if (m_out) {
                         corto_id id;
-                        ast_Parser_error(yparser(), 
+                        ast_Parser_error(yparser(),
                             "too many elements for non-composite\\collection type '%s'", ast_Parser_id(t, id));
                         result = NULL;
                     }
@@ -152,7 +153,7 @@ corto_type ast_Parser_initGetType(ast_Initializer this, corto_member *m_out) {
                         ast_Parser_id(this->frames[0].type, id), this->frames[0].location);
             } else {
                 ast_Parser_error(yparser(), "excess elements in initializer for primitive type '%s' (location=%d)",
-                            ast_Parser_id(this->frames[0].type, id), this->frames[0].location);              
+                            ast_Parser_id(this->frames[0].type, id), this->frames[0].location);
             }
         }
     }
@@ -169,7 +170,7 @@ corto_int16 _ast_Initializer_construct(
 /* $begin(corto/ast/Initializer/construct) */
     corto_uint32 variable;
     corto_type t = ast_Expression_getType(this->variables[0].object);
-    
+
     if (!t) {
         ast_Parser_error(yparser(), "parser error: invalid object in initializer"); abort();
         goto error;
@@ -186,22 +187,22 @@ corto_int16 _ast_Initializer_construct(
 #ifdef CORTO_INIT_DEBUG
     {
         corto_id id, id2;
-        printf("%*s%d[%s %p]: construct (type=%s)\n", 
+        printf("%*s%d[%s %p]: construct (type=%s)\n",
             indent, " ", yparser()->line, ast_Parser_id(corto_typeof(this), id), this, ast_Parser_id(t, id2));
         indent++;
     }
 #endif
-    
+
     /* If type of initializer is either a composite or a collection type, do an initial push */
     if ((((t->kind == CORTO_COMPOSITE) && (corto_interface(t)->kind != CORTO_DELEGATE)) || (t->kind == CORTO_COLLECTION))) {
         if (ast_Initializer_push(this)) {
             goto error;
         }
     }
-    
+
     ast_Node(this)->kind = Ast_InitializerExpr;
     corto_setref(&ast_Expression(this)->type, t);
-    
+
     return 0;
 error:
     return -1;
@@ -240,7 +241,7 @@ corto_uint16 _ast_Initializer_initFrame(
     struct corto_serializer_s s;
     corto_type t;
     ast_Initializer_findMember_t walkData;
-    
+
     /* Lookup corresponding member for current value (if there is any) */
     if (this->fp) {
         t = this->frames[this->fp-1].type;
@@ -290,7 +291,7 @@ corto_int32 _ast_Initializer_member_v(
 
     t = this->frames[this->fp-1].type;
     s = ast_findMemberSerializer(TRUE);
-    
+
     walkData.id = 0;
     walkData.count = 0;
     walkData.lookForLocation = -1;
@@ -322,22 +323,22 @@ corto_int16 _ast_Initializer_next_v(
     ast_Initializer this)
 {
 /* $begin(corto/ast/Initializer/next) */
-    
+
     /* Increase location by one */
     this->frames[this->fp].location++;
     ast_Initializer_initFrame(this);
-    
+
 #ifdef CORTO_INIT_DEBUG
     {
         corto_id id, id2;
         printf("%*s%d[%s %p]: next(fp=%d, location=%d, type=%s, member=%s)\n",
-               indent, " ", yparser()->line, ast_Parser_id(corto_typeof(this), id), this, this->fp, 
+               indent, " ", yparser()->line, ast_Parser_id(corto_typeof(this), id), this, this->fp,
                this->frames[this->fp].location,
                this->frames[this->fp].type?ast_Parser_id(this->frames[this->fp].type, id2):NULL,
                this->frames[this->fp].member?corto_idof(this->frames[this->fp].member):NULL);
     }
 #endif
-    
+
     return 0;
 /* $end */
 }
@@ -349,13 +350,13 @@ corto_int8 _ast_Initializer_pop_v(
 
     if (this->fp) {
         this->fp--;
-    
+
 #ifdef CORTO_INIT_DEBUG
     {
         corto_id id;
         indent--;
-        printf("%*s%d[%s %p]: pop(fp=%d, location=%d)\n", 
-            indent, " ", yparser()->line, 
+        printf("%*s%d[%s %p]: pop(fp=%d, location=%d)\n",
+            indent, " ", yparser()->line,
             ast_Parser_id(corto_typeof(this), id), this, this->fp, this->frames[this->fp].location);
     }
 #endif
@@ -385,13 +386,13 @@ corto_int16 _ast_Initializer_push_v(
         this->frames[this->fp].location = 0;
         corto_setref(&this->frames[this->fp].type, t);
         ast_Initializer_initFrame(this);
-        
+
 #ifdef CORTO_INIT_DEBUG
         {
             corto_id id, id2;
             printf("%*s%d[%s %p]: push(fp=%d, location=%d, type=%s, member=%s)\n",
                    indent, " ", yparser()->line, ast_Parser_id(corto_typeof(this), id), this, this->fp,
-                   this->frames[this->fp].location, 
+                   this->frames[this->fp].location,
                    this->frames[this->fp].type ? ast_Parser_id(this->frames[this->fp].type, id2) : NULL,
                    this->frames[this->fp].member?corto_idof(this->frames[this->fp].member):NULL);
             indent++;
@@ -402,7 +403,7 @@ corto_int16 _ast_Initializer_push_v(
         ast_Parser_error(yparser(), "unexpected initializer scope for value of reference type '%s'", ast_Parser_id(t, id));
         goto error;
     }
-    
+
     return 0;
 error:
     return -1;

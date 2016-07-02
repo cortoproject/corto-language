@@ -54,7 +54,7 @@ ast_Call ast_createCallWithArguments(ast_Expression instance, corto_string funct
 
     /* Initialize builder */
     ast_CallBuilderInit(&builder);
-    ast_CallBuilderSet(&builder,
+    ast_CallBuilderAssign(&builder,
         function,
         arguments,
         instance,
@@ -138,7 +138,7 @@ ast_Call ast_createCallFromExpr(ast_Expression f, ast_Expression arguments) {
 
     if (!result) {
         ast_CallBuilderInit(&builder);
-        ast_CallBuilderSet(&builder, name, arguments, instance, scope, yparser()->block);
+        ast_CallBuilderAssign(&builder, name, arguments, instance, scope, yparser()->block);
         result = ast_CallBuilder_build(&builder);
         ast_CallBuilderDeinit(&builder);
     }
