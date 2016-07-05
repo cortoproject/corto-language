@@ -117,7 +117,7 @@ corto_int16 ast_Parser_toIc(ast_Parser this, corto_stringSeq argv) {
     extern corto_bool CORTO_DEBUG_ENABLED;
     if (CORTO_DEBUG_ENABLED) {
         corto_string programStr = ic_program_toString(program);
-        corto_print("%s", programStr);
+        corto_trace("%s", programStr);
         corto_dealloc(programStr);
     }
 #endif
@@ -2430,7 +2430,7 @@ ast_Expression _ast_Parser_parseExpression(
     // Give expression its own block
     ast_Parser_blockPush(this, FALSE);
     if (fast_yparse(this, line, column)) {
-        corto_print("%s: expression '%s' parsed with errors", this->filename, expr);
+        corto_trace("%s: expression '%s' parsed with errors", this->filename, expr);
         ast_Parser_blockPop(this);
         goto error;
     }
@@ -2448,20 +2448,20 @@ ast_Expression _ast_Parser_parseExpression(
                     result = ast_Expression(node);
                 } else {
                     corto_id id;
-                    corto_print("%s: '%s' does not resolve to a valid expression (found %s).",
+                    corto_trace("%s: '%s' does not resolve to a valid expression (found %s).",
                             this->filename, expr, ast_Parser_id(corto_typeof(node), id));
                     goto error;
                 }
             } else {
-                corto_print("%s: expression '%s' is not allowed to contain multiple statements", this->filename, expr);
+                corto_trace("%s: expression '%s' is not allowed to contain multiple statements", this->filename, expr);
                 goto error;
             }
         } else {
-            corto_print("%s: expression '%s' did not result in a statement", this->filename, expr);
+            corto_trace("%s: expression '%s' did not result in a statement", this->filename, expr);
             goto error;
         }
     } else {
-        corto_print("parser error: no block set in parser after parsing expression.");
+        corto_trace("parser error: no block set in parser after parsing expression.");
         goto error;
     }
 

@@ -24,13 +24,13 @@ corto_int16 _ast_If_construct(
         conditionType = ast_Expression_getType(this->condition);
         if (conditionType) {
             /* Check if condition can evaluate to a boolean value */
-            if ((!this->condition->deref == Ast_ByReference) && !conditionType->reference && (conditionType->kind != CORTO_PRIMITIVE)) {
+            if ((this->condition->deref != Ast_ByReference) && !conditionType->reference && (conditionType->kind != CORTO_PRIMITIVE)) {
                 ast_Parser_error(yparser(), "expression does not evaluate to condition");
                 goto error;
             }
         }
     }
-    
+
     this->warnUnreachable = TRUE;
 
     return 0;
@@ -65,7 +65,7 @@ ic_node _ast_If_toIc_v(
 
     CORTO_UNUSED(storage);
     CORTO_UNUSED(stored);
-    
+
     if (this->condition && !(condition = ast_Node_optimizeCondition(this->condition, &condResult, &inverse))) {
         if (condResult) {
             ast_Block_toIc(this->trueBranch, program, NULL, FALSE);
@@ -108,7 +108,7 @@ ic_node _ast_If_toIc_v(
             /* Check whether condition is a resource returned by function.
              * Because of how resources are managed, his case needs to be handled
              * separately. Resources are references, strings or certain collections.
-             * 
+             *
              * A function returnvalue used in an condition
              * is stored in a temporary register. Temporary registers don't do
              * resource management, except when they contain a resource returned
@@ -145,7 +145,7 @@ ic_node _ast_If_toIc_v(
 
             /* Evaluate condition, insert jump */
             if (this->falseBranch) {
-                IC_3(program, ast_Node(this)->line, inverse ? ic_jneq : ic_jeq, expr, 
+                IC_3(program, ast_Node(this)->line, inverse ? ic_jneq : ic_jeq, expr,
                     labelEval, NULL, deref1, IC_DEREF_VALUE, IC_DEREF_VALUE);
 
                 /* Label to jump over true-branch */
