@@ -8,11 +8,12 @@
 
 #include <corto/corto.h>
 #include <corto/parser/_interface.h>
+#include <corto/corto.h>
+#include <antlr3/antlr3.h>
+
 #include <corto/parser/_type.h>
 #include <corto/parser/_api.h>
 #include <corto/parser/_meta.h>
-
-#include <corto/corto.h>
 
 #ifdef __cplusplus
 extern "C" {
