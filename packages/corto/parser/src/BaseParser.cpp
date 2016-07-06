@@ -20,34 +20,20 @@ static corto_int16 parseInputStream(
     pCortolangLexer lexer;
     pANTLR3_COMMON_TOKEN_STREAM tokens;
     pCortolangParser parser;
-    // CortolangParser_program_return_struct prog_return;
-    pANTLR3_BASE_TREE tree;
     corto_int16 error = 0;
 
-    lexer = CustomLexer_new(input);
+    lexer = CortolangLexerNew(input);
     tokens = antlr3CommonTokenStreamSourceNew(
         ANTLR3_SIZE_HINT,
         TOKENSOURCE(lexer)
     );
     parser = CortolangParserNew(tokens);
     if (!parser) {
-        /* TODO check if there is a custom message from antlr3 */
         corto_seterr("error creating parser");
         goto errorParserNew;
     }
 
-    assert(parser->parser_data == NULL);
-    parser->parser_data = parser_parserDataNew(_this);
-    if (!(parser->parser_data)) {
-        goto errorNoParserData;
-    }
-
-    _this->success = TRUE;
-    // prog_return = parser->program(parser);
     _this->programReturn = parser->program(parser);
-    error = _this->success ? 0 : -1;
-    
-    // CORTO_UNUSED((tree = prog_return.tree));
 
     parser->free(parser);
     tokens->free(tokens);
@@ -96,7 +82,7 @@ corto_int16 _parser_BaseParser_parse(
         corto_seterr("input string: %s", text);
         goto errorInput;
     }
-    
+
     return parseInputStream(_this, input);
 
 errorInput:
