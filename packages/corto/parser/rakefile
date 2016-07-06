@@ -3,4 +3,12 @@ PACKAGE = 'corto/parser'
 
 LANGUAGE = "c4cpp"
 
+def _lib_path
+  corto_target = ENV["CORTO_TARGET"]
+  corto_version = ENV["CORTO_VERSION"]
+  "#{corto_target}lib/corto/#{corto_version}/antlr3"
+end
+
+LIB_PATH = [_lib_path]
+
 require "#{ENV['CORTO_BUILD']}/package"
