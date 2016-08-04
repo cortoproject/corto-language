@@ -19,6 +19,7 @@ install:
     require "#{ENV["CORTO_BUILD"]}/forward"' > rakefile
   - source corto/configure
   - rake
+  - cd corto-language
 
 script:
-  - rake test
+  - CORTO_VERBOSITY=TRACE corto test --verbose
