@@ -184,14 +184,6 @@ gid (("::"|"/")*{id})+
                                     }
                                 }
 
-"update"                        TOKEN; return KW_UPDATE;
-"declare"                       TOKEN; return KW_DECLARE;
-"define"                        TOKEN; return KW_DEFINE;
-"delete"                        TOKEN; return KW_DESTRUCT;
-"on"                            TOKEN; return KW_ON;
-"self"                          TOKEN; return KW_SELF;
-"scope"                         TOKEN; return KW_SCOPE;
-"synchronized"                  TOKEN; return KW_SYNCHRONIZED;
 "if"                            TOKEN; return KW_IF;
 "else"                          TOKEN; return KW_ELSE;
 "while"                         TOKEN; return KW_WHILE;

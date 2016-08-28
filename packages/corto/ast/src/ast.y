@@ -131,7 +131,6 @@ error:
 %token INDENT DEDENT
 
 /* Keywords */
-%token KW_UPDATE KW_DECLARE KW_DEFINE KW_DESTRUCT KW_ON KW_SCOPE KW_SELF KW_SYNCHRONIZED
 %token KW_IF KW_ELSE KW_WHILE KW_SWITCH KW_CASE KW_DEFAULT KW_BREAK KW_FOR
 %token KW_TRY KW_CATCH
 %token KW_IMPORT
@@ -183,7 +182,7 @@ error:
     function_declaration
     block block_start
     initializer initializer_expr initializer_braces init_key
-    if_start if_statement observer_statement observer_declaration update_statement
+    if_start if_statement
     while_statement while_until package_declaration
 
 /* Operators */
@@ -192,15 +191,12 @@ error:
 
 /* Objects */
 %type <Reference>
-    identifier identifier_id observer_dispatch
+    identifier identifier_id
 
 /* Observable mask */
 /*%type <Mask>
     event_mask_norm event_mask event_mask_flags event_mask_childflags event_mask_baseflags
 */
-
-%type <Mask>
-    event_mask event_baseflag event_childflag event_flag
 
 %type <Declarations>
     declaration_list
@@ -233,7 +229,6 @@ statement_nodecl
     | if_statement              {ast_Parser_addStatement(yparser(), $1); fast_op;}
     | while_statement           {ast_Parser_addStatement(yparser(), $1); fast_op;}
     | scope_statement           {$<Variable>$ = ast_Parser_pushScope(yparser()); ast_Parser_pushLvalue(yparser(),NULL, FALSE); fast_op;} scope {ast_Parser_popScope(yparser(),$<Variable>2); fast_op;}
-    | update_statement          {ast_Parser_addStatement(yparser(), $1); fast_op;}
     | block                     {ast_Parser_addStatement(yparser(), $1); fast_op;}
     | ENDL                      {$$ = NULL;}
     | TAB                       {ast_Parser_error(yparser(), "usage of tabs is not allowed");}
@@ -245,7 +240,6 @@ statement
     | declaration ENDL {$$ = NULL;}
     | function_declaration ENDL {$$ = NULL;}
     | function_implementation   {$$ = NULL;}
-    | observer_statement        {$$ = NULL;}
     ;
 
 /* ======================================================================== */
@@ -494,7 +488,6 @@ postfix_expr
     | postfix_expr '(' ')'                        {$$ = ast_Parser_callExpr(yparser(), $1, NULL); fast_op;}
     | postfix_expr bracket_expr                   {$$ = ast_Parser_callExpr(yparser(), $1, $2); fast_op;}
     | postfix_expr '.' any_id                     {ast_String str = ast_StringCreate($3); if (!str) {YYERROR;} $$ = ast_Parser_memberExpr(yparser(), $1, ast_Expression(str)); corto_release(str); fast_op;}
-    | postfix_expr '.' KW_DESTRUCT                {ast_String str = ast_StringCreate("delete"); if (!str) {YYERROR;} $$ = ast_Parser_memberExpr(yparser(), $1, ast_Expression(str)); corto_release(str); fast_op;}
     | postfix_expr INC                            {$$ = ast_Parser_postfixExpr(yparser(), $1, CORTO_INC); fast_op}
     | postfix_expr DEC                            {$$ = ast_Parser_postfixExpr(yparser(), $1, CORTO_DEC); fast_op}
     ;
@@ -691,14 +684,6 @@ identifier_string
 
 any_id
     : ID
-    | '@' KW_SCOPE {$$ = "scope";}
-    | '@' KW_UPDATE {$$ = "update";}
-    | '@' KW_DECLARE {$$ = "declare";}
-    | '@' KW_DEFINE {$$ = "define";}
-    | '@' KW_DESTRUCT {$$ = "delete";}
-    | '@' KW_ON {$$ = "on";}
-    | '@' KW_SELF {$$ = "self";}
-    | '@' KW_SYNCHRONIZED {$$ = "synchronized";}
     | '@' KW_IF {$$ = "if";}
     | '@' KW_ELSE {$$ = "else";}
     | '@' KW_WHILE {$$ = "while";}
@@ -715,8 +700,6 @@ any_id
     | '@' LOR {$$ = "or";}
     | '@' LNOT {$$ = "not";}
     | '@' SCOPE {$$ = "::";}
-    | KW_DECLARE {$$ = "declare";}
-    | KW_DEFINE {$$ = "define";}
     ;
 
 /* ======================================================================== */
@@ -743,55 +726,6 @@ while_statement
 while_until
     : KW_WHILE assignment_expr {$$=$2;}
     ;
-
-/* ======================================================================== */
-/* Observer statement */
-/* ======================================================================== */
-observer_statement
-    : observer_declaration block {}
-    | observer_declaration ENDL {yparser()->blockCount--;}
-    ;
-
-observer_declaration
-    : observer_dispatch event_mask assignment_expr  {$$ = NULL; ast_Parser_observerDeclaration(yparser(), NULL, $3, $2, $1); fast_op;}
-    ;
-
-observer_dispatch
-    : KW_ON                 {$$ = NULL; ast_Parser_observerPush(yparser());}
-    ;
-
-event_mask
-    : event_flag
-    | event_mask '|' event_flag         {$$ = $1 | $3;}
-    ;
-
-event_flag
-    : event_baseflag
-    | event_childflag
-    | event_baseflag event_childflag    {$$ = $1 | $2;}
-    ;
-
-event_baseflag
-    : KW_UPDATE         {$$ = CORTO_ON_UPDATE;}
-    | KW_DECLARE        {$$ = CORTO_ON_DECLARE;}
-    | KW_DEFINE         {$$ = CORTO_ON_DEFINE;}
-    | KW_DESTRUCT       {$$ = CORTO_ON_DELETE;}
-    ;
-
-event_childflag
-    : KW_SELF           {$$ = CORTO_ON_SELF;}
-    | KW_SCOPE          {$$ = CORTO_ON_SCOPE;}
-    | KW_SYNCHRONIZED   {$$ = CORTO_ON_VALUE;}
-    ;
-
-/* ======================================================================== */
-/* Update statement */
-/* ======================================================================== */
-update_statement
-    : KW_UPDATE postfix_expr ENDL    {$$ = ast_Parser_updateStatement(yparser(), $2, NULL); fast_op;}
-    | KW_UPDATE postfix_expr block  {$$ = ast_Parser_updateStatement(yparser(), $2, $3); fast_op;}
-    ;
-
 
 %%
 
