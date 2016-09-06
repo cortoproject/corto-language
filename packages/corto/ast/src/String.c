@@ -105,7 +105,7 @@ corto_int16 ast_String_parse(ast_String this) {
 
     ptr = this->value;
     str = ptr; /* Keep track of beginning of string-element */
-    
+
     if (ptr) {
         /* Walk string, split embedded expressions */
         while((ch = *ptr)) {
@@ -158,14 +158,14 @@ corto_int16 _ast_String_construct(
     ast_String this)
 {
 /* $begin(corto/ast/String/construct) */
-    
+
     if (!yparser()->block || !yparser()->scope) {
         goto error;
     }
 
     corto_setref(&this->block, yparser()->block);
     corto_setref(&this->scope, yparser()->scope);
-    
+
     return 0;
 error:
     return -1;
@@ -232,6 +232,10 @@ corto_int16 _ast_String_serialize(
         break;
     case Ast_Ref: {
         corto_object o = corto_resolve(NULL, this->value);
+        if (!o) {
+            ast_Parser_error(yparser(), "unresolved object '%s'", this->value);
+            goto error;
+        }
         corto_setref(&dst, o);
         corto_release(o);
         break;
