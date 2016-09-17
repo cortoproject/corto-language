@@ -67,7 +67,7 @@ corto_int16 _ast_InitializerExpression_insert(
 
     /* Walk operations */
     ast_InitOperListForeach(this->operations, elem) {
-        switch(elem->kind) {
+        switch(elem.kind) {
         case Ast_InitOpPush:
             if (ast_DynamicInitializer_push(initializer)) {
                 goto error;
@@ -84,12 +84,12 @@ corto_int16 _ast_InitializerExpression_insert(
             }
             break;
         case Ast_InitOpValue:
-            if (ast_DynamicInitializer_value(initializer, elem->expr)) {
+            if (ast_DynamicInitializer_value(initializer, elem.expr)) {
                 goto error;
             }
             break;
         case Ast_InitOpMember:
-            if (ast_Initializer_member(ast_Initializer(initializer), elem->name)) {
+            if (ast_Initializer_member(ast_Initializer(initializer), elem.name)) {
                 goto error;
             }
            break;
