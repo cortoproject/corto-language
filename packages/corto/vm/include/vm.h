@@ -3,21 +3,17 @@
  * This file is generated. Do not modify.
  */
 
-#ifndef VM_H
-#define VM_H
+#ifndef CORTO_VM_H
+#define CORTO_VM_H
 
-#include "corto/corto.h"
-#include "corto/vm/_interface.h"
-#include "corto/vm/vm_expansion.h"
-#include "corto/vm/vm_operands.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include <corto/corto.h>
 
 /* $header() */
 #include "stdint.h"
 #include "corto/vm/vm_def.h"
+#include "corto/vm/_interface.h"
+#include "corto/vm/vm_expansion.h"
+#include "corto/vm/vm_operands.h"
 
 extern int CORTO_PROCEDURE_VM;
 
@@ -125,6 +121,11 @@ vm_op *vm_programAddOp(vm_program program, uint32_t line);
 /* $end */
 
 #ifdef __cplusplus
+extern "C" {
+#endif
+
+#ifdef __cplusplus
 }
 #endif
 #endif
+

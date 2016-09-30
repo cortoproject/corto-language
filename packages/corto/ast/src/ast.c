@@ -281,6 +281,7 @@ int astMain(int argc, char* argv[]) {
     if (corto_threadTlsKey(&ast_PARSER_KEY, NULL)) {
         return -1;
     }
+
     /* Register corto extension */
     corto_loaderRegister("cx", fast_cortoRun, NULL);
     return 0;
