@@ -329,6 +329,7 @@ function_declaration
         $$ = ast_Parser_declareFunction(yparser(), $1 ? ast_Object($1)->value : NULL, id, kind, FALSE); fast_op;
         corto_release(kind);
     }
+    | identifier any_id function_argumentList identifier_string initializer_braces
     | identifier GID function_argumentList  {corto_id id; sprintf(id, "%s(%s)", $2, $3); corto_dealloc($3); $$ = ast_Parser_declareFunction(yparser(), $1 ? ast_Object($1)->value : NULL, id, NULL, FALSE); fast_op; }
 
     /* Reference returnvalue */

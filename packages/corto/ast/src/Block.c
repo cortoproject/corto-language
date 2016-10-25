@@ -36,7 +36,7 @@ ast_Local _ast_Block_declare(
     ast_LocalKind kind = 0;
 
     corto_assert(this->locals != NULL, "initialization failed");
-    
+
     /* Check if variable already exists. Use lookupLocal instead of lookup since the ordinary lookup also
      * looks for member-variables if the block is part of a function. */
     if (ast_Block_lookupLocal(this, id)) {
@@ -122,10 +122,9 @@ ast_Expression _ast_Block_lookup(
     result = ast_Expression(ast_Block_lookupLocal(this, id));
 
     if (!result) {
-        if (this->function) {
+        if (this->function && corto_instanceof(corto_interface_o, corto_parentof(this->function))) {
             if ((corto_procedure(corto_typeof(this->function))->kind == CORTO_METHOD) ||
-               ((corto_procedure(corto_typeof(this->function))->kind == CORTO_OBSERVER) && 
-               corto_observer(this->function)->_template)) {
+               ((corto_procedure(corto_typeof(this->function))->kind == CORTO_OBSERVER))) {
                 if (strcmp(id, "this")) {
                     corto_object parent;
                     corto_member m;
@@ -155,11 +154,11 @@ ast_Expression _ast_Block_lookup(
                      * a 'this' from either a method or observer is illegal */
                     if (!corto_instanceof(corto_type(corto_interface_o), parent)) {
                         corto_id id;
-                        ast_Parser_error(yparser(), 
-                            "'this' illegal in procedure '%s'", 
+                        ast_Parser_error(yparser(),
+                            "'this' illegal in procedure '%s'",
                             ast_Parser_id(this->function, id));
                         goto error;
-                    }                    
+                    }
 
                     m = corto_interface_resolveMember(corto_interface(parent), id);
 
@@ -276,9 +275,9 @@ ic_node _ast_Block_toIc_v(
     ic_scope scope;
     CORTO_UNUSED(storage);
     CORTO_UNUSED(stored);
-    
+
     scope = ic_program_pushScope(program);
-    
+
     if (!this->_while) {
         ast_Block_toIcBody_v(this, program, storage, stored);
     } else {
@@ -304,7 +303,7 @@ ic_node _ast_Block_toIcBody_v(
     ast_Local local;
     CORTO_UNUSED(storage);
     CORTO_UNUSED(stored);
-    
+
     /* Declare locals */
     if (this->locals) {
         localIter = corto_llIter(this->locals);
@@ -320,7 +319,7 @@ ic_node _ast_Block_toIcBody_v(
                     local->kind == Ast_LocalReturn);
         }
     }
-    
+
     if (this->statements) {
         statementIter = corto_llIter(this->statements);
         while(corto_iterHasNext(&statementIter)) {

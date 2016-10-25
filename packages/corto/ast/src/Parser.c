@@ -676,13 +676,8 @@ ast_Storage ast_Parser_observerCreate(ast_Parser this, corto_string id, ast_Expr
         observer->mask = mask;
         corto_setref(&observer->dispatcher, dispatcher);
     } else {
-        observer = corto_observerDeclareChild(this->scope, id);
-        if (!observer) {
-            goto error;
-        }
-        corto_setref(&observer->dispatcher, dispatcher);
-
-        if (corto_observerDefine(observer, mask, observable, NULL)) {
+        observer = corto_observerCreateChild(this->scope, id, mask, observable, NULL, dispatcher, NULL, FALSE, NULL);
+        if (!observer){
             goto error;
         }
     }
@@ -1364,7 +1359,7 @@ ast_Storage _ast_Parser_declareFunction(
 
         /* This could be an implementation after a forward declaration so try to resolve
          * function first. */
-        if (!((function = corto_lookupFunction(this->scope, id, &distance)) && !distance)) {
+        if (!((function = corto_lookupFunction(this->scope, id, &distance, NULL)) && !distance)) {
             if (!kind) {
                 kind = corto_typeof(this->scope)->defaultProcedureType;
                 if (!kind) {
@@ -3051,8 +3046,8 @@ ast_Node _ast_Parser_updateStatement(
 
         if (functionBlock) {
             procedureKind = corto_procedure(corto_typeof(function))->kind;
-            if (functionBlock) {
-                if ((procedureKind == CORTO_METHOD) || ((procedureKind == CORTO_OBSERVER) && corto_observer(function)->_template)) {
+            if (functionBlock && corto_instanceof(corto_interface_o, corto_parentof(function))) {
+                if ((procedureKind == CORTO_METHOD) || ((procedureKind == CORTO_OBSERVER))) {
                     from = ast_Parser_lookup(this, "this");
                 }
             }
