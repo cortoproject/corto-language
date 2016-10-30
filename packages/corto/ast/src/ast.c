@@ -34,6 +34,10 @@ int fast_cortoRun(corto_string file, int argc, char* argv[], void* udata) {
 
         /* Parse & run script */
         ast_Parser_parse(p, seq);
+        if (p->errors) {
+            corto_seterr("found %d errors", p->errors);
+            goto error;
+        }
         corto_release(p);
         corto_dealloc(source);
     } else {
