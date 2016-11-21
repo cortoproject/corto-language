@@ -7,7 +7,7 @@
 #define CORTO_IC_H
 
 #include <corto/corto.h>
-#include <corto/ic/_interface.h>
+#include <corto/ic/_project.h>
 /* $header() */
 #include "corto/vm/vm.h"
 /* $end */
@@ -16,7 +16,7 @@
 
 #include <corto/ic/_type.h>
 #include <corto/ic/_api.h>
-#include <corto/ic/_meta.h>
+#include <corto/ic/_load.h>
 
 #ifdef __cplusplus
 extern "C" {

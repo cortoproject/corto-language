@@ -11,7 +11,7 @@
 /* $header() */
 #include "stdint.h"
 #include "corto/vm/vm_def.h"
-#include "corto/vm/_interface.h"
+#include "corto/vm/_project.h"
 #include "corto/vm/vm_expansion.h"
 #include "corto/vm/vm_operands.h"
 

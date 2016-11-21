@@ -877,7 +877,7 @@ corto_string _ast_Parser_argumentToString(
         corto_string_ser_t walkData;
 
         memset(&walkData, 0, sizeof(walkData));
-        s = corto_string_ser(CORTO_LOCAL, CORTO_NOT, CORTO_SERIALIZER_TRACE_NEVER);
+        s = corto_string_ser(CORTO_LOCAL|CORTO_READONLY|CORTO_PRIVATE, CORTO_NOT, CORTO_SERIALIZER_TRACE_NEVER);
 
         walkData.buffer = CORTO_BUFFER_INIT;
         walkData.compactNotation = TRUE;

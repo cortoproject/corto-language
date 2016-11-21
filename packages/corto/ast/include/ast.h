@@ -7,12 +7,16 @@
 #define CORTO_AST_H
 
 #include <corto/corto.h>
-#include <corto/ast/_interface.h>
+#include <corto/ast/_project.h>
+/* $header() */
+/* You can put your own definitions here! */
+/* $end */
+
 #include <corto/ic/ic.h>
 
 #include <corto/ast/_type.h>
 #include <corto/ast/_api.h>
-#include <corto/ast/_meta.h>
+#include <corto/ast/_load.h>
 
 #ifdef __cplusplus
 extern "C" {
