@@ -13,11 +13,13 @@
 /* $end */
 
 #include <corto/ic/ic.h>
+#include <corto/core/c/c.h>
+#include <corto/lang/c/c.h>
 
 #include <corto/ast/_type.h>
+
 #include <corto/ast/_api.h>
 #include <corto/ast/_load.h>
-
 #ifdef __cplusplus
 extern "C" {
 #endif

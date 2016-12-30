@@ -12,13 +12,15 @@
 /* You can put your own definitions here! */
 /* $end */
 
-#include <corto/test/test.h>
 #include <corto/ast/ast.h>
+#include <corto/test/test.h>
+#include <corto/core/c/c.h>
+#include <corto/lang/c/c.h>
 
 #include <_type.h>
+
 #include <_api.h>
 #include <_load.h>
-
 #ifdef __cplusplus
 extern "C" {
 #endif

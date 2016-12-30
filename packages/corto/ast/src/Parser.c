@@ -2442,7 +2442,7 @@ ast_Expression _ast_Parser_parseExpression(
                 if (corto_instanceof(corto_type(ast_Expression_o), node)) {
                     result = ast_Expression(node);
                 } else {
-                    corto_id id;
+                    corto_id id; (void)id;
                     corto_trace("%s: '%s' does not resolve to a valid expression (found %s).",
                             this->filename, expr, ast_Parser_id(corto_typeof(node), id));
                     goto error;
