@@ -8,10 +8,6 @@
 
 #include <corto/corto.h>
 #include <corto/ast/_project.h>
-/* $header() */
-/* You can put your own definitions here! */
-/* $end */
-
 #include <corto/ic/ic.h>
 #include <corto/core/c/c.h>
 #include <corto/lang/c/c.h>

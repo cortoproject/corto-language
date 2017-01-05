@@ -201,6 +201,7 @@ gid (("::"|"/")*{id})+
 
 true                            TOKEN; yylval.Boolean =  TRUE; return BOOLEAN;
 false                           TOKEN; yylval.Boolean = FALSE; return BOOLEAN;
+nan                             TOKEN; yylval.FloatingPoint = NAN; return FLOATINGPOINT;
 
 "#package"                      TOKEN; return PACKAGE;
 "//"                            comment();

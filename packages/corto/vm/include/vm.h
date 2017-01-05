@@ -8,6 +8,8 @@
 
 #include <corto/corto.h>
 
+#include <corto/core/c/c.h>
+#include <corto/lang/c/c.h>
 /* $header() */
 #include "stdint.h"
 #include "corto/vm/vm_def.h"
