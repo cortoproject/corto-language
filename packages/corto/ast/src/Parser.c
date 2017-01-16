@@ -1361,7 +1361,7 @@ ast_Storage _ast_Parser_declareFunction(
          * function first. */
         if (!((function = corto_lookupFunction(this->scope, id, &distance, NULL)) && !distance)) {
             if (!kind) {
-                kind = corto_typeof(this->scope)->defaultProcedureType;
+                kind = corto_typeof(this->scope)->options.defaultProcedureType;
                 if (!kind) {
                     kind = corto_type(corto_function_o);
                 }
@@ -1434,7 +1434,7 @@ ast_Storage _ast_Parser_declareFunction(
             }
             *bptr = '\0';
 
-            corto_object function = corto_resolve(this->scope, query);
+            corto_object function = corto_lookup(this->scope, query);
             corto_assert(function != NULL,
                 "object '%s' should still be in '%s' in 2nd pass (%s)",
                 query, corto_fullpath(NULL, this->scope), corto_lasterr());
@@ -1863,9 +1863,9 @@ corto_int16 _ast_Parser_initDeclare(
 
             /* Obtain default type from scope */
             if (scope) {
-                type = corto_typeof(scope)->defaultType;
+                type = corto_typeof(scope)->options.defaultType;
             } else {
-                type = corto_typeof(this->scope)->defaultType;
+                type = corto_typeof(this->scope)->options.defaultType;
             }
 
             if (!type) {
