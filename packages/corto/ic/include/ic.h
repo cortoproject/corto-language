@@ -17,9 +17,9 @@
 #include <corto/lang/c/c.h>
 
 #include <corto/ic/_type.h>
-
 #include <corto/ic/_api.h>
 #include <corto/ic/_load.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif

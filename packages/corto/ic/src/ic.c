@@ -50,7 +50,7 @@ ic_opKind _ic_opKindFromOperator(
 /* $end */
 }
 
-int icMain(int argc, char* argv[]) {
+int icMain(int argc, char *argv[]) {
 /* $begin(main) */
     CORTO_UNUSED(argc);
     CORTO_UNUSED(argv);

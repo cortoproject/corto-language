@@ -278,7 +278,7 @@ error:
 /* $end */
 }
 
-int astMain(int argc, char* argv[]) {
+int astMain(int argc, char *argv[]) {
 /* $begin(main) */
     CORTO_UNUSED(argc);
     CORTO_UNUSED(argv);

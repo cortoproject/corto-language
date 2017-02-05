@@ -170,7 +170,7 @@ error:
 %type <SignedInteger> SIGNEDINTEGER
 %type <FloatingPoint> FLOATINGPOINT
 %type <String> STRING identifier_string
-%type <String> ID GID function_argument function_arguments function_argumentList any_id
+%type <String> ID GID function_argument function_argument_inout function_arguments function_argumentList any_id
 %type <Null> NUL
 
 /* Syntax tree nodes */
@@ -354,8 +354,13 @@ function_argumentList
     ;
 
 function_arguments
-    : function_argument                           {$$=corto_alloc(sizeof(corto_id));strcpy($$,$1); corto_dealloc($1);}
-    | function_arguments ',' function_argument    {$$=$1; strcat($$,","); strcat($$,$3); corto_dealloc($3);}
+    : function_argument_inout                           {$$=corto_alloc(sizeof(corto_id));strcpy($$,$1); corto_dealloc($1);}
+    | function_arguments ',' function_argument_inout    {$$=$1; strcat($$,","); strcat($$,$3); corto_dealloc($3);}
+    ;
+
+function_argument_inout
+    : ID ':' function_argument {corto_asprintf(&$$, "%s:%s", $1, $3); corto_dealloc($3);}
+    | function_argument
     ;
 
 function_argument
