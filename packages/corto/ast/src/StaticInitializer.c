@@ -149,12 +149,19 @@ corto_int16 _ast_StaticInitializer_define(
         o = (corto_object)ast_Object(ast_Initializer(this)->variables[variable].object)->value;
         if (corto_instanceof(corto_type(corto_type_o), o)
                 || (corto_checkAttr(o, CORTO_ATTR_SCOPED) && corto_instanceof(corto_type(corto_type_o), corto_parentof(o)))) {
-            if (corto_define(o)) {
-                corto_id id1;
-                ast_Parser_error(yparser(), "failed to define '%s': %s",
-                        ast_Parser_id(o, id1),
-                        corto_lasterr());
-                goto error;
+            
+            corto_type t = corto_typeof(o);
+            if (!corto_checkAttr(o, CORTO_ATTR_SCOPED) ||
+                (corto_parentof(o) && corto_checkState(corto_parentof(o), CORTO_DEFINED)) ||
+                (t->options.parentState != CORTO_DEFINED)) 
+            {
+                if (corto_define(o)) {
+                    corto_id id1;
+                    ast_Parser_error(yparser(), "failed to define '%s': %s",
+                            ast_Parser_id(o, id1),
+                            corto_lasterr());
+                    goto error;
+                }
             }
         } else {
             ast_Expression refVar = ast_Expression(ast_ObjectCreate(o));

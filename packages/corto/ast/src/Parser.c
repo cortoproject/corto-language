@@ -2676,6 +2676,19 @@ corto_void _ast_Parser_popScope(
 /* $begin(corto/ast/Parser/popScope) */
     ast_CHECK_ERRSET(this);
 
+    /* Scope content of types is defined at parse-time. If scope contained objects
+     * that set their parentstate to CORTO_DEFINED, they might not yet be defined. */
+    if (corto_instanceof(corto_type(corto_type_o), this->scope)) {
+        corto_objectseq objects = corto_scopeClaim(this->scope);
+        corto_int32 i;
+        for (i = 0; i < objects.length; i ++) {
+            if (!corto_checkState(objects.buffer[i], CORTO_DEFINED)) {
+                corto_define(objects.buffer[i]);
+            }
+        }
+        corto_scopeRelease(objects);
+    }
+
     /* Restore scope */
     corto_setref(&this->scope, previous);
 /* $end */
