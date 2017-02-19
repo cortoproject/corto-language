@@ -13,6 +13,7 @@ corto_void _test_Enum_setup(
 {
 /* $begin(test/Enum/setup) */
 
+    corto_enableload(FALSE);
     corto_load("cx/types/enum.cx", 0, NULL);
 
 /* $end */

@@ -13,6 +13,7 @@ corto_void _test_Bitmask_setup(
 {
 /* $begin(test/Bitmask/setup) */
 
+    corto_enableload(FALSE);
     corto_load("cx/types/bitmask.cx", 0, NULL);
 
 /* $end */
