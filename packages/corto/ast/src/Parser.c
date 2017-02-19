@@ -2780,7 +2780,7 @@ corto_int16 _ast_Parser_pushPackage(
             if (ch == ':') {
                 ptr++;
             }
-            corto_object o = corto_resolve(this->scope, buffer);
+            corto_object o = corto_lookup(this->scope, buffer);
             if (!o) {
                 /* Declare package */
                 ast_Parser_declaration(this, corto_type(corto_package_o), buffer, FALSE);
