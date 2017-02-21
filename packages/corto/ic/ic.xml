@@ -211,7 +211,6 @@
                     <member name="storages" type="list{storage}" modifiers="readonly"/>
                     <member name="scopes" type="list{scope}" modifiers="readonly"/>
                     <member name="labels" type="list{label}" modifiers="readonly"/>
-                    <member name="functions" type="list{function}" modifiers="readonly"/>
                     <member name="literals" type="list{literal}" modifiers="readonly"/>
                     <member name="ops" type="list{op}" modifiers="readonly"/>
                     <member name="labelCount" type="uint32" modifiers="readonly"/>

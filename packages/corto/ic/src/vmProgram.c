@@ -169,7 +169,6 @@ void ic_vmProgram_finalize(ic_vmProgram *vmProgram) {
     /* If program is a function, set the function-implementation to the program */
     if (vmProgram->function) {
         corto_function function = vmProgram->function->function;
-        function->impl = (corto_word)vm_call;
         function->fptr = (corto_word)vmProgram->program;
         corto_define(function);
 

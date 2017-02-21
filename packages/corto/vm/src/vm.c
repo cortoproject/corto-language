@@ -1211,18 +1211,27 @@ vm_op *vm_programAddOp(vm_program program, uint32_t line) {
 }
 
 /* Language binding function that calls a VM function */
-void vm_call(corto_function f, corto_void* result, void* args) {
+static void vm_call(void *fdata, void *fptr, void* result, void** args) {
     vm_program program;
     void *storage = NULL;
+    corto_function f = fdata;
 
     /* Obtain instruction sequence */
-    program = (vm_program)f->fptr;
+    program = (vm_program)fptr;
 
     /* Allocate a storage for a program. This memory will
      * store all local variables, and space required to
      * prepare a stack for calling functions */
     storage = alloca(program->storage);
-    memcpy(storage, args, f->size); /* Copy parameters into storage */
+
+    char *ptr = storage;
+    corto_int32 i;
+    for (i = 0; i < f->parameters.length; i++) {
+        corto_type type = f->parameters.buffer[i].type;
+        corto_int32 size = type->reference ? sizeof(corto_word) : type->size;
+        memcpy(ptr, args[i], size);
+        ptr += size;
+    }
 
     /* Thread specific cache that speeds up string concatenations */
     corto_stringConcatCacheCreate();
@@ -1236,9 +1245,18 @@ void vm_callDestruct(corto_function f) {
     vm_programFree((vm_program)f->fptr);
 }
 
+corto_int16 vm_initFunction(corto_function this) {
+    this->impl = (corto_word)vm_call;
+    this->fdata = this;
+    return 0;
+}
+
+void vm_deinitFunction(corto_function this) {
+}
+
 int vmMain(int argc, char* argv[]) {
     CORTO_UNUSED(argc);
     CORTO_UNUSED(argv);
-    /*CORTO_PROCEDURE_VM = corto_callRegisterBinding(vm_call, NULL, NULL, (corto_callDestructHandler)vm_callDestruct);*/
+    CORTO_PROCEDURE_VM = corto_callRegister(vm_initFunction, vm_deinitFunction);
     return 0;
 }

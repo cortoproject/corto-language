@@ -800,7 +800,7 @@ corto_void _ast_Parser_addStatement(
        (statement->kind == Ast_StorageExpr) &&
        (ast_Storage(statement)->kind == Ast_UnresolvedReferenceStorage))
     {
-        if (!this->pass) {
+        if (!this->pass && !this->repl) {
             if (ast_Parser_initDeclare(this, statement)) {
                 /* This will eventually trigger an unresolved reference error */
                 ast_Block_addStatement(this->block, statement);
@@ -1868,7 +1868,7 @@ corto_int16 _ast_Parser_initDeclare(
                 type = corto_typeof(this->scope)->options.defaultType;
             }
 
-            if (!type) {
+            if (!type && this->pass) {
                 ast_Parser_error(this,
                   "unresolved identifier: %s", id);
                 goto error;
@@ -2463,6 +2463,147 @@ ast_Expression _ast_Parser_parseExpression(
     return result;
 error:
     return NULL;
+/* $end */
+}
+
+corto_int16 _ast_Parser_parseFunction(
+    corto_function f,
+    corto_string expr)
+{
+/* $begin(corto/ast/Parser/parseFunction) */
+    ic_scope icScope; /* Parsed intermediate-code program */
+    ic_storage returnValue = NULL; /* Intermediate representation of return value */
+    corto_type returnType = NULL; /* Return type */
+    ic_op ret = NULL; /* ret or stop instruction */
+    ic_program program = NULL;
+    ast_Local resultLocal = NULL;
+    corto_int32 i, err = 0;
+
+    /* Create parser */
+    ast_Parser parser = ast_ParserCreate(expr, NULL);
+    parser->repl = TRUE;
+
+    /* Create block that contains local variables for function arguments */
+    ast_Block block = ast_BlockCreate(NULL);
+    if (!block) {
+        goto error;
+    }
+
+    for (i = 0; i < f->parameters.length; i++) {
+        corto_parameter *p = &f->parameters.buffer[i];
+        if (!ast_Block_declare(block, p->name, p->type, TRUE, p->passByReference)) {
+            goto error;
+        }
+    }
+
+    if (f->returnType) {
+        corto_bool isReference = f->returnType->reference || f->returnsReference;
+        resultLocal = ast_Block_declare(
+            block, 
+            "_", 
+            f->returnType, 
+            FALSE,
+            isReference);
+        if (!resultLocal) {
+            goto error;
+        }
+        resultLocal->kind = Ast_LocalReturn;
+        ast_Expression(resultLocal)->deref = isReference ? Ast_ByReference : Ast_ByValue;
+        returnType = f->returnType;
+        corto_string prev = parser->source;
+        corto_asprintf(&parser->source, "_ = %s", parser->source);
+        corto_dealloc(prev);
+    }
+
+    corto_setref(&parser->block, block);
+
+    /* Parse expression */
+    ast_Expression result = ast_Parser_parseIntern(parser, NULL, &err);
+    if (err) {
+        goto error;
+    }
+
+    /* Create assignment expression that returns result of expression */
+    if (!resultLocal && result && result->type) {
+        ast_Binary assignment;
+        returnType = corto_type(ast_Expression_getType(result));
+        if ((returnType->kind != CORTO_VOID) || (result->deref == Ast_ByReference)) {
+            resultLocal = ast_Block_declare(parser->block, "_", result->type, FALSE,
+                result->isReference);
+            if (!resultLocal) {
+                goto error;
+            }
+            ast_Expression(resultLocal)->deref = returnType->reference ? Ast_ByReference : Ast_ByValue;
+            resultLocal->kind = Ast_LocalReturn;
+            assignment = ast_BinaryCreate(ast_Expression(resultLocal), result, CORTO_ASSIGN);
+            corto_llReplace(parser->block->statements, result, assignment);
+        }
+        corto_setref(&f->returnType, returnType);
+    }
+
+    /* Create program for intermediate code */
+    program = ic_programCreate(parser->filename);
+
+    ic_program_pushScope(program);
+
+    /* Push function, so when assembling, code will be added to a function */
+    ic_program_pushFunction(program, f);
+
+    /* Generate intermediate code for AST */
+    icScope = (ic_scope)ast_Block_toIc(parser->block, program, NULL, FALSE);
+    if (parser->errors) {
+        goto error;
+    }
+
+    /* If code contains bindings, expression contains nested functions */
+    if (parser->bindings && corto_llSize(parser->bindings)) {
+        corto_seterr("nested functions are invalid");
+        goto error;
+    }
+
+    returnValue = ic_scope_lookupStorage(icScope, "_", TRUE);
+    if (returnValue) {
+        ret = IC_1_OP(parser->line, ic_ret, returnValue, IC_DEREF_VALUE, FALSE);
+        if (returnType->reference) {
+            ((ic_storage)returnValue)->isReference = TRUE;
+            ((ic_op)ret)->s1Deref = IC_DEREF_ADDRESS;
+        }else {
+            ((ic_op)ret)->s1Deref = IC_DEREF_VALUE;
+        }
+    } else {
+        ret = IC_1_OP(parser->line, ic_stop, NULL, IC_DEREF_VALUE, FALSE);
+    }
+
+    ic_scope_add(icScope, ic_node(ret));
+
+    /* Pop function */
+    ic_program_popScope(program);
+
+#ifdef IC_TRACING
+    extern corto_bool CORTO_DEBUG_ENABLED;
+    if (CORTO_DEBUG_ENABLED) {
+        printf("=====\n%s\n\n", ic_program_toString(program));
+    }
+#endif
+
+    /* Translate program to vm code */
+    ic_program_assemble(program);
+
+    /* Free program */
+    corto_delete(program);
+
+    /* Free parser */
+    corto_delete(parser);
+
+    return 0;
+error:
+    if (parser) {
+        corto_delete(parser);
+    }
+    if (program) {
+        corto_delete(program);
+    }
+    return -1;
 /* $end */
 }
 

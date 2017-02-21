@@ -254,6 +254,8 @@ ic_scope _ic_program_pushFunction(
     scope = ic_program_pushScope(this);
     scope->isFunction = TRUE;
 
+    function->kind = CORTO_PROCEDURE_VM;
+
     return scope;
 /* $end */
 }

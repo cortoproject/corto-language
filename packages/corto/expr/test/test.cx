@@ -1,0 +1,26 @@
+#package ::test
+
+struct Point::
+  x, y: int32
+
+test/Suite Expr::
+  void tc_primitive()
+  void tc_primitiveBinary()
+  void tc_primitiveBinaryMixedType()
+  void tc_primitiveParentheses()
+  void tc_stringConcat()
+  void tc_cast()
+  void tc_castString()
+  void tc_composite()
+
+test/Suite ArgExpr::
+  void tc_primitive()
+  void tc_primitiveFlt()
+  void tc_primitiveDbl()
+  void tc_primitiveBinary()
+  void tc_primitiveBinaryMixedType()
+  void tc_primitiveParentheses()
+  void tc_stringConcat()
+  void tc_cast()
+  void tc_castString()
+  void tc_composite()

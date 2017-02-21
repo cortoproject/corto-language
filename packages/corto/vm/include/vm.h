@@ -102,8 +102,6 @@ CORTO_SEQUENCE(corto_stringSeq, corto_string,);
 #endif
 
 /* ---- Virtual machine API */
-/* Callback to vm program, for usage with call API */
-void vm_call(corto_function f, corto_void* result, void* args);
 
 /* Run a program */
 int32_t vm_run(vm_program program, corto_stringSeq argv, void *result);

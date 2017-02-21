@@ -1792,8 +1792,6 @@ corto_int16 ic_vmProgram_scopeToVm(ic_vmProgram *program, ic_scope scope) {
 
 vm_program ic_vmAssemble(ic_program program) {
     ic_vmProgram vmProgram;
-    corto_iter functionIter;
-    corto_function function;
     corto_iter inlineFunctionIter;
     ic_vmInlineFunction *inlineFunction;
 
@@ -1810,15 +1808,6 @@ vm_program ic_vmAssemble(ic_program program) {
         vmProgram.maxScopeSize = 0;
         vmProgram.stackSize = 0;
         vmProgram.maxStackSize = 0;
-
-        /* Set kind of functions to VM - that way they can be
-         * recognized as such and make usage of optimzations available
-         * when calling vm-to-vm functions. */
-        functionIter = corto_llIter(program->functions);
-        while(corto_iterHasNext(&functionIter)) {
-            function = ((ic_function)corto_iterNext(&functionIter))->function;
-            function->kind = CORTO_PROCEDURE_VM;
-        }
 
         /* Start assembling */
         if (ic_vmProgram_scopeToVm(&vmProgram, program->scope)) {
