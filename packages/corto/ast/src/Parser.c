@@ -1142,7 +1142,7 @@ ast_Expression _ast_Parser_callExpr(
         if (args) {ast_ExpressionListForeach(args, a) {
             if (ast_Node(a)->kind == Ast_InitializerExpr) {
                 ast_Expression var = ast_Initializer(a)->variables[0].object;
-                if (ast_Storage(var)->kind == Ast_TemporaryStorage) {
+                if (var && (ast_Storage(var)->kind == Ast_TemporaryStorage)) {
                     ast_Deinit deinit = ast_DeinitCreate(ast_Storage(var));
                     result = ast_Comma_addOrCreate(result, ast_Expression(deinit));
                     ast_Parser_collect(this, deinit);
@@ -1180,15 +1180,20 @@ ast_Expression _ast_Parser_castExpr(
             ast_Parser_warning(this, "casting to value of the same type (%s)", ast_Parser_id(lvalue, id));
             castRequired = FALSE;
         } else {
-            if ((lvalue->kind == CORTO_COMPOSITE) && (rvalueType->kind == CORTO_COMPOSITE)) {
-                if (corto_type_castable(lvalue, rvalueType)) {
-                    corto_id id1, id2;
+            if (rvalueType) {
+                if ((lvalue->kind == CORTO_COMPOSITE) && (rvalueType->kind == CORTO_COMPOSITE)) {
+                    if (corto_type_castable(lvalue, rvalueType)) {
+                        corto_id id1, id2;
+                        castRequired = FALSE;
+                        ast_Parser_warning(this, "upcasting from '%s' to '%s' does not require an explicit cast",
+                                ast_Parser_id(rvalueType, id1), ast_Parser_id(lvalue, id2));
+                    }
+                } else if (ast_Node(rvalue)->kind == Ast_LiteralExpr) {
+                    result = ast_Expression_cast(rvalue, lvalue, FALSE);
                     castRequired = FALSE;
-                    ast_Parser_warning(this, "upcasting from '%s' to '%s' does not require an explicit cast",
-                            ast_Parser_id(rvalueType, id1), ast_Parser_id(lvalue, id2));
                 }
-            } else if (ast_Node(rvalue)->kind == Ast_LiteralExpr) {
-                result = ast_Expression_cast(rvalue, lvalue, FALSE);
+            } else {
+                corto_setref(&rvalue->type, lvalue);
                 castRequired = FALSE;
             }
         }

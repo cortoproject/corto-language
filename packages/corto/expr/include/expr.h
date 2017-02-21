@@ -13,13 +13,8 @@
 #include <corto/ast/ast.h>
 /* $header() */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 typedef struct corto_expr {
     corto_function function;
-
 } corto_expr;
 
 typedef struct corto_expr_opt {
@@ -29,16 +24,14 @@ typedef struct corto_expr_opt {
 } corto_expr_opt;
 
 corto_int16 corto_expr_comp(corto_expr *out, corto_expr_opt *opt, char *expr, ...);
+
 corto_int16 corto_expr_compb(corto_expr *out, corto_expr_opt *opt, char *expr, char **types);
 
 corto_int16 corto_expr_call(corto_expr *expr, corto_value *out, ...);
+
 corto_int16 corto_expr_callb(corto_expr *expr, corto_value *out, void **args);
 
 void corto_expr_free(corto_expr *expr);
-
-#ifdef __cplusplus
-}
-#endif
 
 /* $end */
 

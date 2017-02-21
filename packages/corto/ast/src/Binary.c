@@ -373,16 +373,18 @@ error:
 }
 
 corto_int16 ast_Binary_toIc_strOp(
-        ast_Binary this,
-        ic_program program,
-        ic_storage storage,
-        ic_node lvalue,
-        ic_node rvalue) {
+    ast_Binary this,
+    ic_program program,
+    ic_storage storage,
+    ic_node lvalue,
+    ic_node rvalue) 
+{
 
     switch(this->_operator) {
     /* Append strings */
     case CORTO_ADD: {
-        corto_any l = {corto_type(corto_string_o), NULL, TRUE};
+        corto_string str = NULL;
+        corto_any l = {corto_type(corto_string_o), &str, TRUE};
         ic_literal dummy = ic_literalCreate(l);
         IC_2(program, ast_Node(this)->line, ic_strcat, lvalue, rvalue, IC_DEREF_VALUE, IC_DEREF_VALUE);
         IC_2(program, ast_Node(this)->line, ic_strcpy, storage, dummy, IC_DEREF_VALUE, IC_DEREF_VALUE);

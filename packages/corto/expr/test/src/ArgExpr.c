@@ -89,6 +89,33 @@ corto_void _test_ArgExpr_tc_composite(
 /* $end */
 }
 
+corto_void _test_ArgExpr_tc_compositeCast(
+    test_ArgExpr this)
+{
+/* $begin(test/ArgExpr/tc_compositeCast) */
+    corto_int16 ret;
+    corto_expr e;
+    
+    ret = corto_expr_comp(&e, NULL, "test/Point({%a.x + %b.x, %a.y + %b.y})", "test/Point", "test/Point");
+    test_assert(ret == 0);
+    test_assert(e.function != NULL);
+    test_assert(e.function->returnType != NULL);
+    test_assert(e.function->returnType == (corto_type)test_Point_o);
+    test_assert(e.function->returnsReference == FALSE);
+    test_assert(e.function->parameters.length == 2);
+    test_assertstr(e.function->parameters.buffer[0].name, "_a");
+    test_assertstr(e.function->parameters.buffer[1].name, "_b");
+    test_assert(e.function->parameters.buffer[0].type == corto_type(test_Point_o));
+    test_assert(e.function->parameters.buffer[1].type == corto_type(test_Point_o));
+
+    test_Point p1 = {10, 20}, p2 = {30, 40}, result = {0, 0};
+    corto_call(e.function, &result, &p1, &p2);
+    test_assertint(result.x, 40);
+    test_assertint(result.y, 60);
+
+/* $end */
+}
+
 corto_void _test_ArgExpr_tc_primitive(
     test_ArgExpr this)
 {

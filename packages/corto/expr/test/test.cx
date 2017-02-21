@@ -24,3 +24,4 @@ test/Suite ArgExpr::
   void tc_cast()
   void tc_castString()
   void tc_composite()
+  void tc_compositeCast()

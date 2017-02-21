@@ -3,6 +3,7 @@ COMPONENTS = %w(
     vm
     ic
     ast
+    expr
 )
 
 require "#{ENV['CORTO_BUILD']}/forward"
