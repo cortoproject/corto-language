@@ -56,17 +56,62 @@ corto_void _test_Expr_tc_composite(
 /* $begin(test/Expr/tc_composite) */
     corto_int16 ret;
     corto_expr e;
+    corto_expr_opt opt = {.returnType = corto_type(test_Point_o)};
     
-    ret = corto_expr_comp(&e, NULL, "test/Point{10,20}.x + test/Point{30,40}.y");
+    ret = corto_expr_comp(&e, &opt, "{10, 20}");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
     test_assert(e.function->returnType != NULL);
-    test_assert(e.function->returnType == (corto_type)corto_int32_o);
+    test_assert(e.function->returnType == (corto_type)test_Point_o);
     test_assert(e.function->parameters.length == 0);
 
-    corto_int32 result = 0;
+    test_Point result = {0, 0};
     corto_call(e.function, &result);
-    test_assertint(result, 50);
+    test_assertint(result.x, 10);
+    test_assertint(result.y, 20);
+
+/* $end */
+}
+
+corto_void _test_Expr_tc_compositeCast(
+    test_Expr this)
+{
+/* $begin(test/Expr/tc_compositeCast) */
+    corto_int16 ret;
+    corto_expr e;
+    
+    ret = corto_expr_comp(&e, NULL, "test/Point({10, 20})");
+    test_assert(ret == 0);
+    test_assert(e.function != NULL);
+    test_assert(e.function->returnType != NULL);
+    test_assert(e.function->returnType == (corto_type)test_Point_o);
+    test_assert(e.function->parameters.length == 0);
+
+    test_Point result = {0, 0};
+    corto_call(e.function, &result);
+    test_assertint(result.x, 10);
+    test_assertint(result.y, 20);
+
+/* $end */
+}
+
+corto_void _test_Expr_tc_cond(
+    test_Expr this)
+{
+/* $begin(test/Expr/tc_cond) */
+    corto_int16 ret;
+    corto_expr e;
+    
+    ret = corto_expr_comp(&e, NULL, "10 == (5 + 5)");
+    test_assert(ret == 0);
+    test_assert(e.function != NULL);
+    test_assert(e.function->returnType != NULL);
+    test_assert(e.function->returnType == (corto_type)corto_bool_o);
+    test_assert(e.function->parameters.length == 0);
+
+    corto_bool result = FALSE;
+    corto_call(e.function, &result);
+    test_assertint(result, TRUE);
 
 /* $end */
 }

@@ -12,6 +12,8 @@ test/Suite Expr::
   void tc_cast()
   void tc_castString()
   void tc_composite()
+  void tc_compositeCast()
+  void tc_cond()
 
 test/Suite ArgExpr::
   void tc_primitive()
@@ -25,3 +27,4 @@ test/Suite ArgExpr::
   void tc_castString()
   void tc_composite()
   void tc_compositeCast()
+  void tc_cond()

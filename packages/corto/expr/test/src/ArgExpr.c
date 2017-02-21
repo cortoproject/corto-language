@@ -67,7 +67,7 @@ corto_void _test_ArgExpr_tc_composite(
 /* $begin(test/ArgExpr/tc_composite) */
     corto_int16 ret;
     corto_expr e;
-    corto_expr_opt opt = {.returnType = corto_type(test_Point_o), .returnsReference = FALSE};
+    corto_expr_opt opt = {.returnType = corto_type(test_Point_o)};
     
     ret = corto_expr_comp(&e, &opt, "{%a.x + %b.x, %a.y + %b.y}", "test/Point", "test/Point");
     test_assert(ret == 0);
@@ -112,6 +112,34 @@ corto_void _test_ArgExpr_tc_compositeCast(
     corto_call(e.function, &result, &p1, &p2);
     test_assertint(result.x, 40);
     test_assertint(result.y, 60);
+
+/* $end */
+}
+
+corto_void _test_ArgExpr_tc_cond(
+    test_ArgExpr this)
+{
+/* $begin(test/ArgExpr/tc_cond) */
+    corto_int16 ret;
+    corto_expr e;
+    
+    ret = corto_expr_comp(&e, NULL, "%a == %b", "int32", "int32");
+    test_assert(ret == 0);
+    test_assert(e.function != NULL);
+    test_assert(e.function->returnType != NULL);
+    test_assert(e.function->returnType == (corto_type)corto_bool_o);
+    test_assert(e.function->parameters.length == 2);
+    test_assertstr(e.function->parameters.buffer[0].name, "_a");
+    test_assert(e.function->parameters.buffer[0].type == corto_type(corto_int32_o));
+    test_assertstr(e.function->parameters.buffer[1].name, "_b");
+    test_assert(e.function->parameters.buffer[1].type == corto_type(corto_int32_o));
+
+    corto_bool result = FALSE;
+    corto_call(e.function, &result, 10, 10);
+    test_assertint(result, TRUE);
+
+    corto_call(e.function, &result, 10, 20);
+    test_assertint(result, FALSE);
 
 /* $end */
 }
