@@ -7,11 +7,8 @@
 #define CORTO_IC_H
 
 #include <corto/corto.h>
+#include <corto/corto.h>
 #include <corto/ic/_project.h>
-/* $header() */
-#include "corto/vm/vm.h"
-/* $end */
-
 #include <corto/vm/vm.h>
 #include <corto/core/c/c.h>
 #include <corto/lang/c/c.h>
@@ -24,10 +21,11 @@
 extern "C" {
 #endif
 
-
-CORTO_IC_EXPORT ic_opKind _ic_opKindFromOperator(
-    corto_operatorKind _operator);
 #define ic_opKindFromOperator(_operator) _ic_opKindFromOperator(_operator)
+CORTO_IC_EXPORT
+ic_opKind _ic_opKindFromOperator(
+    corto_operatorKind _operator);
+
 #include <corto/ic/accumulator.h>
 #include <corto/ic/address.h>
 #include <corto/ic/element.h>
@@ -46,5 +44,6 @@ CORTO_IC_EXPORT ic_opKind _ic_opKindFromOperator(
 #ifdef __cplusplus
 }
 #endif
+
 #endif
 

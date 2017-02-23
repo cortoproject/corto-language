@@ -400,10 +400,10 @@ package_declaration
     ;
 
 declaration
-    : identifier declaration_list { $$ = ast_declarationSeqDo($1, &$2, FALSE); fast_op; $$ = NULL; }
+    : identifier declaration_list { $$ = ast_declarationSeqDo($1, &$2, FALSE); fast_op; }
     | KW_DEFAULT declaration_list {
         corto_object type = ast_Parser_lookup(yparser(), "default");
-        $$ = ast_declarationSeqDo(type, &$2, FALSE); fast_op; $$ = NULL;
+        $$ = ast_declarationSeqDo(type, &$2, FALSE); fast_op;
     }
     | KW_LOCAL {yparser()->isLocal = TRUE;} declaration_ref     {$$=$3;}
     ;
@@ -644,10 +644,10 @@ declaration_expr
         ast_Parser_initPop(yparser()); fast_op;
         $$ = NULL;
     }
-    | declaration ':' {ast_Parser_initPushStatic(yparser()); fast_op;} initializer {ast_Parser_initPop(yparser()); fast_op;}
-    | declaration '{' {ast_Parser_initPushStatic(yparser()); fast_op;} initializer {ast_Parser_initPop(yparser()); fast_op;} '}'
-    | declaration '{' {ast_Parser_initPushStatic(yparser()); fast_op; ast_Parser_initPop(yparser()); fast_op;} '}'
-    | declaration ':' {ast_Parser_initPushStatic(yparser()); fast_op; ast_Parser_initPop(yparser()); fast_op;}
+    | declaration ':' {ast_Parser_initPushStatic(yparser()); fast_op;} initializer {ast_Parser_initPop(yparser()); fast_op; $$ = NULL; }
+    | declaration '{' {ast_Parser_initPushStatic(yparser()); fast_op;} initializer {ast_Parser_initPop(yparser()); fast_op;} '}' {$$ = NULL;}
+    | declaration '{' {ast_Parser_initPushStatic(yparser()); fast_op; ast_Parser_initPop(yparser()); fast_op;} '}' {$$ = NULL;}
+    | declaration ':' {ast_Parser_initPushStatic(yparser()); fast_op; ast_Parser_initPop(yparser()); fast_op; $$ = NULL; }
     | declaration '=' {
         if (!yparser()->isLocal && !yparser()->blockCount) {
             _fast_err("invalid usage of assignment operator, initialize objects with ':'");
@@ -764,8 +764,6 @@ int fast_yparse(ast_Parser parser, corto_uint32 line, corto_uint32 column) {
     parser->line = line;
     parser->column = column;
 
-    yparser()->blockCount = 0;
-
     if (!parser->block) {
         parser->block = ast_BlockCreate(NULL);
         parser->block->isRoot = TRUE;
@@ -774,6 +772,8 @@ int fast_yparse(ast_Parser parser, corto_uint32 line, corto_uint32 column) {
         corto_type t = corto_resolve(NULL, "sequence{string}");
         ast_Block_declare(parser->block, "argv", t, TRUE, FALSE);
         corto_release(t);
+
+        yparser()->blockCount = 0;
     }
 
     if (!parser->scope) {

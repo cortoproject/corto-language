@@ -92,9 +92,10 @@ corto_string _ic_scope_str(
         if (storage->kind == IC_VARIABLE) {
             result = strappend(
               result,
-              "%%var %s %s\n",
+              "%%var %s %s%s\n",
               storage->name,
-              corto_fullpath(NULL, storage->type));
+              corto_fullpath(NULL, storage->type),
+              storage->isReference ? "&" : "");
         }
     }
 

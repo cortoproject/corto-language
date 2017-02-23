@@ -1,19 +1,19 @@
 /* vm.h
  *
- * This file is generated. Do not modify.
+ * This file contains generated code. Do not modify!
  */
 
 #ifndef CORTO_VM_H
 #define CORTO_VM_H
 
 #include <corto/corto.h>
-
+#include <include/_project.h>
 #include <corto/core/c/c.h>
 #include <corto/lang/c/c.h>
+
 /* $header() */
 #include "stdint.h"
 #include "corto/vm/vm_def.h"
-#include "corto/vm/_project.h"
 #include "corto/vm/vm_expansion.h"
 #include "corto/vm/vm_operands.h"
 
@@ -127,5 +127,6 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
+
 #endif
 

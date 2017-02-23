@@ -1,9 +1,14 @@
-/*
- * corto_vm.c
+/* $CORTO_GENERATED
  *
- *  Created on: Aug 16, 2013
- *      Author: sander
+ * vm.c
+ *
+ * Only code written between the begin and end tags will be preserved
+ * when the file is regenerated.
  */
+
+#include <corto/vm/vm.h>
+
+/* $header() */
 
 #include "corto/vm/vm.h"
 #include "corto/vm/vm_operands.h"
@@ -1247,16 +1252,20 @@ void vm_callDestruct(corto_function f) {
 
 corto_int16 vm_initFunction(corto_function this) {
     this->impl = (corto_word)vm_call;
-    this->fdata = this;
+    this->fdata = (corto_word)this;
     return 0;
 }
 
 void vm_deinitFunction(corto_function this) {
+    CORTO_UNUSED(this);
 }
+/* $end */
 
-int vmMain(int argc, char* argv[]) {
+int vmMain(int argc, char *argv[]) {
+/* $begin(main) */
     CORTO_UNUSED(argc);
     CORTO_UNUSED(argv);
     CORTO_PROCEDURE_VM = corto_callRegister(vm_initFunction, vm_deinitFunction);
     return 0;
+/* $end */
 }

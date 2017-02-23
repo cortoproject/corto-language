@@ -12,7 +12,7 @@ void ast_Parser_warning(ast_Parser _this, char* fmt, ... );
 corto_string ast_Parser_id(corto_object o, corto_id buffer);
 ast_Parser yparser(void);
 int fast_yparse(ast_Parser parser, corto_uint32 line, corto_uint32 column);
-ast_Expression ast_Expression_narrow(ast_Expression expr, corto_type target);
+ast_Expression ast_Expression_narrow(ast_Expression expr);
 corto_type ast_Expression_narrowType(ast_Expression expr);
 corto_int8 ast_Expression_getCastScore(corto_primitive t);
 corto_int8 ast_Expression_getTypeScore(corto_primitive t);

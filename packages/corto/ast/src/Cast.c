@@ -82,7 +82,7 @@ ic_node _ast_Cast_toIc_v(
     if ((this->rvalue->deref == Ast_ByReference) || thisType->reference) {
         deref2 = IC_DEREF_ADDRESS;
     }
-    if (ic_storage(result)->isReference) {
+    if ((this->rvalue->deref == Ast_ByReference) || thisType->reference) {
         deref1 = IC_DEREF_ADDRESS;
     }
 

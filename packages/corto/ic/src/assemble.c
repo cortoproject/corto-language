@@ -113,7 +113,11 @@ corto_void *ic_valueValue_width(ic_vmProgram *program, ic_node s, void* truncate
             case CORTO_FLOAT:
                 if (width == sizeof(corto_float32)) {
                     if (truncated) {
-                        *(corto_float32*)truncated = *(corto_float64*)v->value;
+                        if (corto_primitive(v->type)->width == CORTO_WIDTH_32) {
+                            *(corto_float32*)truncated = *(corto_float32*)v->value;
+                        } else {
+                            *(corto_float32*)truncated = *(corto_float64*)v->value;
+                        }
                         result = truncated;
                     } else {
                         result = v->value;
@@ -510,11 +514,11 @@ static void ic_vmSetOp(
                 ic_vmStorage *local;
                 local = ic_vmProgram_getStorage(program, (ic_storage)v);
                 *(corto_uint16*)addr = local->addr;
-            } else if (((ic_storage)v)->kind == IC_ACCUMULATOR){
+            } else if (((ic_storage)v)->kind == IC_ACCUMULATOR) {
                 ic_vmStorage *accumulator;
                 accumulator = ic_vmProgram_getStorage(program, (ic_storage)v);
                 ic_vmStorageAddReferee(accumulator, program, addr);
-            } else if ((((ic_storage)v)->kind == IC_MEMBER) || (((ic_storage)v)->kind == IC_ELEMENT)){
+            } else if ((((ic_storage)v)->kind == IC_MEMBER) || (((ic_storage)v)->kind == IC_ELEMENT)) {
                 ic_vmStorage *accumulator;
                 accumulator = ic_vmProgram_getStorage(program, (ic_storage)v);
                 switch(accumulator->base->ic->kind) {
@@ -571,7 +575,6 @@ static void ic_vmSetOp1Addr(ic_vmProgram *program, vm_op *op, ic_vmType typeKind
     OP1_EXP(GETOPADDR1, 1, BSLDW, PQRV,,)
     OP1_EXP(GETOPADDR1, 1, W, A,,)
     ic_vmSetOp(program, op, marker, ic_vmOpSize(typeKind, op1Kind), op1Kind, v1);
-
 }
 
 /* Set operands for 2 operand instructions */
@@ -695,7 +698,6 @@ vm_opKind ic_getVm##arg(corto_type t, ic_vmType typeKind, ic_vmOperand op1, ic_v
     if ((typeKind == IC_VMTYPE_D) && (op1 == IC_VMOPERAND_##_op1)) {\
         result = CORTO_VM_##arg##D_##type##_op1;\
     }
-
 
 #define GETOP2(type, arg, _op1, _op2)\
     if ((IC_VMTYPE_##type == typeKind) && (IC_VMOPERAND_##_op1 == op1) && (IC_VMOPERAND_##_op2 == op2)) {\
@@ -1355,7 +1357,7 @@ static void vm_op2Cast(ic_vmProgram *program, vm_op *vmOp, ic_op op, ic_node sto
     destinationType = ic_valueType(storage);
 
     /* If destinationType is a reference, insert regular 2-operand instruction */
-    if (ic_storage(storage)->isReference) {
+    if (storageDeref == IC_DEREF_ADDRESS) {
         vm_op2Storage(program, vmOp, op, storage, op1, op2, storageDeref, opDeref1, opDeref2);
     /* If destinationType is not a reference, stage types and insert primitive cast */
     } else {

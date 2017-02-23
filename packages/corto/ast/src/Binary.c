@@ -136,17 +136,10 @@ corto_int16 ast_Binary_cast(ast_Binary this, corto_type *returnType) {
 
     /* Narrow expressions where possible */
     if (!isNull) {
-        lvalue = ast_Expression_narrow(lvalue, rvalueType);
-        if (lvalue) {
-            corto_setref(&this->lvalue, lvalue);
-            lvalueType = ast_Expression_getType(this->lvalue);
-        }
-
-        rvalue = ast_Expression_narrow(rvalue, lvalueType);
-        if (rvalue) {
-            corto_setref(&this->rvalue, rvalue);
-            rvalueType = ast_Expression_getType_expr(this->rvalue, this->lvalue);
-        }
+        ast_Expression_narrow(lvalue);
+        ast_Expression_narrow(rvalue);
+        lvalueType = ast_Expression_getType(this->lvalue);
+        rvalueType = ast_Expression_getType_expr(this->rvalue, this->lvalue);
     }
 
     if (!lvalueType) {
@@ -165,17 +158,6 @@ corto_int16 ast_Binary_cast(ast_Binary this, corto_type *returnType) {
     if (this->_operator == CORTO_DIV) {
         castType = corto_type(corto_float64_o);
     } else if (!equal) {
-        ast_nodeKind lKind = ast_Node(this->lvalue)->kind;
-        ast_nodeKind rKind = ast_Node(this->rvalue)->kind;
-
-        /* If one of the operands is a literal, always cast to the type of the non-literal */
-        if ((lKind == Ast_LiteralExpr) ^ (rKind == Ast_LiteralExpr)) {
-            if (lKind == Ast_LiteralExpr) {
-                castType = rvalueType;
-            } else {
-                castType = lvalueType;
-            }
-        } else
 
         /* Can only cast between primitive types */
         if ((lvalueType->kind == CORTO_PRIMITIVE ) && (rvalueType->kind == CORTO_PRIMITIVE)) {

@@ -59,6 +59,57 @@ error:
 /* $end */
 }
 
+ast_Expression _ast_Unary_fold(
+    ast_Unary this)
+{
+/* $begin(corto/ast/Unary/fold) */
+    ast_Expression result = ast_Expression(this);
+    corto_type type = ast_Expression_getType(this);
+
+    void *resultPtr, *ptr = (void*)ast_Expression_getValue(this->lvalue);
+    if (ptr) {
+        if (type->kind == CORTO_PRIMITIVE) {
+            if (this->_operator == CORTO_NOT) {
+                result = ast_Expression(ast_BooleanCreate(FALSE));
+            } else {
+                switch(corto_primitive(type)->kind) {
+                case CORTO_BOOLEAN: result = ast_Expression(ast_BooleanCreate(FALSE)); break;
+                case CORTO_CHARACTER: result = ast_Expression(ast_CharacterCreate('a')); break;
+                case CORTO_BITMASK:
+                case CORTO_UINTEGER: result = ast_Expression(ast_IntegerCreate(0)); break;
+                case CORTO_ENUM:
+                case CORTO_INTEGER: result = ast_Expression(ast_SignedIntegerCreate(0)); break;
+                case CORTO_FLOAT: result = ast_Expression(ast_FloatingPointCreate(0)); break;
+                case CORTO_TEXT: result = ast_Expression(ast_StringCreate(NULL)); break;
+                default:
+                    ast_Parser_error(yparser(), "Invalid primitive for folding expression");
+                    goto error;
+                    break;
+                }
+                if ((corto_primitive(type)->kind == CORTO_BITMASK) || (corto_primitive(type)->kind == CORTO_ENUM)) {
+                    corto_setref(&ast_Expression(result)->type, type);
+                }
+            }
+
+            /* Collect new expression */
+            ast_Parser_collect(yparser(), result);
+
+            /* Obtain pointer to value-field */
+            resultPtr = (void*)ast_Literal_getValue(ast_Literal(result));
+
+            if (corto_unaryOperator(type, this->_operator, ptr, resultPtr)) {
+                ast_Parser_error(yparser(), "operator failed: %s", corto_lasterr());
+                goto error;
+            }
+        }
+    }
+
+    return result;
+error:
+    return NULL;
+/* $end */
+}
+
 corto_bool _ast_Unary_hasReturnedResource_v(
     ast_Unary this)
 {

@@ -79,29 +79,8 @@ error:
     return -1;
 }
 
-corto_int16 corto_expr_comp(corto_expr *out, corto_expr_opt *opt, char *expr, ...) {
-    corto_int32 prev = 0, length;
-    char *ptr, *cortoExpr;
-    corto_function f = corto_declare(corto_function_o);
-    va_list list;
-
-    va_start(list, expr);
-    for (ptr = expr; ptr && *ptr && (ptr = strchr(ptr, '%')); ptr ++) {
-        if (!(length = corto_expr_addParam(f, ptr + 1))) {
-            corto_seterr("corto: expr: failed to add parameter for expr '%s': %s", expr, corto_lasterr());
-            goto error;
-        }
-
-        if (length != prev) {
-            corto_parameter *p = &f->parameters.buffer[length - 1];
-            if (corto_expr_setParamType(p, va_arg(list, char*))) {
-                corto_seterr("corto: expr: failed to set parameter type for '%s': %s", expr, corto_lasterr());
-                goto error;
-            }
-            prev = length;
-        }
-    }
-    va_end(list);
+static corto_int16 corto_expr_finalize(corto_expr *out, corto_expr_opt *opt, char *expr, corto_function f) {
+    char *cortoExpr;
 
     if (!(cortoExpr = corto_expr_toCortoExpr(f, expr))) {
         corto_seterr("corto: expr: parser error (toCorto) '%s': %s", expr, corto_lasterr());
@@ -127,19 +106,107 @@ error:
     return -1;
 }
 
+corto_int16 corto_expr_comp(corto_expr *out, corto_expr_opt *opt, char *expr, ...) {
+    corto_int32 prev = 0, length;
+    char *ptr;
+    corto_function f = corto_declare(corto_function_o);
+    va_list list;
+
+    va_start(list, expr);
+    for (ptr = expr; ptr && *ptr && (ptr = strchr(ptr, '%')); ptr ++) {
+        if (!(length = corto_expr_addParam(f, ptr + 1))) {
+            corto_seterr("corto: expr: failed to add parameter for expr '%s': %s", expr, corto_lasterr());
+            goto error;
+        }
+
+        if (length != prev) {
+            corto_parameter *p = &f->parameters.buffer[length - 1];
+            if (corto_expr_setParamType(p, va_arg(list, char*))) {
+                corto_seterr("corto: expr: failed to set parameter type for '%s': %s", expr, corto_lasterr());
+                goto error;
+            }
+            prev = length;
+        }
+    }
+    va_end(list);
+
+    if (corto_expr_finalize(out, opt, expr, f)) {
+        goto error;
+    }
+
+    return 0;
+error:
+    return -1;
+}
+
 corto_int16 corto_expr_compb(corto_expr *out, corto_expr_opt *opt, char *expr, char **types) {
+    corto_int32 prev = 0, length;
+    char *ptr;
+    corto_function f = corto_declare(corto_function_o);
 
+    for (ptr = expr; ptr && *ptr && (ptr = strchr(ptr, '%')); ptr ++) {
+        if (!(length = corto_expr_addParam(f, ptr + 1))) {
+            corto_seterr("corto: expr: failed to add parameter for expr '%s': %s", expr, corto_lasterr());
+            goto error;
+        }
+
+        if (length != prev) {
+            corto_parameter *p = &f->parameters.buffer[length - 1];
+            if (corto_expr_setParamType(p, types[length - 1])) {
+                corto_seterr("corto: expr: failed to set parameter type for '%s': %s", expr, corto_lasterr());
+                goto error;
+            }
+            prev = length;
+        }
+    }
+
+    if (corto_expr_finalize(out, opt, expr, f)) {
+        goto error;
+    }
+
+    return 0;
+error:
+    return -1;
 }
 
-corto_int16 corto_expr_call(corto_expr *expr, corto_value *out, ...) {
+corto_int16 corto_expr_run(corto_expr *expr, corto_value *out, ...) {
+    va_list args;
+    corto_uint64 dummy;
+    void *ptr = &dummy;
 
+    va_start(args, out);
+    corto_callv(expr->function, ptr, args);
+    va_end(args);
+
+    if (expr->function->returnsReference) {
+        *out = corto_value_object(*(corto_object*)ptr, NULL);
+    } else {
+        *out = corto_value_value(expr->function->returnType, &out->is.value.storage);
+        *(corto_uint64*)&out->is.value.storage = dummy;
+    }
+
+    return 0;
 }
 
-corto_int16 corto_expr_callb(corto_expr *expr, corto_value *out, void **args) {
+corto_int16 corto_expr_runb(corto_expr *expr, corto_value *out, void **args) {
+    corto_uint64 dummy;
+    void *ptr = &dummy;
 
+    corto_callb(expr->function, ptr, args);
+
+    if (expr->function->returnsReference) {
+        *out = corto_value_object(*(corto_object*)ptr, NULL);
+    } else {
+        *out = corto_value_value(expr->function->returnType, &out->is.value.storage);
+        *(corto_uint64*)&out->is.value.storage = dummy;
+    }
+
+    return 0;
 }
 
-void corto_expr_free(corto_expr *expr);
+void corto_expr_free(corto_expr *expr) {
+    corto_release(expr->function);
+}
 
 /* $end */
 

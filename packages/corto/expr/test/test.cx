@@ -3,28 +3,109 @@
 struct Point::
   x, y: int32
 
+struct PointFlt::
+  x, y: float32
+
+class PointRef::
+  x, y: int32
+
+// Test expressions without arguments
 test/Suite Expr::
+  void tc_primitiveBool()
+  void tc_primitiveNot()
   void tc_primitive()
+  void tc_primitive32()
+  void tc_primitive16()
+  void tc_primitive8()
+  void tc_primitiveFlt()
+  void tc_primitiveDbl()
   void tc_primitiveBinary()
   void tc_primitiveBinaryMixedType()
   void tc_primitiveParentheses()
+  void tc_primitiveObject()
+  void tc_primitiveObjectValue()
+  void tc_assign()
+  void tc_assignExplicitVar()
+  void tc_assignMixedType()
+  void tc_assignObject()
+  void tc_assignObjectMixedType()
   void tc_stringConcat()
+  void tc_div()
   void tc_cast()
   void tc_castString()
   void tc_composite()
   void tc_compositeCast()
   void tc_cond()
 
+// Test expressions with arguments
 test/Suite ArgExpr::
+  void tc_primitiveBool()
+  void tc_primitiveNot()
   void tc_primitive()
+  void tc_primitive32()
+  void tc_primitive16()
+  void tc_primitive8()
   void tc_primitiveFlt()
   void tc_primitiveDbl()
   void tc_primitiveBinary()
   void tc_primitiveBinaryMixedType()
   void tc_primitiveParentheses()
+  void tc_assign()
+  void tc_assignMixedType()
+  void tc_assignObject()
+  void tc_assignExplicitVar()
+  void tc_assignObjectMixedType()
   void tc_stringConcat()
+  void tc_div()
   void tc_cast()
   void tc_castString()
   void tc_composite()
   void tc_compositeCast()
   void tc_cond()
+
+// Test expressions with corto_value
+test/Suite ValueExpr::
+  void tc_primitiveObject()
+  void tc_compositeObject()
+  void tc_referenceObject()
+  void tc_primitiveLiteral()
+  void tc_compositeLiteral()
+  void tc_primitiveVar()
+  void tc_compositeVar()
+  void tc_referenceVar()
+  void tc_primitiveArg()
+  void tc_compositeArg()
+  void tc_referenceArg()
+
+// Generic binary operations
+test/Suite BinaryOp::
+  void tc_VO()
+  void tc_VR()
+  void tc_VV()
+  void tc_VM()
+  void tc_RO()
+  void tc_RR()
+  void tc_RV()
+  void tc_RM()
+  void tc_OO()
+  void tc_OR()
+  void tc_OV()
+  void tc_OM()
+
+// Generic binary operations with float to int
+test/Suite BinaryOpFltToInt::
+  void tc_VO()
+  void tc_VR()
+  void tc_VV()
+  void tc_VM()
+  void tc_RO()
+  void tc_RR()
+  void tc_RV()
+  void tc_RM()
+  void tc_OO()
+  void tc_OR()
+  void tc_OV()
+  void tc_OM()
+
+
+

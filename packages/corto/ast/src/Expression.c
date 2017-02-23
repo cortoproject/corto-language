@@ -117,72 +117,11 @@ corto_type ast_Expression_narrowType(ast_Expression expr) {
     return t;
 }
 
-/* Check if expression is integer literal that is eligible to changing type, if this is the case do the cast */
-ast_Expression ast_Expression_narrow(ast_Expression expr, corto_type target) {
+/* Reduce integer literals to smallest possible dimensions */
+ast_Expression ast_Expression_narrow(ast_Expression expr) {
 
     if (ast_Node(expr)->kind == Ast_LiteralExpr) {
-        if (!target) {
-            target = ast_Expression_narrowType(expr);
-        }
-        corto_type t = ast_Expression_getType_type(expr, target);
-        if (target && (t != target) &&
-           (target->kind == CORTO_PRIMITIVE) &&
-           (corto_primitive(target)->kind == corto_primitive(t)->kind)) {
-            corto_width width = corto_primitive(target)->width;
-
-            if (t->kind == CORTO_PRIMITIVE) {
-                switch(corto_primitive(t)->kind) {
-                case CORTO_INTEGER: {
-                    corto_int64 v = *(corto_int64*)ast_Expression_getValue(expr);
-                    switch(width) {
-                    case CORTO_WIDTH_8:
-                        if ((v <= 127) && (v >= -128)) {
-                            corto_setref(&expr->type, target);
-                        }
-                        break;
-                    case CORTO_WIDTH_16:
-                        if ((v <= 32767) && (v >= -32768)) {
-                            corto_setref(&expr->type, target);
-                        }
-                        break;
-                    case CORTO_WIDTH_32:
-                        if ((v <= 2147483647) && (v >= -2147483648)) {
-                            corto_setref(&expr->type, target);
-                        }
-                        break;
-                    default:
-                        break;
-                    }
-                    break;
-                }
-                case CORTO_UINTEGER: {
-                    corto_uint64 v = *(corto_uint64*)ast_Expression_getValue(expr);
-                    switch(width) {
-                    case CORTO_WIDTH_8:
-                        if (v <= 255) {
-                            corto_setref(&expr->type, target);
-                        }
-                        break;
-                    case CORTO_WIDTH_16:
-                        if (v <= 65535) {
-                            corto_setref(&expr->type, target);
-                        }
-                        break;
-                    case CORTO_WIDTH_32:
-                        if (v <= 4294967295) {
-                            corto_setref(&expr->type, target);
-                        }
-                        break;
-                    default:
-                        break;
-                    }
-                    break;
-                }
-                default:
-                    break;
-                }
-            }
-        }
+        corto_setref(&expr->type, ast_Expression_narrowType(expr));
     }
 
     return expr;
@@ -282,7 +221,7 @@ ast_Expression _ast_Expression_cast(
                 }
                 case CORTO_FLOAT: {
                     corto_float64 dstValue;
-                    corto_convert(corto_primitive(exprType), value, corto_primitive(corto_float64_o), &dstValue);
+                    corto_convert(corto_primitive(exprType), value, type, &dstValue);
                     result = ast_Expression(ast_FloatingPointCreate(dstValue));
                     break;
                 }

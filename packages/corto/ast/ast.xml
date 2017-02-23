@@ -415,6 +415,7 @@
                     <method name="construct()" returnType="int16"/>
                     <member name="lvalue" type="ast::Expression"/>
                     <member name="operator" type="operatorKind"/>
+                    <method name="fold()" returnType="ast::Expression"/>
                     <virtual name="hasSideEffects()" returnType="bool"/>
                     <virtual name="hasReturnedResource()" returnType="bool"/>
                     <virtual name="resolve(type type)" returnType="Expression"/>

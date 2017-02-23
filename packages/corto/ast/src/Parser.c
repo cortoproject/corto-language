@@ -776,6 +776,10 @@ corto_void _ast_Parser_addStatement(
 /* $begin(corto/ast/Parser/addStatement) */
     ast_CHECK_ERRSET(this);
 
+    if (statement && corto_instanceof(ast_Expression_o, statement)) {
+        statement = ast_Node(ast_Expression_fold(statement));
+    }
+
     /* If a comma expression is encountered in the second pass it could be the result of an expanded
      * comma expression. Only add if the expression has side effects. If it doesn't have side effects
      * it is likely the result of a staged declaration */
@@ -2494,6 +2498,8 @@ corto_int16 _ast_Parser_parseFunction(
         goto error;
     }
 
+    parser->blockCount ++;
+
     for (i = 0; i < f->parameters.length; i++) {
         corto_parameter *p = &f->parameters.buffer[i];
         if (!ast_Block_declare(block, p->name, p->type, TRUE, p->passByReference)) {
@@ -2538,12 +2544,13 @@ corto_int16 _ast_Parser_parseFunction(
             if (!resultLocal) {
                 goto error;
             }
-            ast_Expression(resultLocal)->deref = returnType->reference ? Ast_ByReference : Ast_ByValue;
+            ast_Expression(resultLocal)->deref = result->isReference ? Ast_ByReference : Ast_ByValue;
             resultLocal->kind = Ast_LocalReturn;
             assignment = ast_BinaryCreate(ast_Expression(resultLocal), result, CORTO_ASSIGN);
             corto_llReplace(parser->block->statements, result, assignment);
         }
         corto_setref(&f->returnType, returnType);
+        f->returnsReference = result->isReference;
     }
 
     /* Create program for intermediate code */
@@ -2569,7 +2576,7 @@ corto_int16 _ast_Parser_parseFunction(
     returnValue = ic_scope_lookupStorage(icScope, "_", TRUE);
     if (returnValue) {
         ret = IC_1_OP(parser->line, ic_ret, returnValue, IC_DEREF_VALUE, FALSE);
-        if (returnType->reference) {
+        if (result->isReference) {
             ((ic_storage)returnValue)->isReference = TRUE;
             ((ic_op)ret)->s1Deref = IC_DEREF_ADDRESS;
         }else {
