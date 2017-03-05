@@ -7,7 +7,7 @@
 #define CORTO_EXPR_H
 
 #include <corto/corto.h>
-#include <include/_project.h>
+#include <corto/expr/_project.h>
 #include <corto/core/c/c.h>
 #include <corto/lang/c/c.h>
 #include <corto/ast/ast.h>
@@ -22,6 +22,7 @@ typedef struct corto_expr_opt {
     corto_object scope;
     corto_type returnType;
     corto_bool returnsReference;
+    corto_bool inverse;
 } corto_expr_opt;
 
 corto_int16 corto_expr_comp(corto_expr *out, corto_expr_opt *opt, char *expr, ...);

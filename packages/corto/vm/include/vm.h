@@ -7,7 +7,7 @@
 #define CORTO_VM_H
 
 #include <corto/corto.h>
-#include <include/_project.h>
+#include <corto/vm/_project.h>
 #include <corto/core/c/c.h>
 #include <corto/lang/c/c.h>
 

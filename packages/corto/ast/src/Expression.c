@@ -127,6 +127,68 @@ ast_Expression ast_Expression_narrow(ast_Expression expr) {
     return expr;
 }
 
+ast_Expression ast_Expression_literalFromType(corto_type type, corto_type exprType, void *value) {
+    ast_Expression result = NULL;
+
+    if (type->kind != CORTO_PRIMITIVE) {
+        corto_seterr("cannot create literal from non-primitive type '%s'",
+            corto_fullpath(NULL, type));
+        goto error;
+    }
+
+    /* Create literal expressions based on destination type */
+    switch(corto_primitive(type)->kind) {
+    case CORTO_BOOLEAN: {
+        corto_bool dstValue = FALSE;
+        corto_convert(corto_primitive(exprType), value, corto_primitive(corto_bool_o), &dstValue);
+        result = ast_Expression(ast_BooleanCreate(dstValue));
+        break;
+    }
+    case CORTO_CHARACTER: {
+        corto_char dstValue;
+        corto_convert(corto_primitive(exprType), value, corto_primitive(corto_char_o), &dstValue);
+        result = ast_Expression(ast_CharacterCreate(dstValue));
+        break;
+    }
+    case CORTO_BINARY:
+    case CORTO_UINTEGER: {
+        corto_uint64 dstValue;
+        corto_convert(corto_primitive(exprType), value, corto_primitive(corto_uint64_o), &dstValue);
+        result = ast_Expression(ast_IntegerCreate(dstValue));
+        break;
+    }
+    case CORTO_INTEGER: {
+        corto_int64 dstValue;
+        corto_convert(corto_primitive(exprType), value, corto_primitive(corto_int64_o), &dstValue);
+        result = ast_Expression(ast_SignedIntegerCreate(dstValue));
+        break;
+    }
+    case CORTO_FLOAT: {
+        corto_float64 dstValue;
+        corto_convert(corto_primitive(exprType), value, type, &dstValue);
+        result = ast_Expression(ast_FloatingPointCreate(dstValue));
+        break;
+    }
+    case CORTO_TEXT: {
+        corto_string dstValue;
+        corto_convert(corto_primitive(exprType), value, corto_primitive(corto_string_o), &dstValue);
+        result = ast_Expression(ast_StringCreate(dstValue));
+        break;
+    }
+    case CORTO_ENUM:
+    case CORTO_BITMASK: {
+        corto_int32 dstValue;
+        corto_convert(corto_primitive(exprType), value, corto_primitive(corto_int32_o), &dstValue);
+        result = ast_Expression(ast_SignedIntegerCreate(dstValue));
+        break;
+    }
+    }
+
+    return result;
+error:
+    return NULL;
+}
+
 /* $end */
 
 ast_Expression _ast_Expression_cast(
@@ -193,52 +255,7 @@ ast_Expression _ast_Expression_cast(
                 }
 
                 /* Create literal expressions based on destination type */
-                switch(corto_primitive(type)->kind) {
-                case CORTO_BOOLEAN: {
-                    corto_bool dstValue = FALSE;
-                    corto_convert(corto_primitive(exprType), value, corto_primitive(corto_bool_o), &dstValue);
-                    result = ast_Expression(ast_BooleanCreate(dstValue));
-                    break;
-                }
-                case CORTO_CHARACTER: {
-                    corto_char dstValue;
-                    corto_convert(corto_primitive(exprType), value, corto_primitive(corto_char_o), &dstValue);
-                    result = ast_Expression(ast_CharacterCreate(dstValue));
-                    break;
-                }
-                case CORTO_BINARY:
-                case CORTO_UINTEGER: {
-                    corto_uint64 dstValue;
-                    corto_convert(corto_primitive(exprType), value, corto_primitive(corto_uint64_o), &dstValue);
-                    result = ast_Expression(ast_IntegerCreate(dstValue));
-                    break;
-                }
-                case CORTO_INTEGER: {
-                    corto_int64 dstValue;
-                    corto_convert(corto_primitive(exprType), value, corto_primitive(corto_int64_o), &dstValue);
-                    result = ast_Expression(ast_SignedIntegerCreate(dstValue));
-                    break;
-                }
-                case CORTO_FLOAT: {
-                    corto_float64 dstValue;
-                    corto_convert(corto_primitive(exprType), value, type, &dstValue);
-                    result = ast_Expression(ast_FloatingPointCreate(dstValue));
-                    break;
-                }
-                case CORTO_TEXT: {
-                    corto_string dstValue;
-                    corto_convert(corto_primitive(exprType), value, corto_primitive(corto_string_o), &dstValue);
-                    result = ast_Expression(ast_StringCreate(dstValue));
-                    break;
-                }
-                case CORTO_ENUM:
-                case CORTO_BITMASK: {
-                    corto_int32 dstValue;
-                    corto_convert(corto_primitive(exprType), value, corto_primitive(corto_int32_o), &dstValue);
-                    result = ast_Expression(ast_SignedIntegerCreate(dstValue));
-                    break;
-                }
-                }
+                result = ast_Expression_literalFromType(type, exprType, value);
 
                 if (result){
                     corto_setref(&ast_Expression(result)->type, type);

@@ -16,10 +16,17 @@ ast_Expression ast_Expression_narrow(ast_Expression expr);
 corto_type ast_Expression_narrowType(ast_Expression expr);
 corto_int8 ast_Expression_getCastScore(corto_primitive t);
 corto_int8 ast_Expression_getTypeScore(corto_primitive t);
+ast_Expression ast_Expression_literalFromType(corto_type type, corto_type valueType, void *value);
 ast_Expression ast_Node_optimizeCondition(ast_Expression condition, corto_bool *staticResult, corto_bool *inverse);
 ast_Call ast_createCall(ast_Expression instance, corto_string function, corto_uint32 numArgs, ...);
 ast_Call ast_createCallWithArguments(ast_Expression instance, corto_string function, ast_Expression arguments);
 ast_Call ast_createCallFromExpr(ast_Expression f, ast_Expression arguments);
+
+void ast_OptimizeExpr_printExpression(ast_Expression expr);
+ast_Expression ast_OptimizeExpr_reorderExpression(ast_Expression expr);
+ast_Expression ast_OptimizeExpr_reducedToExpression(corto_ll elems);
+corto_ll ast_OptimizeExpr_reduceExpression(ast_Expression e);
+void ast_OptimizeExpr_inverse(corto_ll elems);
 
 /* Convenience macro's for IC generation */
 #define IC_1_OP(line, opkind, _op, deref, any)\

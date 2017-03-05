@@ -100,6 +100,7 @@ corto_string ast_Parser_id(corto_object o, corto_id buffer) {
 /* Translate result of parser to corto intermediate bytecode */
 corto_int16 ast_Parser_toIc(ast_Parser this, corto_stringSeq argv) {
     ic_program program = ic_programCreate(this->filename);
+    corto_int16 ret = 0;
 
     /* Parse root-block */
     ast_Block_toIc(this->block, program, NULL, FALSE);
@@ -123,7 +124,10 @@ corto_int16 ast_Parser_toIc(ast_Parser this, corto_stringSeq argv) {
 #endif
 
     ic_program_assemble(program);
-    if (ic_program_run(program, 0, argv)) {
+    ret = ic_program_run(program, 0, argv);
+    corto_threadTlsSet(ast_PARSER_KEY, this);
+    if (ret) {
+        ast_Parser_error(this, "%s", corto_lasterr());
         goto error;
     }
 
@@ -2475,9 +2479,13 @@ error:
 /* $end */
 }
 
+/* $header(corto/ast/Parser/parseFunction) */
+
+/* $end */
 corto_int16 _ast_Parser_parseFunction(
     corto_function f,
-    corto_string expr)
+    corto_string expr,
+    corto_bool inverse)
 {
 /* $begin(corto/ast/Parser/parseFunction) */
     ic_scope icScope; /* Parsed intermediate-code program */
@@ -2490,11 +2498,17 @@ corto_int16 _ast_Parser_parseFunction(
 
     /* Create parser */
     ast_Parser parser = ast_ParserCreate(expr, NULL);
+    if (!parser) {
+        corto_seterr("failed to create parser: %s", corto_lasterr());
+        goto error;
+    }
+
     parser->repl = TRUE;
 
     /* Create block that contains local variables for function arguments */
     ast_Block block = ast_BlockCreate(NULL);
     if (!block) {
+        corto_seterr("failed to create code block: %s", corto_lasterr());
         goto error;
     }
 
@@ -2503,6 +2517,7 @@ corto_int16 _ast_Parser_parseFunction(
     for (i = 0; i < f->parameters.length; i++) {
         corto_parameter *p = &f->parameters.buffer[i];
         if (!ast_Block_declare(block, p->name, p->type, TRUE, p->passByReference)) {
+            corto_seterr("failed to declare parameter '%s': %s", p->name, corto_lasterr());
             goto error;
         }
     }
@@ -2516,6 +2531,7 @@ corto_int16 _ast_Parser_parseFunction(
             FALSE,
             isReference);
         if (!resultLocal) {
+            corto_seterr("failed to create return variable: %s", corto_lasterr());
             goto error;
         }
         resultLocal->kind = Ast_LocalReturn;
@@ -2534,6 +2550,21 @@ corto_int16 _ast_Parser_parseFunction(
         goto error;
     }
 
+    /*printf("\n%s:\n", expr);*/
+    /*ast_OptimizeExpr_printExpression(result);*/
+    /*printf("\n");*/
+
+    if (inverse) {
+        result = ast_OptimizeExpr_reorderExpression(result);
+        /*printf("#1: "); ast_OptimizeExpr_printExpression(result); printf("\n");*/
+
+        corto_ll elems = ast_OptimizeExpr_reduceExpression(result);
+        ast_OptimizeExpr_inverse(elems);
+        result = ast_OptimizeExpr_reducedToExpression(elems);
+        /*printf("##: "); ast_OptimizeExpr_printExpression(result); printf("\n");*/
+    }
+    
+
     /* Create assignment expression that returns result of expression */
     if (!resultLocal && result && result->type) {
         ast_Binary assignment;
@@ -2542,6 +2573,7 @@ corto_int16 _ast_Parser_parseFunction(
             resultLocal = ast_Block_declare(parser->block, "_", result->type, FALSE,
                 result->isReference);
             if (!resultLocal) {
+                corto_seterr("failed to create return variable: %s", corto_lasterr());
                 goto error;
             }
             ast_Expression(resultLocal)->deref = result->isReference ? Ast_ByReference : Ast_ByValue;
@@ -2555,6 +2587,10 @@ corto_int16 _ast_Parser_parseFunction(
 
     /* Create program for intermediate code */
     program = ic_programCreate(parser->filename);
+    if (!program) {
+        corto_seterr("failed to create intermediate code program: %s", corto_lasterr());
+        goto error;
+    }
 
     ic_program_pushScope(program);
 
@@ -3030,7 +3066,8 @@ corto_object _ast_Parser_pushScope(
     }
 
     if (!corto_instanceof(ast_Object_o, this->variables[0])) {
-        ast_Parser_error(this, "invalid scope expression (expected object)");
+        ast_Parser_error(this, "invalid scope expression (expected object, got '%s')",
+            corto_idof(corto_typeof(this->variables[0])));
         goto error;
     }
 

@@ -92,7 +92,7 @@ static corto_int16 corto_expr_finalize(corto_expr *out, corto_expr_opt *opt, cha
         f->returnsReference = opt->returnsReference;
     }
 
-    if (ast_Parser_parseFunction(f, cortoExpr)) {
+    if (ast_Parser_parseFunction(f, cortoExpr, opt ? opt->inverse : FALSE)) {
         corto_seterr("corto: expr: failed to parse '%s': %s", cortoExpr, corto_lasterr());
         goto error;
     }

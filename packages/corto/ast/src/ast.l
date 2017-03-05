@@ -268,11 +268,10 @@ L?\"(\\.|[^\\"])*\"             TOKEN; yylval.String = malloc(strlen(yytext) + 1
 "`"                             TOKEN; return '`';
 "$"                             TOKEN; return '$';
 "'"                             TOKEN; return '\'';
-
 {id}                            TOKEN; yylval.Identifier = strdup(yytext); lex_collect(yylval.Identifier); return ID;
 {gid}                           TOKEN; yylval.Identifier = strdup(yytext); lex_collect(yylval.Identifier); return GID;
-
 " "                             yparser()->column += 1;
+
 
 %%
 
