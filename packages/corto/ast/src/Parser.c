@@ -1315,7 +1315,9 @@ ast_Storage _ast_Parser_declaration(
         if (!this->pass) {
             o = corto_declareChild(this->scope, id, type);
             if (!o) {
-                ast_Parser_error(this, "%s", corto_lasterr());
+                ast_Parser_error(this, "cannot declare '%s': %s", 
+                    id,
+                    corto_lasterr());
                 goto error;
             }
         } else {
