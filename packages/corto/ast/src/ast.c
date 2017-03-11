@@ -14,12 +14,11 @@
 corto_threadKey ast_PARSER_KEY;
 
 /* Run a corto file */
-int fast_cortoRun(corto_string file, int argc, char* argv[], void* udata) {
+int ast_loadFile(corto_string file, int argc, char* argv[]) {
     corto_char* source;
     ast_Parser p;
     corto_int32 i;
     corto_stringSeq seq;
-    CORTO_UNUSED(udata);
 
     seq.buffer = corto_alloc(argc * sizeof(corto_string));
     seq.length = argc;
@@ -285,9 +284,6 @@ int astMain(int argc, char *argv[]) {
     if (corto_threadTlsKey(&ast_PARSER_KEY, NULL)) {
         return -1;
     }
-
-    /* Register corto extension */
-    corto_loaderRegister("cx", fast_cortoRun, NULL);
     return 0;
 /* $end */
 }

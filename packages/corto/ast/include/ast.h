@@ -22,9 +22,9 @@
 #include <corto/ast/_api.h>
 
 /* $body() */
-/* Enter code that requires types here */
+CORTO_AST_EXPORT
+int ast_loadFile(corto_string file, int argc, char* argv[]);
 /* $end */
-
 
 #ifdef __cplusplus
 extern "C" {

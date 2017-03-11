@@ -1,0 +1,9 @@
+{
+  "id" : "corto/ext/cx",
+  "type" : "package",
+  "value" : {
+    "description" : "CX file extension",
+    "version" : "1.0.0",
+    "dependencies" : ["corto/ast"]
+  }
+}
