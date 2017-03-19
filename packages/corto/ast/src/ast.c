@@ -30,6 +30,10 @@ int ast_loadFile(corto_string file, int argc, char* argv[]) {
     if (source) {
         /* Create parser */
         p = ast_ParserCreate(source, file);
+        if (!p) {
+            corto_seterr("failed to create parser for '%s': %s", file, corto_lasterr());
+            goto error;
+        }
 
         /* Parse & run script */
         ast_Parser_parse(p, seq);
