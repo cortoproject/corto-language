@@ -605,8 +605,14 @@ ast_Expression ast_Parser_resolve(ast_Parser this, corto_id id) {
         object = corto_lookup(rvalueType, id);
     }
 
-    if (!object){
+
+    if (!object) {
         object = corto_resolve(this->scope, id);
+    }
+
+    corto_iter it = corto_llIter(this->imports);
+    while (!object && corto_iterHasNext(&it)) {
+        object = corto_lookup(corto_iterNext(&it), id);
     }
 
     if (object) {
@@ -1827,6 +1833,26 @@ error:
 /* $end */
 }
 
+corto_int16 _ast_Parser_import(
+    ast_Parser this,
+    corto_string name)
+{
+/* $begin(corto/ast/Parser/import) */
+
+    corto_object import = corto_lookup(NULL, name);
+    if (!import) {
+        ast_Parser_error(this, "unresolved import '%s'", name);
+        goto error;
+    }
+
+    corto_objectListAppend(this->imports, import);
+
+    return 0;
+error:
+    return -1;
+/* $end */
+}
+
 corto_int16 _ast_Parser_initDeclare(
     ast_Parser this,
     ast_Expression ids)
@@ -1885,7 +1911,7 @@ corto_int16 _ast_Parser_initDeclare(
 
             if (!type && this->pass) {
                 ast_Parser_error(this,
-                  "unresolved identifier: %s", id);
+                  "unresolved identifier '%s'", id);
                 goto error;
             }
 

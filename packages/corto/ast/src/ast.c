@@ -190,15 +190,16 @@ corto_void _ast_report(
 {
 /* $begin(corto/ast/report) */
     CORTO_UNUSED(token);
+    CORTO_UNUSED(kind);
 
     if (yparser()->repl) {
         if (!yparser()->errors) {
-            corto_seterr("%d: %s: %s", column, kind, error);
+            corto_seterr("%d: %s", column, error);
         }
     } else if(filename) {
-        corto_error("%s:%d:%d: %s: %s", filename, line, column, kind, error);
+        corto_error("%s:%d:%d: %s", filename, line, column, error);
     } else {
-        corto_error("%d:%d: %s: %s", line, column, kind, error);
+        corto_error("%d:%d: %s", line, column, error);
     }
 
 /* $end */

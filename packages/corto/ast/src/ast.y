@@ -120,7 +120,7 @@ error:
 %token BOOLEAN CHARACTER INTEGER SIGNEDINTEGER FLOATINGPOINT STRING NUL
 
 /* Identifiers */
-%token ID GID PACKAGE
+%token ID GID PACKAGE IMPORT
 
 /* Operators */
 %token MUL_ASSIGN DIV_ASSIGN ADD_ASSIGN SUB_ASSIGN OR_ASSIGN AND_ASSIGN
@@ -183,7 +183,7 @@ error:
     block block_start
     initializer initializer_expr initializer_braces init_key
     if_start if_statement
-    while_statement while_until package_declaration
+    while_statement while_until package_declaration import_declaration
 
 /* Operators */
 %type <Operator>
@@ -237,6 +237,7 @@ statement_nodecl
 statement
     : statement_nodecl
     | package_declaration ENDL
+    | import_declaration ENDL
     | declaration ENDL {$$ = NULL;}
     | function_declaration ENDL {$$ = NULL;}
     | function_implementation   {$$ = NULL;}
@@ -396,6 +397,15 @@ function_argument
 package_declaration
     : PACKAGE GID {
         ast_Parser_pushPackage(yparser(), $2); fast_op;
+    }
+    | PACKAGE ID {
+        ast_Parser_pushPackage(yparser(), $2); fast_op;
+    }
+    ;
+
+import_declaration
+    : IMPORT GID {
+        ast_Parser_import(yparser(), $2); fast_op;
     }
     ;
 

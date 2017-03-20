@@ -31,7 +31,7 @@ corto_void _ast_UnresolvedReference_error(
 /* $begin(corto/ast/UnresolvedReference/error) */
     corto_id errMsg;
 
-    sprintf(errMsg, "unresolved identifier: %s", this->ref);
+    sprintf(errMsg, "unresolved identifier '%s'", this->ref);
     ast_reportError(
         yparser()->filename,
         this->line,

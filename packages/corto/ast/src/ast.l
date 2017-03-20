@@ -204,6 +204,7 @@ false                           TOKEN; yylval.Boolean = FALSE; return BOOLEAN;
 nan                             TOKEN; yylval.FloatingPoint = NAN; return FLOATINGPOINT;
 
 "#package"                      TOKEN; return PACKAGE;
+"#import"                       TOKEN; return IMPORT;
 "//"                            comment();
 "#"                             comment();
 
