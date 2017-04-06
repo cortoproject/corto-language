@@ -14,6 +14,10 @@
 
 /* $header() */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct corto_expr {
     corto_function function;
 } corto_expr;
@@ -34,6 +38,10 @@ corto_int16 corto_expr_run(corto_expr *expr, corto_value *out, ...);
 corto_int16 corto_expr_runb(corto_expr *expr, corto_value *out, void **args);
 
 void corto_expr_free(corto_expr *expr);
+
+#ifdef __cplusplus
+}
+#endif
 
 /* $end */
 
