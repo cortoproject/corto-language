@@ -123,8 +123,7 @@ ast_Expression _ast_Block_lookup(
 
     if (!result) {
         if (this->function && corto_instanceof(corto_interface_o, corto_parentof(this->function))) {
-            if ((corto_procedure(corto_typeof(this->function))->kind == CORTO_METHOD) ||
-               ((corto_procedure(corto_typeof(this->function))->kind == CORTO_OBSERVER))) {
+            if (corto_procedure(corto_typeof(this->function))->hasThis) {
                 if (strcmp(id, "this")) {
                     corto_object parent;
                     corto_member m;
@@ -265,7 +264,7 @@ corto_void _ast_Block_setFunction(
 /* $end */
 }
 
-ic_node _ast_Block_toIc_v(
+ic_node _ast_Block_toIc(
     ast_Block this,
     ic_program program,
     ic_storage storage,
@@ -279,7 +278,7 @@ ic_node _ast_Block_toIc_v(
     scope = ic_program_pushScope(program);
 
     if (!this->_while) {
-        ast_Block_toIcBody_v(this, program, storage, stored);
+        ast_Block_toIcBody(this, program, storage, stored);
     } else {
         ast_While_toIc(this->_while, program, storage, stored);
     }
@@ -290,7 +289,7 @@ ic_node _ast_Block_toIc_v(
 /* $end */
 }
 
-ic_node _ast_Block_toIcBody_v(
+ic_node _ast_Block_toIcBody(
     ast_Block this,
     ic_program program,
     ic_storage storage,

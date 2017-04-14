@@ -254,7 +254,7 @@ error:
 /* $end */
 }
 
-ic_node _ast_String_toIc_v(
+ic_node _ast_String_toIc(
     ast_String this,
     ic_program program,
     ic_storage storage,

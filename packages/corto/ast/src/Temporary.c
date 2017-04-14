@@ -30,7 +30,7 @@ corto_void _ast_Temporary_setProxy(
 /* $end */
 }
 
-ic_node _ast_Temporary_toIc_v(
+ic_node _ast_Temporary_toIc(
     ast_Temporary this,
     ic_program program,
     ic_storage storage,

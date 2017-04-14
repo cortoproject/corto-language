@@ -25,7 +25,7 @@ corto_int16 _ast_New_construct(
 /* $end */
 }
 
-corto_bool _ast_New_hasSideEffects_v(
+corto_bool _ast_New_hasSideEffects(
     ast_New this)
 {
 /* $begin(corto/ast/New/hasSideEffects) */
@@ -34,7 +34,7 @@ corto_bool _ast_New_hasSideEffects_v(
 /* $end */
 }
 
-ic_node _ast_New_toIc_v(
+ic_node _ast_New_toIc(
     ast_New this,
     ic_program program,
     ic_storage storage,

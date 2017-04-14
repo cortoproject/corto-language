@@ -27,7 +27,7 @@ corto_int16 _ast_StaticCall_construct(
 
     /* If function is a metaprocedure, signal Call class to push this as any */
     ast_Call(this)->instanceIsAny = 
-        (corto_procedure(corto_typeof(this->function))->kind == CORTO_METAPROCEDURE);
+        (corto_procedure(corto_typeof(this->function))->thisType == corto_any_o);
 
     return ast_Call_construct(ast_Call(this));
 /* $end */

@@ -55,7 +55,7 @@ error:
 /* $end */
 }
 
-ic_node _ast_Character_toIc_v(
+ic_node _ast_Character_toIc(
     ast_Character this,
     ic_program program,
     ic_storage storage,

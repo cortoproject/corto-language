@@ -47,7 +47,7 @@ ast_Call ast_CallBuilder_buildMethod(ast_CallBuilder *this) {
         }
 
         /* If function is a metaprocedure, validate whether the instance pointer should be a refernce */
-        if (corto_procedure(corto_typeof(f))->kind == CORTO_METAPROCEDURE) {
+        if (corto_instanceof(corto_metaprocedure_o, f)) {
             if (corto_metaprocedure(f)->referenceOnly && !this->instance->isReference) {
                 ast_Parser_error(yparser(), "can only call %s on objects", corto_idof(f));
                 goto error;

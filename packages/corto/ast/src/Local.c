@@ -26,7 +26,7 @@ corto_int16 _ast_Local_construct(
 /* $end */
 }
 
-ic_node _ast_Local_toIc_v(
+ic_node _ast_Local_toIc(
     ast_Local this,
     ic_program program,
     ic_storage storage,

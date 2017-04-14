@@ -101,7 +101,7 @@ error:
 /* $end */
 }
 
-corto_bool _ast_Member_hasSideEffects_v(
+corto_bool _ast_Member_hasSideEffects(
     ast_Member this)
 {
 /* $begin(corto/ast/Member/hasSideEffects) */
@@ -109,7 +109,7 @@ corto_bool _ast_Member_hasSideEffects_v(
 /* $end */
 }
 
-ic_node _ast_Member_toIc_v(
+ic_node _ast_Member_toIc(
     ast_Member this,
     ic_program program,
     ic_storage storage,

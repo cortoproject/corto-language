@@ -70,7 +70,7 @@ corto_int16 _ast_Comma_construct(
 /* $end */
 }
 
-corto_bool _ast_Comma_hasReturnedResource_v(
+corto_bool _ast_Comma_hasReturnedResource(
     ast_Comma this)
 {
 /* $begin(corto/ast/Comma/hasReturnedResource) */
@@ -87,7 +87,7 @@ corto_bool _ast_Comma_hasReturnedResource_v(
 /* $end */
 }
 
-corto_bool _ast_Comma_hasSideEffects_v(
+corto_bool _ast_Comma_hasSideEffects(
     ast_Comma this)
 {
 /* $begin(corto/ast/Comma/hasSideEffects) */
@@ -139,7 +139,7 @@ ast_Expression _ast_Comma_insertOrCreate(
 /* $end */
 }
 
-ic_node _ast_Comma_toIc_v(
+ic_node _ast_Comma_toIc(
     ast_Comma this,
     ic_program program,
     ic_storage storage,
@@ -155,7 +155,7 @@ ic_node _ast_Comma_toIc_v(
 /* $end */
 }
 
-ast_NodeList _ast_Comma_toList(
+ast_ExpressionList _ast_Comma_toList(
     ast_Comma this)
 {
 /* $begin(corto/ast/Comma/toList) */

@@ -110,7 +110,7 @@ error:
 /* $end */
 }
 
-corto_bool _ast_Unary_hasReturnedResource_v(
+corto_bool _ast_Unary_hasReturnedResource(
     ast_Unary this)
 {
 /* $begin(corto/ast/Unary/hasReturnedResource) */
@@ -118,7 +118,7 @@ corto_bool _ast_Unary_hasReturnedResource_v(
 /* $end */
 }
 
-corto_bool _ast_Unary_hasSideEffects_v(
+corto_bool _ast_Unary_hasSideEffects(
     ast_Unary this)
 {
 /* $begin(corto/ast/Unary/hasSideEffects) */
@@ -126,7 +126,7 @@ corto_bool _ast_Unary_hasSideEffects_v(
 /* $end */
 }
 
-ast_Expression _ast_Unary_resolve_v(
+ast_Expression _ast_Unary_resolve(
     ast_Unary this,
     corto_type type)
 {
@@ -152,7 +152,7 @@ error:
 /* $end */
 }
 
-ic_node _ast_Unary_toIc_v(
+ic_node _ast_Unary_toIc(
     ast_Unary this,
     ic_program program,
     ic_storage storage,

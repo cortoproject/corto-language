@@ -79,7 +79,7 @@ static void ast_Update_end(ast_Update this, ic_program program, ic_node expr, ic
 }
 
 /* $end */
-ic_node _ast_Update_toIc_v(
+ic_node _ast_Update_toIc(
     ast_Update this,
     ic_program program,
     ic_storage storage,

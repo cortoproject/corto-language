@@ -148,7 +148,7 @@ corto_int16 _ast_DynamicInitializer_define(
 /* $end */
 }
 
-corto_bool _ast_DynamicInitializer_hasReturnedResource_v(
+corto_bool _ast_DynamicInitializer_hasReturnedResource(
     ast_DynamicInitializer this)
 {
 /* $begin(corto/ast/DynamicInitializer/hasReturnedResource) */

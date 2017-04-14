@@ -23,7 +23,7 @@ corto_int16 _ast_Deinit_construct(
 /* $end */
 }
 
-ic_node _ast_Deinit_toIc_v(
+ic_node _ast_Deinit_toIc(
     ast_Deinit this,
     ic_program program,
     ic_storage storage,

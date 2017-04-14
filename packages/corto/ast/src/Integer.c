@@ -58,7 +58,7 @@ error:
 /* $end */
 }
 
-ic_node _ast_Integer_toIc_v(
+ic_node _ast_Integer_toIc(
     ast_Integer this,
     ic_program program,
     ic_storage storage,

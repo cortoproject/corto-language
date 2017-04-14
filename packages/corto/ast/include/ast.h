@@ -9,9 +9,8 @@
 #include <corto/corto.h>
 #include <corto/corto.h>
 #include <corto/ast/_project.h>
+#include <corto/c/c.h>
 #include <corto/ic/ic.h>
-#include <corto/core/c/c.h>
-#include <corto/lang/c/c.h>
 
 /* $header() */
 /* Enter additional code here. */
@@ -19,7 +18,7 @@
 
 #include <corto/ast/_type.h>
 #include <corto/ast/_load.h>
-#include <corto/ast/_api.h>
+#include <corto/ast/c/_api.h>
 
 /* $body() */
 CORTO_AST_EXPORT

@@ -59,7 +59,7 @@ error:
 /* $end */
 }
 
-ic_node _ast_SignedInteger_toIc_v(
+ic_node _ast_SignedInteger_toIc(
     ast_SignedInteger this,
     ic_program program,
     ic_storage storage,

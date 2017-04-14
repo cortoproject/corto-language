@@ -47,7 +47,7 @@ corto_void _ast_If_noWarnUnreachable(
 /* $end */
 }
 
-ic_node _ast_If_toIc_v(
+ic_node _ast_If_toIc(
     ast_If this,
     ic_program program,
     ic_storage storage,

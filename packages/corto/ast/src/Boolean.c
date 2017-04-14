@@ -61,7 +61,7 @@ error:
 /* $end */
 }
 
-ic_node _ast_Boolean_toIc_v(
+ic_node _ast_Boolean_toIc(
     ast_Boolean this,
     ic_program program,
     ic_storage storage,

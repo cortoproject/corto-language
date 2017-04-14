@@ -63,7 +63,7 @@ error:
 /* $end */
 }
 
-ic_node _ast_Null_toIc_v(
+ic_node _ast_Null_toIc(
     ast_Null this,
     ic_program program,
     ic_storage storage,

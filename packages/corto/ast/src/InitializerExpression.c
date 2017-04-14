@@ -34,7 +34,7 @@ corto_int16 _ast_InitializerExpression_define(
 /* $end */
 }
 
-corto_bool _ast_InitializerExpression_hasReturnedResource_v(
+corto_bool _ast_InitializerExpression_hasReturnedResource(
     ast_InitializerExpression this)
 {
 /* $begin(corto/ast/InitializerExpression/hasReturnedResource) */

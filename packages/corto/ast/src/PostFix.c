@@ -71,7 +71,7 @@ error:
 /* $end */
 }
 
-corto_bool _ast_PostFix_hasReturnedResource_v(
+corto_bool _ast_PostFix_hasReturnedResource(
     ast_PostFix this)
 {
 /* $begin(corto/ast/PostFix/hasReturnedResource) */
@@ -79,7 +79,7 @@ corto_bool _ast_PostFix_hasReturnedResource_v(
 /* $end */
 }
 
-ic_node _ast_PostFix_toIc_v(
+ic_node _ast_PostFix_toIc(
     ast_PostFix this,
     ic_program program,
     ic_storage storage,

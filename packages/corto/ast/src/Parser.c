@@ -1491,7 +1491,7 @@ ast_Block _ast_Parser_declareFunctionParams(
         ast_Block_setFunction(result, function_o);
 
         /* If function is a method, include 'this' pointer */
-        if (corto_procedure(corto_typeof(function_o))->kind == CORTO_METHOD) {
+        if (corto_procedure(corto_typeof(function_o))->hasThis) {
             corto_object parent;
 
             if (!corto_instanceof(corto_type(corto_interface_o), corto_parentof(function_o))) {
@@ -3261,7 +3261,6 @@ ast_Node _ast_Parser_updateStatement(
         ast_Block functionBlock;
         ast_Expression from = NULL;
         corto_function function;
-        corto_procedureKind procedureKind;
         corto_ll exprList;
 
         if (!expr) { /* Can only happen due to a previous error */
@@ -3276,9 +3275,8 @@ ast_Node _ast_Parser_updateStatement(
         }
 
         if (functionBlock) {
-            procedureKind = corto_procedure(corto_typeof(function))->kind;
-            if (functionBlock && corto_instanceof(corto_interface_o, corto_parentof(function))) {
-                if ((procedureKind == CORTO_METHOD) || ((procedureKind == CORTO_OBSERVER))) {
+            if (corto_instanceof(corto_interface_o, corto_parentof(function))) {
+                if (corto_procedure(corto_typeof(function))->hasThis) {
                     from = ast_Parser_lookup(this, "this");
                 }
             }

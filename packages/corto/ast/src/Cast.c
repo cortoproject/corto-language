@@ -44,7 +44,7 @@ error:
 /* $end */
 }
 
-corto_bool _ast_Cast_hasReturnedResource_v(
+corto_bool _ast_Cast_hasReturnedResource(
     ast_Cast this)
 {
 /* $begin(corto/ast/Cast/hasReturnedResource) */
@@ -54,7 +54,7 @@ corto_bool _ast_Cast_hasReturnedResource_v(
 /* $end */
 }
 
-ic_node _ast_Cast_toIc_v(
+ic_node _ast_Cast_toIc(
     ast_Cast this,
     ic_program program,
     ic_storage storage,

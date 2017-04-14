@@ -84,7 +84,7 @@ corto_int16 _ast_Ternary_construct(
 /* $end */
 }
 
-corto_bool _ast_Ternary_hasReturnedResource_v(
+corto_bool _ast_Ternary_hasReturnedResource(
     ast_Ternary this)
 {
 /* $begin(corto/ast/Ternary/hasReturnedResource) */
@@ -94,7 +94,7 @@ corto_bool _ast_Ternary_hasReturnedResource_v(
 /* $end */
 }
 
-corto_bool _ast_Ternary_hasSideEffects_v(
+corto_bool _ast_Ternary_hasSideEffects(
     ast_Ternary this)
 {
 /* $begin(corto/ast/Ternary/hasSideEffects) */
@@ -120,7 +120,7 @@ corto_void _ast_Ternary_setOperator(
 /* $end */
 }
 
-ic_node _ast_Ternary_toIc_v(
+ic_node _ast_Ternary_toIc(
     ast_Ternary this,
     ic_program program,
     ic_storage storage,

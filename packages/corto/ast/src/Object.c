@@ -47,7 +47,7 @@ corto_word _ast_Object_getValue(
 /* $end */
 }
 
-corto_string _ast_Object_id_v(
+corto_string _ast_Object_id(
     ast_Object this)
 {
 /* $begin(corto/ast/Object/id) */
@@ -151,7 +151,7 @@ error:
 /* $end */
 }
 
-ic_node _ast_Object_toIc_v(
+ic_node _ast_Object_toIc(
     ast_Object this,
     ic_program program,
     ic_storage storage,

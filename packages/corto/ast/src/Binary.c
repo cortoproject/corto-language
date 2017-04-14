@@ -549,7 +549,7 @@ error:
 /* $end */
 }
 
-corto_bool _ast_Binary_hasReturnedResource_v(
+corto_bool _ast_Binary_hasReturnedResource(
     ast_Binary this)
 {
 /* $begin(corto/ast/Binary/hasReturnedResource) */
@@ -560,7 +560,7 @@ corto_bool _ast_Binary_hasReturnedResource_v(
 /* $end */
 }
 
-corto_bool _ast_Binary_hasSideEffects_v(
+corto_bool _ast_Binary_hasSideEffects(
     ast_Binary this)
 {
 /* $begin(corto/ast/Binary/hasSideEffects) */
@@ -585,7 +585,7 @@ corto_bool _ast_Binary_hasSideEffects_v(
 /* $end */
 }
 
-ast_Expression _ast_Binary_resolve_v(
+ast_Expression _ast_Binary_resolve(
     ast_Binary this,
     corto_type type)
 {
@@ -692,7 +692,7 @@ error:
 /* $end */
 }
 
-ic_node _ast_Binary_toIc_v(
+ic_node _ast_Binary_toIc(
     ast_Binary this,
     ic_program program,
     ic_storage storage,

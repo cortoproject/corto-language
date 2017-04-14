@@ -85,7 +85,7 @@ error:
 /* $end */
 }
 
-corto_bool _ast_Call_hasReturnedResource_v(
+corto_bool _ast_Call_hasReturnedResource(
     ast_Call this)
 {
 /* $begin(corto/ast/Call/hasReturnedResource) */
@@ -97,7 +97,7 @@ corto_bool _ast_Call_hasReturnedResource_v(
 /* $end */
 }
 
-corto_bool _ast_Call_hasSideEffects_v(
+corto_bool _ast_Call_hasSideEffects(
     ast_Call this)
 {
 /* $begin(corto/ast/Call/hasSideEffects) */
@@ -127,7 +127,7 @@ corto_void _ast_Call_setParameters(
 /* $end */
 }
 
-ic_node _ast_Call_toIc_v(
+ic_node _ast_Call_toIc(
     ast_Call this,
     ic_program program,
     ic_storage storage,

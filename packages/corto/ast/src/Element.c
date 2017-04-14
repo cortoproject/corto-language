@@ -61,7 +61,7 @@ error:
 /* $end */
 }
 
-ic_node _ast_Element_toIc_v(
+ic_node _ast_Element_toIc(
     ast_Element this,
     ic_program program,
     ic_storage storage,

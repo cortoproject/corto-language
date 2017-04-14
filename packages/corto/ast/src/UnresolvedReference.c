@@ -44,7 +44,7 @@ corto_void _ast_UnresolvedReference_error(
 /* $end */
 }
 
-corto_string _ast_UnresolvedReference_id_v(
+corto_string _ast_UnresolvedReference_id(
     ast_UnresolvedReference this)
 {
 /* $begin(corto/ast/UnresolvedReference/id) */
@@ -54,7 +54,7 @@ corto_string _ast_UnresolvedReference_id_v(
 /* $end */
 }
 
-ast_Expression _ast_UnresolvedReference_resolve_v(
+ast_Expression _ast_UnresolvedReference_resolve(
     ast_UnresolvedReference this,
     corto_type type)
 {
@@ -81,7 +81,7 @@ ast_Expression _ast_UnresolvedReference_resolve_v(
 /* $end */
 }
 
-ic_node _ast_UnresolvedReference_toIc_v(
+ic_node _ast_UnresolvedReference_toIc(
     ast_UnresolvedReference this,
     ic_program program,
     ic_storage storage,

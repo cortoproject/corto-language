@@ -56,7 +56,7 @@ error:
 /* $end */
 }
 
-ic_node _ast_FloatingPoint_toIc_v(
+ic_node _ast_FloatingPoint_toIc(
     ast_FloatingPoint this,
     ic_program program,
     ic_storage storage,

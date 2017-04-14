@@ -55,7 +55,7 @@
                     <member name="kind" type="nodeKind"/>
                     <member name="line" type="uint32" modifiers="readonly"/>
                     <member name="column" type="uint32" modifiers="readonly"/>
-                    <virtual name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
+                    <overridable name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
                 </meta:scope>
             </class>
 
@@ -78,15 +78,15 @@
                     <method name="getType()" returnType="type"/>
                     <method name="getType_expr(Expression target)" returnType="type"/>
                     <method name="getType_type(type target)" returnType="type"/>
-                    <virtual name="serialize(type dstType,word dst)" returnType="int16"/>
+                    <overridable name="serialize(type dstType,word dst)" returnType="int16"/>
                     <method name="cast(type type,bool isReference)" returnType="ast::Expression"/>
-                    <virtual name="fold()" returnType="ast::Expression"/>
-                    <virtual name="getValue()" returnType="word"/>
-                    <virtual name="toList()" returnType="list{Expression}"/>
-                    <virtual name="hasSideEffects()" returnType="bool"/>
-                    <virtual name="hasReturnedResource()" returnType="bool"/>
-                    <virtual name="resolve(type type)" returnType="Expression"/>
-                    <virtual name="id()" returnType="string"/>
+                    <overridable name="fold()" returnType="ast::Expression"/>
+                    <overridable name="getValue()" returnType="word"/>
+                    <overridable name="toList()" returnType="list{Expression}"/>
+                    <overridable name="hasSideEffects()" returnType="bool"/>
+                    <overridable name="hasReturnedResource()" returnType="bool"/>
+                    <overridable name="resolve(type type)" returnType="Expression"/>
+                    <overridable name="id()" returnType="string"/>
                     <function name="fromList(list{Expression} list)" returnType="Expression"/>
                     <function name="cleanList(list{Expression} list)"/>
                 </meta:scope>
@@ -99,12 +99,12 @@
                   <method name="construct()" returnType="int16"/>
                   <member name="expressions" type="list{Expression}" modifiers="private"/>
                   <method name="addExpression(Expression expr)" returnType="int16"/>
-                  <method name="toList()" returnType="list{Node}"/>
+                  <override name="toList()" returnType="list{Expression}"/>
                   <function name="addOrCreate(Expression list,Expression expr)" returnType="Expression"/>
                   <function name="insertOrCreate(Expression list,Expression expr)" returnType="Expression"/>
-                  <virtual name="hasSideEffects()" returnType="bool"/>
-                  <virtual name="hasReturnedResource()" returnType="bool"/>
-                  <virtual name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
+                  <override name="hasSideEffects()" returnType="bool"/>
+                  <override name="hasReturnedResource()" returnType="bool"/>
+                  <override name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
               </meta:scope>
             </class>
 
@@ -113,7 +113,7 @@
                 <meta:scope>
                     <method name="init()" returnType="int16"/>
                     <member name="kind" type="valueKind"/>
-                    <virtual name="getValue()" returnType="word"/>
+                    <overridable name="getValue()" returnType="word"/>
                 </meta:scope>
             </class>
 
@@ -121,9 +121,9 @@
             <class name="Boolean" base="Literal" baseAccess="readonly">
                 <meta:scope>
                     <method name="init()" returnType="int16"/>
-                    <method name="serialize(type dstType,word dst)" returnType="int16"/>
+                    <override name="serialize(type dstType,word dst)" returnType="int16"/>
                     <member name="value" type="bool"/>
-                    <virtual name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
+                    <override name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
                 </meta:scope>
             </class>
 
@@ -131,9 +131,9 @@
             <class name="Character" base="Literal" baseAccess="readonly">
                 <meta:scope>
                     <method name="init()" returnType="int16"/>
-                    <method name="serialize(type dstType,word dst)" returnType="int16"/>
+                    <override name="serialize(type dstType,word dst)" returnType="int16"/>
                     <member name="value" type="char"/>
-                    <virtual name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
+                    <override name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
                 </meta:scope>
             </class>
 
@@ -141,9 +141,9 @@
             <class name="Integer" base="Literal" baseAccess="readonly">
                 <meta:scope>
                     <method name="init()" returnType="int16"/>
-                    <method name="serialize(type dstType,word dst)" returnType="int16"/>
+                    <override name="serialize(type dstType,word dst)" returnType="int16"/>
                     <member name="value" type="uint64"/>
-                    <virtual name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
+                    <override name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
                 </meta:scope>
             </class>
 
@@ -151,9 +151,9 @@
             <class name="SignedInteger" base="Literal" baseAccess="readonly">
                 <meta:scope>
                     <method name="init()" returnType="int16"/>
-                    <method name="serialize(type dstType,word dst)" returnType="int16"/>
+                    <override name="serialize(type dstType,word dst)" returnType="int16"/>
                     <member name="value" type="int64"/>
-                    <virtual name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
+                    <override name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
                 </meta:scope>
             </class>
 
@@ -161,9 +161,9 @@
             <class name="FloatingPoint" base="Literal" baseAccess="readonly">
                 <meta:scope>
                     <method name="init()" returnType="int16"/>
-                    <method name="serialize(type dstType,word dst)" returnType="int16"/>
+                    <override name="serialize(type dstType,word dst)" returnType="int16"/>
                     <member name="value" type="float64"/>
-                    <virtual name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
+                    <override name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
                 </meta:scope>
             </class>
 
@@ -171,8 +171,8 @@
             <class name="Null" base="Literal" baseAccess="readonly">
                 <meta:scope>
                     <method name="init()" returnType="int16"/>
-                    <method name="serialize(type dstType,word dst)" returnType="int16"/>
-                    <virtual name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
+                    <override name="serialize(type dstType,word dst)" returnType="int16"/>
+                    <override name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
                 </meta:scope>
             </class>
 
@@ -215,7 +215,7 @@
                     <member name="type" type="type"/>
                     <member name="kind" type="ast::LocalKind"/>
                     <member name="reference" type="bool"/>
-                    <virtual name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
+                    <override name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
                 </meta:scope>
             </class>
 
@@ -228,7 +228,7 @@
                     <member name="proxy" type="Temporary" modifiers="private|local"/>
                     <member name="ic" type="ic::node" modifiers="private|local"/>
                     <method name="setProxy(Temporary proxy)"/>
-                    <virtual name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
+                    <override name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
                 </meta:scope>
             </class>
 
@@ -243,10 +243,10 @@
             <class name="Object" base="Storage" baseAccess="readonly">
                 <meta:scope>
                     <method name="construct()" returnType="int16"/>
-                    <method name="serialize(type dstType,word dst)" returnType="int16"/>
-                    <virtual name="id()" returnType="string"/>
-                    <virtual name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
-                    <method name="getValue()" returnType="word"/>
+                    <override name="serialize(type dstType,word dst)" returnType="int16"/>
+                    <override name="id()" returnType="string"/>
+                    <override name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
+                    <override name="getValue()" returnType="word"/>
                     <member name="value" type="object"/>
                 </meta:scope>
             </class>
@@ -260,9 +260,9 @@
                     <member name="line" type="uint32"/>
                     <member name="column" type="uint32"/>
                     <method name="error()" returnType="void"/>
-                    <virtual name="resolve(type type)" returnType="Expression"/>
-                    <virtual name="id()" returnType="string"/>
-                    <virtual name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
+                    <override name="resolve(type type)" returnType="Expression"/>
+                    <override name="id()" returnType="string"/>
+                    <override name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
                 </meta:scope>
             </class>
 
@@ -271,7 +271,7 @@
                 <meta:scope>
                     <method name="construct()" returnType="int16"/>
                     <member name="storage" type="ast::Storage"/>
-                    <virtual name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
+                    <override name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
                 </meta:scope>
             </class>
 
@@ -280,7 +280,7 @@
                 <meta:scope>
                     <method name="construct()" returnType="int16"/>
                     <member name="storage" type="ast::Storage"/>
-                    <virtual name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
+                    <override name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
                 </meta:scope>
             </class>
 
@@ -305,8 +305,8 @@
                     <method name="resolve(string id)" returnType="ast::Expression"/>
                     <method name="resolveLocal(string id)" returnType="ast::Local"/>
                     <method name="addStatement(ast::Node statement)"/>
-                    <virtual name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
-                    <virtual name="toIcBody(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
+                    <override name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
+                    <method name="toIcBody(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
                 </meta:scope>
             </class>
 
@@ -318,8 +318,8 @@
                     <member name="rvalue" type="ast::Expression"/>
                     <member name="superMember" type="bool" modifiers="readonly"/>
                     <member name="member" type="object" modifiers="private"/> <!-- Only set when determined at compile-time -->
-                    <virtual name="hasSideEffects()" returnType="bool"/>
-                    <virtual name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
+                    <override name="hasSideEffects()" returnType="bool"/>
+                    <override name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
                 </meta:scope>
             </class>
 
@@ -329,7 +329,7 @@
                     <method name="construct()" returnType="int16"/>
                     <member name="lvalue" type="ast::Expression"/>
                     <member name="rvalue" type="ast::Expression"/>
-                    <virtual name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
+                    <override name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
                 </meta:scope>
             </class>
 
@@ -349,9 +349,9 @@
                     <member name="overloaded" type="bool" modifiers="readonly"/>
 
                     <method name="setParameters(function function)"/>
-                    <virtual name="hasSideEffects()" returnType="bool"/>
-                    <virtual name="hasReturnedResource()" returnType="bool"/>
-                    <virtual name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
+                    <override name="hasSideEffects()" returnType="bool"/>
+                    <override name="hasReturnedResource()" returnType="bool"/>
+                    <override name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
                 </meta:scope>
             </class>
 
@@ -393,8 +393,8 @@
                     <member name="lvalue" type="type"/>
                     <member name="rvalue" type="ast::Expression"/>
                     <member name="isReference" type="bool"/>
-                    <virtual name="hasReturnedResource()" returnType="bool"/>
-                    <virtual name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
+                    <override name="hasReturnedResource()" returnType="bool"/>
+                    <override name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
                 </meta:scope>
             </class>
 
@@ -404,8 +404,8 @@
                     <method name="construct()" returnType="int16"/>
                     <member name="lvalue" type="ast::Expression"/>
                     <member name="operator" type="operatorKind"/>
-                    <virtual name="hasReturnedResource()" returnType="bool"/>
-                    <virtual name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
+                    <override name="hasReturnedResource()" returnType="bool"/>
+                    <override name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
                 </meta:scope>
             </class>
 
@@ -415,11 +415,11 @@
                     <method name="construct()" returnType="int16"/>
                     <member name="lvalue" type="ast::Expression"/>
                     <member name="operator" type="operatorKind"/>
-                    <method name="fold()" returnType="ast::Expression"/>
-                    <virtual name="hasSideEffects()" returnType="bool"/>
-                    <virtual name="hasReturnedResource()" returnType="bool"/>
-                    <virtual name="resolve(type type)" returnType="Expression"/>
-                    <virtual name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
+                    <override name="fold()" returnType="ast::Expression"/>
+                    <override name="hasSideEffects()" returnType="bool"/>
+                    <override name="hasReturnedResource()" returnType="bool"/>
+                    <override name="resolve(type type)" returnType="Expression"/>
+                    <override name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
                 </meta:scope>
             </class>
 
@@ -432,12 +432,12 @@
                     <member name="operator" type="operatorKind"/>
                     <member name="deref" type="ast::derefKind" modifiers="local|private"/>
                     <member name="isScalar" type="lang::bool" modifiers="local|readonly"/>
-                    <method name="fold()" returnType="ast::Expression"/>
+                    <override name="fold()" returnType="ast::Expression"/>
                     <method name="setOperator(operatorKind kind)" returnType="void"/>
-                    <virtual name="hasSideEffects()" returnType="bool"/>
-                    <virtual name="hasReturnedResource()" returnType="bool"/>
-                    <virtual name="resolve(type type)" returnType="Expression"/>
-                    <virtual name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
+                    <override name="hasSideEffects()" returnType="bool"/>
+                    <override name="hasReturnedResource()" returnType="bool"/>
+                    <override name="resolve(type type)" returnType="Expression"/>
+                    <override name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
                 </meta:scope>
             </class>
 
@@ -455,9 +455,9 @@
                     <member name="result" type="ast::Expression"/>
                     <member name="ifstmt" type="ast::If" modifiers="local|private"/>
                     <method name="setOperator(operatorKind kind)" returnType="void"/>
-                    <virtual name="hasSideEffects()" returnType="bool"/>
-                    <virtual name="hasReturnedResource()" returnType="bool"/>
-                    <virtual name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
+                    <override name="hasSideEffects()" returnType="bool"/>
+                    <override name="hasReturnedResource()" returnType="bool"/>
+                    <override name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
                 </meta:scope>
             </class>
 
@@ -467,8 +467,8 @@
                     <method name="construct()" returnType="int16"/>
                     <member name="type" type="type"/>
                     <member name="attributes" type="ast::Expression"/>
-                    <virtual name="hasSideEffects()" returnType="bool"/>
-                    <virtual name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
+                    <override name="hasSideEffects()" returnType="bool"/>
+                    <override name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
                 </meta:scope>
             </class>
 
@@ -477,7 +477,7 @@
                 <meta:scope>
                     <method name="construct()" returnType="int16"/>
                     <member name="object" type="ast::Expression"/>
-                    <virtual name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
+                    <override name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
                 </meta:scope>
             </class>
 
@@ -486,13 +486,13 @@
                 <meta:scope>
                     <method name="init()" returnType="int16"/>
                     <method name="construct()" returnType="int16"/>
-                    <method name="serialize(type dstType,word dst)" returnType="int16"/>
+                    <override name="serialize(type dstType,word dst)" returnType="int16"/>
                     <member name="value" type="string"/>
                     <member name="elements" type="list{ast::Expression}" modifiers="readonly"/>
                     <member name="block" type="ast::Block" modifiers="readonly"/>
                     <member name="scope" type="object" modifiers="readonly"/>
-                    <method name="getValue()" returnType="word"/>
-                    <virtual name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
+                    <override name="getValue()" returnType="word"/>
+                    <override name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
                 </meta:scope>
             </class>
 
@@ -505,7 +505,7 @@
                     <member name="falseBranch" type="ast::If"/>
                     <member name="warnUnreachable" type="bool" modifiers="private|local"/>
                     <method name="noWarnUnreachable()"/>
-                    <virtual name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
+                    <override name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
                 </meta:scope>
             </class>
 
@@ -516,7 +516,7 @@
                     <member name="condition" type="ast::Expression"/>
                     <member name="trueBranch" type="ast::Block"/>
                     <member name="isUntil" type="bool"/>
-                    <virtual name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
+                    <override name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
                 </meta:scope>
             </class>
 
@@ -535,7 +535,7 @@
                     <member name="block" type="ast::Block"/>
                     <member name="from" type="ast::Expression"/>
                     <member name="kind" type="ast::UpdateKind"/>
-                    <virtual name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
+                    <override name="toIc(ic::program program,ic::storage storage,bool stored)" returnType="ic::node"/>
                 </meta:scope>
             </class>
 
@@ -576,15 +576,15 @@
                     <method name="construct()" returnType="int16"/>
                     <method name="currentType()" returnType="type"/>
                     <method name="type()" returnType="type"/>
-                    <virtual name="push()" returnType="int16"/>
-                    <virtual name="pop()" returnType="int8"/>
-                    <virtual name="value(Expression v)" returnType="int16"/>
-                    <virtual name="member(string name)" returnType="int32"/>
-                    <virtual name="pushKey()" returnType="int16"/>
-                    <virtual name="popKey()" returnType="int16"/>
-                    <virtual name="valueKey(Expression key)" returnType="int16"/>
-                    <virtual name="define()" returnType="int16"/>
-                    <virtual name="next()" returnType="int16"/>
+                    <overridable name="push()" returnType="int16"/>
+                    <overridable name="pop()" returnType="int8"/>
+                    <overridable name="value(Expression v)" returnType="int16"/>
+                    <overridable name="member(string name)" returnType="int32"/>
+                    <overridable name="pushKey()" returnType="int16"/>
+                    <overridable name="popKey()" returnType="int16"/>
+                    <overridable name="valueKey(Expression key)" returnType="int16"/>
+                    <overridable name="define()" returnType="int16"/>
+                    <overridable name="next()" returnType="int16"/>
                     <method name="initFrame()" returnType="uint16"/>
                 </meta:scope>
             </class>
@@ -601,9 +601,9 @@
                 <meta:scope>
                     <method name="construct()" returnType="int16"/>
                     <member name="frames" type="array{StaticInitializerFrame,64}" modifiers="private|local"/>
-                    <method name="push()" returnType="int16"/>
-                    <method name="value(Expression v)" returnType="int16"/>
-                    <method name="define()" returnType="int16"/>
+                    <override name="push()" returnType="int16"/>
+                    <override name="value(Expression v)" returnType="int16"/>
+                    <override name="define()" returnType="int16"/>
                 </meta:scope>
             </class>
 
@@ -621,11 +621,11 @@
                     <method name="construct()" returnType="int16"/>
                     <member name="assignValue" type="bool"/>
                     <member name="frames" type="array{DynamicInitializerFrame,64}" modifiers="private|local"/>
-                    <method name="push()" returnType="int16"/>
-                    <method name="pop()" returnType="int16"/>
-                    <method name="value(Expression v)" returnType="int16"/>
-                    <method name="define()" returnType="int16"/>
-                    <virtual name="hasReturnedResource()" returnType="bool"/>
+                    <override name="push()" returnType="int16"/>
+                    <override name="pop()" returnType="int16"/>
+                    <override name="value(Expression v)" returnType="int16"/>
+                    <override name="define()" returnType="int16"/>
+                    <override name="hasReturnedResource()" returnType="bool"/>
                 </meta:scope>
             </class>
 
@@ -659,7 +659,7 @@
                     <method name="member(string name)" returnType="int32"/>
                     <method name="define()" returnType="int16"/>
                     <method name="insert(Expression variable)" returnType="int16"/>
-                    <virtual name="hasReturnedResource()" returnType="bool"/>
+                    <override name="hasReturnedResource()" returnType="bool"/>
                 </meta:scope>
             </class>
 

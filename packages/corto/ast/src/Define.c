@@ -23,7 +23,7 @@ corto_int16 _ast_Define_construct(
 /* $end */
 }
 
-ic_node _ast_Define_toIc_v(
+ic_node _ast_Define_toIc(
     ast_Define this,
     ic_program program,
     ic_storage storage,
