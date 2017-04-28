@@ -55,7 +55,7 @@ error:
 
 /* $end */
 
-corto_int16 _ast_Member_construct(
+int16_t _ast_Member_construct(
     ast_Member this)
 {
 /* $begin(corto/ast/Member/construct) */
@@ -101,7 +101,7 @@ error:
 /* $end */
 }
 
-corto_bool _ast_Member_hasSideEffects(
+bool _ast_Member_hasSideEffects(
     ast_Member this)
 {
 /* $begin(corto/ast/Member/hasSideEffects) */
@@ -113,7 +113,7 @@ ic_node _ast_Member_toIc(
     ast_Member this,
     ic_program program,
     ic_storage storage,
-    corto_bool stored)
+    bool stored)
 {
 /* $begin(corto/ast/Member/toIc) */
     ic_member result = NULL;

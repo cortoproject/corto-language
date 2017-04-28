@@ -112,7 +112,7 @@ error:
 
 /* $end */
 
-corto_int16 _ast_DynamicInitializer_construct(
+int16_t _ast_DynamicInitializer_construct(
     ast_DynamicInitializer this)
 {
 /* $begin(corto/ast/DynamicInitializer/construct) */
@@ -128,7 +128,7 @@ corto_int16 _ast_DynamicInitializer_construct(
 /* $end */
 }
 
-corto_int16 _ast_DynamicInitializer_define(
+int16_t _ast_DynamicInitializer_define(
     ast_DynamicInitializer this)
 {
 /* $begin(corto/ast/DynamicInitializer/define) */
@@ -148,7 +148,7 @@ corto_int16 _ast_DynamicInitializer_define(
 /* $end */
 }
 
-corto_bool _ast_DynamicInitializer_hasReturnedResource(
+bool _ast_DynamicInitializer_hasReturnedResource(
     ast_DynamicInitializer this)
 {
 /* $begin(corto/ast/DynamicInitializer/hasReturnedResource) */
@@ -157,7 +157,7 @@ corto_bool _ast_DynamicInitializer_hasReturnedResource(
 /* $end */
 }
 
-corto_int16 _ast_DynamicInitializer_pop(
+int16_t _ast_DynamicInitializer_pop(
     ast_DynamicInitializer this)
 {
 /* $begin(corto/ast/DynamicInitializer/pop) */
@@ -171,7 +171,7 @@ corto_int16 _ast_DynamicInitializer_pop(
 /* $end */
 }
 
-corto_int16 _ast_DynamicInitializer_push(
+int16_t _ast_DynamicInitializer_push(
     ast_DynamicInitializer this)
 {
 /* $begin(corto/ast/DynamicInitializer/push) */
@@ -238,7 +238,7 @@ error:
 /* $end */
 }
 
-corto_int16 _ast_DynamicInitializer_value(
+int16_t _ast_DynamicInitializer_value(
     ast_DynamicInitializer this,
     ast_Expression v)
 {

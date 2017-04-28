@@ -12,7 +12,7 @@
 #include "ast__private.h"
 /* $end */
 
-corto_int16 _ast_Comma_addExpression(
+int16_t _ast_Comma_addExpression(
     ast_Comma this,
     ast_Expression expr)
 {
@@ -52,7 +52,7 @@ ast_Expression _ast_Comma_addOrCreate(
 /* $end */
 }
 
-corto_int16 _ast_Comma_construct(
+int16_t _ast_Comma_construct(
     ast_Comma this)
 {
 /* $begin(corto/ast/Comma/construct) */
@@ -70,13 +70,15 @@ corto_int16 _ast_Comma_construct(
 /* $end */
 }
 
-corto_bool _ast_Comma_hasReturnedResource(
+bool _ast_Comma_hasReturnedResource(
     ast_Comma this)
 {
 /* $begin(corto/ast/Comma/hasReturnedResource) */
     corto_bool result = FALSE;
 
-    ast_ExpressionListForeach(this->expressions, elem) {
+    corto_iter it = corto_llIter(this->expressions);
+    while (corto_iterHasNext(&it)) {
+        ast_Expression elem = corto_iterNext(&it);
         if (ast_Expression_hasReturnedResource(elem)) {
             result = TRUE;
             break;
@@ -87,13 +89,15 @@ corto_bool _ast_Comma_hasReturnedResource(
 /* $end */
 }
 
-corto_bool _ast_Comma_hasSideEffects(
+bool _ast_Comma_hasSideEffects(
     ast_Comma this)
 {
 /* $begin(corto/ast/Comma/hasSideEffects) */
     corto_bool result = FALSE;
     
-    ast_ExpressionListForeach(this->expressions, elem) {
+    corto_iter it = corto_llIter(this->expressions);
+    while (corto_iterHasNext(&it)) {
+        ast_Expression elem = corto_iterNext(&it);
         if (ast_Expression_hasSideEffects(elem)) {
             result = TRUE;
             break;
@@ -104,7 +108,7 @@ corto_bool _ast_Comma_hasSideEffects(
 /* $end */
 }
 
-corto_int16 _ast_Comma_init(
+int16_t _ast_Comma_init(
     ast_Comma this)
 {
 /* $begin(corto/ast/Comma/init) */
@@ -143,12 +147,14 @@ ic_node _ast_Comma_toIc(
     ast_Comma this,
     ic_program program,
     ic_storage storage,
-    corto_bool stored)
+    bool stored)
 {
 /* $begin(corto/ast/Comma/toIc) */
 
-    ast_ExpressionListForeach(this->expressions, expr) {
-        ast_Node_toIc(expr, program, storage, stored);
+    corto_iter it = corto_llIter(this->expressions);
+    while (corto_iterHasNext(&it)) {
+        ast_Expression elem = corto_iterNext(&it);
+        ast_Node_toIc(elem, program, storage, stored);
     }
 
     return NULL;
@@ -161,8 +167,10 @@ ast_ExpressionList _ast_Comma_toList(
 /* $begin(corto/ast/Comma/toList) */
 
     ast_NodeList result = corto_llNew();
-    ast_ExpressionListForeach(this->expressions, expr) {
-        corto_llAppend(result, expr); corto_claim(expr);
+    corto_iter it = corto_llIter(this->expressions);
+    while (corto_iterHasNext(&it)) {
+        ast_Expression elem = corto_iterNext(&it);
+        corto_llAppend(result, elem); corto_claim(elem);
     }
 
     return result;

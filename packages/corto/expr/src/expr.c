@@ -44,7 +44,7 @@ static corto_int32 corto_expr_addParam(corto_function f, corto_string name) {
         }
     }
 
-    f->parameters.buffer = 
+    f->parameters.buffer =
         corto_realloc(f->parameters.buffer, sizeof(corto_parameter) * (length + 1));
     f->parameters.length ++;
 
@@ -181,7 +181,7 @@ corto_int16 corto_expr_run(corto_expr *expr, corto_value *out, ...) {
     if (expr->function->returnsReference) {
         *out = corto_value_object(*(corto_object*)ptr, NULL);
     } else {
-        *out = corto_value_value(expr->function->returnType, &out->is.value.storage);
+        *out = corto_value_value(&out->is.value.storage, expr->function->returnType);
         *(corto_uint64*)&out->is.value.storage = dummy;
     }
 
@@ -197,7 +197,7 @@ corto_int16 corto_expr_runb(corto_expr *expr, corto_value *out, void **args) {
     if (expr->function->returnsReference) {
         *out = corto_value_object(*(corto_object*)ptr, NULL);
     } else {
-        *out = corto_value_value(expr->function->returnType, &out->is.value.storage);
+        *out = corto_value_value(&out->is.value.storage, expr->function->returnType);
         *(corto_uint64*)&out->is.value.storage = dummy;
     }
 

@@ -438,7 +438,7 @@ error:
 
 /* $end */
 
-corto_int16 _ast_Binary_construct(
+int16_t _ast_Binary_construct(
     ast_Binary this)
 {
 /* $begin(corto/ast/Binary/construct) */
@@ -549,7 +549,7 @@ error:
 /* $end */
 }
 
-corto_bool _ast_Binary_hasReturnedResource(
+bool _ast_Binary_hasReturnedResource(
     ast_Binary this)
 {
 /* $begin(corto/ast/Binary/hasReturnedResource) */
@@ -560,7 +560,7 @@ corto_bool _ast_Binary_hasReturnedResource(
 /* $end */
 }
 
-corto_bool _ast_Binary_hasSideEffects(
+bool _ast_Binary_hasSideEffects(
     ast_Binary this)
 {
 /* $begin(corto/ast/Binary/hasSideEffects) */
@@ -619,7 +619,7 @@ error:
 /* $end */
 }
 
-corto_void _ast_Binary_setOperator(
+void _ast_Binary_setOperator(
     ast_Binary this,
     corto_operatorKind kind)
 {
@@ -696,7 +696,7 @@ ic_node _ast_Binary_toIc(
     ast_Binary this,
     ic_program program,
     ic_storage storage,
-    corto_bool stored)
+    bool stored)
 {
 /* $begin(corto/ast/Binary/toIc) */
     ic_node returnsResult = NULL;

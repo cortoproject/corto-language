@@ -12,7 +12,7 @@
 #include "ast__private.h"
 /* $end */
 
-corto_int16 _ast_Local_construct(
+int16_t _ast_Local_construct(
     ast_Local this)
 {
 /* $begin(corto/ast/Local/construct) */
@@ -30,7 +30,7 @@ ic_node _ast_Local_toIc(
     ast_Local this,
     ic_program program,
     ic_storage storage,
-    corto_bool stored)
+    bool stored)
 {
 /* $begin(corto/ast/Local/toIc) */
     ic_node result;

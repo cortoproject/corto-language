@@ -12,7 +12,7 @@
 #include "ast__private.h"
 /* $end */
 
-corto_void _ast_Block_addStatement(
+void _ast_Block_addStatement(
     ast_Block this,
     ast_Node statement)
 {
@@ -28,8 +28,8 @@ ast_Local _ast_Block_declare(
     ast_Block this,
     corto_string id,
     corto_type type,
-    corto_bool isParameter,
-    corto_bool isReference)
+    bool isParameter,
+    bool isReference)
 {
 /* $begin(corto/ast/Block/declare) */
     ast_Local result;
@@ -86,8 +86,8 @@ ast_Template _ast_Block_declareTemplate(
     ast_Block this,
     corto_string id,
     corto_type type,
-    corto_bool isParameter,
-    corto_bool isReference)
+    bool isParameter,
+    bool isReference)
 {
 /* $begin(corto/ast/Block/declareTemplate) */
     ast_Template result;
@@ -255,7 +255,7 @@ ast_Local _ast_Block_resolveLocal(
 /* $end */
 }
 
-corto_void _ast_Block_setFunction(
+void _ast_Block_setFunction(
     ast_Block this,
     corto_function function)
 {
@@ -268,7 +268,7 @@ ic_node _ast_Block_toIc(
     ast_Block this,
     ic_program program,
     ic_storage storage,
-    corto_bool stored)
+    bool stored)
 {
 /* $begin(corto/ast/Block/toIc) */
     ic_scope scope;
@@ -293,7 +293,7 @@ ic_node _ast_Block_toIcBody(
     ast_Block this,
     ic_program program,
     ic_storage storage,
-    corto_bool stored)
+    bool stored)
 {
 /* $begin(corto/ast/Block/toIcBody) */
     ast_Node statement;

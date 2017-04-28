@@ -8,7 +8,7 @@
 
 #include <corto/ast/ast.h>
 
-corto_int16 _ast_Temporary_construct(
+int16_t _ast_Temporary_construct(
     ast_Temporary this)
 {
 /* $begin(corto/ast/Temporary/construct) */
@@ -21,7 +21,7 @@ corto_int16 _ast_Temporary_construct(
 /* $end */
 }
 
-corto_void _ast_Temporary_setProxy(
+void _ast_Temporary_setProxy(
     ast_Temporary this,
     ast_Temporary proxy)
 {
@@ -34,7 +34,7 @@ ic_node _ast_Temporary_toIc(
     ast_Temporary this,
     ic_program program,
     ic_storage storage,
-    corto_bool stored)
+    bool stored)
 {
 /* $begin(corto/ast/Temporary/toIc) */
     CORTO_UNUSED(storage);

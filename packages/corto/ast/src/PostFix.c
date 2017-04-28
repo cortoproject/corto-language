@@ -12,7 +12,7 @@
 #include "ast__private.h"
 /* $end */
 
-corto_int16 _ast_PostFix_construct(
+int16_t _ast_PostFix_construct(
     ast_PostFix this)
 {
 /* $begin(corto/ast/PostFix/construct) */
@@ -71,7 +71,7 @@ error:
 /* $end */
 }
 
-corto_bool _ast_PostFix_hasReturnedResource(
+bool _ast_PostFix_hasReturnedResource(
     ast_PostFix this)
 {
 /* $begin(corto/ast/PostFix/hasReturnedResource) */
@@ -83,7 +83,7 @@ ic_node _ast_PostFix_toIc(
     ast_PostFix this,
     ic_program program,
     ic_storage storage,
-    corto_bool stored)
+    bool stored)
 {
 /* $begin(corto/ast/PostFix/toIc) */
     ic_storage result;

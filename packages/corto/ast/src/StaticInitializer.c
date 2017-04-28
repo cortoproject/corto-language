@@ -111,7 +111,7 @@ error:
 }
 /* $end */
 
-corto_int16 _ast_StaticInitializer_construct(
+int16_t _ast_StaticInitializer_construct(
     ast_StaticInitializer this)
 {
 /* $begin(corto/ast/StaticInitializer/construct) */
@@ -133,7 +133,7 @@ error:
 /* $end */
 }
 
-corto_int16 _ast_StaticInitializer_define(
+int16_t _ast_StaticInitializer_define(
     ast_StaticInitializer this)
 {
 /* $begin(corto/ast/StaticInitializer/define) */
@@ -181,7 +181,7 @@ error:
 /* $end */
 }
 
-corto_int16 _ast_StaticInitializer_push(
+int16_t _ast_StaticInitializer_push(
     ast_StaticInitializer this)
 {
 /* $begin(corto/ast/StaticInitializer/push) */
@@ -197,7 +197,7 @@ corto_int16 _ast_StaticInitializer_push(
 /* $end */
 }
 
-corto_int16 _ast_StaticInitializer_value(
+int16_t _ast_StaticInitializer_value(
     ast_StaticInitializer this,
     ast_Expression v)
 {

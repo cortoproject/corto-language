@@ -50,7 +50,7 @@ ast_If ast_Ternary_createIf(ast_Expression condition, ast_Node ifTrue, ast_Node 
 
 /* $end */
 
-corto_int16 _ast_Ternary_construct(
+int16_t _ast_Ternary_construct(
     ast_Ternary this)
 {
 /* $begin(corto/ast/Ternary/construct) */
@@ -84,7 +84,7 @@ corto_int16 _ast_Ternary_construct(
 /* $end */
 }
 
-corto_bool _ast_Ternary_hasReturnedResource(
+bool _ast_Ternary_hasReturnedResource(
     ast_Ternary this)
 {
 /* $begin(corto/ast/Ternary/hasReturnedResource) */
@@ -94,7 +94,7 @@ corto_bool _ast_Ternary_hasReturnedResource(
 /* $end */
 }
 
-corto_bool _ast_Ternary_hasSideEffects(
+bool _ast_Ternary_hasSideEffects(
     ast_Ternary this)
 {
 /* $begin(corto/ast/Ternary/hasSideEffects) */
@@ -104,7 +104,7 @@ corto_bool _ast_Ternary_hasSideEffects(
 /* $end */
 }
 
-corto_void _ast_Ternary_setOperator(
+void _ast_Ternary_setOperator(
     ast_Ternary this,
     corto_operatorKind kind)
 {
@@ -124,7 +124,7 @@ ic_node _ast_Ternary_toIc(
     ast_Ternary this,
     ic_program program,
     ic_storage storage,
-    corto_bool stored)
+    bool stored)
 {
 /* $begin(corto/ast/Ternary/toIc) */
     ast_If_toIc(this->ifstmt, program, storage, stored);

@@ -194,7 +194,7 @@ error:
 ast_Expression _ast_Expression_cast(
     ast_Expression this,
     corto_type type,
-    corto_bool isReference)
+    bool isReference)
 {
 /* $begin(corto/ast/Expression/cast) */
     corto_type exprType, refType;
@@ -331,7 +331,7 @@ error:
 /* $end */
 }
 
-corto_void _ast_Expression_cleanList(
+void _ast_Expression_cleanList(
     ast_ExpressionList list)
 {
 /* $begin(corto/ast/Expression/cleanList) */
@@ -462,7 +462,7 @@ corto_type _ast_Expression_getType_type(
 /* $end */
 }
 
-corto_word _ast_Expression_getValue_v(
+uintptr_t _ast_Expression_getValue_v(
     ast_Expression this)
 {
 /* $begin(corto/ast/Expression/getValue) */
@@ -471,7 +471,7 @@ corto_word _ast_Expression_getValue_v(
 /* $end */
 }
 
-corto_bool _ast_Expression_hasReturnedResource_v(
+bool _ast_Expression_hasReturnedResource_v(
     ast_Expression this)
 {
 /* $begin(corto/ast/Expression/hasReturnedResource) */
@@ -480,7 +480,7 @@ corto_bool _ast_Expression_hasReturnedResource_v(
 /* $end */
 }
 
-corto_bool _ast_Expression_hasSideEffects_v(
+bool _ast_Expression_hasSideEffects_v(
     ast_Expression this)
 {
 /* $begin(corto/ast/Expression/hasSideEffects) */
@@ -508,10 +508,10 @@ ast_Expression _ast_Expression_resolve_v(
 /* $end */
 }
 
-corto_int16 _ast_Expression_serialize_v(
+int16_t _ast_Expression_serialize_v(
     ast_Expression this,
     corto_type dstType,
-    corto_word dst)
+    uintptr_t dst)
 {
 /* $begin(corto/ast/Expression/serialize) */
     CORTO_UNUSED(this);

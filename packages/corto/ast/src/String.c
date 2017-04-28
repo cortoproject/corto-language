@@ -154,7 +154,7 @@ error:
 
 /* $end */
 
-corto_int16 _ast_String_construct(
+int16_t _ast_String_construct(
     ast_String this)
 {
 /* $begin(corto/ast/String/construct) */
@@ -172,7 +172,7 @@ error:
 /* $end */
 }
 
-corto_word _ast_String_getValue(
+uintptr_t _ast_String_getValue(
     ast_String this)
 {
 /* $begin(corto/ast/String/getValue) */
@@ -204,7 +204,7 @@ corto_word _ast_String_getValue(
 /* $end */
 }
 
-corto_int16 _ast_String_init(
+int16_t _ast_String_init(
     ast_String this)
 {
 /* $begin(corto/ast/String/init) */
@@ -213,10 +213,10 @@ corto_int16 _ast_String_init(
 /* $end */
 }
 
-corto_int16 _ast_String_serialize(
+int16_t _ast_String_serialize(
     ast_String this,
     corto_type dstType,
-    corto_word dst)
+    uintptr_t dst)
 {
 /* $begin(corto/ast/String/serialize) */
     ast_valueKind kind;
@@ -258,7 +258,7 @@ ic_node _ast_String_toIc(
     ast_String this,
     ic_program program,
     ic_storage storage,
-    corto_bool stored)
+    bool stored)
 {
 /* $begin(corto/ast/String/toIc) */
     ic_node result = NULL;

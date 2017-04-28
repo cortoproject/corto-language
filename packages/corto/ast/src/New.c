@@ -12,7 +12,7 @@
 #include "ast__private.h"
 /* $end */
 
-corto_int16 _ast_New_construct(
+int16_t _ast_New_construct(
     ast_New this)
 {
 /* $begin(corto/ast/New/construct) */
@@ -25,7 +25,7 @@ corto_int16 _ast_New_construct(
 /* $end */
 }
 
-corto_bool _ast_New_hasSideEffects(
+bool _ast_New_hasSideEffects(
     ast_New this)
 {
 /* $begin(corto/ast/New/hasSideEffects) */
@@ -38,7 +38,7 @@ ic_node _ast_New_toIc(
     ast_New this,
     ic_program program,
     ic_storage storage,
-    corto_bool stored)
+    bool stored)
 {
 /* $begin(corto/ast/New/toIc) */
     ic_node type, attrs, result;

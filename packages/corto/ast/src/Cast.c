@@ -12,7 +12,7 @@
 #include "ast__private.h"
 /* $end */
 
-corto_int16 _ast_Cast_construct(
+int16_t _ast_Cast_construct(
     ast_Cast this)
 {
 /* $begin(corto/ast/Cast/construct) */
@@ -44,7 +44,7 @@ error:
 /* $end */
 }
 
-corto_bool _ast_Cast_hasReturnedResource(
+bool _ast_Cast_hasReturnedResource(
     ast_Cast this)
 {
 /* $begin(corto/ast/Cast/hasReturnedResource) */
@@ -58,7 +58,7 @@ ic_node _ast_Cast_toIc(
     ast_Cast this,
     ic_program program,
     ic_storage storage,
-    corto_bool stored)
+    bool stored)
 {
 /* $begin(corto/ast/Cast/toIc) */
     ic_node lvalue, rvalue, result;

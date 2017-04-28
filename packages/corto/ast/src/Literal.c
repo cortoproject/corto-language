@@ -12,7 +12,7 @@
 #include "ast__private.h"
 /* $end */
 
-corto_word _ast_Literal_getValue_v(
+uintptr_t _ast_Literal_getValue_v(
     ast_Literal this)
 {
 /* $begin(corto/ast/Literal/getValue) */
@@ -31,7 +31,7 @@ corto_word _ast_Literal_getValue_v(
 /* $end */
 }
 
-corto_int16 _ast_Literal_init(
+int16_t _ast_Literal_init(
     ast_Literal this)
 {
 /* $begin(corto/ast/Literal/init) */

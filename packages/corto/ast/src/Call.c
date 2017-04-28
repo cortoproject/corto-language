@@ -62,7 +62,7 @@ error:
 
 /* $end */
 
-corto_int16 _ast_Call_construct(
+int16_t _ast_Call_construct(
     ast_Call this)
 {
 /* $begin(corto/ast/Call/construct) */
@@ -85,7 +85,7 @@ error:
 /* $end */
 }
 
-corto_bool _ast_Call_hasReturnedResource(
+bool _ast_Call_hasReturnedResource(
     ast_Call this)
 {
 /* $begin(corto/ast/Call/hasReturnedResource) */
@@ -97,7 +97,7 @@ corto_bool _ast_Call_hasReturnedResource(
 /* $end */
 }
 
-corto_bool _ast_Call_hasSideEffects(
+bool _ast_Call_hasSideEffects(
     ast_Call this)
 {
 /* $begin(corto/ast/Call/hasSideEffects) */
@@ -106,7 +106,7 @@ corto_bool _ast_Call_hasSideEffects(
 /* $end */
 }
 
-corto_void _ast_Call_setParameters(
+void _ast_Call_setParameters(
     ast_Call this,
     corto_function function)
 {
@@ -131,7 +131,7 @@ ic_node _ast_Call_toIc(
     ast_Call this,
     ic_program program,
     ic_storage storage,
-    corto_bool stored)
+    bool stored)
 {
 /* $begin(corto/ast/Call/toIc) */
     ic_storage result = NULL;

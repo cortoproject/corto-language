@@ -12,7 +12,7 @@
 #include "ast__private.h"
 /* $end */
 
-corto_int16 _ast_FloatingPoint_init(
+int16_t _ast_FloatingPoint_init(
     ast_FloatingPoint this)
 {
 /* $begin(corto/ast/FloatingPoint/init) */
@@ -21,10 +21,10 @@ corto_int16 _ast_FloatingPoint_init(
 /* $end */
 }
 
-corto_int16 _ast_FloatingPoint_serialize(
+int16_t _ast_FloatingPoint_serialize(
     ast_FloatingPoint this,
     corto_type dstType,
-    corto_word dst)
+    uintptr_t dst)
 {
 /* $begin(corto/ast/FloatingPoint/serialize) */
     ast_valueKind kind;
@@ -60,7 +60,7 @@ ic_node _ast_FloatingPoint_toIc(
     ast_FloatingPoint this,
     ic_program program,
     ic_storage storage,
-    corto_bool stored)
+    bool stored)
 {
 /* $begin(corto/ast/FloatingPoint/toIc) */
     ic_node result;

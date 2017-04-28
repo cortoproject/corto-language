@@ -18,7 +18,9 @@ ast_Expression ast_Node_optimizeCondition(ast_Expression condition, corto_bool *
     *inverse = FALSE;
     
     /* If condition is an expression list, inserts && between each expression. */
-    ast_ExpressionListForeach(conditions, elem) {
+    corto_iter it = corto_llIter(conditions);
+    while (corto_iterHasNext(&it)) {
+        ast_Expression elem = corto_iterNext(&it);
 
         /* If condition is a unary NOT inverse the condition and evaluate lvalue of NOT expression instead */
         if (ast_Node(elem)->kind == Ast_UnaryExpr) {
@@ -66,7 +68,7 @@ error:
 
 /* $end */
 
-corto_int16 _ast_Node_init(
+int16_t _ast_Node_init(
     ast_Node this)
 {
 /* $begin(corto/ast/Node/init) */
@@ -80,7 +82,7 @@ ic_node _ast_Node_toIc_v(
     ast_Node this,
     ic_program program,
     ic_storage storage,
-    corto_bool stored)
+    bool stored)
 {
 /* $begin(corto/ast/Node/toIc) */
     CORTO_UNUSED(this);

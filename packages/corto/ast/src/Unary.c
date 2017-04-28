@@ -39,7 +39,7 @@ error:
 } 
 /* $end */
 
-corto_int16 _ast_Unary_construct(
+int16_t _ast_Unary_construct(
     ast_Unary this)
 {
 /* $begin(corto/ast/Unary/construct) */
@@ -110,7 +110,7 @@ error:
 /* $end */
 }
 
-corto_bool _ast_Unary_hasReturnedResource(
+bool _ast_Unary_hasReturnedResource(
     ast_Unary this)
 {
 /* $begin(corto/ast/Unary/hasReturnedResource) */
@@ -118,7 +118,7 @@ corto_bool _ast_Unary_hasReturnedResource(
 /* $end */
 }
 
-corto_bool _ast_Unary_hasSideEffects(
+bool _ast_Unary_hasSideEffects(
     ast_Unary this)
 {
 /* $begin(corto/ast/Unary/hasSideEffects) */
@@ -156,7 +156,7 @@ ic_node _ast_Unary_toIc(
     ast_Unary this,
     ic_program program,
     ic_storage storage,
-    corto_bool stored)
+    bool stored)
 {
 /* $begin(corto/ast/Unary/toIc) */
     ic_storage result;

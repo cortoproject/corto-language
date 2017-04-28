@@ -164,7 +164,7 @@ corto_type ast_Parser_initGetType(ast_Initializer this, corto_member *m_out) {
 
 /* $end */
 
-corto_int16 _ast_Initializer_construct(
+int16_t _ast_Initializer_construct(
     ast_Initializer this)
 {
 /* $begin(corto/ast/Initializer/construct) */
@@ -217,7 +217,7 @@ corto_type _ast_Initializer_currentType(
 /* $end */
 }
 
-corto_int16 _ast_Initializer_define_v(
+int16_t _ast_Initializer_define_v(
     ast_Initializer this)
 {
 /* $begin(corto/ast/Initializer/define) */
@@ -234,7 +234,7 @@ corto_int16 _ast_Initializer_define_v(
 /* $end */
 }
 
-corto_uint16 _ast_Initializer_initFrame(
+uint16_t _ast_Initializer_initFrame(
     ast_Initializer this)
 {
 /* $begin(corto/ast/Initializer/initFrame) */
@@ -275,7 +275,7 @@ corto_uint16 _ast_Initializer_initFrame(
 /* $end */
 }
 
-corto_int32 _ast_Initializer_member_v(
+int32_t _ast_Initializer_member_v(
     ast_Initializer this,
     corto_string name)
 {
@@ -319,7 +319,7 @@ error:
 /* $end */
 }
 
-corto_int16 _ast_Initializer_next_v(
+int16_t _ast_Initializer_next_v(
     ast_Initializer this)
 {
 /* $begin(corto/ast/Initializer/next) */
@@ -343,7 +343,7 @@ corto_int16 _ast_Initializer_next_v(
 /* $end */
 }
 
-corto_int8 _ast_Initializer_pop_v(
+int8_t _ast_Initializer_pop_v(
     ast_Initializer this)
 {
 /* $begin(corto/ast/Initializer/pop) */
@@ -367,7 +367,7 @@ corto_int8 _ast_Initializer_pop_v(
 /* $end */
 }
 
-corto_int16 _ast_Initializer_popKey_v(
+int16_t _ast_Initializer_popKey_v(
     ast_Initializer this)
 {
 /* $begin(corto/ast/Initializer/popKey) */
@@ -375,7 +375,7 @@ corto_int16 _ast_Initializer_popKey_v(
 /* $end */
 }
 
-corto_int16 _ast_Initializer_push_v(
+int16_t _ast_Initializer_push_v(
     ast_Initializer this)
 {
 /* $begin(corto/ast/Initializer/push) */
@@ -410,7 +410,7 @@ error:
 /* $end */
 }
 
-corto_int16 _ast_Initializer_pushKey_v(
+int16_t _ast_Initializer_pushKey_v(
     ast_Initializer this)
 {
 /* $begin(corto/ast/Initializer/pushKey) */
@@ -427,7 +427,7 @@ corto_type _ast_Initializer_type(
 /* $end */
 }
 
-corto_int16 _ast_Initializer_value_v(
+int16_t _ast_Initializer_value_v(
     ast_Initializer this,
     ast_Expression v)
 {
@@ -437,7 +437,7 @@ corto_int16 _ast_Initializer_value_v(
 /* $end */
 }
 
-corto_int16 _ast_Initializer_valueKey_v(
+int16_t _ast_Initializer_valueKey_v(
     ast_Initializer this,
     ast_Expression key)
 {

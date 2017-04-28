@@ -12,7 +12,7 @@
 #include "ast__private.h"
 /* $end */
 
-corto_int16 _ast_DelegateCall_construct(
+int16_t _ast_DelegateCall_construct(
     ast_DelegateCall this)
 {
 /* $begin(corto/ast/DelegateCall/construct) */

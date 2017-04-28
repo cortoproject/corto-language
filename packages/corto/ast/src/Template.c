@@ -8,7 +8,7 @@
 
 #include <corto/ast/ast.h>
 
-corto_int16 _ast_Template_construct(
+int16_t _ast_Template_construct(
     ast_Template this)
 {
 /* $begin(corto/ast/Template/construct) */

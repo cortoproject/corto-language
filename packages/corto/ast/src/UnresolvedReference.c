@@ -12,7 +12,7 @@
 #include "ast__private.h"
  /* $end */
 
-corto_int16 _ast_UnresolvedReference_construct(
+int16_t _ast_UnresolvedReference_construct(
     ast_UnresolvedReference this)
 {
 /* $begin(corto/ast/UnresolvedReference/construct) */
@@ -25,7 +25,7 @@ corto_int16 _ast_UnresolvedReference_construct(
 /* $end */
 }
 
-corto_void _ast_UnresolvedReference_error(
+void _ast_UnresolvedReference_error(
     ast_UnresolvedReference this)
 {
 /* $begin(corto/ast/UnresolvedReference/error) */
@@ -85,7 +85,7 @@ ic_node _ast_UnresolvedReference_toIc(
     ast_UnresolvedReference this,
     ic_program program,
     ic_storage storage,
-    corto_bool stored)
+    bool stored)
 {
 /* $begin(corto/ast/UnresolvedReference/toIc) */
 

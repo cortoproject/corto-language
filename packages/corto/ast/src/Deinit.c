@@ -12,7 +12,7 @@
 #include "ast__private.h"
 /* $end */
 
-corto_int16 _ast_Deinit_construct(
+int16_t _ast_Deinit_construct(
     ast_Deinit this)
 {
 /* $begin(corto/ast/Deinit/construct) */
@@ -27,7 +27,7 @@ ic_node _ast_Deinit_toIc(
     ast_Deinit this,
     ic_program program,
     ic_storage storage,
-    corto_bool stored)
+    bool stored)
 {
 /* $begin(corto/ast/Deinit/toIc) */
     ic_node s;

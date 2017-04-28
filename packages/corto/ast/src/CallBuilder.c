@@ -136,7 +136,7 @@ error:
 /* $end */
 }
 
-corto_int16 _ast_CallBuilder_buildSignature(
+int16_t _ast_CallBuilder_buildSignature(
     ast_CallBuilder* this)
 {
 /* $begin(corto/ast/CallBuilder/buildSignature) */

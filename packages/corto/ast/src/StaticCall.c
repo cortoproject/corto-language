@@ -12,7 +12,7 @@
 #include "ast__private.h"
 /* $end */
 
-corto_int16 _ast_StaticCall_construct(
+int16_t _ast_StaticCall_construct(
     ast_StaticCall this)
 {
 /* $begin(corto/ast/StaticCall/construct) */

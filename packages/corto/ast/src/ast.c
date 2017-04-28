@@ -156,7 +156,7 @@ error:
 }
 /* $end */
 
-corto_bool _ast_isOperatorAssignment(
+bool _ast_isOperatorAssignment(
     corto_operatorKind _operator)
 {
 /* $begin(corto/ast/isOperatorAssignment) */
@@ -180,11 +180,11 @@ corto_bool _ast_isOperatorAssignment(
 /* $end */
 }
 
-corto_void _ast_report(
+void _ast_report(
     corto_string kind,
     corto_string filename,
-    corto_uint32 line,
-    corto_uint32 column,
+    uint32_t line,
+    uint32_t column,
     corto_string error,
     corto_string token)
 {
@@ -205,10 +205,10 @@ corto_void _ast_report(
 /* $end */
 }
 
-corto_void _ast_reportError(
+void _ast_reportError(
     corto_string filename,
-    corto_uint32 line,
-    corto_uint32 column,
+    uint32_t line,
+    uint32_t column,
     corto_string error,
     corto_string token)
 {
@@ -219,10 +219,10 @@ corto_void _ast_reportError(
 /* $end */
 }
 
-corto_void _ast_reportWarning(
+void _ast_reportWarning(
     corto_string filename,
-    corto_uint32 line,
-    corto_uint32 column,
+    uint32_t line,
+    uint32_t column,
     corto_string error,
     corto_string token)
 {

@@ -12,7 +12,7 @@
 #include "ast__private.h"
 /* $end */
 
-corto_int16 _ast_Object_construct(
+int16_t _ast_Object_construct(
     ast_Object this)
 {
 /* $begin(corto/ast/Object/construct) */
@@ -31,7 +31,7 @@ corto_int16 _ast_Object_construct(
 /* $end */
 }
 
-corto_word _ast_Object_getValue(
+uintptr_t _ast_Object_getValue(
     ast_Object this)
 {
 /* $begin(corto/ast/Object/getValue) */
@@ -62,10 +62,10 @@ corto_string _ast_Object_id(
 /* $end */
 }
 
-corto_int16 _ast_Object_serialize(
+int16_t _ast_Object_serialize(
     ast_Object this,
     corto_type dstType,
-    corto_word dst)
+    uintptr_t dst)
 {
 /* $begin(corto/ast/Object/serialize) */
     ast_valueKind kind;
@@ -89,8 +89,8 @@ corto_int16 _ast_Object_serialize(
         } else if (dstIsDelegate) {
             if (srcIsDelegate) {
                 corto_value vDst, vSrc;
-                vDst = corto_value_value(corto_type(dstType), (void *)dst);
-                vSrc = corto_value_value(corto_type(srcType), ast_Object(this)->value);
+                vDst = corto_value_value((void*)dst, corto_type(dstType));
+                vSrc = corto_value_value(ast_Object(this)->value, corto_type(srcType));
                 corto_copyv(&vDst, &vSrc);
             } else if ((srcType->kind == CORTO_COMPOSITE) && (corto_interface(srcType)->kind == CORTO_PROCEDURE)) {
                 corto_setref(&((corto_delegatedata *)dst)->procedure, ast_Object(this)->value);
@@ -100,8 +100,8 @@ corto_int16 _ast_Object_serialize(
         } else if (corto_instanceof((corto_type)dstType, ast_Object(this)->value)) {
             /* If object is not of a reference type and object is of dstType, copy value */
             corto_value vDst, vSrc;
-            vDst = corto_value_value(corto_type(dstType), (void *)dst);
-            vSrc = corto_value_value(corto_type(srcType), obj);
+            vDst = corto_value_value((void *)dst, corto_type(dstType));
+            vSrc = corto_value_value(obj, corto_type(srcType));
             corto_copyv(&vDst, &vSrc);
 
         } else {
@@ -155,7 +155,7 @@ ic_node _ast_Object_toIc(
     ast_Object this,
     ic_program program,
     ic_storage storage,
-    corto_bool stored)
+    bool stored)
 {
 /* $begin(corto/ast/Object/toIc) */
     CORTO_UNUSED(program);

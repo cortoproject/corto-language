@@ -12,7 +12,7 @@
 #include "ast__private.h"
 /* $end */
 
-corto_int16 _ast_Character_init(
+int16_t _ast_Character_init(
     ast_Character this)
 {
 /* $begin(corto/ast/Character/init) */
@@ -21,10 +21,10 @@ corto_int16 _ast_Character_init(
 /* $end */
 }
 
-corto_int16 _ast_Character_serialize(
+int16_t _ast_Character_serialize(
     ast_Character this,
     corto_type dstType,
-    corto_word dst)
+    uintptr_t dst)
 {
 /* $begin(corto/ast/Character/serialize) */
     ast_valueKind kind;
@@ -59,7 +59,7 @@ ic_node _ast_Character_toIc(
     ast_Character this,
     ic_program program,
     ic_storage storage,
-    corto_bool stored)
+    bool stored)
 {
 /* $begin(corto/ast/Character/toIc) */
     ic_literal result;
