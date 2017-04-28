@@ -39,7 +39,7 @@ int16_t _ast_Character_serialize(
     case Ast_Int:
     case Ast_SignedInt:
     case Ast_Text:
-        corto_convert(corto_primitive(corto_char_o), &this->value, corto_primitive(dstType), (void*)dst);
+        corto_ptr_cast(corto_primitive(corto_char_o), &this->value, corto_primitive(dstType), (void*)dst);
         break;
     default: {
         corto_id id;

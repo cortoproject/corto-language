@@ -491,7 +491,7 @@ ast_Expression _ast_Binary_fold(
                 if (ast_Binary_isConditional(this)) {
                     result = ast_Expression(ast_BooleanCreate(FALSE));
                     resultPtr = (void*)ast_Literal_getValue(ast_Literal(result));
-                    corto_binaryOperator(corto_object_o, this->_operator, &lptr, &rptr, resultPtr);
+                    corto_ptr_binaryOp(corto_object_o, this->_operator, &lptr, &rptr, resultPtr);
                 } else {
                     result = ast_Expression(ast_NullCreate());
                 }
@@ -533,7 +533,7 @@ ast_Expression _ast_Binary_fold(
             resultPtr = (void*)ast_Literal_getValue(ast_Literal(result));
 
             /* Perform operation */
-            if (corto_binaryOperator(type, this->_operator, lptr, rptr, resultPtr)) {
+            if (corto_ptr_binaryOp(type, this->_operator, lptr, rptr, resultPtr)) {
                 ast_Parser_error(yparser(), "operator failed: %s", corto_lasterr());
                 goto error;
             }

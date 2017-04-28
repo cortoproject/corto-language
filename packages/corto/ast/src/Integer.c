@@ -42,7 +42,7 @@ int16_t _ast_Integer_serialize(
     case Ast_Float:
     case Ast_Enum:
     case Ast_Text:
-        corto_convert(corto_primitive(corto_uint64_o), &this->value, corto_primitive(dstType), (void*)dst);
+        corto_ptr_cast(corto_primitive(corto_uint64_o), &this->value, corto_primitive(dstType), (void*)dst);
         break;
     default: {
         corto_id id;

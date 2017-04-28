@@ -143,7 +143,7 @@ corto_bool ast_OptimizeExpr_isNoop(corto_operatorKind oper, ast_Expression e) {
         } else {
             return FALSE;
         }
-        corto_value_binary(CORTO_COND_EQ, &v, &eValue, &isNoop);
+        corto_value_binaryOp(CORTO_COND_EQ, &v, &eValue, &isNoop);
         return *(corto_bool*)corto_value_ptrof(&isNoop);
     }
     return e == NULL;
@@ -201,7 +201,7 @@ ast_Expression ast_OptimizeExpr_collectTerm(ast_Expression e, corto_value *const
         if (rightKind == Ast_LiteralExpr) {
             corto_value v;
             ast_OptimizeExpr_valueFromExpr(right, &v);
-            corto_value_binary(oper, constant, &v, constant);
+            corto_value_binaryOp(oper, constant, &v, constant);
         } else if ((rightKind == Ast_BinaryExpr) &&
             (ast_OptimizeExpr_samePrecendence(ast_Binary(e), ast_Binary(right))))
         {
@@ -213,7 +213,7 @@ ast_Expression ast_OptimizeExpr_collectTerm(ast_Expression e, corto_value *const
                 elems,
                 oper,
                 ast_OptimizeExpr_collectTerm(right, constant, elems));
-            corto_value_binary(oper, constant, &v, constant);
+            corto_value_binaryOp(oper, constant, &v, constant);
         } else {
             ast_OptimizeExpr_elemsAppend(elems, oper, right);
         }
@@ -350,11 +350,11 @@ ast_Expression ast_OptimizeExpr_combine(
         eValue = corto_value_int(1);
     }
 
-    corto_value_binary(oper, &outValue, &eValue, &outValue);
+    corto_value_binaryOp(oper, &outValue, &eValue, &outValue);
 
     corto_value one = corto_value_int(1);
     corto_value equals = corto_value_bool(FALSE);
-    corto_value_binary(CORTO_COND_EQ, &one, &outValue, &equals);
+    corto_value_binaryOp(CORTO_COND_EQ, &one, &outValue, &equals);
     ast_Expression literal = NULL;
 
     if (!*(corto_bool*)corto_value_ptrof(&equals)) {
@@ -420,7 +420,7 @@ ast_Expression ast_OptimizeExpr_reducedToExpression(corto_ll elems) {
 corto_bool ast_OptimizeExpr_isValueNull(corto_value *v) {
     corto_value b = corto_value_bool(FALSE);
     corto_value null = corto_value_int(0);
-    corto_value_binary(CORTO_COND_EQ, v, &null, &b);
+    corto_value_binaryOp(CORTO_COND_EQ, v, &null, &b);
     return *(corto_bool*)corto_value_ptrof(&b);
 }
 
@@ -506,7 +506,7 @@ corto_ll ast_OptimizeExpr_reduceExpression(ast_Expression e) {
          * from the list and add it to the constant */
         if (ast_Node(elem->e)->kind == Ast_LiteralExpr) {
             corto_value v; ast_OptimizeExpr_valueFromExpr(elem->e, &v);
-            corto_value_binary(CORTO_ADD, &constant, &v, &constant);
+            corto_value_binaryOp(CORTO_ADD, &constant, &v, &constant);
             corto_llRemove(final, elem);
             corto_dealloc(elem);
         } else {

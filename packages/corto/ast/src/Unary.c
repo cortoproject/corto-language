@@ -97,7 +97,7 @@ ast_Expression _ast_Unary_fold(
             /* Obtain pointer to value-field */
             resultPtr = (void*)ast_Literal_getValue(ast_Literal(result));
 
-            if (corto_unaryOperator(type, this->_operator, ptr, resultPtr)) {
+            if (corto_ptr_unaryOp(type, this->_operator, ptr, resultPtr)) {
                 ast_Parser_error(yparser(), "operator failed: %s", corto_lasterr());
                 goto error;
             }

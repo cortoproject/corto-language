@@ -26,7 +26,7 @@ typedef struct ast_Initializer_findMember_t {
 }ast_Initializer_findMember_t;
 
 /* Walk members, look it up */
-corto_int16 ast_Initializer_findMember(corto_serializer s, corto_value* v, void* userData) {
+corto_int16 ast_Initializer_findMember(corto_walk_opt* s, corto_value* v, void* userData) {
     corto_uint32 result;
     ast_Initializer_findMember_t* data;
 
@@ -36,7 +36,7 @@ corto_int16 ast_Initializer_findMember(corto_serializer s, corto_value* v, void*
     switch(v->kind) {
     case CORTO_MEMBER:
         if (v->is.member.t->id == (corto_uint32)-1) {
-            result = corto_serializeValue(s, v, userData);
+            result = corto_value_walk(s, v, userData);
         } else {
             if ((data->lookForLocation >= 0) && ((corto_uint32)data->lookForLocation == data->count)) {
                 data->m = v->is.member.t;
@@ -63,18 +63,18 @@ found:
 }
 
 /* Create serializer */
-struct corto_serializer_s ast_findMemberSerializer(corto_bool findHidden) {
-    struct corto_serializer_s s;
-    corto_serializerInit(&s);
+corto_walk_opt ast_findMemberSerializer(corto_bool findHidden) {
+    corto_walk_opt s;
+    corto_walk_init(&s);
     s.metaprogram[CORTO_MEMBER] = ast_Initializer_findMember;
     s.access = CORTO_LOCAL | CORTO_PRIVATE | CORTO_READONLY;
     if (!findHidden) {
         s.access |= CORTO_HIDDEN;
     }
     s.accessKind = CORTO_NOT;
-    s.traceKind = CORTO_SERIALIZER_TRACE_NEVER;
-    s.aliasAction = CORTO_SERIALIZER_ALIAS_FOLLOW;
-    s.optionalAction = CORTO_SERIALIZER_OPTIONAL_ALWAYS;
+    s.traceKind = CORTO_WALK_TRACE_NEVER;
+    s.aliasAction = CORTO_WALK_ALIAS_FOLLOW;
+    s.optionalAction = CORTO_WALK_OPTIONAL_ALWAYS;
     return s;
 }
 
@@ -94,7 +94,7 @@ corto_type ast_Parser_initGetType(ast_Initializer this, corto_member *m_out) {
         } else {
             switch(t->kind) {
             case CORTO_COMPOSITE: {
-                struct corto_serializer_s s;
+                corto_walk_opt s;
                 ast_Initializer_findMember_t walkData;
 
                 if (!this->frames[this->fp].member) {
@@ -105,7 +105,7 @@ corto_type ast_Parser_initGetType(ast_Initializer this, corto_member *m_out) {
                     walkData.lookForString = NULL;
                     walkData.m = NULL;
                     walkData.current = 0;
-                    corto_metaWalk(&s, t, &walkData);
+                    corto_metawalk(&s, t, &walkData);
                 } else {
                     walkData.m = this->frames[this->fp].member;
                 }
@@ -238,7 +238,7 @@ uint16_t _ast_Initializer_initFrame(
     ast_Initializer this)
 {
 /* $begin(corto/ast/Initializer/initFrame) */
-    struct corto_serializer_s s;
+    corto_walk_opt s;
     corto_type t;
     ast_Initializer_findMember_t walkData;
 
@@ -253,7 +253,7 @@ uint16_t _ast_Initializer_initFrame(
         walkData.m = NULL;
         walkData.current = this->frames[this->fp].location;
         if (t->kind == CORTO_COMPOSITE) {
-            corto_metaWalk(&s, t, &walkData);
+            corto_metawalk(&s, t, &walkData);
         }
         if (walkData.m) {
             this->frames[this->fp].location = walkData.id;
@@ -280,7 +280,7 @@ int32_t _ast_Initializer_member_v(
     corto_string name)
 {
 /* $begin(corto/ast/Initializer/member) */
-    struct corto_serializer_s s;
+    corto_walk_opt s;
     corto_type t;
     ast_Initializer_findMember_t walkData;
 
@@ -299,7 +299,7 @@ int32_t _ast_Initializer_member_v(
     walkData.m = NULL;
     walkData.current = this->frames[this->fp].location;
     if (t->kind == CORTO_COMPOSITE) {
-        corto_metaWalk(&s, t, &walkData);
+        corto_metawalk(&s, t, &walkData);
     }
     if (walkData.m) {
         /* this->frames[this->fp].location = walkData.id; */

@@ -83,15 +83,15 @@ corto_string ast_Parser_id(corto_object o, corto_id buffer) {
     } else {
         corto_id tmp;
         corto_string_ser_t serData;
-        struct corto_serializer_s s;
+        corto_walk_opt s;
         serData.buffer = CORTO_BUFFER_INIT;
         serData.buffer.buf = tmp;
         serData.buffer.max = sizeof(corto_id)-strlen("<anonymous>");
         serData.compactNotation=TRUE;
         serData.prefixType = TRUE;
         serData.enableColors = FALSE;
-        s = corto_string_ser(CORTO_LOCAL, CORTO_NOT, CORTO_SERIALIZER_TRACE_NEVER);
-        corto_serialize(&s, o, &serData);
+        s = corto_string_ser(CORTO_LOCAL, CORTO_NOT, CORTO_WALK_TRACE_NEVER);
+        corto_walk(&s, o, &serData);
         strcpy(buffer, tmp);
     }
     return buffer;
@@ -893,17 +893,17 @@ corto_string _ast_Parser_argumentToString(
             str = strdup(ast_Parser_id(type, id));
         }
     } else {
-        struct corto_serializer_s s;
+        corto_walk_opt s;
         corto_string_ser_t walkData;
 
         memset(&walkData, 0, sizeof(walkData));
-        s = corto_string_ser(CORTO_LOCAL|CORTO_READONLY|CORTO_PRIVATE, CORTO_NOT, CORTO_SERIALIZER_TRACE_NEVER);
+        s = corto_string_ser(CORTO_LOCAL|CORTO_READONLY|CORTO_PRIVATE, CORTO_NOT, CORTO_WALK_TRACE_NEVER);
 
         walkData.buffer = CORTO_BUFFER_INIT;
         walkData.compactNotation = TRUE;
         walkData.prefixType = TRUE;
 
-        if (corto_serialize(&s, type, &walkData)) {
+        if (corto_walk(&s, type, &walkData)) {
             goto error;
         }
         str = corto_buffer_str(&walkData.buffer);
