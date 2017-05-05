@@ -60,7 +60,7 @@ ast_Call ast_createCallWithArguments(ast_Expression instance, corto_string funct
     ast_CallBuilder builder;
 
     /* Initialize builder */
-    corto_initp(&builder, ast_CallBuilder_o);
+    corto_ptr_init(&builder, ast_CallBuilder_o);
     ast_CallBuilderAssign(&builder,
         function,
         arguments,
@@ -68,7 +68,7 @@ ast_Call ast_createCallWithArguments(ast_Expression instance, corto_string funct
         yparser()->scope,
         yparser()->block);
     result = ast_CallBuilder_build(&builder);
-    corto_deinitp(&builder, ast_CallBuilder_o);
+    corto_ptr_deinit(&builder, ast_CallBuilder_o);
 
     return result;
 }

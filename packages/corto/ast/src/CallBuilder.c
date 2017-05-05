@@ -152,9 +152,9 @@ int16_t _ast_CallBuilder_buildSignature(
         if (this->arguments) {
             corto_ll arguments = ast_Expression_toList(this->arguments);
             argumentIter = corto_llIter(arguments);
-            while(corto_iterHasNext(&argumentIter)) {
+            while(corto_iter_hasNext(&argumentIter)) {
                 int flags = 0;
-                argument = corto_iterNext(&argumentIter);
+                argument = corto_iter_next(&argumentIter);
                 argumentType = ast_Expression_narrowType(argument);
 
                 /* If there is no type and the argument is an initializer, insert a wildcard */

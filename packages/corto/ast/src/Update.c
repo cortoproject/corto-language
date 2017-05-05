@@ -49,8 +49,8 @@ int16_t _ast_Update_construct(
     ast_Node(this)->kind = Ast_UpdateExpr;
 
     exprIter = corto_llIter(this->exprList);
-    while(corto_iterHasNext(&exprIter)) {
-        expr = corto_iterNext(&exprIter);
+    while(corto_iter_hasNext(&exprIter)) {
+        expr = corto_iter_next(&exprIter);
 
         expr = ast_Update_getFirstReference(expr);
 
@@ -98,8 +98,8 @@ ic_node _ast_Update_toIc(
 
     /* Add update statement for each expression in exprList */
     exprIter = corto_llIter(this->exprList);
-    while(corto_iterHasNext(&exprIter)) {
-        ast_Expression fastExpr = ast_Update_getFirstReference(corto_iterNext(&exprIter));
+    while(corto_iter_hasNext(&exprIter)) {
+        ast_Expression fastExpr = ast_Update_getFirstReference(corto_iter_next(&exprIter));
 
         /* Run binary expression between updatebegin and updateend */
         if (this->kind != Ast_UpdateDefault) {
@@ -125,8 +125,8 @@ ic_node _ast_Update_toIc(
         /* Translate block to ic */
         ast_Block_toIc(this->block, program, NULL, FALSE);
         exprIter = corto_llIter(this->exprList);
-        while(corto_iterHasNext(&exprIter)) {
-            ast_Expression fastExpr = corto_iterNext(&exprIter);
+        while(corto_iter_hasNext(&exprIter)) {
+            ast_Expression fastExpr = corto_iter_next(&exprIter);
             expr = ast_Node_toIc(ast_Node(fastExpr), program, NULL, TRUE);
             ast_Update_end(this, program, expr, from);
         }

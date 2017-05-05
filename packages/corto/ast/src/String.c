@@ -297,10 +297,10 @@ ic_node _ast_String_toIc(
 
             result = (ic_node)storage;
             elementIter = corto_llIter(this->elements);
-            while(corto_iterHasNext(&elementIter)) {
+            while(corto_iter_hasNext(&elementIter)) {
                 ic_accumulator acc = ic_program_pushAccumulator(program, (corto_type)corto_string_o, FALSE, FALSE);
                 accPushCount++;
-                element = corto_iterNext(&elementIter);
+                element = corto_iter_next(&elementIter);
 
                 elementType = ast_Expression_getType(element);
                 if (!elementType) {
@@ -325,10 +325,10 @@ ic_node _ast_String_toIc(
                     stored = TRUE;
                 } else {
                     if (elementCount) {
-                        if (corto_iterHasNext(&elementIter)) {
+                        if (corto_iter_hasNext(&elementIter)) {
                             ic_accumulator acc = ic_program_pushAccumulator(program, (corto_type)corto_string_o, FALSE, FALSE);
                             accPushCount++;
-                            element = corto_iterNext(&elementIter);
+                            element = corto_iter_next(&elementIter);
                             elementType = ast_Expression_getType(element);
 
                             if (!elementType) {

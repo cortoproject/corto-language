@@ -5,13 +5,13 @@ void ast_OptimizeExpr_printExpression(ast_Expression expr) {
     if (ast_Node(expr)->kind == Ast_BinaryExpr) {
         printf("(");
         ast_OptimizeExpr_printExpression(ast_Binary(expr)->lvalue);
-        printf(" %s ", corto_strp(&ast_Binary(expr)->_operator, corto_operatorKind_o, 0));
+        printf(" %s ", corto_ptr_str(&ast_Binary(expr)->_operator, corto_operatorKind_o, 0));
         ast_OptimizeExpr_printExpression(ast_Binary(expr)->rvalue);
         printf(")");
     } else {
         if (ast_Node(expr)->kind == Ast_LiteralExpr) {
             corto_word value = ast_Expression_getValue(expr);
-            printf("%s", corto_strp((void*)value, expr->type, 0));
+            printf("%s", corto_ptr_str((void*)value, expr->type, 0));
         } else if (ast_Node(expr)->kind == Ast_StorageExpr) {
             if (ast_Storage(expr)->kind == Ast_LocalStorage) {
                 printf("%s", ast_Local(expr)->name);
@@ -168,8 +168,8 @@ void ast_OptimizeExpr_elemsAppend(corto_ll elems, corto_operatorKind oper, ast_E
 
 void ast_OptimizeExpr_elemsFree(corto_ll elems) {
     corto_iter it = corto_llIter(elems);
-    while (corto_iterHasNext(&it)) {
-        ast_OptimizeExpr_exprElem *elem = corto_iterNext(&it);
+    while (corto_iter_hasNext(&it)) {
+        ast_OptimizeExpr_exprElem *elem = corto_iter_next(&it);
         corto_dealloc(elem);
     }
     corto_llFree(elems);
@@ -333,7 +333,7 @@ ast_Expression ast_OptimizeExpr_combine(
     ast_Expression result = out;
 
     /*printf("combine: %s\n out=%s\n outLiteral=%s\n eLiteral=%s\n",
-        corto_strp(&oper, corto_operatorKind_o, 0),
+        corto_ptr_str(&oper, corto_operatorKind_o, 0),
         out ? corto_contentof(NULL, "text/corto-color", out) : "-",
         outLiteral ? corto_contentof(NULL, "text/corto-color", outLiteral) : "-",
         eLiteral ? corto_contentof(NULL, "text/corto-color", eLiteral) : "-");*/
@@ -403,8 +403,8 @@ ast_Expression ast_OptimizeExpr_reducedToExpression(corto_ll elems) {
     ast_Expression result = NULL;
 
     corto_iter it = corto_llIter(elems);
-    while (corto_iterHasNext(&it)) {
-        ast_OptimizeExpr_exprElem *elem = corto_iterNext(&it);
+    while (corto_iter_hasNext(&it)) {
+        ast_OptimizeExpr_exprElem *elem = corto_iter_next(&it);
         if (!result) {
             result = elem->e;
         } else {
@@ -452,8 +452,8 @@ corto_ll ast_OptimizeExpr_reduceExpression(ast_Expression e) {
     /* Reduce subexpressions */
     if (corto_llSize(elems) > 1) {
         corto_iter it = corto_llIter(elems);
-        while (corto_iterHasNext(&it)) {
-            ast_OptimizeExpr_exprElem *elem = corto_iterNext(&it);
+        while (corto_iter_hasNext(&it)) {
+            ast_OptimizeExpr_exprElem *elem = corto_iter_next(&it);
             if (ast_Node(elem->e)->kind == Ast_BinaryExpr) {
                 corto_ll subElems = ast_OptimizeExpr_reduceExpression(elem->e);
                 elem->e = ast_OptimizeExpr_reducedToExpression(subElems);
@@ -472,8 +472,8 @@ corto_ll ast_OptimizeExpr_reduceExpression(ast_Expression e) {
 
         /*printf("elem = %s\n", corto_contentof(NULL, "text/corto-color", elem->e));*/
 
-        while (corto_iterHasNext(&it) && !found) {
-            ast_OptimizeExpr_exprElem *finalElem = corto_iterNext(&it);
+        while (corto_iter_hasNext(&it) && !found) {
+            ast_OptimizeExpr_exprElem *finalElem = corto_iter_next(&it);
             corto_int32 a, aFinal;
             ast_Expression b, bFinal, var, varFinal, expr;
             expr = ast_OptimizeExpr_getTerm(elem->e, &a, &b, &var);
@@ -533,8 +533,8 @@ corto_ll ast_OptimizeExpr_reduceExpression(ast_Expression e) {
 void ast_OptimizeExpr_inverse(corto_ll elems) {
     corto_iter it = corto_llIter(elems);
     corto_bool prevIsLiteral = FALSE;
-    while (corto_iterHasNext(&it)) {
-        ast_OptimizeExpr_exprElem *elem = corto_iterNext(&it);
+    while (corto_iter_hasNext(&it)) {
+        ast_OptimizeExpr_exprElem *elem = corto_iter_next(&it);
         if ((ast_Node(elem->e)->kind == Ast_LiteralExpr) || prevIsLiteral) {
             switch(elem->oper) {
             case CORTO_ADD: elem->oper = CORTO_SUB; break;

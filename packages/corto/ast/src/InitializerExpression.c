@@ -67,8 +67,8 @@ int16_t _ast_InitializerExpression_insert(
 
     /* Walk operations */
     corto_iter it = corto_llIter(this->operations);
-    while (corto_iterHasNext(&it)) {
-        ast_InitOper *elem = corto_iterNext(&it);
+    while (corto_iter_hasNext(&it)) {
+        ast_InitOper *elem = corto_iter_next(&it);
         switch(elem->kind) {
         case Ast_InitOpPush:
             if (ast_DynamicInitializer_push(initializer)) {

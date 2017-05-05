@@ -337,8 +337,8 @@ void _ast_Expression_cleanList(
 /* $begin(corto/ast/Expression/cleanList) */
     if (list) {
         corto_iter iter = corto_llIter(list);
-        while(corto_iterHasNext(&iter)) {
-            corto_release(corto_iterNext(&iter));
+        while(corto_iter_hasNext(&iter)) {
+            corto_release(corto_iter_next(&iter));
         }
         corto_llFree(list);
     }
@@ -372,8 +372,8 @@ ast_Expression _ast_Expression_fromList(
             result = ast_Expression(ast_CommaCreate());
 
             iter = corto_llIter(list);
-            while(corto_iterHasNext(&iter)) {
-                expr = corto_iterNext(&iter);
+            while(corto_iter_hasNext(&iter)) {
+                expr = corto_iter_next(&iter);
                 ast_ExpressionListAppend(toList, expr);
             }
             ast_Comma(result)->expressions = toList;

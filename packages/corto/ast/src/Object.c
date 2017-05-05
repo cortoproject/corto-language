@@ -91,7 +91,7 @@ int16_t _ast_Object_serialize(
                 corto_value vDst, vSrc;
                 vDst = corto_value_value((void*)dst, corto_type(dstType));
                 vSrc = corto_value_value(ast_Object(this)->value, corto_type(srcType));
-                corto_copyv(&vDst, &vSrc);
+                corto_value_copy(&vDst, &vSrc);
             } else if ((srcType->kind == CORTO_COMPOSITE) && (corto_interface(srcType)->kind == CORTO_PROCEDURE)) {
                 corto_setref(&((corto_delegatedata *)dst)->procedure, ast_Object(this)->value);
                 corto_setref(&((corto_delegatedata *)dst)->instance, NULL);
@@ -102,7 +102,7 @@ int16_t _ast_Object_serialize(
             corto_value vDst, vSrc;
             vDst = corto_value_value((void *)dst, corto_type(dstType));
             vSrc = corto_value_value(obj, corto_type(srcType));
-            corto_copyv(&vDst, &vSrc);
+            corto_value_copy(&vDst, &vSrc);
 
         } else {
             corto_id id, id2;

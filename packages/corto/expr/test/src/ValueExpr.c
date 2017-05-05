@@ -12,7 +12,7 @@ corto_void _test_ValueExpr_tc_compositeArg(
     test_ValueExpr this)
 {
 /* $begin(test/ValueExpr/tc_compositeArg) */
-    corto_value result = corto_value_init();
+    corto_value result = corto_value_empty();
     corto_expr e;
     corto_int16 ret;
     test_Point p = {10, 20};
@@ -45,7 +45,7 @@ corto_void _test_ValueExpr_tc_compositeLiteral(
     test_ValueExpr this)
 {
 /* $begin(test/ValueExpr/tc_compositeLiteral) */
-    corto_value result = corto_value_init();
+    corto_value result = corto_value_empty();
     corto_expr e;
     corto_int16 ret;
 
@@ -75,7 +75,7 @@ corto_void _test_ValueExpr_tc_compositeObject(
     test_ValueExpr this)
 {
 /* $begin(test/ValueExpr/tc_compositeObject) */
-    corto_value result = corto_value_init();
+    corto_value result = corto_value_empty();
     corto_expr e;
     corto_int16 ret;
 
@@ -110,7 +110,7 @@ corto_void _test_ValueExpr_tc_compositeVar(
     test_ValueExpr this)
 {
 /* $begin(test/ValueExpr/tc_compositeVar) */
-    corto_value result = corto_value_init();
+    corto_value result = corto_value_empty();
     corto_expr e;
     corto_int16 ret;
 
@@ -140,7 +140,7 @@ corto_void _test_ValueExpr_tc_primitiveArg(
     test_ValueExpr this)
 {
 /* $begin(test/ValueExpr/tc_primitiveArg) */
-    corto_value result = corto_value_init();
+    corto_value result = corto_value_empty();
     corto_expr e;
     corto_int16 ret;
 
@@ -169,7 +169,7 @@ corto_void _test_ValueExpr_tc_primitiveLiteral(
     test_ValueExpr this)
 {
 /* $begin(test/ValueExpr/tc_primitiveLiteral) */
-    corto_value result = corto_value_init();
+    corto_value result = corto_value_empty();
     corto_expr e;
     corto_int16 ret;
 
@@ -196,7 +196,7 @@ corto_void _test_ValueExpr_tc_primitiveObject(
     test_ValueExpr this)
 {
 /* $begin(test/ValueExpr/tc_primitiveObject) */
-    corto_value result = corto_value_init();
+    corto_value result = corto_value_empty();
     corto_expr e;
     corto_int16 ret;
 
@@ -229,7 +229,7 @@ corto_void _test_ValueExpr_tc_primitiveVar(
     test_ValueExpr this)
 {
 /* $begin(test/ValueExpr/tc_primitiveVar) */
-    corto_value result = corto_value_init();
+    corto_value result = corto_value_empty();
     corto_expr e;
     corto_int16 ret;
 
@@ -256,7 +256,7 @@ corto_void _test_ValueExpr_tc_referenceArg(
     test_ValueExpr this)
 {
 /* $begin(test/ValueExpr/tc_referenceArg) */
-    corto_value result = corto_value_init();
+    corto_value result = corto_value_empty();
     corto_expr e;
     corto_int16 ret;
 
@@ -291,7 +291,7 @@ corto_void _test_ValueExpr_tc_referenceObject(
     test_ValueExpr this)
 {
 /* $begin(test/ValueExpr/tc_referenceObject) */
-    corto_value result = corto_value_init();
+    corto_value result = corto_value_empty();
     corto_expr e;
     corto_int16 ret;
 
@@ -324,7 +324,7 @@ corto_void _test_ValueExpr_tc_referenceVar(
     test_ValueExpr this)
 {
 /* $begin(test/ValueExpr/tc_referenceVar) */
-    corto_value result = corto_value_init();
+    corto_value result = corto_value_empty();
     corto_expr e;
     corto_int16 ret;
 

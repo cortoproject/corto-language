@@ -19,8 +19,8 @@ ast_Expression ast_Node_optimizeCondition(ast_Expression condition, corto_bool *
     
     /* If condition is an expression list, inserts && between each expression. */
     corto_iter it = corto_llIter(conditions);
-    while (corto_iterHasNext(&it)) {
-        ast_Expression elem = corto_iterNext(&it);
+    while (corto_iter_hasNext(&it)) {
+        ast_Expression elem = corto_iter_next(&it);
 
         /* If condition is a unary NOT inverse the condition and evaluate lvalue of NOT expression instead */
         if (ast_Node(elem)->kind == Ast_UnaryExpr) {

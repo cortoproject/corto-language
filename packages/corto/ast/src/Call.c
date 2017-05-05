@@ -21,8 +21,8 @@ corto_int16 ast_Call_insertCasts(ast_Call this) {
     if (this->arguments) {
         corto_ll arguments = ast_Expression_toList(this->arguments);
         argumentIter = corto_llIter(arguments);
-        while(corto_iterHasNext(&argumentIter)) {
-            argument = corto_iterNext(&argumentIter);
+        while(corto_iter_hasNext(&argumentIter)) {
+            argument = corto_iter_next(&argumentIter);
             parameterType = this->parameters.buffer[i].type;
             argumentType = ast_Expression_getType(argument);
 
@@ -183,12 +183,12 @@ ic_node _ast_Call_toIc(
 
         /* Temporary storage for push-instructions required for pushing the arguments of this function */
         argumentIter = corto_llIter(arguments);
-        while(corto_iterHasNext(&argumentIter)) {
+        while(corto_iter_hasNext(&argumentIter)) {
             corto_type paramType, exprType;
             ic_derefKind deref = IC_DEREF_ADDRESS;
             corto_bool isAny = FALSE;
 
-            argument = corto_iterNext(&argumentIter);
+            argument = corto_iter_next(&argumentIter);
             if (!argumentStorage ||
               (argumentIc == (ic_node)argumentStorage) ||
               (ast_Expression_getType(argument) != argumentStorage->type)) {

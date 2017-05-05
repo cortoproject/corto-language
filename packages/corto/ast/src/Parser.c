@@ -274,7 +274,7 @@ ast_Expression ast_Parser_delegateAssignment(ast_Parser this, ast_Expression lva
     signature = corto_signatureClose(signature);
 
     /* Resolve function */
-    corto_initp(&builder, ast_CallBuilder_o);
+    corto_ptr_init(&builder, ast_CallBuilder_o);
     ast_CallBuilderAssign(
         &builder,
         signature,
@@ -283,7 +283,7 @@ ast_Expression ast_Parser_delegateAssignment(ast_Parser this, ast_Expression lva
         this->scope,
         yparser()->block);
     tempCall = ast_CallBuilder_build(&builder);
-    corto_deinitp(&builder, ast_CallBuilder_o);
+    corto_ptr_deinit(&builder, ast_CallBuilder_o);
 
     if (!tempCall) {
         goto error;
@@ -484,12 +484,12 @@ ast_Expression ast_Parser_explodeComma(ast_Parser this, ast_Expression lvalues, 
     }
 
     corto_iter itL = corto_llIter(lvalueList);
-    while (corto_iterHasNext(&itL)) {
-        ast_Expression l = corto_iterNext(&itL);
+    while (corto_iter_hasNext(&itL)) {
+        ast_Expression l = corto_iter_next(&itL);
 
         corto_iter itR = corto_llIter(rvalueList);
-        while (corto_iterHasNext(&itR)) {
-            ast_Expression r = corto_iterNext(&itR);
+        while (corto_iter_hasNext(&itR)) {
+            ast_Expression r = corto_iter_next(&itR);
 
             ast_Expression e = action(this, var ? var : l, r, userData);
             if (!e) {
@@ -553,17 +553,17 @@ ast_Expression ast_Parser_expandComma(ast_Parser this, ast_Expression lvalues, a
     lIter = corto_llIter(lvalueList);
     rIter = corto_llIter(rvalueList);
     ast_Expression lvalue = lvalues;
-    while((((expandMode == EXPAND_LEFT)||(expandMode == EXPAND_BOTH)) && corto_iterHasNext(&lIter)) || ((expandMode == EXPAND_RIGHT) && corto_iterHasNext(&rIter))) {
+    while((((expandMode == EXPAND_LEFT)||(expandMode == EXPAND_BOTH)) && corto_iter_hasNext(&lIter)) || ((expandMode == EXPAND_RIGHT) && corto_iter_hasNext(&rIter))) {
 
         /* If rvalueList is greater than 1, loop through rvalues as well */
         switch(expandMode) {
             case EXPAND_BOTH:
-                rvalues = corto_iterNext(&rIter);
+                rvalues = corto_iter_next(&rIter);
             case EXPAND_LEFT:
-                lvalue = corto_iterNext(&lIter);
+                lvalue = corto_iter_next(&lIter);
                 break;
             case EXPAND_RIGHT:
-                rvalues = corto_iterNext(&rIter);
+                rvalues = corto_iter_next(&rIter);
                 break;
         }
 
@@ -617,8 +617,8 @@ ast_Expression ast_Parser_resolve(ast_Parser this, corto_id id) {
     }
 
     corto_iter it = corto_llIter(this->imports);
-    while (!object && corto_iterHasNext(&it)) {
-        object = corto_lookup(corto_iterNext(&it), id);
+    while (!object && corto_iter_hasNext(&it)) {
+        object = corto_lookup(corto_iter_next(&it), id);
     }
 
     if (object) {
@@ -1135,8 +1135,8 @@ ast_Expression _ast_Parser_callExpr(
 
         if (functions) {
             corto_iter it = corto_llIter(functions);
-            while (corto_iterHasNext(&it)) {
-                ast_Expression f = corto_iterNext(&it);
+            while (corto_iter_hasNext(&it)) {
+                ast_Expression f = corto_iter_next(&it);
                 ast_Expression expr;
                 if ((ast_Node(f)->kind == Ast_StorageExpr) && (ast_Storage(f)->kind == Ast_ObjectStorage)) {
                     o = ast_Object(f)->value;
@@ -1165,8 +1165,8 @@ ast_Expression _ast_Parser_callExpr(
         /* Cleanup initializer arguments */
         if (args) {
             corto_iter it = corto_llIter(args);
-            while (corto_iterHasNext(&it)) {
-                ast_Expression a = corto_iterNext(&it);
+            while (corto_iter_hasNext(&it)) {
+                ast_Expression a = corto_iter_next(&it);
                 if (ast_Node(a)->kind == Ast_InitializerExpr) {
                     ast_Expression var = ast_Initializer(a)->variables[0].object;
                     if (var && (ast_Storage(var)->kind == Ast_TemporaryStorage)) {
@@ -1638,8 +1638,8 @@ void _ast_Parser_destruct(
 
     if (this->heapCollected) {
         iter = corto_llIter(this->heapCollected);
-        while(corto_iterHasNext(&iter)) {
-            corto_dealloc(corto_iterNext(&iter));
+        while(corto_iter_hasNext(&iter)) {
+            corto_dealloc(corto_iter_next(&iter));
         }
         corto_llFree(this->heapCollected);
     }
@@ -1704,9 +1704,9 @@ int16_t _ast_Parser_finalize(
     /* Parse functions */
     if (this->bindings) {
         bindingIter = corto_llIter(this->bindings);
-        while(corto_iterHasNext(&bindingIter)) {
+        while(corto_iter_hasNext(&bindingIter)) {
             ic_op ret;
-            binding = corto_iterNext(&bindingIter);
+            binding = corto_iter_next(&bindingIter);
             ic_program_pushFunction(program, binding->function);
             scope = (ic_scope)ast_Block_toIc(binding->impl, program, NULL, FALSE);
             if (this->errors) {
@@ -1884,8 +1884,8 @@ int16_t _ast_Parser_initDeclare(
     /* Comma expression is encountered in the first pass. If this expression
      * contains out of UnresolvedReference nodes, declare objects */
     corto_iter it = corto_llIter(expressions);
-    while (corto_iterHasNext(&it)) {
-        ast_Expression s = corto_iterNext(&it);
+    while (corto_iter_hasNext(&it)) {
+        ast_Expression s = corto_iter_next(&it);
 
         if (ast_Node(s)->kind == Ast_StorageExpr) {
             corto_string id = NULL;
@@ -3341,5 +3341,24 @@ ast_Node _ast_Parser_whileStatement(
 error:
     fast_err;
     return NULL;
+/* $end */
+}
+
+int16_t _ast_Parser_with(
+    ast_Parser this)
+{
+/* $begin(corto/ast/Parser/with) */
+
+    if (ast_Parser_pushScope(yparser())) {
+        goto error;
+    }
+
+    if (ast_Parser_defineScope(this)) {
+        goto error;
+    }
+
+    return 0;
+error:
+    return -1;
 /* $end */
 }

@@ -208,8 +208,8 @@ ast_Local _ast_Block_lookupLocal(
         corto_iter iter;
         ast_Local local;
         iter = corto_llIter(this->locals);
-        while(corto_iterHasNext(&iter)) {
-            local = corto_iterNext(&iter);
+        while(corto_iter_hasNext(&iter)) {
+            local = corto_iter_next(&iter);
             if (!strcmp(local->name, id)) {
                 result = local;
                 break;
@@ -306,8 +306,8 @@ ic_node _ast_Block_toIcBody(
     /* Declare locals */
     if (this->locals) {
         localIter = corto_llIter(this->locals);
-        while(corto_iterHasNext(&localIter)) {
-            local = corto_iterNext(&localIter);
+        while(corto_iter_hasNext(&localIter)) {
+            local = corto_iter_next(&localIter);
             ic_program_declareVariable(
                     program,
                     local->name,
@@ -321,8 +321,8 @@ ic_node _ast_Block_toIcBody(
 
     if (this->statements) {
         statementIter = corto_llIter(this->statements);
-        while(corto_iterHasNext(&statementIter)) {
-            statement = corto_iterNext(&statementIter);
+        while(corto_iter_hasNext(&statementIter)) {
+            statement = corto_iter_next(&statementIter);
             ast_Node_toIc(statement, program, NULL, FALSE);
         }
     }
