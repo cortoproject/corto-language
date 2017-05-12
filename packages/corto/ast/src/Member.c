@@ -17,7 +17,7 @@ corto_int16 ast_Member_resolveMember(ast_Member this, corto_type type, corto_str
     if (corto_instanceof(corto_type(corto_interface_o), type) && !strcmp(member, "super")) {
         if (corto_interface(type)->base) {
             this->member = NULL;
-            corto_setref(&ast_Expression(this)->type, corto_interface(type)->base);
+            corto_ptr_setref(&ast_Expression(this)->type, corto_interface(type)->base);
         } else {
             corto_id id;
             ast_Parser_error(yparser(), "type '%s' has no base", ast_Parser_id(type, id));
@@ -41,11 +41,11 @@ corto_int16 ast_Member_resolveMember(ast_Member this, corto_type type, corto_str
                 }
                 goto error;
             }
-            corto_setref(&ast_Expression(this)->type, corto_function(o)->returnType);
+            corto_ptr_setref(&ast_Expression(this)->type, corto_function(o)->returnType);
         } else {
-            corto_setref(&ast_Expression(this)->type, corto_member(o)->type);
+            corto_ptr_setref(&ast_Expression(this)->type, corto_member(o)->type);
         }
-        corto_setref(&this->member, o);
+        corto_ptr_setref(&this->member, o);
     }
 
     return 0;

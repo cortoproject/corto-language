@@ -88,7 +88,7 @@ static corto_int16 corto_expr_finalize(corto_expr *out, corto_expr_opt *opt, cha
     }
 
     if (opt) {
-        corto_setref(&f->returnType, opt->returnType);
+        corto_ptr_setref(&f->returnType, opt->returnType);
         f->returnsReference = opt->returnsReference;
     }
 

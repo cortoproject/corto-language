@@ -82,7 +82,7 @@ corto_char *ast_String_parseEmbedded(ast_String this, corto_char *expr) {
 
     element = ast_Parser_parseExpression(yparser(), expr, this->block, this->scope, ast_Node(this)->line, ast_Node(this)->column);
     if (element) {
-        corto_llAppend(this->elements, element);
+        corto_ll_append(this->elements, element);
         corto_claim(element);
     } else {
         goto error;
@@ -116,7 +116,7 @@ corto_int16 ast_String_parse(ast_String this) {
                     *ptr = '\0';
 
                     element = ast_StringCreate(str);
-                    corto_llAppend(this->elements, element);
+                    corto_ll_append(this->elements, element);
 
                     *ptr = ch;
                 }
@@ -140,11 +140,11 @@ corto_int16 ast_String_parse(ast_String this) {
          * string to elements list */
         if ((str != this->value) && *str) {
             element = ast_StringCreate(str);
-            corto_llAppend(this->elements, element);
+            corto_ll_append(this->elements, element);
         }
     } else {
         element = ast_StringCreate("null");
-        corto_llAppend(this->elements, element);
+        corto_ll_append(this->elements, element);
     }
 
     return 0;
@@ -163,8 +163,8 @@ int16_t _ast_String_construct(
         goto error;
     }
 
-    corto_setref(&this->block, yparser()->block);
-    corto_setref(&this->scope, yparser()->scope);
+    corto_ptr_setref(&this->block, yparser()->block);
+    corto_ptr_setref(&this->scope, yparser()->scope);
 
     return 0;
 error:
@@ -236,7 +236,7 @@ int16_t _ast_String_serialize(
             ast_Parser_error(yparser(), "unresolved object '%s'", this->value);
             goto error;
         }
-        corto_setref(&dst, o);
+        corto_ptr_setref(&dst, o);
         corto_release(o);
         break;
     }
@@ -270,7 +270,7 @@ ic_node _ast_String_toIc(
         goto error;
     }
 
-    if (!corto_llSize(this->elements)) {
+    if (!corto_ll_size(this->elements)) {
         corto_any l = {corto_type(corto_string_o), &this->value, FALSE};
         result = (ic_node)ic_literalCreate(l);
     } else {
@@ -278,7 +278,7 @@ ic_node _ast_String_toIc(
             corto_iter elementIter;
             ast_Expression element;
             ic_node icElement1, icElement2;
-            corto_uint32 elementCount = corto_llSize(this->elements);
+            corto_uint32 elementCount = corto_ll_size(this->elements);
             corto_bool stored = FALSE;
             ic_node dummy;
             corto_uint32 accPushCount = 0;
@@ -296,7 +296,7 @@ ic_node _ast_String_toIc(
             dummy = (ic_node)ic_literalCreate(l);
 
             result = (ic_node)storage;
-            elementIter = corto_llIter(this->elements);
+            elementIter = corto_ll_iter(this->elements);
             while(corto_iter_hasNext(&elementIter)) {
                 ic_accumulator acc = ic_program_pushAccumulator(program, (corto_type)corto_string_o, FALSE, FALSE);
                 accPushCount++;

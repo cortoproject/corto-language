@@ -48,7 +48,7 @@ ast_Local _ast_Block_declare(
     kind = isParameter ? Ast_LocalParameter : Ast_LocalDefault;
     result = ast_LocalCreate(id, type, kind, isReference);
     if (result) {
-        corto_llAppend(this->locals, result);
+        corto_ll_append(this->locals, result);
     } else {
         goto error;
     }
@@ -75,7 +75,7 @@ ast_Local _ast_Block_declareReturnVariable(
     /* If variable did not exist, declare it in this block */
     result = ast_LocalCreate(id, function->returnType, Ast_LocalReturn, function->returnsReference);
     if (result) {
-        corto_llAppend(this->locals, result);
+        corto_ll_append(this->locals, result);
     }
 
     return result;
@@ -103,7 +103,7 @@ ast_Template _ast_Block_declareTemplate(
     /* If variable did not exist, declare it in this block */
     result = ast_TemplateCreate(id, type, isParameter, isReference);
     if (result) {
-        corto_llInsert(this->locals, result);
+        corto_ll_insert(this->locals, result);
     }
 
     return result;
@@ -207,7 +207,7 @@ ast_Local _ast_Block_lookupLocal(
     if (this->locals) {
         corto_iter iter;
         ast_Local local;
-        iter = corto_llIter(this->locals);
+        iter = corto_ll_iter(this->locals);
         while(corto_iter_hasNext(&iter)) {
             local = corto_iter_next(&iter);
             if (!strcmp(local->name, id)) {
@@ -260,7 +260,7 @@ void _ast_Block_setFunction(
     corto_function function)
 {
 /* $begin(corto/ast/Block/setFunction) */
-    corto_setref(&this->function, function);
+    corto_ptr_setref(&this->function, function);
 /* $end */
 }
 
@@ -305,7 +305,7 @@ ic_node _ast_Block_toIcBody(
 
     /* Declare locals */
     if (this->locals) {
-        localIter = corto_llIter(this->locals);
+        localIter = corto_ll_iter(this->locals);
         while(corto_iter_hasNext(&localIter)) {
             local = corto_iter_next(&localIter);
             ic_program_declareVariable(
@@ -320,7 +320,7 @@ ic_node _ast_Block_toIcBody(
     }
 
     if (this->statements) {
-        statementIter = corto_llIter(this->statements);
+        statementIter = corto_ll_iter(this->statements);
         while(corto_iter_hasNext(&statementIter)) {
             statement = corto_iter_next(&statementIter);
             ast_Node_toIc(statement, program, NULL, FALSE);

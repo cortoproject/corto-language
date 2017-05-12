@@ -18,14 +18,14 @@ corto_int16 ast_Unary_doConstruct(ast_Unary this) {
 
     if (lvalueType->kind != CORTO_ITERATOR) {
         if (this->_operator == CORTO_COND_NOT) {
-            corto_setref(&ast_Expression(this)->type, corto_bool_o);
+            corto_ptr_setref(&ast_Expression(this)->type, corto_bool_o);
         } else {
-            corto_setref(&ast_Expression(this)->type, lvalueType);
+            corto_ptr_setref(&ast_Expression(this)->type, lvalueType);
         }
     } else {
         if (this->_operator == CORTO_MUL) {
             corto_type iterType = corto_iterator(lvalueType)->elementType;
-            corto_setref(&ast_Expression(this)->type, iterType);
+            corto_ptr_setref(&ast_Expression(this)->type, iterType);
             ast_Expression(this)->isReference = TRUE;
         } else {
             ast_Parser_error(yparser(), "invalid operator for iterator");
@@ -87,7 +87,7 @@ ast_Expression _ast_Unary_fold(
                     break;
                 }
                 if ((corto_primitive(type)->kind == CORTO_BITMASK) || (corto_primitive(type)->kind == CORTO_ENUM)) {
-                    corto_setref(&ast_Expression(result)->type, type);
+                    corto_ptr_setref(&ast_Expression(result)->type, type);
                 }
             }
 
@@ -138,7 +138,7 @@ ast_Expression _ast_Unary_resolve(
             goto error;
         }
 
-        corto_setref(&this->lvalue, lvalue);
+        corto_ptr_setref(&this->lvalue, lvalue);
         ast_Expression(this)->unresolved = FALSE;
 
         if (ast_Unary_doConstruct(this)) {

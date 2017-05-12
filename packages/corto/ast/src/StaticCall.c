@@ -20,7 +20,7 @@ int16_t _ast_StaticCall_construct(
 
     fExpr = ast_ObjectCreate(this->function);
     ast_Parser_collect(yparser(), fExpr);
-    corto_setref(&ast_Call(this)->functionExpr, fExpr);
+    corto_ptr_setref(&ast_Call(this)->functionExpr, fExpr);
 
     /* Set parameters */
     ast_Call_setParameters(ast_Call(this), this->function);

@@ -449,7 +449,7 @@ int16_t _ast_Binary_construct(
         this->rvalue->unresolved)
     {
         ast_Expression(this)->unresolved = TRUE;
-        corto_setref(&ast_Expression(this)->type, corto_void_o);
+        corto_ptr_setref(&ast_Expression(this)->type, corto_void_o);
     } else
     {
         if (ast_Binary_doConstruct(this)) {
@@ -522,7 +522,7 @@ ast_Expression _ast_Binary_fold(
                     break;
                 }
                 if ((corto_primitive(type)->kind == CORTO_BITMASK) || (corto_primitive(type)->kind == CORTO_ENUM)) {
-                    corto_setref(&ast_Expression(result)->type, type);
+                    corto_ptr_setref(&ast_Expression(result)->type, type);
                 }
             }
 
@@ -603,8 +603,8 @@ ast_Expression _ast_Binary_resolve(
             goto error;
         }
 
-        corto_setref(&this->lvalue, lvalue);
-        corto_setref(&this->rvalue, rvalue);
+        corto_ptr_setref(&this->lvalue, lvalue);
+        corto_ptr_setref(&this->rvalue, rvalue);
 
         if (ast_Binary_doConstruct(this)) {
             goto error;
@@ -648,7 +648,7 @@ void _ast_Binary_setOperator(
 
     if (compoundExpr) {
         this->_operator = CORTO_ASSIGN;
-        corto_setref(&this->rvalue, compoundExpr);
+        corto_ptr_setref(&this->rvalue, compoundExpr);
         ast_Parser_collect(yparser(), compoundExpr);
     }
 
@@ -669,10 +669,10 @@ void _ast_Binary_setOperator(
     case CORTO_COND_GTEQ:
     case CORTO_COND_AND:
     case CORTO_COND_OR:
-        corto_setref(&ast_Expression(this)->type, corto_bool_o);
+        corto_ptr_setref(&ast_Expression(this)->type, corto_bool_o);
         break;
     default:
-        corto_setref(&ast_Expression(this)->type, exprType);
+        corto_ptr_setref(&ast_Expression(this)->type, exprType);
         break;
     }
 

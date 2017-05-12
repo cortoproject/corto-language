@@ -42,7 +42,7 @@ int16_t _ast_Element_construct(
                 }
             }
             /* Set type of expression */
-            corto_setref(&ast_Expression(this)->type, corto_collection(lvalueType)->elementType);
+            corto_ptr_setref(&ast_Expression(this)->type, corto_collection(lvalueType)->elementType);
         } else {
             corto_id id;
             ast_Parser_error(yparser(), "cannot obtain element from this of non-collection type '%s'", ast_Parser_id(lvalueType, id));

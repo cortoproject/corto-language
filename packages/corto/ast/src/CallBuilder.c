@@ -96,7 +96,7 @@ ast_Call _ast_CallBuilder_build(
             } else if ((l = ast_Block_resolveLocal(this->block, "this"))) {
                 if (corto_type_resolveProcedure(l->type, this->signature)) {
                     /* Set instance to 'this' */
-                    corto_setref(&this->instance, l);
+                    corto_ptr_setref(&this->instance, l);
                     result = ast_CallBuilder_buildMethod(this);
                 }           
             }
@@ -151,7 +151,7 @@ int16_t _ast_CallBuilder_buildSignature(
 
         if (this->arguments) {
             corto_ll arguments = ast_Expression_toList(this->arguments);
-            argumentIter = corto_llIter(arguments);
+            argumentIter = corto_ll_iter(arguments);
             while(corto_iter_hasNext(&argumentIter)) {
                 int flags = 0;
                 argument = corto_iter_next(&argumentIter);

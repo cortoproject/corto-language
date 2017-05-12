@@ -83,8 +83,8 @@ ast_Expression ast_OptimizeExpr_reorderExpression(ast_Expression expr) {
             ast_Binary(expr)->_operator = oper = CORTO_ADD;
         }
 
-        corto_setref(&ast_Binary(expr)->lvalue, left);
-        corto_setref(&ast_Binary(expr)->rvalue, right);
+        corto_ptr_setref(&ast_Binary(expr)->lvalue, left);
+        corto_ptr_setref(&ast_Binary(expr)->rvalue, right);
 
         if ((oper == CORTO_MUL) || (oper == CORTO_DIV)) {
             if (ast_Node(left)->kind == Ast_BinaryExpr) {
@@ -157,22 +157,22 @@ ast_OptimizeExpr_exprElem* ast_OptimizeExpr_elemNew(corto_operatorKind oper, ast
 }
 void ast_OptimizeExpr_elemsInsert(corto_ll elems, corto_operatorKind oper, ast_Expression e) {
     if (!ast_OptimizeExpr_isNoop(oper, e)) {
-        corto_llInsert(elems, ast_OptimizeExpr_elemNew(oper, e));
+        corto_ll_insert(elems, ast_OptimizeExpr_elemNew(oper, e));
     }
 }
 void ast_OptimizeExpr_elemsAppend(corto_ll elems, corto_operatorKind oper, ast_Expression e) {
     if (!ast_OptimizeExpr_isNoop(oper, e)) {
-        corto_llAppend(elems, ast_OptimizeExpr_elemNew(oper, e));
+        corto_ll_append(elems, ast_OptimizeExpr_elemNew(oper, e));
     }
 }
 
 void ast_OptimizeExpr_elemsFree(corto_ll elems) {
-    corto_iter it = corto_llIter(elems);
+    corto_iter it = corto_ll_iter(elems);
     while (corto_iter_hasNext(&it)) {
         ast_OptimizeExpr_exprElem *elem = corto_iter_next(&it);
         corto_dealloc(elem);
     }
-    corto_llFree(elems);
+    corto_ll_free(elems);
 }
 
 ast_Expression ast_OptimizeExpr_collectTerm(ast_Expression e, corto_value *constant, corto_ll elems) {
@@ -402,7 +402,7 @@ ast_Expression ast_OptimizeExpr_combine(
 ast_Expression ast_OptimizeExpr_reducedToExpression(corto_ll elems) {
     ast_Expression result = NULL;
 
-    corto_iter it = corto_llIter(elems);
+    corto_iter it = corto_ll_iter(elems);
     while (corto_iter_hasNext(&it)) {
         ast_OptimizeExpr_exprElem *elem = corto_iter_next(&it);
         if (!result) {
@@ -427,8 +427,8 @@ corto_bool ast_OptimizeExpr_isValueNull(corto_value *v) {
 corto_ll ast_OptimizeExpr_reduceExpression(ast_Expression e) {
     corto_value constant = corto_value_int(0);
     corto_operatorKind constantOper = CORTO_ADD;
-    corto_ll elems = corto_llNew();
-    corto_ll final = corto_llNew();
+    corto_ll elems = corto_ll_new();
+    corto_ll final = corto_ll_new();
 
     if (ast_Node(e)->kind == Ast_BinaryExpr) {
         if ((ast_Binary(e)->_operator == CORTO_MUL) ||
@@ -450,8 +450,8 @@ corto_ll ast_OptimizeExpr_reduceExpression(ast_Expression e) {
     }
 
     /* Reduce subexpressions */
-    if (corto_llSize(elems) > 1) {
-        corto_iter it = corto_llIter(elems);
+    if (corto_ll_size(elems) > 1) {
+        corto_iter it = corto_ll_iter(elems);
         while (corto_iter_hasNext(&it)) {
             ast_OptimizeExpr_exprElem *elem = corto_iter_next(&it);
             if (ast_Node(elem->e)->kind == Ast_BinaryExpr) {
@@ -466,9 +466,9 @@ corto_ll ast_OptimizeExpr_reduceExpression(ast_Expression e) {
     ast_OptimizeExpr_exprElem *elem;
     corto_int32 i = 0;
     corto_operatorKind firstOperator;
-    while ((elem = corto_llTakeFirst(elems))) {
+    while ((elem = corto_ll_takeFirst(elems))) {
         corto_bool found = FALSE;
-        corto_iter it = corto_llIter(final);
+        corto_iter it = corto_ll_iter(final);
 
         /*printf("elem = %s\n", corto_contentof(NULL, "text/corto-color", elem->e));*/
 
@@ -499,7 +499,7 @@ corto_ll ast_OptimizeExpr_reduceExpression(ast_Expression e) {
             }
         }
         if (!found) {
-            corto_llAppend(final, elem);
+            corto_ll_append(final, elem);
         }
 
         /* If the combined expression resulted in a literal, remove it
@@ -507,7 +507,7 @@ corto_ll ast_OptimizeExpr_reduceExpression(ast_Expression e) {
         if (ast_Node(elem->e)->kind == Ast_LiteralExpr) {
             corto_value v; ast_OptimizeExpr_valueFromExpr(elem->e, &v);
             corto_value_binaryOp(CORTO_ADD, &constant, &v, &constant);
-            corto_llRemove(final, elem);
+            corto_ll_remove(final, elem);
             corto_dealloc(elem);
         } else {
             if (!i) firstOperator = elem->oper;
@@ -531,7 +531,7 @@ corto_ll ast_OptimizeExpr_reduceExpression(ast_Expression e) {
 }
 
 void ast_OptimizeExpr_inverse(corto_ll elems) {
-    corto_iter it = corto_llIter(elems);
+    corto_iter it = corto_ll_iter(elems);
     corto_bool prevIsLiteral = FALSE;
     while (corto_iter_hasNext(&it)) {
         ast_OptimizeExpr_exprElem *elem = corto_iter_next(&it);

@@ -59,11 +59,11 @@ corto_word ast_Initializer_offset(ast_StaticInitializer this, corto_uint32 varia
                     result = (corto_word)corto_calloc(elementSize);
                 }
                 if (!*(corto_ll*)base) {
-                    *(corto_ll*)base = corto_llNew();
+                    *(corto_ll*)base = corto_ll_new();
                 }
-                corto_llAppend(*(corto_ll*)base, (void*)result);
+                corto_ll_append(*(corto_ll*)base, (void*)result);
                 if (!result) {
-                    result = (corto_word)corto_llGetPtr(*(corto_ll*)base, corto_llSize(*(corto_ll*)base)-1);
+                    result = (corto_word)corto_ll_getPtr(*(corto_ll*)base, corto_ll_size(*(corto_ll*)base)-1);
                 }
                 break;
             }
@@ -74,12 +74,12 @@ corto_word ast_Initializer_offset(ast_StaticInitializer this, corto_uint32 varia
                         result = (corto_word)corto_calloc(elementSize);
                     }
                     if (!*(corto_rbtree*)base) {
-                        *(corto_rbtree*)base = corto_rbtreeNew(frame->type);
+                        *(corto_rbtree*)base = corto_rb_new(frame->type);
                     }
-                    corto_rbtreeSet(*(corto_rbtree*)base, (void*)this->frames[fp].keyPtr[variable], (void*)result);
+                    corto_rb_set(*(corto_rbtree*)base, (void*)this->frames[fp].keyPtr[variable], (void*)result);
                     if (!result) {
                         if (this->frames[fp].keyPtr[variable]) {
-                            result = (corto_word)corto_rbtreeGetPtr(*(corto_rbtree*)base, (void*)this->frames[fp].keyPtr[variable]);
+                            result = (corto_word)corto_rb_getPtr(*(corto_rbtree*)base, (void*)this->frames[fp].keyPtr[variable]);
                         } else {
                             ast_Parser_error(yparser(), "cannot set element without keyvalue");
                             goto error;

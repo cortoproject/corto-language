@@ -18,7 +18,7 @@ int16_t _ast_Deinit_construct(
 /* $begin(corto/ast/Deinit/construct) */
 	corto_type t = ast_Expression_getType(ast_Expression(this->storage));
     ast_Node(this)->kind = Ast_DeinitExpr;
-    corto_setref(&ast_Expression(this)->type, t);
+    corto_ptr_setref(&ast_Expression(this)->type, t);
     return 0;
 /* $end */
 }

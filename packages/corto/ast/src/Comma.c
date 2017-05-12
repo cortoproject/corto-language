@@ -19,9 +19,9 @@ int16_t _ast_Comma_addExpression(
 /* $begin(corto/ast/Comma/addExpression) */
     if (expr) {
         corto_assert(this->expressions != NULL, "initialization failed");
-        corto_llAppend(this->expressions, expr); corto_claim(expr);
-        if (corto_llSize(this->expressions) == 1) {
-            corto_setref(&ast_Expression(this)->type, expr->type);
+        corto_ll_append(this->expressions, expr); corto_claim(expr);
+        if (corto_ll_size(this->expressions) == 1) {
+            corto_ptr_setref(&ast_Expression(this)->type, expr->type);
         }
     }
 
@@ -57,11 +57,11 @@ int16_t _ast_Comma_construct(
 {
 /* $begin(corto/ast/Comma/construct) */
     if (this->expressions) {
-        ast_Expression firstExpr = corto_llGet(this->expressions, 0);
+        ast_Expression firstExpr = corto_ll_get(this->expressions, 0);
 
         if (yparser()->line == 8) {
             if (firstExpr) {
-                corto_setref(&ast_Expression(this)->type, firstExpr->type);
+                corto_ptr_setref(&ast_Expression(this)->type, firstExpr->type);
             }
         }
     }
@@ -76,7 +76,7 @@ bool _ast_Comma_hasReturnedResource(
 /* $begin(corto/ast/Comma/hasReturnedResource) */
     corto_bool result = FALSE;
 
-    corto_iter it = corto_llIter(this->expressions);
+    corto_iter it = corto_ll_iter(this->expressions);
     while (corto_iter_hasNext(&it)) {
         ast_Expression elem = corto_iter_next(&it);
         if (ast_Expression_hasReturnedResource(elem)) {
@@ -95,7 +95,7 @@ bool _ast_Comma_hasSideEffects(
 /* $begin(corto/ast/Comma/hasSideEffects) */
     corto_bool result = FALSE;
     
-    corto_iter it = corto_llIter(this->expressions);
+    corto_iter it = corto_ll_iter(this->expressions);
     while (corto_iter_hasNext(&it)) {
         ast_Expression elem = corto_iter_next(&it);
         if (ast_Expression_hasSideEffects(elem)) {
@@ -151,7 +151,7 @@ ic_node _ast_Comma_toIc(
 {
 /* $begin(corto/ast/Comma/toIc) */
 
-    corto_iter it = corto_llIter(this->expressions);
+    corto_iter it = corto_ll_iter(this->expressions);
     while (corto_iter_hasNext(&it)) {
         ast_Expression elem = corto_iter_next(&it);
         ast_Node_toIc(elem, program, storage, stored);
@@ -166,11 +166,11 @@ ast_ExpressionList _ast_Comma_toList(
 {
 /* $begin(corto/ast/Comma/toList) */
 
-    ast_NodeList result = corto_llNew();
-    corto_iter it = corto_llIter(this->expressions);
+    ast_NodeList result = corto_ll_new();
+    corto_iter it = corto_ll_iter(this->expressions);
     while (corto_iter_hasNext(&it)) {
         ast_Expression elem = corto_iter_next(&it);
-        corto_llAppend(result, elem); corto_claim(elem);
+        corto_ll_append(result, elem); corto_claim(elem);
     }
 
     return result;

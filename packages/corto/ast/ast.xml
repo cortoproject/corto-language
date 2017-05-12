@@ -1,9 +1,9 @@
 <meta xmlns:meta="http://corto.io/meta">
-    <meta:package name="corto" url="http://corto.io/doc/corto">
-        <meta:package name="ast" url="http://corto.io/doc/corto/ast">
+    <corto:package name="corto" url="http://corto.io/doc/corto">
+        <corto:package name="ast" url="http://corto.io/doc/corto/ast">
             <!-- Enumeration representing the values that can be represented in hyve -->
             <enum name="valueKind">
-                <meta:scope>
+                <corto:scope>
                     <constant name="Bool"/>
                     <constant name="Char"/>
                     <constant name="Int"/>
@@ -24,7 +24,7 @@
 
             <!-- Enumeration representing the different treenode kinds -->
             <enum name="nodeKind">
-                <meta:scope>
+                <corto:scope>
                     <constant name="BinaryExpr"/>
                     <constant name="CallExpr"/>
                     <constant name="CastExpr"/>
@@ -50,7 +50,7 @@
 
             <!-- Base node -->
             <class name="Node">
-                <meta:scope>
+                <corto:scope>
                     <method name="init()" returnType="int16"/>
                     <member name="kind" type="nodeKind"/>
                     <member name="line" type="uint32" modifiers="readonly"/>
@@ -59,10 +59,10 @@
                 </meta:scope>
             </class>
 
-            <meta:object name="Storage" type="class"/>
+            <corto:object name="Storage" type="class"/>
 
             <enum name="derefKind">
-                <meta:scope>
+                <corto:scope>
                     <constant name="ByValue"/>
                     <constant name="ByReference"/>
                 </meta:scope>
@@ -70,7 +70,7 @@
 
             <!-- Base expression node -->
             <class name="Expression" base="Node">
-                <meta:scope>
+                <corto:scope>
                     <member name="type" type="type" modifiers="readonly"/>
                     <member name="isReference" type="bool" modifiers="readonly"/>
                     <member name="deref" type="derefKind" modifiers="readonly"/>
@@ -94,7 +94,7 @@
 
             <!-- Comma expression node -->
             <class name="Comma" base="Expression" baseAccess="readonly">
-              <meta:scope>
+              <corto:scope>
                   <method name="init()" returnType="int16"/>
                   <method name="construct()" returnType="int16"/>
                   <member name="expressions" type="list{Expression}" modifiers="private"/>
@@ -110,7 +110,7 @@
 
             <!-- Base literal node -->
             <class name="Literal" base="Expression" baseAccess="readonly">
-                <meta:scope>
+                <corto:scope>
                     <method name="init()" returnType="int16"/>
                     <member name="kind" type="valueKind"/>
                     <overridable name="getValue()" returnType="word"/>
@@ -119,7 +119,7 @@
 
             <!-- Boolean literal -->
             <class name="Boolean" base="Literal" baseAccess="readonly">
-                <meta:scope>
+                <corto:scope>
                     <method name="init()" returnType="int16"/>
                     <override name="serialize(type dstType,word dst)" returnType="int16"/>
                     <member name="value" type="bool"/>
@@ -129,7 +129,7 @@
 
             <!-- Character literal -->
             <class name="Character" base="Literal" baseAccess="readonly">
-                <meta:scope>
+                <corto:scope>
                     <method name="init()" returnType="int16"/>
                     <override name="serialize(type dstType,word dst)" returnType="int16"/>
                     <member name="value" type="char"/>
@@ -139,7 +139,7 @@
 
             <!-- Integer literal -->
             <class name="Integer" base="Literal" baseAccess="readonly">
-                <meta:scope>
+                <corto:scope>
                     <method name="init()" returnType="int16"/>
                     <override name="serialize(type dstType,word dst)" returnType="int16"/>
                     <member name="value" type="uint64"/>
@@ -149,7 +149,7 @@
 
             <!-- Signed integer literal -->
             <class name="SignedInteger" base="Literal" baseAccess="readonly">
-                <meta:scope>
+                <corto:scope>
                     <method name="init()" returnType="int16"/>
                     <override name="serialize(type dstType,word dst)" returnType="int16"/>
                     <member name="value" type="int64"/>
@@ -159,7 +159,7 @@
 
             <!-- Floating point literal -->
             <class name="FloatingPoint" base="Literal" baseAccess="readonly">
-                <meta:scope>
+                <corto:scope>
                     <method name="init()" returnType="int16"/>
                     <override name="serialize(type dstType,word dst)" returnType="int16"/>
                     <member name="value" type="float64"/>
@@ -169,7 +169,7 @@
 
             <!-- Null literal -->
             <class name="Null" base="Literal" baseAccess="readonly">
-                <meta:scope>
+                <corto:scope>
                     <method name="init()" returnType="int16"/>
                     <override name="serialize(type dstType,word dst)" returnType="int16"/>
                     <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
@@ -178,7 +178,7 @@
 
             <!-- Enumeration representing the different variable kinds -->
             <enum name="storageKind">
-                <meta:scope>
+                <corto:scope>
                     <constant name="LocalStorage"/>
                     <constant name="ObjectStorage"/>
                     <constant name="MemberStorage"/>
@@ -191,7 +191,7 @@
 
             <!-- Base variable node -->
             <class name="Storage" base="Expression" baseAccess="readonly">
-                <meta:scope>
+                <corto:scope>
                     <method name="construct()" returnType="int16"/>
                     <member name="kind" type="storageKind"/>
                 </meta:scope>
@@ -200,7 +200,7 @@
 
             <!-- Different kinds of locals -->
             <enum name="LocalKind">
-                <meta:scope>
+                <corto:scope>
                     <constant name="LocalDefault"/>
                     <constant name="LocalParameter"/>
                     <constant name="LocalReturn"/>
@@ -209,7 +209,7 @@
 
             <!-- Local variable node -->
             <class name="Local" base="Storage" baseAccess="readonly">
-                <meta:scope>
+                <corto:scope>
                     <method name="construct()" returnType="int16"/>
                     <member name="name" type="string"/>
                     <member name="type" type="type"/>
@@ -221,7 +221,7 @@
 
             <!-- Temporary storage node -->
             <class name="Temporary" base="Storage" baseAccess="readonly">
-                <meta:scope>
+                <corto:scope>
                     <method name="construct()" returnType="int16"/>
                     <member name="type" type="type"/>
                     <member name="reference" type="bool"/>
@@ -234,14 +234,14 @@
 
             <!-- Observer template variable -->
             <class name="Template" base="Local">
-                <meta:scope>
+                <corto:scope>
                     <method name="construct()" returnType="int16"/>
                 </meta:scope>
             </class>
 
             <!-- Object variable node -->
             <class name="Object" base="Storage" baseAccess="readonly">
-                <meta:scope>
+                <corto:scope>
                     <method name="construct()" returnType="int16"/>
                     <override name="serialize(type dstType,word dst)" returnType="int16"/>
                     <override name="id()" returnType="string"/>
@@ -253,7 +253,7 @@
 
             <!-- Unresolved object, allows for just in time resolving -->
             <class name="UnresolvedReference" base="Storage" baseAccess="readonly">
-                <meta:scope>
+                <corto:scope>
                     <method name="construct()" returnType="int16"/>
                     <member name="ref" type="string"/>
                     <member name="scope" type="object"/>
@@ -268,7 +268,7 @@
 
             <!-- Explicitly init storage -->
             <class name="Init" base="Expression" baseAccess="readonly">
-                <meta:scope>
+                <corto:scope>
                     <method name="construct()" returnType="int16"/>
                     <member name="storage" type="ast/Storage"/>
                     <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
@@ -277,7 +277,7 @@
 
             <!-- Explicitly deinit storage -->
             <class name="Deinit" base="Expression" baseAccess="readonly">
-                <meta:scope>
+                <corto:scope>
                     <method name="construct()" returnType="int16"/>
                     <member name="storage" type="ast/Storage"/>
                     <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
@@ -285,11 +285,11 @@
             </class>
 
             <!-- Forward declaration of while -->
-            <meta:object name="While" type="class"/>
+            <corto:object name="While" type="class"/>
 
             <!-- Statement block -->
             <class name="Block" base="Node" baseAccess="readonly">
-                <meta:scope>
+                <corto:scope>
                     <member name="parent" type="ast/Block"/>
                     <member name="isRoot" type="bool" modifiers="readonly"/>
                     <member name="statements" type="list{ast/Node}" modifiers="private|local"/>
@@ -312,7 +312,7 @@
 
             <!-- Member expression -->
             <class name="Member" base="Storage" baseAccess="readonly">
-                <meta:scope>
+                <corto:scope>
                     <method name="construct()" returnType="int16"/>
                     <member name="lvalue" type="ast/Expression"/>
                     <member name="rvalue" type="ast/Expression"/>
@@ -325,7 +325,7 @@
 
             <!-- Element expression -->
             <class name="Element" base="Storage" baseAccess="readonly">
-                <meta:scope>
+                <corto:scope>
                     <method name="construct()" returnType="int16"/>
                     <member name="lvalue" type="ast/Expression"/>
                     <member name="rvalue" type="ast/Expression"/>
@@ -335,7 +335,7 @@
 
             <!-- Call expression -->
             <class name="Call" base="Expression" baseAccess="readonly">
-                <meta:scope>
+                <corto:scope>
                     <method name="construct()" returnType="int16"/>
 
                     <member name="instanceExpr" type="ast/Expression"/>
@@ -357,7 +357,7 @@
 
             <!-- Compiler-defined function call -->
             <class name="StaticCall" base="Call">
-                <meta:scope>
+                <corto:scope>
                     <method name="construct()" returnType="int16"/>
                     <member name="function" type="function"/>
                 </meta:scope>
@@ -365,7 +365,7 @@
 
             <!-- Runtime-defined (delegate) function call -->
             <class name="DelegateCall" base="Call">
-                <meta:scope>
+                <corto:scope>
                     <method name="construct()" returnType="int16"/>
                     <member name="expr" type="ast/Expression"/>
                 </meta:scope>
@@ -373,7 +373,7 @@
 
             <!-- Helps finding the correct procedure given a name and argumentlist and build call expression -->
             <struct name="CallBuilder">
-                <meta:scope>
+                <corto:scope>
                     <member name="name" type="string"/>
                     <member name="arguments" type="ast/Expression"/>
                     <member name="instance" type="ast/Expression"/>
@@ -388,7 +388,7 @@
 
             <!-- Cast expression -->
             <class name="Cast" base="Expression" baseAccess="readonly">
-                <meta:scope>
+                <corto:scope>
                     <method name="construct()" returnType="int16"/>
                     <member name="lvalue" type="type"/>
                     <member name="rvalue" type="ast/Expression"/>
@@ -400,7 +400,7 @@
 
             <!-- Postfix expression -->
             <class name="PostFix" base="Expression" baseAccess="readonly">
-                <meta:scope>
+                <corto:scope>
                     <method name="construct()" returnType="int16"/>
                     <member name="lvalue" type="ast/Expression"/>
                     <member name="operator" type="operatorKind"/>
@@ -411,7 +411,7 @@
 
             <!-- Unary expression -->
             <class name="Unary" base="Expression" baseAccess="readonly">
-                <meta:scope>
+                <corto:scope>
                     <method name="construct()" returnType="int16"/>
                     <member name="lvalue" type="ast/Expression"/>
                     <member name="operator" type="operatorKind"/>
@@ -425,7 +425,7 @@
 
             <!-- Binary expression -->
             <class name="Binary" base="Expression" baseAccess="readonly">
-                <meta:scope>
+                <corto:scope>
                     <method name="construct()" returnType="int16"/>
                     <member name="lvalue" type="ast/Expression"/>
                     <member name="rvalue" type="ast/Expression"/>
@@ -441,11 +441,11 @@
                 </meta:scope>
             </class>
 
-            <meta:object name="If" type="class"/>
+            <corto:object name="If" type="class"/>
 
             <!-- Ternary expression -->
             <class name="Ternary" base="Expression" baseAccess="readonly">
-                <meta:scope>
+                <corto:scope>
                     <method name="construct()" returnType="int16"/>
                     <member name="condition" type="ast/Expression"/>
                     <member name="ifTrue" type="ast/Expression"/>
@@ -463,7 +463,7 @@
 
             <!-- New expression -->
             <class name="New" base="Expression" baseAccess="readonly">
-                <meta:scope>
+                <corto:scope>
                     <method name="construct()" returnType="int16"/>
                     <member name="type" type="type"/>
                     <member name="attributes" type="ast/Expression"/>
@@ -474,7 +474,7 @@
 
             <!-- Define statement -->
             <class name="Define" base="Node" baseAccess="readonly">
-                <meta:scope>
+                <corto:scope>
                     <method name="construct()" returnType="int16"/>
                     <member name="object" type="ast/Expression"/>
                     <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
@@ -483,7 +483,7 @@
 
             <!-- Text literal -->
             <class name="String" base="Literal" baseAccess="readonly">
-                <meta:scope>
+                <corto:scope>
                     <method name="init()" returnType="int16"/>
                     <method name="construct()" returnType="int16"/>
                     <override name="serialize(type dstType,word dst)" returnType="int16"/>
@@ -498,7 +498,7 @@
 
             <!-- If statement -->
             <class name="If" base="Node" baseAccess="readonly">
-                <meta:scope>
+                <corto:scope>
                     <method name="construct()" returnType="int16"/>
                     <member name="condition" type="ast/Expression"/>
                     <member name="trueBranch" type="ast/Block"/>
@@ -511,7 +511,7 @@
 
             <!-- While statement -->
             <class name="While" base="Node" baseAccess="readonly">
-                <meta:scope>
+                <corto:scope>
                     <method name="construct()" returnType="int16"/>
                     <member name="condition" type="ast/Expression"/>
                     <member name="trueBranch" type="ast/Block"/>
@@ -522,14 +522,14 @@
 
             <!-- Update statement -->
             <enum name="UpdateKind">
-                <meta:scope>
+                <corto:scope>
                     <constant name="UpdateDefault"/>
                     <constant name="UpdateBegin"/>
                     <constant name="UpdateEnd"/>
                 </meta:scope>
             </enum>
             <class name="Update" base="Node" baseAccess="readonly">
-                <meta:scope>
+                <corto:scope>
                     <method name="construct()" returnType="int16"/>
                     <member name="exprList" type="list{ast/Expression}"/>
                     <member name="block" type="ast/Block"/>
@@ -541,7 +541,7 @@
 
             <!-- Initializer -->
             <enum name="InitializerKind">
-                <meta:scope>
+                <corto:scope>
                     <constant name="InitStatic"/>
                     <constant name="InitDynamic"/>
                     <constant name="InitExpression"/>
@@ -550,7 +550,7 @@
 
             <!-- Initializer stack element -->
             <struct name="InitializerVariable">
-                <meta:scope>
+                <corto:scope>
                     <member name="offset" type="word"/>
                     <member name="object" type="Expression"/>
                     <!-- Key-values (of associative collections) are serialized to this member -->
@@ -559,7 +559,7 @@
             </struct>
 
             <struct name="InitializerFrame">
-                <meta:scope>
+                <corto:scope>
                     <member name="location" type="uint32"/>
                     <member name="type" type="type"/>
                     <member name="isKey" type="bool"/>
@@ -568,7 +568,7 @@
             </struct>
 
             <class name="Initializer" base="Expression" baseAccess="readonly">
-                <meta:scope>
+                <corto:scope>
                     <member name="variables" type="array{InitializerVariable,64}"/>
                     <member name="variableCount" type="uint8"/>
                     <member name="frames" type="array{InitializerFrame,64}" modifiers="private|local"/>
@@ -590,7 +590,7 @@
             </class>
 
             <struct name="StaticInitializerFrame">
-                <meta:scope>
+                <corto:scope>
                     <member name="ptr" type="array{word,64}"/>
                     <member name="keyPtr" type="array{word,64}"/>
                 </meta:scope>
@@ -598,7 +598,7 @@
 
             <!-- A static initializer represents an object that is initialized during compiletime -->
             <class name="StaticInitializer" base="Initializer">
-                <meta:scope>
+                <corto:scope>
                     <method name="construct()" returnType="int16"/>
                     <member name="frames" type="array{StaticInitializerFrame,64}" modifiers="private|local"/>
                     <override name="push()" returnType="int16"/>
@@ -608,7 +608,7 @@
             </class>
 
             <struct name="DynamicInitializerFrame">
-                <meta:scope>
+                <corto:scope>
                     <member name="expr" type="array{ast/Expression,64}"/>
                     <member name="keyExpr" type="array{ast/Expression,64}"/>
                     <member name="sequenceSize" type="ast/Integer"/>
@@ -617,7 +617,7 @@
 
             <!-- A dynamic initializer represents an object that is initialized during runtime -->
             <class name="DynamicInitializer" base="Initializer">
-                <meta:scope>
+                <corto:scope>
                     <method name="construct()" returnType="int16"/>
                     <member name="assignValue" type="bool"/>
                     <member name="frames" type="array{DynamicInitializerFrame,64}" modifiers="private|local"/>
@@ -631,7 +631,7 @@
 
             <!-- Recorded Initializer operation -->
             <enum name="InitOperKind">
-                <meta:scope>
+                <corto:scope>
                     <constant name="InitOpPush"/>
                     <constant name="InitOpPop"/>
                     <constant name="InitOpDefine"/>
@@ -640,7 +640,7 @@
                 </meta:scope>
             </enum>
             <struct name="InitOper">
-                <meta:scope>
+                <corto:scope>
                     <member name="kind" type="InitOperKind"/>
                     <member name="expr" type="ast/Expression"/>
                     <member name="name" type="string"/>
@@ -649,7 +649,7 @@
 
             <!-- Record initializer for later evaluation -->
             <class name="InitializerExpression" base="Initializer">
-                <meta:scope>
+                <corto:scope>
                     <method name="construct()" returnType="int16"/>
                     <member name="assignValue" type="bool"/>
                     <member name="operations" type="list{InitOper}" modifiers="private|local"/>
@@ -665,7 +665,7 @@
 
             <!-- ParseDeclaration is used to transfer declaration-information within the parser -->
             <struct name="ParserDeclaration">
-                <meta:scope>
+                <corto:scope>
                     <member name="name" type="string"/>
                     <member name="storage" type="ast/Storage"/>
                 </meta:scope>
@@ -675,7 +675,7 @@
 
             <!-- ParserNew is used to transfer new-expression information within the parser -->
             <struct name="ParserNew">
-                <meta:scope>
+                <corto:scope>
                     <member name="kind" type="ast/nodeKind"/>
                     <member name="parent" type="ast/Expression"/>
                     <member name="name" type="ast/Expression"/>
@@ -685,7 +685,7 @@
 
             <!-- Binds function to an implementation -->
             <struct name="Binding">
-                <meta:scope>
+                <corto:scope>
                     <member name="function" type="function"/>
                     <member name="impl" type="ast/Block"/>
                 </meta:scope>
@@ -693,7 +693,7 @@
 
             <!-- Keep track of lvalue-stack and whether lvalue is an assignment or not -->
             <struct name="Lvalue">
-                <meta:scope>
+                <corto:scope>
                     <member name="expr" type="ast/Expression"/>
                     <member name="isAssignment" type="bool"/>
                 </meta:scope>
@@ -701,7 +701,7 @@
 
             <!-- Parser object -->
             <class name="Parser">
-                <meta:scope>
+                <corto:scope>
                     <method name="construct()" returnType="int16"/>
                     <method name="destruct()"/>
                     <member name="source" type="string"/>

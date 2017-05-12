@@ -19,7 +19,7 @@ int16_t _ast_Local_construct(
 
     ast_Node(this)->kind = Ast_StorageExpr;
     ast_Storage(this)->kind = Ast_LocalStorage;
-    corto_setref(&ast_Expression(this)->type, this->type);
+    corto_ptr_setref(&ast_Expression(this)->type, this->type);
     ast_Expression(this)->isReference = this->reference || this->type->reference;
 
     return ast_Storage_construct(ast_Storage(this));

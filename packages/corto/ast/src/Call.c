@@ -20,7 +20,7 @@ corto_int16 ast_Call_insertCasts(ast_Call this) {
 
     if (this->arguments) {
         corto_ll arguments = ast_Expression_toList(this->arguments);
-        argumentIter = corto_llIter(arguments);
+        argumentIter = corto_ll_iter(arguments);
         while(corto_iter_hasNext(&argumentIter)) {
             argument = corto_iter_next(&argumentIter);
             parameterType = this->parameters.buffer[i].type;
@@ -43,7 +43,7 @@ corto_int16 ast_Call_insertCasts(ast_Call this) {
                     expr = ast_Expression_cast(argument, parameterType, this->parameters.buffer[i].passByReference);
                     if (expr) {
                         corto_claim(expr);
-                        corto_llReplace(arguments, argument, expr);
+                        corto_ll_replace(arguments, argument, expr);
                         corto_release(argument);
                     }
                 }
@@ -51,7 +51,7 @@ corto_int16 ast_Call_insertCasts(ast_Call this) {
 
             i++;
         }
-        corto_setref(&this->arguments, ast_Expression_fromList(arguments));
+        corto_ptr_setref(&this->arguments, ast_Expression_fromList(arguments));
         ast_Expression_cleanList(arguments);
     }
 
@@ -73,7 +73,7 @@ int16_t _ast_Call_construct(
         goto error;
     }
 
-    corto_setref(&ast_Expression(this)->type, this->returnType);
+    corto_ptr_setref(&ast_Expression(this)->type, this->returnType);
     ast_Expression(this)->isReference =
         this->returnsReference || this->returnType->reference;
 
@@ -114,13 +114,13 @@ void _ast_Call_setParameters(
     corto_uint32 i;
 
     /* Set parameters */
-    corto_setref(&this->returnType, function->returnType);
+    corto_ptr_setref(&this->returnType, function->returnType);
     this->returnsReference = function->returnsReference;
 
     corto_parameterSeqSize(&this->parameters, function->parameters.length);
 
     for (i = 0; i < function->parameters.length; i++) {
-        corto_setref(&this->parameters.buffer[i].type, function->parameters.buffer[i].type);
+        corto_ptr_setref(&this->parameters.buffer[i].type, function->parameters.buffer[i].type);
         this->parameters.buffer[i].name = corto_strdup(function->parameters.buffer[i].name);
         this->parameters.buffer[i].passByReference = function->parameters.buffer[i].passByReference;
     }
@@ -158,7 +158,7 @@ ic_node _ast_Call_toIc(
     if (this->arguments) {
         arguments = ast_Expression_toList(this->arguments);
         if (arguments) {
-            argumentCount = corto_llSize(arguments);
+            argumentCount = corto_ll_size(arguments);
         }
     }
 
@@ -182,7 +182,7 @@ ic_node _ast_Call_toIc(
         ic_storage argumentStorage = NULL;
 
         /* Temporary storage for push-instructions required for pushing the arguments of this function */
-        argumentIter = corto_llIter(arguments);
+        argumentIter = corto_ll_iter(arguments);
         while(corto_iter_hasNext(&argumentIter)) {
             corto_type paramType, exprType;
             ic_derefKind deref = IC_DEREF_ADDRESS;

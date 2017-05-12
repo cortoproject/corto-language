@@ -48,7 +48,7 @@ int16_t _ast_Update_construct(
 
     ast_Node(this)->kind = Ast_UpdateExpr;
 
-    exprIter = corto_llIter(this->exprList);
+    exprIter = corto_ll_iter(this->exprList);
     while(corto_iter_hasNext(&exprIter)) {
         expr = corto_iter_next(&exprIter);
 
@@ -97,7 +97,7 @@ ic_node _ast_Update_toIc(
     }
 
     /* Add update statement for each expression in exprList */
-    exprIter = corto_llIter(this->exprList);
+    exprIter = corto_ll_iter(this->exprList);
     while(corto_iter_hasNext(&exprIter)) {
         ast_Expression fastExpr = ast_Update_getFirstReference(corto_iter_next(&exprIter));
 
@@ -124,7 +124,7 @@ ic_node _ast_Update_toIc(
     if (this->block) {
         /* Translate block to ic */
         ast_Block_toIc(this->block, program, NULL, FALSE);
-        exprIter = corto_llIter(this->exprList);
+        exprIter = corto_ll_iter(this->exprList);
         while(corto_iter_hasNext(&exprIter)) {
             ast_Expression fastExpr = corto_iter_next(&exprIter);
             expr = ast_Node_toIc(ast_Node(fastExpr), program, NULL, TRUE);

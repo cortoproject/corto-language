@@ -121,7 +121,7 @@ corto_type ast_Expression_narrowType(ast_Expression expr) {
 ast_Expression ast_Expression_narrow(ast_Expression expr) {
 
     if (ast_Node(expr)->kind == Ast_LiteralExpr) {
-        corto_setref(&expr->type, ast_Expression_narrowType(expr));
+        corto_ptr_setref(&expr->type, ast_Expression_narrowType(expr));
     }
 
     return expr;
@@ -258,7 +258,7 @@ ast_Expression _ast_Expression_cast(
                 result = ast_Expression_literalFromType(type, exprType, value);
 
                 if (result){
-                    corto_setref(&ast_Expression(result)->type, type);
+                    corto_ptr_setref(&ast_Expression(result)->type, type);
                 }
             } else {
                 /* TODO: This functionality must be pushed down to the assembler. For all this function is concerned a cast
@@ -336,11 +336,11 @@ void _ast_Expression_cleanList(
 {
 /* $begin(corto/ast/Expression/cleanList) */
     if (list) {
-        corto_iter iter = corto_llIter(list);
+        corto_iter iter = corto_ll_iter(list);
         while(corto_iter_hasNext(&iter)) {
             corto_release(corto_iter_next(&iter));
         }
-        corto_llFree(list);
+        corto_ll_free(list);
     }
 /* $end */
 }
@@ -362,16 +362,16 @@ ast_Expression _ast_Expression_fromList(
 
     /* Convert list to comma expression */
     if (list) {
-        if (corto_llSize(list) == 1) {
-            result = corto_llGet(list, 0);
+        if (corto_ll_size(list) == 1) {
+            result = corto_ll_get(list, 0);
         } else {
-            corto_ll toList = corto_llNew(); /* Copy list */
+            corto_ll toList = corto_ll_new(); /* Copy list */
             corto_iter iter;
             ast_Expression expr;
 
             result = ast_Expression(ast_CommaCreate());
 
-            iter = corto_llIter(list);
+            iter = corto_ll_iter(list);
             while(corto_iter_hasNext(&iter)) {
                 expr = corto_iter_next(&iter);
                 ast_ExpressionListAppend(toList, expr);
@@ -529,7 +529,7 @@ ast_ExpressionList _ast_Expression_toList_v(
     ast_NodeList result = NULL;
 
     if (this) {
-        result = corto_llNew();
+        result = corto_ll_new();
         ast_ExpressionListInsert(result, this);
     }
 

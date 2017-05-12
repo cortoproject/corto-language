@@ -198,7 +198,7 @@ ast_Expression ast_Parser_createBinaryTernary(ast_Parser this, ast_Expression lv
     case CORTO_ASSIGN_OR:
     case CORTO_ASSIGN_AND:
         ast_Ternary_setOperator(ast_Ternary(rvalue), operator);
-        corto_setref(&result, rvalue);
+        corto_ptr_setref(&result, rvalue);
         break;
     default:
         result = ast_Expression(ast_BinaryCreate(lvalue, rvalue, operator));
@@ -335,7 +335,7 @@ ast_Expression ast_Parser_delegateAssignment(ast_Parser this, ast_Expression lva
     functionExpr = tempCall->functionExpr;
 
     /* If procedure is compatible with delegate type, do a complex assignment */
-    corto_setref(&variables[0].object, lvalue);
+    corto_ptr_setref(&variables[0].object, lvalue);
     result = ast_InitializerExpressionCreate(variables, 1, TRUE);
     ast_InitializerExpression_push(result);
     if (instance) {
@@ -469,12 +469,12 @@ ast_Expression ast_Parser_explodeComma(ast_Parser this, ast_Expression lvalues, 
 
     lvalueList = ast_Expression_toList(lvalues);
     rvalueList = ast_Expression_toList(rvalues);
-    lvalueCount = corto_llSize(lvalueList);
-    rvalueCount = corto_llSize(rvalueList);
+    lvalueCount = corto_ll_size(lvalueList);
+    rvalueCount = corto_ll_size(rvalueList);
 
     if ((rvalueCount > 1) && (lvalueCount == 1)) {
         /* Only temporarily store rvalue if it has side effects */
-        if (ast_Expression_hasSideEffects(ast_Expression(corto_llGet(lvalueList,0)))) {
+        if (ast_Expression_hasSideEffects(ast_Expression(corto_ll_get(lvalueList,0)))) {
             if (ast_Node(rvalues)->kind != Ast_InitializerExpr) {
                 var = ast_Expression(ast_TemporaryCreate(lvalues->type, lvalues->isReference));
                 ast_Parser_addStatement(this, ast_Parser_binaryExpr(this, var, lvalues, CORTO_ASSIGN));
@@ -483,11 +483,11 @@ ast_Expression ast_Parser_explodeComma(ast_Parser this, ast_Expression lvalues, 
         }
     }
 
-    corto_iter itL = corto_llIter(lvalueList);
+    corto_iter itL = corto_ll_iter(lvalueList);
     while (corto_iter_hasNext(&itL)) {
         ast_Expression l = corto_iter_next(&itL);
 
-        corto_iter itR = corto_llIter(rvalueList);
+        corto_iter itR = corto_ll_iter(rvalueList);
         while (corto_iter_hasNext(&itR)) {
             ast_Expression r = corto_iter_next(&itR);
 
@@ -524,14 +524,14 @@ ast_Expression ast_Parser_expandComma(ast_Parser this, ast_Expression lvalues, a
 
     lvalueList = ast_Expression_toList(lvalues);
     rvalueList = ast_Expression_toList(rvalues);
-    lvalueCount = corto_llSize(lvalueList);
-    rvalueCount = corto_llSize(rvalueList);
+    lvalueCount = corto_ll_size(lvalueList);
+    rvalueCount = corto_ll_size(rvalueList);
 
     /* If there is more than one lvalue assign rvalue to temporary value first. This will assure that rvalue is evaluated
      * only once. */
     if ((lvalueCount > 1) && (rvalueCount == 1)) {
         /* Only temporarily store rvalue if it has side effects */
-        if (ast_Expression_hasSideEffects(ast_Expression(corto_llGet(rvalueList,0)))) {
+        if (ast_Expression_hasSideEffects(ast_Expression(corto_ll_get(rvalueList,0)))) {
             if (ast_Node(rvalues)->kind != Ast_InitializerExpr) {
                 ast_Expression var = ast_Expression(ast_TemporaryCreate(rvalues->type, FALSE));
                 ast_Parser_addStatement(this, ast_Parser_binaryExpr(this, var, rvalues, CORTO_ASSIGN));
@@ -545,13 +545,13 @@ ast_Expression ast_Parser_expandComma(ast_Parser this, ast_Expression lvalues, a
         expandMode = EXPAND_BOTH;
     } else {
         ast_Parser_error(this, "mismatch in expression count of binary operation (left = %d, right = %d)",
-                          corto_llSize(lvalueList), corto_llSize(rvalueList));
+                          corto_ll_size(lvalueList), corto_ll_size(rvalueList));
         goto error;
     }
 
     /* Loop through lvalues */
-    lIter = corto_llIter(lvalueList);
-    rIter = corto_llIter(rvalueList);
+    lIter = corto_ll_iter(lvalueList);
+    rIter = corto_ll_iter(rvalueList);
     ast_Expression lvalue = lvalues;
     while((((expandMode == EXPAND_LEFT)||(expandMode == EXPAND_BOTH)) && corto_iter_hasNext(&lIter)) || ((expandMode == EXPAND_RIGHT) && corto_iter_hasNext(&rIter))) {
 
@@ -616,7 +616,7 @@ ast_Expression ast_Parser_resolve(ast_Parser this, corto_id id) {
         object = corto_resolve(this->scope, id);
     }
 
-    corto_iter it = corto_llIter(this->imports);
+    corto_iter it = corto_ll_iter(this->imports);
     while (!object && corto_iter_hasNext(&it)) {
         object = corto_lookup(corto_iter_next(&it), id);
     }
@@ -688,9 +688,9 @@ ast_Storage ast_Parser_observerCreate(ast_Parser this, corto_string id, ast_Expr
 
         /* Set values of observer - but don't yet define it. It will be defined when
          * the observer is bound to the implementation */
-        corto_setref(&observer->observable, observable);
+        corto_ptr_setref(&observer->observable, observable);
         observer->mask = mask;
-        corto_setref(&observer->dispatcher, dispatcher);
+        corto_ptr_setref(&observer->dispatcher, dispatcher);
     } else {
         observer = corto_observerCreateChild(this->scope, id, mask, observable, NULL, dispatcher, NULL, FALSE, NULL);
         if (!observer){
@@ -745,7 +745,7 @@ ast_Expression ast_Parser_parseIntern(ast_Parser parser, corto_object scope, cor
     if (err) *err = 0;
     parser->pass = 0;
 
-    corto_setref(&parser->scope, scope);
+    corto_ptr_setref(&parser->scope, scope);
     if ( fast_yparse(parser, 1, 1)) {
         goto error;
     }
@@ -758,15 +758,15 @@ ast_Expression ast_Parser_parseIntern(ast_Parser parser, corto_object scope, cor
     ast_Parser_reset(parser);
 
     parser->pass = 1;
-    corto_setref(&parser->scope, scope);
+    corto_ptr_setref(&parser->scope, scope);
     if (fast_yparse(parser, 1, 1)) {
         goto error;
     }
 
     /* Find last executed expression */
     if (parser->block) {
-        if (corto_llSize(parser->block->statements)) {
-            ast_Node lastNode = corto_llLast(parser->block->statements);
+        if (corto_ll_size(parser->block->statements)) {
+            ast_Node lastNode = corto_ll_last(parser->block->statements);
 
             /* If node is an expression, store expression in variable so it can be resolved later */
             if (corto_instanceof(corto_type(ast_Expression_o), lastNode) && (lastNode->kind != Ast_CommaExpr)) {
@@ -1008,10 +1008,10 @@ int16_t _ast_Parser_bind(
     if (this->pass && function) {
         if (function->kind == Ast_ObjectStorage) {
             binding = corto_calloc(sizeof(ast_Binding));
-            corto_setref(&binding->function, ast_Object(function)->value);
-            corto_setref(&binding->impl, block);
+            corto_ptr_setref(&binding->function, ast_Object(function)->value);
+            corto_ptr_setref(&binding->impl, block);
             corto_assert(this->bindings != NULL, "initialization failed");
-            corto_llAppend(this->bindings, binding);
+            corto_ll_append(this->bindings, binding);
         }
     }
 
@@ -1076,7 +1076,7 @@ void _ast_Parser_blockPop(
     /* Blocks are parsed only in 2nd pass */
     if (this->pass) {
         if (this->block) {
-            corto_setref(&this->block, this->block->parent);
+            corto_ptr_setref(&this->block, this->block->parent);
         } else {
             /* Got confused by earlier errors */
             ast_Parser_error(this, "unable to continue parsing due to previous errors");
@@ -1108,7 +1108,7 @@ ast_Block _ast_Parser_blockPush(
         if (!this->blockPreset || presetBlock) {
             newBlock = ast_BlockCreate(this->block);
             ast_Parser_collect(this, newBlock);
-            corto_setref(&this->block, newBlock);
+            corto_ptr_setref(&this->block, newBlock);
         }
 
         this->blockPreset = presetBlock;
@@ -1134,7 +1134,7 @@ ast_Expression _ast_Parser_callExpr(
         ast_ExpressionList args = arguments ? ast_Expression_toList(arguments) : NULL;
 
         if (functions) {
-            corto_iter it = corto_llIter(functions);
+            corto_iter it = corto_ll_iter(functions);
             while (corto_iter_hasNext(&it)) {
                 ast_Expression f = corto_iter_next(&it);
                 ast_Expression expr;
@@ -1144,12 +1144,12 @@ ast_Expression _ast_Parser_callExpr(
                 /* If function is a type, insert cast */
                 if (o && corto_instanceof(corto_type(corto_type_o), o)) {
                     corto_ll exprs = ast_Expression_toList(arguments);
-                    if (corto_llSize(exprs) != 1) {
+                    if (corto_ll_size(exprs) != 1) {
                         ast_Parser_error(this, "invalid number of parameters for cast (expected 1)");
                         ast_Expression_cleanList(exprs);
                         goto error;
                     }
-                    expr = ast_Parser_castExpr(this, o, corto_llGet(exprs, 0));
+                    expr = ast_Parser_castExpr(this, o, corto_ll_get(exprs, 0));
                     ast_Expression_cleanList(exprs);
                     ast_Parser_collect(this, expr);
                 } else {
@@ -1164,7 +1164,7 @@ ast_Expression _ast_Parser_callExpr(
 
         /* Cleanup initializer arguments */
         if (args) {
-            corto_iter it = corto_llIter(args);
+            corto_iter it = corto_ll_iter(args);
             while (corto_iter_hasNext(&it)) {
                 ast_Expression a = corto_iter_next(&it);
                 if (ast_Node(a)->kind == Ast_InitializerExpr) {
@@ -1221,7 +1221,7 @@ ast_Expression _ast_Parser_castExpr(
                     castRequired = FALSE;
                 }
             } else {
-                corto_setref(&rvalue->type, lvalue);
+                corto_ptr_setref(&rvalue->type, lvalue);
                 castRequired = FALSE;
             }
         }
@@ -1252,7 +1252,7 @@ void _ast_Parser_collect(
     /* 1st pass & 2nd pass are equal */
 
     corto_assert(this->collected != NULL, "initialization failed");
-    corto_llInsert(this->collected, o);
+    corto_ll_insert(this->collected, o);
 
 /* $end */
 }
@@ -1266,7 +1266,7 @@ void _ast_Parser_collectHeap(
 
     /* 1st pass & 2nd pass are equal */
     corto_assert(this->heapCollected != NULL, "initialization failed");
-    corto_llInsert(this->heapCollected, (void*)addr);
+    corto_ll_insert(this->heapCollected, (void*)addr);
 
 /* $end */
 }
@@ -1433,7 +1433,7 @@ ast_Storage _ast_Parser_declareFunction(
                     goto error;
                 }
 
-                corto_setref(&function->returnType, returnType);
+                corto_ptr_setref(&function->returnType, returnType);
                 function->returnsReference = returnsReference;
             }
         } else {
@@ -1556,7 +1556,7 @@ int16_t _ast_Parser_define(
         if (ast_Initializer_define(this->initializers[this->initializerCount])) {
             goto error;
         }
-        corto_setref(&this->initializers[this->initializerCount], NULL);
+        corto_ptr_setref(&this->initializers[this->initializerCount], NULL);
         this->initializerCount--;
     }
 
@@ -1637,15 +1637,15 @@ void _ast_Parser_destruct(
     corto_iter iter;
 
     if (this->heapCollected) {
-        iter = corto_llIter(this->heapCollected);
+        iter = corto_ll_iter(this->heapCollected);
         while(corto_iter_hasNext(&iter)) {
             corto_dealloc(corto_iter_next(&iter));
         }
-        corto_llFree(this->heapCollected);
+        corto_ll_free(this->heapCollected);
     }
 
     this->heapCollected = NULL;
-    corto_setref(&this->scope, NULL);
+    corto_ptr_setref(&this->scope, NULL);
 
     memset(this->variables, 0, sizeof(this->variables));
 /* $end */
@@ -1703,7 +1703,7 @@ int16_t _ast_Parser_finalize(
 
     /* Parse functions */
     if (this->bindings) {
-        bindingIter = corto_llIter(this->bindings);
+        bindingIter = corto_ll_iter(this->bindings);
         while(corto_iter_hasNext(&bindingIter)) {
             ic_op ret;
             binding = corto_iter_next(&bindingIter);
@@ -1734,7 +1734,7 @@ int16_t _ast_Parser_finalize(
             corto_release(binding->impl);
             corto_dealloc(binding);
         }
-        corto_llFree(this->bindings);
+        corto_ll_free(this->bindings);
         this->bindings = NULL;
     }
 
@@ -1883,7 +1883,7 @@ int16_t _ast_Parser_initDeclare(
 
     /* Comma expression is encountered in the first pass. If this expression
      * contains out of UnresolvedReference nodes, declare objects */
-    corto_iter it = corto_llIter(expressions);
+    corto_iter it = corto_ll_iter(expressions);
     while (corto_iter_hasNext(&it)) {
         ast_Expression s = corto_iter_next(&it);
 
@@ -1915,8 +1915,8 @@ int16_t _ast_Parser_initDeclare(
 
             /* Temporarily set scope to scope of unresolved ref */
             if (scope) {
-                corto_setref(&oldScope, this->scope);
-                corto_setref(&this->scope, scope);
+                corto_ptr_setref(&oldScope, this->scope);
+                corto_ptr_setref(&this->scope, scope);
             }
 
             /* Obtain default type from scope */
@@ -1938,8 +1938,8 @@ int16_t _ast_Parser_initDeclare(
             }
 
             if (scope) {
-                corto_setref(&this->scope, oldScope);
-                corto_setref(&oldScope, NULL);
+                corto_ptr_setref(&this->scope, oldScope);
+                corto_ptr_setref(&oldScope, NULL);
             }
         } else {
             ast_Parser_error(this, "invalid usage of comma expression");
@@ -2085,7 +2085,7 @@ ast_Expression _ast_Parser_initPushExpression(
 
         /* Create initializer */
         initializer = ast_Initializer(ast_InitializerExpressionCreate(variables, 1, TRUE));
-        corto_setref(&this->initializers[this->initializerCount], initializer);
+        corto_ptr_setref(&this->initializers[this->initializerCount], initializer);
         ast_Parser_collect(this, initializer);
         this->variablePushed = TRUE;
     }
@@ -2148,7 +2148,7 @@ ast_Expression _ast_Parser_initPushIdentifier(
     if ((!this->pass && !isDynamic) || forceStatic) {
         corto_object o;
         o = corto_declare(t);
-        corto_setref(&variables[0].object, ast_Expression(ast_ObjectCreate(o)));
+        corto_ptr_setref(&variables[0].object, ast_Expression(ast_ObjectCreate(o)));
         this->initializers[this->initializerCount] = ast_Initializer(ast_StaticInitializerCreate(variables, 1));
         this->variablePushed = TRUE;
     } else if (this->pass && isDynamic && !forceStatic) {
@@ -2165,11 +2165,11 @@ ast_Expression _ast_Parser_initPushIdentifier(
         ast_Parser_collect(this, assignExpr);
         ast_Parser_addStatement(this, ast_Node(assignExpr));
 
-        corto_setref(&variables[0].object, var);
+        corto_ptr_setref(&variables[0].object, var);
         this->initializers[this->initializerCount] = ast_Initializer(ast_DynamicInitializerCreate(variables, 1, FALSE));
         this->variablePushed = TRUE;
     } else {
-        corto_setref(&this->initializers[this->initializerCount], NULL);
+        corto_ptr_setref(&this->initializers[this->initializerCount], NULL);
         this->variablePushed = TRUE;
     }
 
@@ -2216,7 +2216,7 @@ int16_t _ast_Parser_initPushStatic(
 
     /* Copy variables from parser to initializer structure */
     for(i=0; i<this->variableCount; i++) {
-        corto_setref(&variables[i].object, ast_Expression(this->variables[i]));
+        corto_ptr_setref(&variables[i].object, ast_Expression(this->variables[i]));
         variables[i].key = 0;
         variables[i].offset = 0;
     }
@@ -2224,12 +2224,12 @@ int16_t _ast_Parser_initPushStatic(
     if (!this->pass) {
         /* Create initializer */
         initializer = ast_Initializer(ast_StaticInitializerCreate(variables, this->variableCount));
-        corto_setref(&this->initializers[this->initializerCount], initializer);
+        corto_ptr_setref(&this->initializers[this->initializerCount], initializer);
         ast_Parser_collect(this, initializer);
     } else {
         /* Create dummy initializer */
         initializer = ast_InitializerCreate(variables, this->variableCount);
-        corto_setref(&this->initializers[this->initializerCount], initializer);
+        corto_ptr_setref(&this->initializers[this->initializerCount], initializer);
         ast_Parser_collect(this, initializer);
     }
 
@@ -2477,8 +2477,8 @@ ast_Expression _ast_Parser_parseExpression(
 
     this->source = exprFinalized;
 
-    corto_setref(&this->block, block);
-    corto_setref(&this->scope, scope);
+    corto_ptr_setref(&this->block, block);
+    corto_ptr_setref(&this->scope, scope);
 
     // Give expression its own block
     ast_Parser_blockPush(this, FALSE);
@@ -2494,9 +2494,9 @@ ast_Expression _ast_Parser_parseExpression(
     if (block) {
         /* Block should contain exactly one expression */
         if (block->statements) {
-            if (corto_llSize(block->statements) == 1) {
+            if (corto_ll_size(block->statements) == 1) {
                 ast_Node node;
-                node = corto_llGet(block->statements, 0);
+                node = corto_ll_get(block->statements, 0);
                 if (corto_instanceof(corto_type(ast_Expression_o), node)) {
                     result = ast_Expression(node);
                 } else {
@@ -2587,7 +2587,7 @@ int16_t _ast_Parser_parseFunction(
         corto_dealloc(prev);
     }
 
-    corto_setref(&parser->block, block);
+    corto_ptr_setref(&parser->block, block);
 
     /* Parse expression */
     ast_Expression result = ast_Parser_parseIntern(parser, NULL, &err);
@@ -2624,9 +2624,9 @@ int16_t _ast_Parser_parseFunction(
             ast_Expression(resultLocal)->deref = result->isReference ? Ast_ByReference : Ast_ByValue;
             resultLocal->kind = Ast_LocalReturn;
             assignment = ast_BinaryCreate(ast_Expression(resultLocal), result, CORTO_ASSIGN);
-            corto_llReplace(parser->block->statements, result, assignment);
+            corto_ll_replace(parser->block->statements, result, assignment);
         }
-        corto_setref(&f->returnType, returnType);
+        corto_ptr_setref(&f->returnType, returnType);
         f->returnsReference = result->isReference;
     }
 
@@ -2649,7 +2649,7 @@ int16_t _ast_Parser_parseFunction(
     }
 
     /* If code contains bindings, expression contains nested functions */
-    if (parser->bindings && corto_llSize(parser->bindings)) {
+    if (parser->bindings && corto_ll_size(parser->bindings)) {
         corto_seterr("nested functions are invalid");
         goto error;
     }
@@ -2735,7 +2735,7 @@ int16_t _ast_Parser_parseLine(
             }
             resultLocal->kind = Ast_LocalReturn;
             assignment = ast_BinaryCreate(ast_Expression(resultLocal), result, CORTO_ASSIGN);
-            corto_llReplace(parser->block->statements, result, assignment);
+            corto_ll_replace(parser->block->statements, result, assignment);
         }
     }
 
@@ -2924,7 +2924,7 @@ void _ast_Parser_popScope(
     }
 
     /* Restore scope */
-    corto_setref(&this->scope, previous);
+    corto_ptr_setref(&this->scope, previous);
 /* $end */
 }
 
@@ -2958,9 +2958,9 @@ void _ast_Parser_pushComplexType(
 /* $begin(corto/ast/Parser/pushComplexType) */
 
     if (lvalue) {
-        corto_setref(&this->complexType[this->complexTypeSp], ast_Expression_getType(lvalue));
+        corto_ptr_setref(&this->complexType[this->complexTypeSp], ast_Expression_getType(lvalue));
     } else {
-        corto_setref(&this->complexType[this->complexTypeSp], NULL);
+        corto_ptr_setref(&this->complexType[this->complexTypeSp], NULL);
     }
     this->complexTypeSp++;
 
@@ -2974,7 +2974,7 @@ void _ast_Parser_pushLvalue(
 {
 /* $begin(corto/ast/Parser/pushLvalue) */
 
-    corto_setref(&this->lvalue[this->lvalueSp].expr, lvalue);
+    corto_ptr_setref(&this->lvalue[this->lvalueSp].expr, lvalue);
     this->lvalue[this->lvalueSp].isAssignment = isAssignment;
     this->lvalueSp++;
 
@@ -2995,7 +2995,7 @@ int16_t _ast_Parser_pushPackage(
         goto error;
     }
 
-    corto_setref(&this->scope, root_o);
+    corto_ptr_setref(&this->scope, root_o);
 
     if ((name[0] == ':') && (name[1] == ':')) {
         strcpy(fullpath, name + 2);
@@ -3025,7 +3025,7 @@ int16_t _ast_Parser_pushPackage(
                 /* Define package */
                 ast_Parser_defineScope(this);
             } else {
-                corto_setref(&this->scope, o);
+                corto_ptr_setref(&this->scope, o);
                 corto_release(o);
             }
             bptr = buffer;
@@ -3117,7 +3117,7 @@ corto_object _ast_Parser_pushScope(
     }
 
     if (this->variables[0]) {
-        corto_setref(&this->scope, ast_Object(this->variables[0])->value);
+        corto_ptr_setref(&this->scope, ast_Object(this->variables[0])->value);
         ast_Parser_reset(this);
     } else {
         goto error;
@@ -3333,7 +3333,7 @@ ast_Node _ast_Parser_whileStatement(
         ast_Parser_collect(this, result);
 
         if (isUntil) {
-            corto_setref(&this->block->_while, result);
+            corto_ptr_setref(&this->block->_while, result);
         }
     }
 

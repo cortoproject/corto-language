@@ -18,7 +18,7 @@ int16_t _ast_New_construct(
 /* $begin(corto/ast/New/construct) */
 
     ast_Node(this)->kind = Ast_NewExpr;
-    corto_setref(&ast_Expression(this)->type, this->type);
+    corto_ptr_setref(&ast_Expression(this)->type, this->type);
     ast_Expression(this)->isReference = TRUE;
 
     return 0;

@@ -50,8 +50,8 @@ int16_t _ast_InitializerExpression_insert(
 /* $begin(corto/ast/InitializerExpression/insert) */
     ast_DynamicInitializer initializer;
 
-    corto_setref(&ast_Initializer(this)->variables[0].object, variable);
-    corto_setref(&ast_Expression(this)->type, variable->type);
+    corto_ptr_setref(&ast_Initializer(this)->variables[0].object, variable);
+    corto_ptr_setref(&ast_Expression(this)->type, variable->type);
 
     ast_Expression var = ast_Initializer(this)->variables[0].object;
     if (ast_Storage(var)->kind == Ast_TemporaryStorage) {
@@ -66,7 +66,7 @@ int16_t _ast_InitializerExpression_insert(
     initializer = ast_DynamicInitializerCreate(ast_Initializer(this)->variables, 1, this->assignValue);
 
     /* Walk operations */
-    corto_iter it = corto_llIter(this->operations);
+    corto_iter it = corto_ll_iter(this->operations);
     while (corto_iter_hasNext(&it)) {
         ast_InitOper *elem = corto_iter_next(&it);
         switch(elem->kind) {
@@ -145,7 +145,7 @@ int16_t _ast_InitializerExpression_value(
 /* $begin(corto/ast/InitializerExpression/value) */
     ast_InitOper *elem = ast_InitOperListAppendAlloc(this->operations);
     elem->kind = Ast_InitOpValue;
-    corto_setref(&elem->expr, v);
+    corto_ptr_setref(&elem->expr, v);
     return 0;
 /* $end */
 }
