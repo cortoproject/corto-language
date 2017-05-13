@@ -1,4 +1,4 @@
-<meta xmlns:meta="http://corto.io/meta">
+<corto xmlns:corto="http://corto.io/packages/corto/fmt/xml">
     <corto:package name="corto" url="http://corto.io/doc/corto">
         <corto:package name="ast" url="http://corto.io/doc/corto/ast">
             <!-- Enumeration representing the values that can be represented in hyve -->
@@ -13,7 +13,7 @@
                     <constant name="Enum"/>
                     <constant name="Ref"/>
                     <constant name="Nothing"/>
-                </meta:scope>
+                </corto:scope>
             </enum>
 
             <function name="valueKindFromType(type type)" returnType="valueKind"/>
@@ -45,7 +45,7 @@
                     <constant name="UpdateExpr"/>
                     <constant name="StorageExpr"/>
                     <constant name="WhileExpr"/>
-                </meta:scope>
+                </corto:scope>
             </enum>
 
             <!-- Base node -->
@@ -56,7 +56,7 @@
                     <member name="line" type="uint32" modifiers="readonly"/>
                     <member name="column" type="uint32" modifiers="readonly"/>
                     <overridable name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
-                </meta:scope>
+                </corto:scope>
             </class>
 
             <corto:object name="Storage" type="class"/>
@@ -65,7 +65,7 @@
                 <corto:scope>
                     <constant name="ByValue"/>
                     <constant name="ByReference"/>
-                </meta:scope>
+                </corto:scope>
             </enum>
 
             <!-- Base expression node -->
@@ -89,7 +89,7 @@
                     <overridable name="id()" returnType="string"/>
                     <function name="fromList(list{Expression} list)" returnType="Expression"/>
                     <function name="cleanList(list{Expression} list)"/>
-                </meta:scope>
+                </corto:scope>
             </class>
 
             <!-- Comma expression node -->
@@ -105,7 +105,7 @@
                   <override name="hasSideEffects()" returnType="bool"/>
                   <override name="hasReturnedResource()" returnType="bool"/>
                   <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
-              </meta:scope>
+              </corto:scope>
             </class>
 
             <!-- Base literal node -->
@@ -114,7 +114,7 @@
                     <method name="init()" returnType="int16"/>
                     <member name="kind" type="valueKind"/>
                     <overridable name="getValue()" returnType="word"/>
-                </meta:scope>
+                </corto:scope>
             </class>
 
             <!-- Boolean literal -->
@@ -124,7 +124,7 @@
                     <override name="serialize(type dstType,word dst)" returnType="int16"/>
                     <member name="value" type="bool"/>
                     <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
-                </meta:scope>
+                </corto:scope>
             </class>
 
             <!-- Character literal -->
@@ -134,7 +134,7 @@
                     <override name="serialize(type dstType,word dst)" returnType="int16"/>
                     <member name="value" type="char"/>
                     <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
-                </meta:scope>
+                </corto:scope>
             </class>
 
             <!-- Integer literal -->
@@ -144,7 +144,7 @@
                     <override name="serialize(type dstType,word dst)" returnType="int16"/>
                     <member name="value" type="uint64"/>
                     <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
-                </meta:scope>
+                </corto:scope>
             </class>
 
             <!-- Signed integer literal -->
@@ -154,7 +154,7 @@
                     <override name="serialize(type dstType,word dst)" returnType="int16"/>
                     <member name="value" type="int64"/>
                     <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
-                </meta:scope>
+                </corto:scope>
             </class>
 
             <!-- Floating point literal -->
@@ -164,7 +164,7 @@
                     <override name="serialize(type dstType,word dst)" returnType="int16"/>
                     <member name="value" type="float64"/>
                     <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
-                </meta:scope>
+                </corto:scope>
             </class>
 
             <!-- Null literal -->
@@ -173,7 +173,7 @@
                     <method name="init()" returnType="int16"/>
                     <override name="serialize(type dstType,word dst)" returnType="int16"/>
                     <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
-                </meta:scope>
+                </corto:scope>
             </class>
 
             <!-- Enumeration representing the different variable kinds -->
@@ -186,7 +186,7 @@
                     <constant name="TemporaryStorage"/>
                     <constant name="TemplateStorage"/>
                     <constant name="UnresolvedReferenceStorage"/>
-                </meta:scope>
+                </corto:scope>
             </enum>
 
             <!-- Base variable node -->
@@ -194,7 +194,7 @@
                 <corto:scope>
                     <method name="construct()" returnType="int16"/>
                     <member name="kind" type="storageKind"/>
-                </meta:scope>
+                </corto:scope>
             </class>
 
 
@@ -204,7 +204,7 @@
                     <constant name="LocalDefault"/>
                     <constant name="LocalParameter"/>
                     <constant name="LocalReturn"/>
-                </meta:scope>
+                </corto:scope>
             </enum>
 
             <!-- Local variable node -->
@@ -216,7 +216,7 @@
                     <member name="kind" type="ast/LocalKind"/>
                     <member name="reference" type="bool"/>
                     <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
-                </meta:scope>
+                </corto:scope>
             </class>
 
             <!-- Temporary storage node -->
@@ -229,14 +229,14 @@
                     <member name="ic" type="ic/node" modifiers="private|local"/>
                     <method name="setProxy(Temporary proxy)"/>
                     <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
-                </meta:scope>
+                </corto:scope>
             </class>
 
             <!-- Observer template variable -->
             <class name="Template" base="Local">
                 <corto:scope>
                     <method name="construct()" returnType="int16"/>
-                </meta:scope>
+                </corto:scope>
             </class>
 
             <!-- Object variable node -->
@@ -248,7 +248,7 @@
                     <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
                     <override name="getValue()" returnType="word"/>
                     <member name="value" type="object"/>
-                </meta:scope>
+                </corto:scope>
             </class>
 
             <!-- Unresolved object, allows for just in time resolving -->
@@ -263,7 +263,7 @@
                     <override name="resolve(type type)" returnType="Expression"/>
                     <override name="id()" returnType="string"/>
                     <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
-                </meta:scope>
+                </corto:scope>
             </class>
 
             <!-- Explicitly init storage -->
@@ -272,7 +272,7 @@
                     <method name="construct()" returnType="int16"/>
                     <member name="storage" type="ast/Storage"/>
                     <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
-                </meta:scope>
+                </corto:scope>
             </class>
 
             <!-- Explicitly deinit storage -->
@@ -281,7 +281,7 @@
                     <method name="construct()" returnType="int16"/>
                     <member name="storage" type="ast/Storage"/>
                     <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
-                </meta:scope>
+                </corto:scope>
             </class>
 
             <!-- Forward declaration of while -->
@@ -307,7 +307,7 @@
                     <method name="addStatement(ast/Node statement)"/>
                     <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
                     <method name="toIcBody(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
-                </meta:scope>
+                </corto:scope>
             </class>
 
             <!-- Member expression -->
@@ -320,7 +320,7 @@
                     <member name="member" type="object" modifiers="private"/> <!-- Only set when determined at compile-time -->
                     <override name="hasSideEffects()" returnType="bool"/>
                     <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
-                </meta:scope>
+                </corto:scope>
             </class>
 
             <!-- Element expression -->
@@ -330,7 +330,7 @@
                     <member name="lvalue" type="ast/Expression"/>
                     <member name="rvalue" type="ast/Expression"/>
                     <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
-                </meta:scope>
+                </corto:scope>
             </class>
 
             <!-- Call expression -->
@@ -352,7 +352,7 @@
                     <override name="hasSideEffects()" returnType="bool"/>
                     <override name="hasReturnedResource()" returnType="bool"/>
                     <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
-                </meta:scope>
+                </corto:scope>
             </class>
 
             <!-- Compiler-defined function call -->
@@ -360,7 +360,7 @@
                 <corto:scope>
                     <method name="construct()" returnType="int16"/>
                     <member name="function" type="function"/>
-                </meta:scope>
+                </corto:scope>
             </class>
 
             <!-- Runtime-defined (delegate) function call -->
@@ -368,7 +368,7 @@
                 <corto:scope>
                     <method name="construct()" returnType="int16"/>
                     <member name="expr" type="ast/Expression"/>
-                </meta:scope>
+                </corto:scope>
             </class>
 
             <!-- Helps finding the correct procedure given a name and argumentlist and build call expression -->
@@ -383,7 +383,7 @@
                     <member name="signature" type="string" modifiers="local|private"/>
                     <method name="buildSignature()" returnType="int16"/>
                     <method name="build()" returnType="ast/Call"/>
-                </meta:scope>
+                </corto:scope>
             </struct>
 
             <!-- Cast expression -->
@@ -395,7 +395,7 @@
                     <member name="isReference" type="bool"/>
                     <override name="hasReturnedResource()" returnType="bool"/>
                     <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
-                </meta:scope>
+                </corto:scope>
             </class>
 
             <!-- Postfix expression -->
@@ -406,7 +406,7 @@
                     <member name="operator" type="operatorKind"/>
                     <override name="hasReturnedResource()" returnType="bool"/>
                     <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
-                </meta:scope>
+                </corto:scope>
             </class>
 
             <!-- Unary expression -->
@@ -420,7 +420,7 @@
                     <override name="hasReturnedResource()" returnType="bool"/>
                     <override name="resolve(type type)" returnType="Expression"/>
                     <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
-                </meta:scope>
+                </corto:scope>
             </class>
 
             <!-- Binary expression -->
@@ -438,7 +438,7 @@
                     <override name="hasReturnedResource()" returnType="bool"/>
                     <override name="resolve(type type)" returnType="Expression"/>
                     <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
-                </meta:scope>
+                </corto:scope>
             </class>
 
             <corto:object name="If" type="class"/>
@@ -458,7 +458,7 @@
                     <override name="hasSideEffects()" returnType="bool"/>
                     <override name="hasReturnedResource()" returnType="bool"/>
                     <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
-                </meta:scope>
+                </corto:scope>
             </class>
 
             <!-- New expression -->
@@ -469,7 +469,7 @@
                     <member name="attributes" type="ast/Expression"/>
                     <override name="hasSideEffects()" returnType="bool"/>
                     <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
-                </meta:scope>
+                </corto:scope>
             </class>
 
             <!-- Define statement -->
@@ -478,7 +478,7 @@
                     <method name="construct()" returnType="int16"/>
                     <member name="object" type="ast/Expression"/>
                     <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
-                </meta:scope>
+                </corto:scope>
             </class>
 
             <!-- Text literal -->
@@ -493,7 +493,7 @@
                     <member name="scope" type="object" modifiers="readonly"/>
                     <override name="getValue()" returnType="word"/>
                     <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
-                </meta:scope>
+                </corto:scope>
             </class>
 
             <!-- If statement -->
@@ -506,7 +506,7 @@
                     <member name="warnUnreachable" type="bool" modifiers="private|local"/>
                     <method name="noWarnUnreachable()"/>
                     <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
-                </meta:scope>
+                </corto:scope>
             </class>
 
             <!-- While statement -->
@@ -517,7 +517,7 @@
                     <member name="trueBranch" type="ast/Block"/>
                     <member name="isUntil" type="bool"/>
                     <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
-                </meta:scope>
+                </corto:scope>
             </class>
 
             <!-- Update statement -->
@@ -526,7 +526,7 @@
                     <constant name="UpdateDefault"/>
                     <constant name="UpdateBegin"/>
                     <constant name="UpdateEnd"/>
-                </meta:scope>
+                </corto:scope>
             </enum>
             <class name="Update" base="Node" baseAccess="readonly">
                 <corto:scope>
@@ -536,7 +536,7 @@
                     <member name="from" type="ast/Expression"/>
                     <member name="kind" type="ast/UpdateKind"/>
                     <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
-                </meta:scope>
+                </corto:scope>
             </class>
 
             <!-- Initializer -->
@@ -545,7 +545,7 @@
                     <constant name="InitStatic"/>
                     <constant name="InitDynamic"/>
                     <constant name="InitExpression"/>
-                </meta:scope>
+                </corto:scope>
             </enum>
 
             <!-- Initializer stack element -->
@@ -555,7 +555,7 @@
                     <member name="object" type="Expression"/>
                     <!-- Key-values (of associative collections) are serialized to this member -->
                     <member name="key" type="word"/>
-                </meta:scope>
+                </corto:scope>
             </struct>
 
             <struct name="InitializerFrame">
@@ -564,7 +564,7 @@
                     <member name="type" type="type"/>
                     <member name="isKey" type="bool"/>
                     <member name="member" type="member"/>
-                </meta:scope>
+                </corto:scope>
             </struct>
 
             <class name="Initializer" base="Expression" baseAccess="readonly">
@@ -586,14 +586,14 @@
                     <overridable name="define()" returnType="int16"/>
                     <overridable name="next()" returnType="int16"/>
                     <method name="initFrame()" returnType="uint16"/>
-                </meta:scope>
+                </corto:scope>
             </class>
 
             <struct name="StaticInitializerFrame">
                 <corto:scope>
                     <member name="ptr" type="array{word,64}"/>
                     <member name="keyPtr" type="array{word,64}"/>
-                </meta:scope>
+                </corto:scope>
             </struct>
 
             <!-- A static initializer represents an object that is initialized during compiletime -->
@@ -604,7 +604,7 @@
                     <override name="push()" returnType="int16"/>
                     <override name="value(Expression v)" returnType="int16"/>
                     <override name="define()" returnType="int16"/>
-                </meta:scope>
+                </corto:scope>
             </class>
 
             <struct name="DynamicInitializerFrame">
@@ -612,7 +612,7 @@
                     <member name="expr" type="array{ast/Expression,64}"/>
                     <member name="keyExpr" type="array{ast/Expression,64}"/>
                     <member name="sequenceSize" type="ast/Integer"/>
-                </meta:scope>
+                </corto:scope>
             </struct>
 
             <!-- A dynamic initializer represents an object that is initialized during runtime -->
@@ -626,7 +626,7 @@
                     <override name="value(Expression v)" returnType="int16"/>
                     <override name="define()" returnType="int16"/>
                     <override name="hasReturnedResource()" returnType="bool"/>
-                </meta:scope>
+                </corto:scope>
             </class>
 
             <!-- Recorded Initializer operation -->
@@ -637,14 +637,14 @@
                     <constant name="InitOpDefine"/>
                     <constant name="InitOpValue"/>
                     <constant name="InitOpMember"/>
-                </meta:scope>
+                </corto:scope>
             </enum>
             <struct name="InitOper">
                 <corto:scope>
                     <member name="kind" type="InitOperKind"/>
                     <member name="expr" type="ast/Expression"/>
                     <member name="name" type="string"/>
-                </meta:scope>
+                </corto:scope>
             </struct>
 
             <!-- Record initializer for later evaluation -->
@@ -660,7 +660,7 @@
                     <method name="define()" returnType="int16"/>
                     <method name="insert(Expression variable)" returnType="int16"/>
                     <override name="hasReturnedResource()" returnType="bool"/>
-                </meta:scope>
+                </corto:scope>
             </class>
 
             <!-- ParseDeclaration is used to transfer declaration-information within the parser -->
@@ -668,7 +668,7 @@
                 <corto:scope>
                     <member name="name" type="string"/>
                     <member name="storage" type="ast/Storage"/>
-                </meta:scope>
+                </corto:scope>
             </struct>
 
             <sequence name="ParserDeclarationSeq" elementType="ParserDeclaration" max="256"/>
@@ -680,7 +680,7 @@
                     <member name="parent" type="ast/Expression"/>
                     <member name="name" type="ast/Expression"/>
                     <member name="attr" type="ast/Expression"/>
-                </meta:scope>
+                </corto:scope>
             </struct>
 
             <!-- Binds function to an implementation -->
@@ -688,7 +688,7 @@
                 <corto:scope>
                     <member name="function" type="function"/>
                     <member name="impl" type="ast/Block"/>
-                </meta:scope>
+                </corto:scope>
             </struct>
 
             <!-- Keep track of lvalue-stack and whether lvalue is an assignment or not -->
@@ -696,7 +696,7 @@
                 <corto:scope>
                     <member name="expr" type="ast/Expression"/>
                     <member name="isAssignment" type="bool"/>
-                </meta:scope>
+                </corto:scope>
             </struct>
 
             <!-- Parser object -->
@@ -842,8 +842,8 @@
 
                     <!-- Update -->
                     <method name="updateStatement(ast/Expression expr,ast/Block block)" returnType="ast/Node"/>
-                </meta:scope>
+                </corto:scope>
             </class>
-        </meta:package>
-    </meta:package>
-</meta>
+        </corto:package>
+    </corto:package>
+</corto>
