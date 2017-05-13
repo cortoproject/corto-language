@@ -12,20 +12,20 @@
 #include "ast__private.h"
 /* $end */
 
-corto_int16 _ast_New_construct(
+int16_t _ast_New_construct(
     ast_New this)
 {
 /* $begin(corto/ast/New/construct) */
 
     ast_Node(this)->kind = Ast_NewExpr;
-    corto_setref(&ast_Expression(this)->type, this->type);
+    corto_ptr_setref(&ast_Expression(this)->type, this->type);
     ast_Expression(this)->isReference = TRUE;
 
     return 0;
 /* $end */
 }
 
-corto_bool _ast_New_hasSideEffects_v(
+bool _ast_New_hasSideEffects(
     ast_New this)
 {
 /* $begin(corto/ast/New/hasSideEffects) */
@@ -34,11 +34,11 @@ corto_bool _ast_New_hasSideEffects_v(
 /* $end */
 }
 
-ic_node _ast_New_toIc_v(
+ic_node _ast_New_toIc(
     ast_New this,
     ic_program program,
     ic_storage storage,
-    corto_bool stored)
+    bool stored)
 {
 /* $begin(corto/ast/New/toIc) */
     ic_node type, attrs, result;

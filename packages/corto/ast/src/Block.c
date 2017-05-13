@@ -12,7 +12,7 @@
 #include "ast__private.h"
 /* $end */
 
-corto_void _ast_Block_addStatement(
+void _ast_Block_addStatement(
     ast_Block this,
     ast_Node statement)
 {
@@ -28,8 +28,8 @@ ast_Local _ast_Block_declare(
     ast_Block this,
     corto_string id,
     corto_type type,
-    corto_bool isParameter,
-    corto_bool isReference)
+    bool isParameter,
+    bool isReference)
 {
 /* $begin(corto/ast/Block/declare) */
     ast_Local result;
@@ -48,7 +48,7 @@ ast_Local _ast_Block_declare(
     kind = isParameter ? Ast_LocalParameter : Ast_LocalDefault;
     result = ast_LocalCreate(id, type, kind, isReference);
     if (result) {
-        corto_llAppend(this->locals, result);
+        corto_ll_append(this->locals, result);
     } else {
         goto error;
     }
@@ -75,7 +75,7 @@ ast_Local _ast_Block_declareReturnVariable(
     /* If variable did not exist, declare it in this block */
     result = ast_LocalCreate(id, function->returnType, Ast_LocalReturn, function->returnsReference);
     if (result) {
-        corto_llAppend(this->locals, result);
+        corto_ll_append(this->locals, result);
     }
 
     return result;
@@ -86,8 +86,8 @@ ast_Template _ast_Block_declareTemplate(
     ast_Block this,
     corto_string id,
     corto_type type,
-    corto_bool isParameter,
-    corto_bool isReference)
+    bool isParameter,
+    bool isReference)
 {
 /* $begin(corto/ast/Block/declareTemplate) */
     ast_Template result;
@@ -103,7 +103,7 @@ ast_Template _ast_Block_declareTemplate(
     /* If variable did not exist, declare it in this block */
     result = ast_TemplateCreate(id, type, isParameter, isReference);
     if (result) {
-        corto_llInsert(this->locals, result);
+        corto_ll_insert(this->locals, result);
     }
 
     return result;
@@ -123,8 +123,7 @@ ast_Expression _ast_Block_lookup(
 
     if (!result) {
         if (this->function && corto_instanceof(corto_interface_o, corto_parentof(this->function))) {
-            if ((corto_procedure(corto_typeof(this->function))->kind == CORTO_METHOD) ||
-               ((corto_procedure(corto_typeof(this->function))->kind == CORTO_OBSERVER))) {
+            if (corto_procedure(corto_typeof(this->function))->hasThis) {
                 if (strcmp(id, "this")) {
                     corto_object parent;
                     corto_member m;
@@ -208,9 +207,9 @@ ast_Local _ast_Block_lookupLocal(
     if (this->locals) {
         corto_iter iter;
         ast_Local local;
-        iter = corto_llIter(this->locals);
-        while(corto_iterHasNext(&iter)) {
-            local = corto_iterNext(&iter);
+        iter = corto_ll_iter(this->locals);
+        while(corto_iter_hasNext(&iter)) {
+            local = corto_iter_next(&iter);
             if (!strcmp(local->name, id)) {
                 result = local;
                 break;
@@ -256,20 +255,20 @@ ast_Local _ast_Block_resolveLocal(
 /* $end */
 }
 
-corto_void _ast_Block_setFunction(
+void _ast_Block_setFunction(
     ast_Block this,
     corto_function function)
 {
 /* $begin(corto/ast/Block/setFunction) */
-    corto_setref(&this->function, function);
+    corto_ptr_setref(&this->function, function);
 /* $end */
 }
 
-ic_node _ast_Block_toIc_v(
+ic_node _ast_Block_toIc(
     ast_Block this,
     ic_program program,
     ic_storage storage,
-    corto_bool stored)
+    bool stored)
 {
 /* $begin(corto/ast/Block/toIc) */
     ic_scope scope;
@@ -279,7 +278,7 @@ ic_node _ast_Block_toIc_v(
     scope = ic_program_pushScope(program);
 
     if (!this->_while) {
-        ast_Block_toIcBody_v(this, program, storage, stored);
+        ast_Block_toIcBody(this, program, storage, stored);
     } else {
         ast_While_toIc(this->_while, program, storage, stored);
     }
@@ -290,11 +289,11 @@ ic_node _ast_Block_toIc_v(
 /* $end */
 }
 
-ic_node _ast_Block_toIcBody_v(
+ic_node _ast_Block_toIcBody(
     ast_Block this,
     ic_program program,
     ic_storage storage,
-    corto_bool stored)
+    bool stored)
 {
 /* $begin(corto/ast/Block/toIcBody) */
     ast_Node statement;
@@ -306,9 +305,9 @@ ic_node _ast_Block_toIcBody_v(
 
     /* Declare locals */
     if (this->locals) {
-        localIter = corto_llIter(this->locals);
-        while(corto_iterHasNext(&localIter)) {
-            local = corto_iterNext(&localIter);
+        localIter = corto_ll_iter(this->locals);
+        while(corto_iter_hasNext(&localIter)) {
+            local = corto_iter_next(&localIter);
             ic_program_declareVariable(
                     program,
                     local->name,
@@ -321,9 +320,9 @@ ic_node _ast_Block_toIcBody_v(
     }
 
     if (this->statements) {
-        statementIter = corto_llIter(this->statements);
-        while(corto_iterHasNext(&statementIter)) {
-            statement = corto_iterNext(&statementIter);
+        statementIter = corto_ll_iter(this->statements);
+        while(corto_iter_hasNext(&statementIter)) {
+            statement = corto_iter_next(&statementIter);
             ast_Node_toIc(statement, program, NULL, FALSE);
         }
     }

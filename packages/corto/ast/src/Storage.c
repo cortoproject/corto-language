@@ -8,7 +8,7 @@
 
 #include <corto/ast/ast.h>
 
-corto_int16 _ast_Storage_construct(
+int16_t _ast_Storage_construct(
     ast_Storage this)
 {
 /* $begin(corto/ast/Storage/construct) */

@@ -12,7 +12,7 @@
 #include "ast__private.h"
 /* $end */
 
-corto_int16 _ast_Boolean_init(
+int16_t _ast_Boolean_init(
     ast_Boolean this)
 {
 /* $begin(corto/ast/Boolean/init) */
@@ -21,10 +21,10 @@ corto_int16 _ast_Boolean_init(
 /* $end */
 }
 
-corto_int16 _ast_Boolean_serialize(
+int16_t _ast_Boolean_serialize(
     ast_Boolean this,
     corto_type dstType,
-    corto_word dst)
+    uintptr_t dst)
 {
 /* $begin(corto/ast/Boolean/serialize) */
     ast_valueKind kind;
@@ -61,11 +61,11 @@ error:
 /* $end */
 }
 
-ic_node _ast_Boolean_toIc_v(
+ic_node _ast_Boolean_toIc(
     ast_Boolean this,
     ic_program program,
     ic_storage storage,
-    corto_bool stored)
+    bool stored)
 {
 /* $begin(corto/ast/Boolean/toIc) */
     ic_node result;

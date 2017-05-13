@@ -26,7 +26,7 @@ typedef struct ast_Initializer_findMember_t {
 }ast_Initializer_findMember_t;
 
 /* Walk members, look it up */
-corto_int16 ast_Initializer_findMember(corto_serializer s, corto_value* v, void* userData) {
+corto_int16 ast_Initializer_findMember(corto_walk_opt* s, corto_value* v, void* userData) {
     corto_uint32 result;
     ast_Initializer_findMember_t* data;
 
@@ -36,7 +36,7 @@ corto_int16 ast_Initializer_findMember(corto_serializer s, corto_value* v, void*
     switch(v->kind) {
     case CORTO_MEMBER:
         if (v->is.member.t->id == (corto_uint32)-1) {
-            result = corto_serializeValue(s, v, userData);
+            result = corto_value_walk(s, v, userData);
         } else {
             if ((data->lookForLocation >= 0) && ((corto_uint32)data->lookForLocation == data->count)) {
                 data->m = v->is.member.t;
@@ -63,18 +63,18 @@ found:
 }
 
 /* Create serializer */
-struct corto_serializer_s ast_findMemberSerializer(corto_bool findHidden) {
-    struct corto_serializer_s s;
-    corto_serializerInit(&s);
+corto_walk_opt ast_findMemberSerializer(corto_bool findHidden) {
+    corto_walk_opt s;
+    corto_walk_init(&s);
     s.metaprogram[CORTO_MEMBER] = ast_Initializer_findMember;
     s.access = CORTO_LOCAL | CORTO_PRIVATE | CORTO_READONLY;
     if (!findHidden) {
         s.access |= CORTO_HIDDEN;
     }
     s.accessKind = CORTO_NOT;
-    s.traceKind = CORTO_SERIALIZER_TRACE_NEVER;
-    s.aliasAction = CORTO_SERIALIZER_ALIAS_FOLLOW;
-    s.optionalAction = CORTO_SERIALIZER_OPTIONAL_ALWAYS;
+    s.traceKind = CORTO_WALK_TRACE_NEVER;
+    s.aliasAction = CORTO_WALK_ALIAS_FOLLOW;
+    s.optionalAction = CORTO_WALK_OPTIONAL_ALWAYS;
     return s;
 }
 
@@ -94,7 +94,7 @@ corto_type ast_Parser_initGetType(ast_Initializer this, corto_member *m_out) {
         } else {
             switch(t->kind) {
             case CORTO_COMPOSITE: {
-                struct corto_serializer_s s;
+                corto_walk_opt s;
                 ast_Initializer_findMember_t walkData;
 
                 if (!this->frames[this->fp].member) {
@@ -105,7 +105,7 @@ corto_type ast_Parser_initGetType(ast_Initializer this, corto_member *m_out) {
                     walkData.lookForString = NULL;
                     walkData.m = NULL;
                     walkData.current = 0;
-                    corto_metaWalk(&s, t, &walkData);
+                    corto_metawalk(&s, t, &walkData);
                 } else {
                     walkData.m = this->frames[this->fp].member;
                 }
@@ -164,7 +164,7 @@ corto_type ast_Parser_initGetType(ast_Initializer this, corto_member *m_out) {
 
 /* $end */
 
-corto_int16 _ast_Initializer_construct(
+int16_t _ast_Initializer_construct(
     ast_Initializer this)
 {
 /* $begin(corto/ast/Initializer/construct) */
@@ -178,8 +178,8 @@ corto_int16 _ast_Initializer_construct(
 
     /* Initialize first frame with type */
     for(variable=0; variable<this->variableCount; variable++) {
-        corto_setref(&this->frames[variable].type, t);
-        /* corto_setref(&this->rvalueType, t); */
+        corto_ptr_setref(&this->frames[variable].type, t);
+        /* corto_ptr_setref(&this->rvalueType, t); */
         this->frames[variable].location = 0;
     }
     this->fp = 0;
@@ -201,7 +201,7 @@ corto_int16 _ast_Initializer_construct(
     }
 
     ast_Node(this)->kind = Ast_InitializerExpr;
-    corto_setref(&ast_Expression(this)->type, t);
+    corto_ptr_setref(&ast_Expression(this)->type, t);
 
     return 0;
 error:
@@ -217,7 +217,7 @@ corto_type _ast_Initializer_currentType(
 /* $end */
 }
 
-corto_int16 _ast_Initializer_define_v(
+int16_t _ast_Initializer_define_v(
     ast_Initializer this)
 {
 /* $begin(corto/ast/Initializer/define) */
@@ -234,11 +234,11 @@ corto_int16 _ast_Initializer_define_v(
 /* $end */
 }
 
-corto_uint16 _ast_Initializer_initFrame(
+uint16_t _ast_Initializer_initFrame(
     ast_Initializer this)
 {
 /* $begin(corto/ast/Initializer/initFrame) */
-    struct corto_serializer_s s;
+    corto_walk_opt s;
     corto_type t;
     ast_Initializer_findMember_t walkData;
 
@@ -253,20 +253,20 @@ corto_uint16 _ast_Initializer_initFrame(
         walkData.m = NULL;
         walkData.current = this->frames[this->fp].location;
         if (t->kind == CORTO_COMPOSITE) {
-            corto_metaWalk(&s, t, &walkData);
+            corto_metawalk(&s, t, &walkData);
         }
         if (walkData.m) {
             this->frames[this->fp].location = walkData.id;
-            corto_setref(&this->frames[this->fp].member, walkData.m);
-            corto_setref(&this->frames[this->fp].type, walkData.m->type);
-            /*corto_setref(&yparser()->rvalueType, walkData.m->type);*/
+            corto_ptr_setref(&this->frames[this->fp].member, walkData.m);
+            corto_ptr_setref(&this->frames[this->fp].type, walkData.m->type);
+            /*corto_ptr_setref(&yparser()->rvalueType, walkData.m->type);*/
         } else {
-            corto_setref(&this->frames[this->fp].member, NULL);
+            corto_ptr_setref(&this->frames[this->fp].member, NULL);
             if (t->kind == CORTO_COLLECTION) {
-                corto_setref(&this->frames[this->fp].type, corto_collection(t)->elementType);
-                /*corto_setref(&yparser()->rvalueType, corto_collection(t)->elementType);*/
+                corto_ptr_setref(&this->frames[this->fp].type, corto_collection(t)->elementType);
+                /*corto_ptr_setref(&yparser()->rvalueType, corto_collection(t)->elementType);*/
             } else {
-                corto_setref(&this->frames[this->fp].type, NULL);
+                corto_ptr_setref(&this->frames[this->fp].type, NULL);
             }
         }
     }
@@ -275,12 +275,12 @@ corto_uint16 _ast_Initializer_initFrame(
 /* $end */
 }
 
-corto_int32 _ast_Initializer_member_v(
+int32_t _ast_Initializer_member_v(
     ast_Initializer this,
     corto_string name)
 {
 /* $begin(corto/ast/Initializer/member) */
-    struct corto_serializer_s s;
+    corto_walk_opt s;
     corto_type t;
     ast_Initializer_findMember_t walkData;
 
@@ -299,17 +299,17 @@ corto_int32 _ast_Initializer_member_v(
     walkData.m = NULL;
     walkData.current = this->frames[this->fp].location;
     if (t->kind == CORTO_COMPOSITE) {
-        corto_metaWalk(&s, t, &walkData);
+        corto_metawalk(&s, t, &walkData);
     }
     if (walkData.m) {
         /* this->frames[this->fp].location = walkData.id; */
-        corto_setref(&this->frames[this->fp].member, walkData.m);
-        corto_setref(&this->frames[this->fp].type, walkData.m->type);
-        /*corto_setref(&yparser()->rvalueType, walkData.m->type);*/
+        corto_ptr_setref(&this->frames[this->fp].member, walkData.m);
+        corto_ptr_setref(&this->frames[this->fp].type, walkData.m->type);
+        /*corto_ptr_setref(&yparser()->rvalueType, walkData.m->type);*/
     } else {
         corto_id id;
         ast_Parser_error(yparser(), "member '%s' invalid for type '%s'", name, ast_Parser_id(t, id));
-        corto_setref(&this->frames[this->fp].type, NULL);
+        corto_ptr_setref(&this->frames[this->fp].type, NULL);
         goto error;
     }
 
@@ -319,7 +319,7 @@ error:
 /* $end */
 }
 
-corto_int16 _ast_Initializer_next_v(
+int16_t _ast_Initializer_next_v(
     ast_Initializer this)
 {
 /* $begin(corto/ast/Initializer/next) */
@@ -343,7 +343,7 @@ corto_int16 _ast_Initializer_next_v(
 /* $end */
 }
 
-corto_int8 _ast_Initializer_pop_v(
+int8_t _ast_Initializer_pop_v(
     ast_Initializer this)
 {
 /* $begin(corto/ast/Initializer/pop) */
@@ -367,7 +367,7 @@ corto_int8 _ast_Initializer_pop_v(
 /* $end */
 }
 
-corto_int16 _ast_Initializer_popKey_v(
+int16_t _ast_Initializer_popKey_v(
     ast_Initializer this)
 {
 /* $begin(corto/ast/Initializer/popKey) */
@@ -375,7 +375,7 @@ corto_int16 _ast_Initializer_popKey_v(
 /* $end */
 }
 
-corto_int16 _ast_Initializer_push_v(
+int16_t _ast_Initializer_push_v(
     ast_Initializer this)
 {
 /* $begin(corto/ast/Initializer/push) */
@@ -384,7 +384,7 @@ corto_int16 _ast_Initializer_push_v(
     if (!this->fp || (this->fp && !t->reference)) {
         this->fp++;
         this->frames[this->fp].location = 0;
-        corto_setref(&this->frames[this->fp].type, t);
+        corto_ptr_setref(&this->frames[this->fp].type, t);
         ast_Initializer_initFrame(this);
 
 #ifdef CORTO_INIT_DEBUG
@@ -410,7 +410,7 @@ error:
 /* $end */
 }
 
-corto_int16 _ast_Initializer_pushKey_v(
+int16_t _ast_Initializer_pushKey_v(
     ast_Initializer this)
 {
 /* $begin(corto/ast/Initializer/pushKey) */
@@ -427,7 +427,7 @@ corto_type _ast_Initializer_type(
 /* $end */
 }
 
-corto_int16 _ast_Initializer_value_v(
+int16_t _ast_Initializer_value_v(
     ast_Initializer this,
     ast_Expression v)
 {
@@ -437,7 +437,7 @@ corto_int16 _ast_Initializer_value_v(
 /* $end */
 }
 
-corto_int16 _ast_Initializer_valueKey_v(
+int16_t _ast_Initializer_valueKey_v(
     ast_Initializer this,
     ast_Expression key)
 {

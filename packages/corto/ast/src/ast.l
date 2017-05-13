@@ -51,6 +51,7 @@ static int fast_blockOperator(void) {
     if (yparser()->token) {
         if (!strcmp(yparser()->token, ":") ||
             !strcmp(yparser()->token, "::") ||
+            !strcmp(yparser()->token, ":/") ||
             !strcmp(yparser()->token, ":::")) {
             return TRUE;
         }
@@ -184,6 +185,11 @@ gid (("::"|"/")*{id})+
                                     }
                                 }
 
+":::"                           TOKEN; return SCOPEPRE;
+":/"                            TOKEN; return SCOPE;
+"::"                            TOKEN; return SCOPE;
+":"                             TOKEN; return ':';
+
 "if"                            TOKEN; return KW_IF;
 "else"                          TOKEN; return KW_ELSE;
 "while"                         TOKEN; return KW_WHILE;
@@ -198,6 +204,8 @@ gid (("::"|"/")*{id})+
 "and"                           TOKEN; return LAND;
 "or"                            TOKEN; return LOR;
 "not"                           TOKEN; return LNOT;
+"in"                            TOKEN; return KW_IN;
+"use"                           TOKEN; return IMPORT;
 
 true                            TOKEN; yylval.Boolean =  TRUE; return BOOLEAN;
 false                           TOKEN; yylval.Boolean = FALSE; return BOOLEAN;
@@ -219,7 +227,6 @@ L?'(\\.|[^\\'])+'               TOKEN; fast_charesc(yytext+1, &yylval.Character)
 "null"                          TOKEN; yylval.Null = NULL; return NUL;
 L?\"(\\.|[^\\"])*\"             TOKEN; yylval.String = malloc(strlen(yytext) + 1); lex_collect(yylval.String); return fast_stresc(yytext+1,yylval.String) ? ERROR : STRING;
 [\t]+                           TOKEN; return TAB;
-":"                             TOKEN; return ':';
 "\n"                            NEWLINE; if (!nesting && !trailing && !block) { return ENDL; }
 ";"                             NEWLINE; return ENDL;
 "("                             TOKEN; nesting++; return '(';
@@ -259,8 +266,6 @@ L?\"(\\.|[^\\"])*\"             TOKEN; yylval.String = malloc(strlen(yytext) + 1
 "|="                            TOKEN; return OR_ASSIGN;
 "&="                            TOKEN; return AND_ASSIGN;
 ":="                            TOKEN; return UPDATE_ASSIGN;
-"::"                            TOKEN; return SCOPE;
-":::"                           TOKEN; return SCOPEPRE;
 "->"                            TOKEN; return ARROW_RIGHT;
 "<-"                            TOKEN; return ARROW_LEFT;
 "<<"                            TOKEN; return SHIFT_LEFT;

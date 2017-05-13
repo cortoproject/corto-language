@@ -50,7 +50,7 @@ ast_If ast_Ternary_createIf(ast_Expression condition, ast_Node ifTrue, ast_Node 
 
 /* $end */
 
-corto_int16 _ast_Ternary_construct(
+int16_t _ast_Ternary_construct(
     ast_Ternary this)
 {
 /* $begin(corto/ast/Ternary/construct) */
@@ -73,18 +73,18 @@ corto_int16 _ast_Ternary_construct(
     ast_Parser_blockPop(yparser());
 
     /* Store both expressions in this */
-    corto_setref(&this->ifTrueExpr, trueExpr);
-    corto_setref(&this->ifFalseExpr, falseExpr);
+    corto_ptr_setref(&this->ifTrueExpr, trueExpr);
+    corto_ptr_setref(&this->ifFalseExpr, falseExpr);
     
     /* Create condition */
     this->ifstmt = ast_Ternary_createIf(this->condition, trueBranch, falseBranch);
-    corto_setref(&ast_Expression(this)->type, resultType);
+    corto_ptr_setref(&ast_Expression(this)->type, resultType);
 
     return 0;
 /* $end */
 }
 
-corto_bool _ast_Ternary_hasReturnedResource_v(
+bool _ast_Ternary_hasReturnedResource(
     ast_Ternary this)
 {
 /* $begin(corto/ast/Ternary/hasReturnedResource) */
@@ -94,7 +94,7 @@ corto_bool _ast_Ternary_hasReturnedResource_v(
 /* $end */
 }
 
-corto_bool _ast_Ternary_hasSideEffects_v(
+bool _ast_Ternary_hasSideEffects(
     ast_Ternary this)
 {
 /* $begin(corto/ast/Ternary/hasSideEffects) */
@@ -104,7 +104,7 @@ corto_bool _ast_Ternary_hasSideEffects_v(
 /* $end */
 }
 
-corto_void _ast_Ternary_setOperator(
+void _ast_Ternary_setOperator(
     ast_Ternary this,
     corto_operatorKind kind)
 {
@@ -120,11 +120,11 @@ corto_void _ast_Ternary_setOperator(
 /* $end */
 }
 
-ic_node _ast_Ternary_toIc_v(
+ic_node _ast_Ternary_toIc(
     ast_Ternary this,
     ic_program program,
     ic_storage storage,
-    corto_bool stored)
+    bool stored)
 {
 /* $begin(corto/ast/Ternary/toIc) */
     ast_If_toIc(this->ifstmt, program, storage, stored);

@@ -12,7 +12,7 @@ corto_void _test_ValueExpr_tc_compositeArg(
     test_ValueExpr this)
 {
 /* $begin(test/ValueExpr/tc_compositeArg) */
-    corto_value result = corto_value_init();
+    corto_value result = corto_value_empty();
     corto_expr e;
     corto_int16 ret;
     test_Point p = {10, 20};
@@ -28,10 +28,10 @@ corto_void _test_ValueExpr_tc_compositeArg(
 
     ret = corto_expr_run(&e, &result, &p);
     test_assert(ret == 0);
-    test_assert(corto_value_getType(&result) == corto_type(test_Point_o));
+    test_assert(corto_value_typeof(&result) == corto_type(test_Point_o));
     test_assert(result.kind == CORTO_VALUE);
-    test_assert(corto_value_getPtr(&result) != NULL);
-    test_Point *ptr = corto_value_getPtr(&result);
+    test_assert(corto_value_ptrof(&result) != NULL);
+    test_Point *ptr = corto_value_ptrof(&result);
     test_assertint(ptr->x, 10);
     test_assertint(ptr->y, 20);
 
@@ -45,7 +45,7 @@ corto_void _test_ValueExpr_tc_compositeLiteral(
     test_ValueExpr this)
 {
 /* $begin(test/ValueExpr/tc_compositeLiteral) */
-    corto_value result = corto_value_init();
+    corto_value result = corto_value_empty();
     corto_expr e;
     corto_int16 ret;
 
@@ -58,10 +58,10 @@ corto_void _test_ValueExpr_tc_compositeLiteral(
 
     ret = corto_expr_run(&e, &result);
     test_assert(ret == 0);
-    test_assert(corto_value_getType(&result) == corto_type(test_Point_o));
+    test_assert(corto_value_typeof(&result) == corto_type(test_Point_o));
     test_assert(result.kind == CORTO_VALUE);
-    test_assert(corto_value_getPtr(&result) != NULL);
-    test_Point *ptr = corto_value_getPtr(&result);
+    test_assert(corto_value_ptrof(&result) != NULL);
+    test_Point *ptr = corto_value_ptrof(&result);
     test_assertint(ptr->x, 10);
     test_assertint(ptr->y, 20);
 
@@ -75,7 +75,7 @@ corto_void _test_ValueExpr_tc_compositeObject(
     test_ValueExpr this)
 {
 /* $begin(test/ValueExpr/tc_compositeObject) */
-    corto_value result = corto_value_init();
+    corto_value result = corto_value_empty();
     corto_expr e;
     corto_int16 ret;
 
@@ -93,10 +93,10 @@ corto_void _test_ValueExpr_tc_compositeObject(
 
     ret = corto_expr_run(&e, &result);
     test_assert(ret == 0);
-    test_assert(corto_value_getType(&result) == corto_type(test_Point_o));
+    test_assert(corto_value_typeof(&result) == corto_type(test_Point_o));
     test_assert(result.kind == CORTO_OBJECT);
-    test_assert(corto_value_getObject(&result) == a);
-    test_Point *ptr = corto_value_getPtr(&result);
+    test_assert(corto_value_objectof(&result) == a);
+    test_Point *ptr = corto_value_ptrof(&result);
     test_assertint(ptr->x, 10);
     test_assertint(ptr->y, 20);
 
@@ -110,7 +110,7 @@ corto_void _test_ValueExpr_tc_compositeVar(
     test_ValueExpr this)
 {
 /* $begin(test/ValueExpr/tc_compositeVar) */
-    corto_value result = corto_value_init();
+    corto_value result = corto_value_empty();
     corto_expr e;
     corto_int16 ret;
 
@@ -123,10 +123,10 @@ corto_void _test_ValueExpr_tc_compositeVar(
 
     ret = corto_expr_run(&e, &result);
     test_assert(ret == 0);
-    test_assert(corto_value_getType(&result) == corto_type(test_Point_o));
+    test_assert(corto_value_typeof(&result) == corto_type(test_Point_o));
     test_assert(result.kind == CORTO_VALUE);
-    test_assert(corto_value_getPtr(&result) != NULL);
-    test_Point *ptr = corto_value_getPtr(&result);
+    test_assert(corto_value_ptrof(&result) != NULL);
+    test_Point *ptr = corto_value_ptrof(&result);
     test_assertint(ptr->x, 10);
     test_assertint(ptr->y, 20);
 
@@ -140,7 +140,7 @@ corto_void _test_ValueExpr_tc_primitiveArg(
     test_ValueExpr this)
 {
 /* $begin(test/ValueExpr/tc_primitiveArg) */
-    corto_value result = corto_value_init();
+    corto_value result = corto_value_empty();
     corto_expr e;
     corto_int16 ret;
 
@@ -154,10 +154,10 @@ corto_void _test_ValueExpr_tc_primitiveArg(
 
     ret = corto_expr_run(&e, &result, 10);
     test_assert(ret == 0);
-    test_assert(corto_value_getType(&result) == corto_type(corto_int32_o));
+    test_assert(corto_value_typeof(&result) == corto_type(corto_int32_o));
     test_assert(result.kind == CORTO_VALUE);
-    test_assert(corto_value_getPtr(&result) != NULL);
-    test_assertint(*(corto_int32*)corto_value_getPtr(&result), 10);
+    test_assert(corto_value_ptrof(&result) != NULL);
+    test_assertint(*(corto_int32*)corto_value_ptrof(&result), 10);
 
     corto_value_free(&result);
     corto_expr_free(&e);
@@ -169,7 +169,7 @@ corto_void _test_ValueExpr_tc_primitiveLiteral(
     test_ValueExpr this)
 {
 /* $begin(test/ValueExpr/tc_primitiveLiteral) */
-    corto_value result = corto_value_init();
+    corto_value result = corto_value_empty();
     corto_expr e;
     corto_int16 ret;
 
@@ -181,10 +181,10 @@ corto_void _test_ValueExpr_tc_primitiveLiteral(
 
     ret = corto_expr_run(&e, &result, 10);
     test_assert(ret == 0);
-    test_assert(corto_value_getType(&result) == corto_type(corto_uint64_o));
+    test_assert(corto_value_typeof(&result) == corto_type(corto_uint64_o));
     test_assert(result.kind == CORTO_VALUE);
-    test_assert(corto_value_getPtr(&result) != NULL);
-    test_assertint(*(corto_int32*)corto_value_getPtr(&result), 10);
+    test_assert(corto_value_ptrof(&result) != NULL);
+    test_assertint(*(corto_int32*)corto_value_ptrof(&result), 10);
 
     corto_value_free(&result);
     corto_expr_free(&e);
@@ -196,7 +196,7 @@ corto_void _test_ValueExpr_tc_primitiveObject(
     test_ValueExpr this)
 {
 /* $begin(test/ValueExpr/tc_primitiveObject) */
-    corto_value result = corto_value_init();
+    corto_value result = corto_value_empty();
     corto_expr e;
     corto_int16 ret;
 
@@ -213,10 +213,10 @@ corto_void _test_ValueExpr_tc_primitiveObject(
 
     ret = corto_expr_run(&e, &result);
     test_assert(ret == 0);
-    test_assert(corto_value_getType(&result) == corto_type(corto_int32_o));
+    test_assert(corto_value_typeof(&result) == corto_type(corto_int32_o));
     test_assert(result.kind == CORTO_OBJECT);
-    test_assert(corto_value_getObject(&result) == a);
-    test_assertint(*(corto_int32*)corto_value_getPtr(&result), 10);
+    test_assert(corto_value_objectof(&result) == a);
+    test_assertint(*(corto_int32*)corto_value_ptrof(&result), 10);
 
     corto_value_free(&result);
     corto_expr_free(&e);
@@ -229,7 +229,7 @@ corto_void _test_ValueExpr_tc_primitiveVar(
     test_ValueExpr this)
 {
 /* $begin(test/ValueExpr/tc_primitiveVar) */
-    corto_value result = corto_value_init();
+    corto_value result = corto_value_empty();
     corto_expr e;
     corto_int16 ret;
 
@@ -241,10 +241,10 @@ corto_void _test_ValueExpr_tc_primitiveVar(
 
     ret = corto_expr_run(&e, &result);
     test_assert(ret == 0);
-    test_assert(corto_value_getType(&result) == corto_type(corto_int32_o));
+    test_assert(corto_value_typeof(&result) == corto_type(corto_int32_o));
     test_assert(result.kind == CORTO_VALUE);
-    test_assert(corto_value_getPtr(&result) != NULL);
-    test_assertint(*(corto_int32*)corto_value_getPtr(&result), 10);
+    test_assert(corto_value_ptrof(&result) != NULL);
+    test_assertint(*(corto_int32*)corto_value_ptrof(&result), 10);
 
     corto_value_free(&result);
     corto_expr_free(&e);
@@ -256,7 +256,7 @@ corto_void _test_ValueExpr_tc_referenceArg(
     test_ValueExpr this)
 {
 /* $begin(test/ValueExpr/tc_referenceArg) */
-    corto_value result = corto_value_init();
+    corto_value result = corto_value_empty();
     corto_expr e;
     corto_int16 ret;
 
@@ -276,9 +276,9 @@ corto_void _test_ValueExpr_tc_referenceArg(
 
     ret = corto_expr_run(&e, &result, a);
     test_assert(ret == 0);
-    test_assert(corto_value_getType(&result) == corto_type(test_PointRef_o));
+    test_assert(corto_value_typeof(&result) == corto_type(test_PointRef_o));
     test_assert(result.kind == CORTO_OBJECT);
-    test_assert(corto_value_getObject(&result) == a);
+    test_assert(corto_value_objectof(&result) == a);
 
     corto_value_free(&result);
     corto_expr_free(&e);
@@ -291,7 +291,7 @@ corto_void _test_ValueExpr_tc_referenceObject(
     test_ValueExpr this)
 {
 /* $begin(test/ValueExpr/tc_referenceObject) */
-    corto_value result = corto_value_init();
+    corto_value result = corto_value_empty();
     corto_expr e;
     corto_int16 ret;
 
@@ -309,9 +309,9 @@ corto_void _test_ValueExpr_tc_referenceObject(
 
     ret = corto_expr_run(&e, &result);
     test_assert(ret == 0);
-    test_assert(corto_value_getType(&result) == corto_type(test_PointRef_o));
+    test_assert(corto_value_typeof(&result) == corto_type(test_PointRef_o));
     test_assert(result.kind == CORTO_OBJECT);
-    test_assert(corto_value_getObject(&result) == a);
+    test_assert(corto_value_objectof(&result) == a);
 
     corto_value_free(&result);
     corto_expr_free(&e);
@@ -324,7 +324,7 @@ corto_void _test_ValueExpr_tc_referenceVar(
     test_ValueExpr this)
 {
 /* $begin(test/ValueExpr/tc_referenceVar) */
-    corto_value result = corto_value_init();
+    corto_value result = corto_value_empty();
     corto_expr e;
     corto_int16 ret;
 
@@ -337,10 +337,10 @@ corto_void _test_ValueExpr_tc_referenceVar(
 
     ret = corto_expr_run(&e, &result);
     test_assert(ret == 0);
-    test_assert(corto_value_getType(&result) == corto_type(test_PointRef_o));
+    test_assert(corto_value_typeof(&result) == corto_type(test_PointRef_o));
     test_assert(result.kind == CORTO_OBJECT);
-    test_assert(corto_value_getObject(&result) != NULL);
-    test_PointRef o = corto_value_getObject(&result);
+    test_assert(corto_value_objectof(&result) != NULL);
+    test_PointRef o = corto_value_objectof(&result);
     test_assertint(o->x, 10);
     test_assertint(o->y, 20);
 

@@ -12,7 +12,7 @@
 #include "ast__private.h"
 /* $end */
 
-corto_int16 _ast_While_construct(
+int16_t _ast_While_construct(
     ast_While this)
 {
 /* $begin(corto/ast/While/construct) */
@@ -38,11 +38,11 @@ error:
 /* $end */
 }
 
-ic_node _ast_While_toIc_v(
+ic_node _ast_While_toIc(
     ast_While this,
     ic_program program,
     ic_storage storage,
-    corto_bool stored)
+    bool stored)
 {
 /* $begin(corto/ast/While/toIc) */
     ic_storage accumulator;

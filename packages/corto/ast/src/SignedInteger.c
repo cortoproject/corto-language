@@ -12,7 +12,7 @@
 #include "ast__private.h"
 /* $end */
 
-corto_int16 _ast_SignedInteger_init(
+int16_t _ast_SignedInteger_init(
     ast_SignedInteger this)
 {
 /* $begin(corto/ast/SignedInteger/init) */
@@ -21,10 +21,10 @@ corto_int16 _ast_SignedInteger_init(
 /* $end */
 }
 
-corto_int16 _ast_SignedInteger_serialize(
+int16_t _ast_SignedInteger_serialize(
     ast_SignedInteger this,
     corto_type dstType,
-    corto_word dst)
+    uintptr_t dst)
 {
 /* $begin(corto/ast/SignedInteger/serialize) */
     ast_valueKind kind;
@@ -43,7 +43,7 @@ corto_int16 _ast_SignedInteger_serialize(
     case Ast_Float:
     case Ast_Enum:
     case Ast_Text:
-        corto_convert(corto_primitive(corto_int64_o), &this->value, corto_primitive(dstType), (void*)dst);
+        corto_ptr_cast(corto_primitive(corto_int64_o), &this->value, corto_primitive(dstType), (void*)dst);
         break;
     default: {
         corto_id id;
@@ -59,11 +59,11 @@ error:
 /* $end */
 }
 
-ic_node _ast_SignedInteger_toIc_v(
+ic_node _ast_SignedInteger_toIc(
     ast_SignedInteger this,
     ic_program program,
     ic_storage storage,
-    corto_bool stored)
+    bool stored)
 {
 /* $begin(corto/ast/SignedInteger/toIc) */
     ic_node result;

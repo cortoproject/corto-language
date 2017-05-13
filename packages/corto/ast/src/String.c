@@ -82,7 +82,7 @@ corto_char *ast_String_parseEmbedded(ast_String this, corto_char *expr) {
 
     element = ast_Parser_parseExpression(yparser(), expr, this->block, this->scope, ast_Node(this)->line, ast_Node(this)->column);
     if (element) {
-        corto_llAppend(this->elements, element);
+        corto_ll_append(this->elements, element);
         corto_claim(element);
     } else {
         goto error;
@@ -116,7 +116,7 @@ corto_int16 ast_String_parse(ast_String this) {
                     *ptr = '\0';
 
                     element = ast_StringCreate(str);
-                    corto_llAppend(this->elements, element);
+                    corto_ll_append(this->elements, element);
 
                     *ptr = ch;
                 }
@@ -140,11 +140,11 @@ corto_int16 ast_String_parse(ast_String this) {
          * string to elements list */
         if ((str != this->value) && *str) {
             element = ast_StringCreate(str);
-            corto_llAppend(this->elements, element);
+            corto_ll_append(this->elements, element);
         }
     } else {
         element = ast_StringCreate("null");
-        corto_llAppend(this->elements, element);
+        corto_ll_append(this->elements, element);
     }
 
     return 0;
@@ -154,7 +154,7 @@ error:
 
 /* $end */
 
-corto_int16 _ast_String_construct(
+int16_t _ast_String_construct(
     ast_String this)
 {
 /* $begin(corto/ast/String/construct) */
@@ -163,8 +163,8 @@ corto_int16 _ast_String_construct(
         goto error;
     }
 
-    corto_setref(&this->block, yparser()->block);
-    corto_setref(&this->scope, yparser()->scope);
+    corto_ptr_setref(&this->block, yparser()->block);
+    corto_ptr_setref(&this->scope, yparser()->scope);
 
     return 0;
 error:
@@ -172,7 +172,7 @@ error:
 /* $end */
 }
 
-corto_word _ast_String_getValue(
+uintptr_t _ast_String_getValue(
     ast_String this)
 {
 /* $begin(corto/ast/String/getValue) */
@@ -204,7 +204,7 @@ corto_word _ast_String_getValue(
 /* $end */
 }
 
-corto_int16 _ast_String_init(
+int16_t _ast_String_init(
     ast_String this)
 {
 /* $begin(corto/ast/String/init) */
@@ -213,10 +213,10 @@ corto_int16 _ast_String_init(
 /* $end */
 }
 
-corto_int16 _ast_String_serialize(
+int16_t _ast_String_serialize(
     ast_String this,
     corto_type dstType,
-    corto_word dst)
+    uintptr_t dst)
 {
 /* $begin(corto/ast/String/serialize) */
     ast_valueKind kind;
@@ -228,7 +228,7 @@ corto_int16 _ast_String_serialize(
     case Ast_Int:
     case Ast_SignedInt:
     case Ast_Text:
-        corto_convert(corto_primitive(corto_string_o), &this->value, corto_primitive(dstType), (void*)dst);
+        corto_ptr_cast(corto_primitive(corto_string_o), &this->value, corto_primitive(dstType), (void*)dst);
         break;
     case Ast_Ref: {
         corto_object o = corto_resolve(NULL, this->value);
@@ -236,7 +236,7 @@ corto_int16 _ast_String_serialize(
             ast_Parser_error(yparser(), "unresolved object '%s'", this->value);
             goto error;
         }
-        corto_setref(&dst, o);
+        corto_ptr_setref(&dst, o);
         corto_release(o);
         break;
     }
@@ -254,11 +254,11 @@ error:
 /* $end */
 }
 
-ic_node _ast_String_toIc_v(
+ic_node _ast_String_toIc(
     ast_String this,
     ic_program program,
     ic_storage storage,
-    corto_bool stored)
+    bool stored)
 {
 /* $begin(corto/ast/String/toIc) */
     ic_node result = NULL;
@@ -270,7 +270,7 @@ ic_node _ast_String_toIc_v(
         goto error;
     }
 
-    if (!corto_llSize(this->elements)) {
+    if (!corto_ll_size(this->elements)) {
         corto_any l = {corto_type(corto_string_o), &this->value, FALSE};
         result = (ic_node)ic_literalCreate(l);
     } else {
@@ -278,7 +278,7 @@ ic_node _ast_String_toIc_v(
             corto_iter elementIter;
             ast_Expression element;
             ic_node icElement1, icElement2;
-            corto_uint32 elementCount = corto_llSize(this->elements);
+            corto_uint32 elementCount = corto_ll_size(this->elements);
             corto_bool stored = FALSE;
             ic_node dummy;
             corto_uint32 accPushCount = 0;
@@ -296,11 +296,11 @@ ic_node _ast_String_toIc_v(
             dummy = (ic_node)ic_literalCreate(l);
 
             result = (ic_node)storage;
-            elementIter = corto_llIter(this->elements);
-            while(corto_iterHasNext(&elementIter)) {
+            elementIter = corto_ll_iter(this->elements);
+            while(corto_iter_hasNext(&elementIter)) {
                 ic_accumulator acc = ic_program_pushAccumulator(program, (corto_type)corto_string_o, FALSE, FALSE);
                 accPushCount++;
-                element = corto_iterNext(&elementIter);
+                element = corto_iter_next(&elementIter);
 
                 elementType = ast_Expression_getType(element);
                 if (!elementType) {
@@ -325,10 +325,10 @@ ic_node _ast_String_toIc_v(
                     stored = TRUE;
                 } else {
                     if (elementCount) {
-                        if (corto_iterHasNext(&elementIter)) {
+                        if (corto_iter_hasNext(&elementIter)) {
                             ic_accumulator acc = ic_program_pushAccumulator(program, (corto_type)corto_string_o, FALSE, FALSE);
                             accPushCount++;
-                            element = corto_iterNext(&elementIter);
+                            element = corto_iter_next(&elementIter);
                             elementType = ast_Expression_getType(element);
 
                             if (!elementType) {

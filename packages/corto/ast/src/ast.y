@@ -132,7 +132,7 @@ error:
 
 /* Keywords */
 %token KW_IF KW_ELSE KW_WHILE KW_SWITCH KW_CASE KW_DEFAULT KW_BREAK KW_FOR
-%token KW_TRY KW_CATCH
+%token KW_TRY KW_CATCH KW_IN
 %token KW_IMPORT
 %token KW_LOCAL
 
@@ -170,7 +170,7 @@ error:
 %type <SignedInteger> SIGNEDINTEGER
 %type <FloatingPoint> FLOATINGPOINT
 %type <String> STRING identifier_string
-%type <String> ID GID function_argument function_argument_inout function_arguments function_argumentList any_id
+%type <String> ID GID function_argument function_argument_inout function_arguments function_argumentList any_id argument_inout
 %type <Null> NUL
 
 /* Syntax tree nodes */
@@ -178,7 +178,7 @@ error:
     statement statements statement_nodecl
     expr literal_expr primary_expr iter_expr postfix_expr unary_expr multiplicative_expr additive_expr shift_expr
     boolean_expr equality_expr and_expr xor_expr or_expr logical_and_expr logical_or_expr assignment_expr
-    comma_expr bracket_expr conditional_expr declaration declaration_expr declaration_ref
+    comma_expr bracket_expr conditional_expr declaration declaration_expr declaration_ref in_declaration
     function_declaration
     block block_start
     initializer initializer_expr initializer_braces init_key
@@ -237,6 +237,7 @@ statement_nodecl
 statement
     : statement_nodecl
     | package_declaration ENDL
+    | in_declaration ENDL
     | import_declaration ENDL
     | declaration ENDL {$$ = NULL;}
     | function_declaration ENDL {$$ = NULL;}
@@ -330,7 +331,6 @@ function_declaration
         $$ = ast_Parser_declareFunction(yparser(), $1 ? ast_Object($1)->value : NULL, id, kind, FALSE); fast_op;
         corto_release(kind);
     }
-    | identifier any_id function_argumentList identifier_string initializer_braces
     | identifier GID function_argumentList  {corto_id id; sprintf(id, "%s(%s)", $2, $3); corto_dealloc($3); $$ = ast_Parser_declareFunction(yparser(), $1 ? ast_Object($1)->value : NULL, id, NULL, FALSE); fast_op; }
 
     /* Reference returnvalue */
@@ -360,8 +360,13 @@ function_arguments
     ;
 
 function_argument_inout
-    : ID ':' function_argument {corto_asprintf(&$$, "%s:%s", $1, $3); corto_dealloc($3);}
+    : argument_inout ':' function_argument {corto_asprintf(&$$, "%s:%s", $1, $3); corto_dealloc($3);}
     | function_argument
+    ;
+
+argument_inout
+    : ID {$$ = $1;}
+    | KW_IN {$$ = "in";}
     ;
 
 function_argument
@@ -409,6 +414,12 @@ import_declaration
     }
     ;
 
+in_declaration
+    : KW_IN declaration {
+        ast_Parser_with(yparser());
+    }
+    ;
+
 declaration
     : identifier declaration_list { $$ = ast_declarationSeqDo($1, &$2, FALSE); fast_op; }
     | KW_DEFAULT declaration_list {
@@ -429,7 +440,9 @@ declaration_list
     ;
 
 declaration_id
-    : any_id    {$$.name = $1;}
+    : any_id {$$.name = $1;}
+    | GID {$$.name = $1;}
+    | KW_IN {$$.name = "in";}
     ;
 
 /* ======================================================================== */
@@ -787,7 +800,7 @@ int fast_yparse(ast_Parser parser, corto_uint32 line, corto_uint32 column) {
     }
 
     if (!parser->scope) {
-        corto_setref(&parser->scope, root_o);
+        corto_ptr_setref(&parser->scope, root_o);
     }
 
     /* Compensate for insertion of the extra \n */

@@ -39,7 +39,7 @@ error:
 
 /* $end */
 
-corto_int16 _ast_Update_construct(
+int16_t _ast_Update_construct(
     ast_Update this)
 {
 /* $begin(corto/ast/Update/construct) */
@@ -48,9 +48,9 @@ corto_int16 _ast_Update_construct(
 
     ast_Node(this)->kind = Ast_UpdateExpr;
 
-    exprIter = corto_llIter(this->exprList);
-    while(corto_iterHasNext(&exprIter)) {
-        expr = corto_iterNext(&exprIter);
+    exprIter = corto_ll_iter(this->exprList);
+    while(corto_iter_hasNext(&exprIter)) {
+        expr = corto_iter_next(&exprIter);
 
         expr = ast_Update_getFirstReference(expr);
 
@@ -79,11 +79,11 @@ static void ast_Update_end(ast_Update this, ic_program program, ic_node expr, ic
 }
 
 /* $end */
-ic_node _ast_Update_toIc_v(
+ic_node _ast_Update_toIc(
     ast_Update this,
     ic_program program,
     ic_storage storage,
-    corto_bool stored)
+    bool stored)
 {
 /* $begin(corto/ast/Update/toIc) */
     ic_node expr, from = NULL;
@@ -97,9 +97,9 @@ ic_node _ast_Update_toIc_v(
     }
 
     /* Add update statement for each expression in exprList */
-    exprIter = corto_llIter(this->exprList);
-    while(corto_iterHasNext(&exprIter)) {
-        ast_Expression fastExpr = ast_Update_getFirstReference(corto_iterNext(&exprIter));
+    exprIter = corto_ll_iter(this->exprList);
+    while(corto_iter_hasNext(&exprIter)) {
+        ast_Expression fastExpr = ast_Update_getFirstReference(corto_iter_next(&exprIter));
 
         /* Run binary expression between updatebegin and updateend */
         if (this->kind != Ast_UpdateDefault) {
@@ -124,9 +124,9 @@ ic_node _ast_Update_toIc_v(
     if (this->block) {
         /* Translate block to ic */
         ast_Block_toIc(this->block, program, NULL, FALSE);
-        exprIter = corto_llIter(this->exprList);
-        while(corto_iterHasNext(&exprIter)) {
-            ast_Expression fastExpr = corto_iterNext(&exprIter);
+        exprIter = corto_ll_iter(this->exprList);
+        while(corto_iter_hasNext(&exprIter)) {
+            ast_Expression fastExpr = corto_iter_next(&exprIter);
             expr = ast_Node_toIc(ast_Node(fastExpr), program, NULL, TRUE);
             ast_Update_end(this, program, expr, from);
         }

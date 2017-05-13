@@ -8,8 +8,7 @@
 
 #include <corto/corto.h>
 #include <corto/expr/_project.h>
-#include <corto/core/c/c.h>
-#include <corto/lang/c/c.h>
+#include <corto/c/c.h>
 #include <corto/ast/ast.h>
 
 /* $header() */
@@ -48,14 +47,6 @@ void corto_expr_free(corto_expr *expr);
 /* $body() */
 /* Enter code that requires types here */
 /* $end */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif
 

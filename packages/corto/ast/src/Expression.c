@@ -121,7 +121,7 @@ corto_type ast_Expression_narrowType(ast_Expression expr) {
 ast_Expression ast_Expression_narrow(ast_Expression expr) {
 
     if (ast_Node(expr)->kind == Ast_LiteralExpr) {
-        corto_setref(&expr->type, ast_Expression_narrowType(expr));
+        corto_ptr_setref(&expr->type, ast_Expression_narrowType(expr));
     }
 
     return expr;
@@ -140,45 +140,45 @@ ast_Expression ast_Expression_literalFromType(corto_type type, corto_type exprTy
     switch(corto_primitive(type)->kind) {
     case CORTO_BOOLEAN: {
         corto_bool dstValue = FALSE;
-        corto_convert(corto_primitive(exprType), value, corto_primitive(corto_bool_o), &dstValue);
+        corto_ptr_cast(corto_primitive(exprType), value, corto_primitive(corto_bool_o), &dstValue);
         result = ast_Expression(ast_BooleanCreate(dstValue));
         break;
     }
     case CORTO_CHARACTER: {
         corto_char dstValue;
-        corto_convert(corto_primitive(exprType), value, corto_primitive(corto_char_o), &dstValue);
+        corto_ptr_cast(corto_primitive(exprType), value, corto_primitive(corto_char_o), &dstValue);
         result = ast_Expression(ast_CharacterCreate(dstValue));
         break;
     }
     case CORTO_BINARY:
     case CORTO_UINTEGER: {
         corto_uint64 dstValue;
-        corto_convert(corto_primitive(exprType), value, corto_primitive(corto_uint64_o), &dstValue);
+        corto_ptr_cast(corto_primitive(exprType), value, corto_primitive(corto_uint64_o), &dstValue);
         result = ast_Expression(ast_IntegerCreate(dstValue));
         break;
     }
     case CORTO_INTEGER: {
         corto_int64 dstValue;
-        corto_convert(corto_primitive(exprType), value, corto_primitive(corto_int64_o), &dstValue);
+        corto_ptr_cast(corto_primitive(exprType), value, corto_primitive(corto_int64_o), &dstValue);
         result = ast_Expression(ast_SignedIntegerCreate(dstValue));
         break;
     }
     case CORTO_FLOAT: {
         corto_float64 dstValue;
-        corto_convert(corto_primitive(exprType), value, type, &dstValue);
+        corto_ptr_cast(corto_primitive(exprType), value, type, &dstValue);
         result = ast_Expression(ast_FloatingPointCreate(dstValue));
         break;
     }
     case CORTO_TEXT: {
         corto_string dstValue;
-        corto_convert(corto_primitive(exprType), value, corto_primitive(corto_string_o), &dstValue);
+        corto_ptr_cast(corto_primitive(exprType), value, corto_primitive(corto_string_o), &dstValue);
         result = ast_Expression(ast_StringCreate(dstValue));
         break;
     }
     case CORTO_ENUM:
     case CORTO_BITMASK: {
         corto_int32 dstValue;
-        corto_convert(corto_primitive(exprType), value, corto_primitive(corto_int32_o), &dstValue);
+        corto_ptr_cast(corto_primitive(exprType), value, corto_primitive(corto_int32_o), &dstValue);
         result = ast_Expression(ast_SignedIntegerCreate(dstValue));
         break;
     }
@@ -194,7 +194,7 @@ error:
 ast_Expression _ast_Expression_cast(
     ast_Expression this,
     corto_type type,
-    corto_bool isReference)
+    bool isReference)
 {
 /* $begin(corto/ast/Expression/cast) */
     corto_type exprType, refType;
@@ -258,7 +258,7 @@ ast_Expression _ast_Expression_cast(
                 result = ast_Expression_literalFromType(type, exprType, value);
 
                 if (result){
-                    corto_setref(&ast_Expression(result)->type, type);
+                    corto_ptr_setref(&ast_Expression(result)->type, type);
                 }
             } else {
                 /* TODO: This functionality must be pushed down to the assembler. For all this function is concerned a cast
@@ -331,16 +331,16 @@ error:
 /* $end */
 }
 
-corto_void _ast_Expression_cleanList(
+void _ast_Expression_cleanList(
     ast_ExpressionList list)
 {
 /* $begin(corto/ast/Expression/cleanList) */
     if (list) {
-        corto_iter iter = corto_llIter(list);
-        while(corto_iterHasNext(&iter)) {
-            corto_release(corto_iterNext(&iter));
+        corto_iter iter = corto_ll_iter(list);
+        while(corto_iter_hasNext(&iter)) {
+            corto_release(corto_iter_next(&iter));
         }
-        corto_llFree(list);
+        corto_ll_free(list);
     }
 /* $end */
 }
@@ -362,18 +362,18 @@ ast_Expression _ast_Expression_fromList(
 
     /* Convert list to comma expression */
     if (list) {
-        if (corto_llSize(list) == 1) {
-            result = corto_llGet(list, 0);
+        if (corto_ll_size(list) == 1) {
+            result = corto_ll_get(list, 0);
         } else {
-            corto_ll toList = corto_llNew(); /* Copy list */
+            corto_ll toList = corto_ll_new(); /* Copy list */
             corto_iter iter;
             ast_Expression expr;
 
             result = ast_Expression(ast_CommaCreate());
 
-            iter = corto_llIter(list);
-            while(corto_iterHasNext(&iter)) {
-                expr = corto_iterNext(&iter);
+            iter = corto_ll_iter(list);
+            while(corto_iter_hasNext(&iter)) {
+                expr = corto_iter_next(&iter);
                 ast_ExpressionListAppend(toList, expr);
             }
             ast_Comma(result)->expressions = toList;
@@ -462,7 +462,7 @@ corto_type _ast_Expression_getType_type(
 /* $end */
 }
 
-corto_word _ast_Expression_getValue_v(
+uintptr_t _ast_Expression_getValue_v(
     ast_Expression this)
 {
 /* $begin(corto/ast/Expression/getValue) */
@@ -471,7 +471,7 @@ corto_word _ast_Expression_getValue_v(
 /* $end */
 }
 
-corto_bool _ast_Expression_hasReturnedResource_v(
+bool _ast_Expression_hasReturnedResource_v(
     ast_Expression this)
 {
 /* $begin(corto/ast/Expression/hasReturnedResource) */
@@ -480,7 +480,7 @@ corto_bool _ast_Expression_hasReturnedResource_v(
 /* $end */
 }
 
-corto_bool _ast_Expression_hasSideEffects_v(
+bool _ast_Expression_hasSideEffects_v(
     ast_Expression this)
 {
 /* $begin(corto/ast/Expression/hasSideEffects) */
@@ -508,10 +508,10 @@ ast_Expression _ast_Expression_resolve_v(
 /* $end */
 }
 
-corto_int16 _ast_Expression_serialize_v(
+int16_t _ast_Expression_serialize_v(
     ast_Expression this,
     corto_type dstType,
-    corto_word dst)
+    uintptr_t dst)
 {
 /* $begin(corto/ast/Expression/serialize) */
     CORTO_UNUSED(this);
@@ -529,7 +529,7 @@ ast_ExpressionList _ast_Expression_toList_v(
     ast_NodeList result = NULL;
 
     if (this) {
-        result = corto_llNew();
+        result = corto_ll_new();
         ast_ExpressionListInsert(result, this);
     }
 

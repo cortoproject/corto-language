@@ -1,7 +1,5 @@
 
 COMPONENTS = %w(
-    vm
-    ic
     ast
     ext/cx
     expr

@@ -12,20 +12,20 @@
 #include "ast__private.h"
  /* $end */
 
-corto_int16 _ast_UnresolvedReference_construct(
+int16_t _ast_UnresolvedReference_construct(
     ast_UnresolvedReference this)
 {
 /* $begin(corto/ast/UnresolvedReference/construct) */
 
     ast_Storage(this)->kind = Ast_UnresolvedReferenceStorage;
     ast_Expression(this)->unresolved = TRUE;
-    corto_setref(&ast_Expression(this)->type, corto_void_o);
+    corto_ptr_setref(&ast_Expression(this)->type, corto_void_o);
 
     return ast_Storage_construct(this);
 /* $end */
 }
 
-corto_void _ast_UnresolvedReference_error(
+void _ast_UnresolvedReference_error(
     ast_UnresolvedReference this)
 {
 /* $begin(corto/ast/UnresolvedReference/error) */
@@ -44,7 +44,7 @@ corto_void _ast_UnresolvedReference_error(
 /* $end */
 }
 
-corto_string _ast_UnresolvedReference_id_v(
+corto_string _ast_UnresolvedReference_id(
     ast_UnresolvedReference this)
 {
 /* $begin(corto/ast/UnresolvedReference/id) */
@@ -54,7 +54,7 @@ corto_string _ast_UnresolvedReference_id_v(
 /* $end */
 }
 
-ast_Expression _ast_UnresolvedReference_resolve_v(
+ast_Expression _ast_UnresolvedReference_resolve(
     ast_UnresolvedReference this,
     corto_type type)
 {
@@ -81,11 +81,11 @@ ast_Expression _ast_UnresolvedReference_resolve_v(
 /* $end */
 }
 
-ic_node _ast_UnresolvedReference_toIc_v(
+ic_node _ast_UnresolvedReference_toIc(
     ast_UnresolvedReference this,
     ic_program program,
     ic_storage storage,
-    corto_bool stored)
+    bool stored)
 {
 /* $begin(corto/ast/UnresolvedReference/toIc) */
 

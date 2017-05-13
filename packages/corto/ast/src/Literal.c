@@ -12,7 +12,7 @@
 #include "ast__private.h"
 /* $end */
 
-corto_word _ast_Literal_getValue_v(
+uintptr_t _ast_Literal_getValue_v(
     ast_Literal this)
 {
 /* $begin(corto/ast/Literal/getValue) */
@@ -31,35 +31,35 @@ corto_word _ast_Literal_getValue_v(
 /* $end */
 }
 
-corto_int16 _ast_Literal_init(
+int16_t _ast_Literal_init(
     ast_Literal this)
 {
 /* $begin(corto/ast/Literal/init) */
     if (!ast_Expression(this)->type) {
         switch(this->kind) {
         case Ast_Bool:
-            corto_setref(&ast_Expression(this)->type, corto_bool_o);
+            corto_ptr_setref(&ast_Expression(this)->type, corto_bool_o);
             break;
         case Ast_Char:
-            corto_setref(&ast_Expression(this)->type, corto_char_o);
+            corto_ptr_setref(&ast_Expression(this)->type, corto_char_o);
             break;
         case Ast_Int:
-            corto_setref(&ast_Expression(this)->type, corto_uint64_o);
+            corto_ptr_setref(&ast_Expression(this)->type, corto_uint64_o);
             break;
         case Ast_SignedInt:
-            corto_setref(&ast_Expression(this)->type, corto_int64_o);
+            corto_ptr_setref(&ast_Expression(this)->type, corto_int64_o);
             break;
         case Ast_Float:
-            corto_setref(&ast_Expression(this)->type, corto_float64_o);
+            corto_ptr_setref(&ast_Expression(this)->type, corto_float64_o);
             break;
         case Ast_Text:
-            corto_setref(&ast_Expression(this)->type, corto_string_o);
+            corto_ptr_setref(&ast_Expression(this)->type, corto_string_o);
             break;
         case Ast_Enum:
-            corto_setref(&ast_Expression(this)->type, corto_uint32_o);
+            corto_ptr_setref(&ast_Expression(this)->type, corto_uint32_o);
             break;
         case Ast_Ref:
-            corto_setref(&ast_Expression(this)->type, corto_object_o);
+            corto_ptr_setref(&ast_Expression(this)->type, corto_object_o);
             break;
         case Ast_Nothing:
             /* No type. */

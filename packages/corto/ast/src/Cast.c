@@ -12,7 +12,7 @@
 #include "ast__private.h"
 /* $end */
 
-corto_int16 _ast_Cast_construct(
+int16_t _ast_Cast_construct(
     ast_Cast this)
 {
 /* $begin(corto/ast/Cast/construct) */
@@ -24,7 +24,7 @@ corto_int16 _ast_Cast_construct(
     if (rvalueType) {
         if ((this->isReference && rvalueType->reference && (rvalueType->kind == CORTO_VOID)) ||
            (corto_type_castable(this->lvalue, rvalueType) || corto_type_castable(rvalueType, this->lvalue))) {
-            corto_setref(&ast_Expression(this)->type, this->lvalue);
+            corto_ptr_setref(&ast_Expression(this)->type, this->lvalue);
             ast_Expression(this)->isReference = this->lvalue->reference || this->isReference;
         } else {
             corto_id id1, id2;
@@ -35,7 +35,7 @@ corto_int16 _ast_Cast_construct(
     } else {
         /* If type of rvalue is unknown, cast is performed at runtime. Set type even though to introduce the
          * type barrier for code using this expression. */
-        corto_setref(&ast_Expression(this)->type, this->lvalue);
+        corto_ptr_setref(&ast_Expression(this)->type, this->lvalue);
     }
 
     return 0;
@@ -44,7 +44,7 @@ error:
 /* $end */
 }
 
-corto_bool _ast_Cast_hasReturnedResource_v(
+bool _ast_Cast_hasReturnedResource(
     ast_Cast this)
 {
 /* $begin(corto/ast/Cast/hasReturnedResource) */
@@ -54,11 +54,11 @@ corto_bool _ast_Cast_hasReturnedResource_v(
 /* $end */
 }
 
-ic_node _ast_Cast_toIc_v(
+ic_node _ast_Cast_toIc(
     ast_Cast this,
     ic_program program,
     ic_storage storage,
-    corto_bool stored)
+    bool stored)
 {
 /* $begin(corto/ast/Cast/toIc) */
     ic_node lvalue, rvalue, result;

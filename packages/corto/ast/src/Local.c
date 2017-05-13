@@ -12,25 +12,25 @@
 #include "ast__private.h"
 /* $end */
 
-corto_int16 _ast_Local_construct(
+int16_t _ast_Local_construct(
     ast_Local this)
 {
 /* $begin(corto/ast/Local/construct) */
 
     ast_Node(this)->kind = Ast_StorageExpr;
     ast_Storage(this)->kind = Ast_LocalStorage;
-    corto_setref(&ast_Expression(this)->type, this->type);
+    corto_ptr_setref(&ast_Expression(this)->type, this->type);
     ast_Expression(this)->isReference = this->reference || this->type->reference;
 
     return ast_Storage_construct(ast_Storage(this));
 /* $end */
 }
 
-ic_node _ast_Local_toIc_v(
+ic_node _ast_Local_toIc(
     ast_Local this,
     ic_program program,
     ic_storage storage,
-    corto_bool stored)
+    bool stored)
 {
 /* $begin(corto/ast/Local/toIc) */
     ic_node result;

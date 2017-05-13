@@ -12,7 +12,7 @@
 #include "ast__private.h"
 /* $end */
 
-corto_int16 _ast_Element_construct(
+int16_t _ast_Element_construct(
     ast_Element this)
 {
 /* $begin(corto/ast/Element/construct) */
@@ -42,7 +42,7 @@ corto_int16 _ast_Element_construct(
                 }
             }
             /* Set type of expression */
-            corto_setref(&ast_Expression(this)->type, corto_collection(lvalueType)->elementType);
+            corto_ptr_setref(&ast_Expression(this)->type, corto_collection(lvalueType)->elementType);
         } else {
             corto_id id;
             ast_Parser_error(yparser(), "cannot obtain element from this of non-collection type '%s'", ast_Parser_id(lvalueType, id));
@@ -61,11 +61,11 @@ error:
 /* $end */
 }
 
-ic_node _ast_Element_toIc_v(
+ic_node _ast_Element_toIc(
     ast_Element this,
     ic_program program,
     ic_storage storage,
-    corto_bool stored)
+    bool stored)
 {
 /* $begin(corto/ast/Element/toIc) */
     ic_element result;

@@ -12,7 +12,7 @@
 #include "ast__private.h"
 /* $end */
 
-corto_int16 _ast_PostFix_construct(
+int16_t _ast_PostFix_construct(
     ast_PostFix this)
 {
 /* $begin(corto/ast/PostFix/construct) */
@@ -42,13 +42,13 @@ corto_int16 _ast_PostFix_construct(
                 goto error;
                 break;       
             }
-            corto_setref(&ast_Expression(this)->type, lvalueType);
+            corto_ptr_setref(&ast_Expression(this)->type, lvalueType);
             break;
 
         case CORTO_ITERATOR:
             if (this->_operator == CORTO_INC) {
                 /* The result of an expression that increments an iterator is a boolean */
-                corto_setref(&ast_Expression(this)->type, corto_bool_o);
+                corto_ptr_setref(&ast_Expression(this)->type, corto_bool_o);
             } else {
                 ast_Parser_error(yparser(), "invalid operator for iterator");
                 goto error;
@@ -71,7 +71,7 @@ error:
 /* $end */
 }
 
-corto_bool _ast_PostFix_hasReturnedResource_v(
+bool _ast_PostFix_hasReturnedResource(
     ast_PostFix this)
 {
 /* $begin(corto/ast/PostFix/hasReturnedResource) */
@@ -79,11 +79,11 @@ corto_bool _ast_PostFix_hasReturnedResource_v(
 /* $end */
 }
 
-ic_node _ast_PostFix_toIc_v(
+ic_node _ast_PostFix_toIc(
     ast_PostFix this,
     ic_program program,
     ic_storage storage,
-    corto_bool stored)
+    bool stored)
 {
 /* $begin(corto/ast/PostFix/toIc) */
     ic_storage result;

@@ -18,14 +18,14 @@ corto_int16 ast_Unary_doConstruct(ast_Unary this) {
 
     if (lvalueType->kind != CORTO_ITERATOR) {
         if (this->_operator == CORTO_COND_NOT) {
-            corto_setref(&ast_Expression(this)->type, corto_bool_o);
+            corto_ptr_setref(&ast_Expression(this)->type, corto_bool_o);
         } else {
-            corto_setref(&ast_Expression(this)->type, lvalueType);
+            corto_ptr_setref(&ast_Expression(this)->type, lvalueType);
         }
     } else {
         if (this->_operator == CORTO_MUL) {
             corto_type iterType = corto_iterator(lvalueType)->elementType;
-            corto_setref(&ast_Expression(this)->type, iterType);
+            corto_ptr_setref(&ast_Expression(this)->type, iterType);
             ast_Expression(this)->isReference = TRUE;
         } else {
             ast_Parser_error(yparser(), "invalid operator for iterator");
@@ -39,7 +39,7 @@ error:
 } 
 /* $end */
 
-corto_int16 _ast_Unary_construct(
+int16_t _ast_Unary_construct(
     ast_Unary this)
 {
 /* $begin(corto/ast/Unary/construct) */
@@ -87,7 +87,7 @@ ast_Expression _ast_Unary_fold(
                     break;
                 }
                 if ((corto_primitive(type)->kind == CORTO_BITMASK) || (corto_primitive(type)->kind == CORTO_ENUM)) {
-                    corto_setref(&ast_Expression(result)->type, type);
+                    corto_ptr_setref(&ast_Expression(result)->type, type);
                 }
             }
 
@@ -97,7 +97,7 @@ ast_Expression _ast_Unary_fold(
             /* Obtain pointer to value-field */
             resultPtr = (void*)ast_Literal_getValue(ast_Literal(result));
 
-            if (corto_unaryOperator(type, this->_operator, ptr, resultPtr)) {
+            if (corto_ptr_unaryOp(type, this->_operator, ptr, resultPtr)) {
                 ast_Parser_error(yparser(), "operator failed: %s", corto_lasterr());
                 goto error;
             }
@@ -110,7 +110,7 @@ error:
 /* $end */
 }
 
-corto_bool _ast_Unary_hasReturnedResource_v(
+bool _ast_Unary_hasReturnedResource(
     ast_Unary this)
 {
 /* $begin(corto/ast/Unary/hasReturnedResource) */
@@ -118,7 +118,7 @@ corto_bool _ast_Unary_hasReturnedResource_v(
 /* $end */
 }
 
-corto_bool _ast_Unary_hasSideEffects_v(
+bool _ast_Unary_hasSideEffects(
     ast_Unary this)
 {
 /* $begin(corto/ast/Unary/hasSideEffects) */
@@ -126,7 +126,7 @@ corto_bool _ast_Unary_hasSideEffects_v(
 /* $end */
 }
 
-ast_Expression _ast_Unary_resolve_v(
+ast_Expression _ast_Unary_resolve(
     ast_Unary this,
     corto_type type)
 {
@@ -138,7 +138,7 @@ ast_Expression _ast_Unary_resolve_v(
             goto error;
         }
 
-        corto_setref(&this->lvalue, lvalue);
+        corto_ptr_setref(&this->lvalue, lvalue);
         ast_Expression(this)->unresolved = FALSE;
 
         if (ast_Unary_doConstruct(this)) {
@@ -152,11 +152,11 @@ error:
 /* $end */
 }
 
-ic_node _ast_Unary_toIc_v(
+ic_node _ast_Unary_toIc(
     ast_Unary this,
     ic_program program,
     ic_storage storage,
-    corto_bool stored)
+    bool stored)
 {
 /* $begin(corto/ast/Unary/toIc) */
     ic_storage result;

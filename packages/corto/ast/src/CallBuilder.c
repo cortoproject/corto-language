@@ -47,7 +47,7 @@ ast_Call ast_CallBuilder_buildMethod(ast_CallBuilder *this) {
         }
 
         /* If function is a metaprocedure, validate whether the instance pointer should be a refernce */
-        if (corto_procedure(corto_typeof(f))->kind == CORTO_METAPROCEDURE) {
+        if (corto_instanceof(corto_metaprocedure_o, f)) {
             if (corto_metaprocedure(f)->referenceOnly && !this->instance->isReference) {
                 ast_Parser_error(yparser(), "can only call %s on objects", corto_idof(f));
                 goto error;
@@ -96,7 +96,7 @@ ast_Call _ast_CallBuilder_build(
             } else if ((l = ast_Block_resolveLocal(this->block, "this"))) {
                 if (corto_type_resolveProcedure(l->type, this->signature)) {
                     /* Set instance to 'this' */
-                    corto_setref(&this->instance, l);
+                    corto_ptr_setref(&this->instance, l);
                     result = ast_CallBuilder_buildMethod(this);
                 }           
             }
@@ -136,7 +136,7 @@ error:
 /* $end */
 }
 
-corto_int16 _ast_CallBuilder_buildSignature(
+int16_t _ast_CallBuilder_buildSignature(
     ast_CallBuilder* this)
 {
 /* $begin(corto/ast/CallBuilder/buildSignature) */
@@ -151,10 +151,10 @@ corto_int16 _ast_CallBuilder_buildSignature(
 
         if (this->arguments) {
             corto_ll arguments = ast_Expression_toList(this->arguments);
-            argumentIter = corto_llIter(arguments);
-            while(corto_iterHasNext(&argumentIter)) {
+            argumentIter = corto_ll_iter(arguments);
+            while(corto_iter_hasNext(&argumentIter)) {
                 int flags = 0;
-                argument = corto_iterNext(&argumentIter);
+                argument = corto_iter_next(&argumentIter);
                 argumentType = ast_Expression_narrowType(argument);
 
                 /* If there is no type and the argument is an initializer, insert a wildcard */

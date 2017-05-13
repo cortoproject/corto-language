@@ -438,7 +438,7 @@ error:
 
 /* $end */
 
-corto_int16 _ast_Binary_construct(
+int16_t _ast_Binary_construct(
     ast_Binary this)
 {
 /* $begin(corto/ast/Binary/construct) */
@@ -449,7 +449,7 @@ corto_int16 _ast_Binary_construct(
         this->rvalue->unresolved)
     {
         ast_Expression(this)->unresolved = TRUE;
-        corto_setref(&ast_Expression(this)->type, corto_void_o);
+        corto_ptr_setref(&ast_Expression(this)->type, corto_void_o);
     } else
     {
         if (ast_Binary_doConstruct(this)) {
@@ -491,7 +491,7 @@ ast_Expression _ast_Binary_fold(
                 if (ast_Binary_isConditional(this)) {
                     result = ast_Expression(ast_BooleanCreate(FALSE));
                     resultPtr = (void*)ast_Literal_getValue(ast_Literal(result));
-                    corto_binaryOperator(corto_object_o, this->_operator, &lptr, &rptr, resultPtr);
+                    corto_ptr_binaryOp(corto_object_o, this->_operator, &lptr, &rptr, resultPtr);
                 } else {
                     result = ast_Expression(ast_NullCreate());
                 }
@@ -522,7 +522,7 @@ ast_Expression _ast_Binary_fold(
                     break;
                 }
                 if ((corto_primitive(type)->kind == CORTO_BITMASK) || (corto_primitive(type)->kind == CORTO_ENUM)) {
-                    corto_setref(&ast_Expression(result)->type, type);
+                    corto_ptr_setref(&ast_Expression(result)->type, type);
                 }
             }
 
@@ -533,7 +533,7 @@ ast_Expression _ast_Binary_fold(
             resultPtr = (void*)ast_Literal_getValue(ast_Literal(result));
 
             /* Perform operation */
-            if (corto_binaryOperator(type, this->_operator, lptr, rptr, resultPtr)) {
+            if (corto_ptr_binaryOp(type, this->_operator, lptr, rptr, resultPtr)) {
                 ast_Parser_error(yparser(), "operator failed: %s", corto_lasterr());
                 goto error;
             }
@@ -549,7 +549,7 @@ error:
 /* $end */
 }
 
-corto_bool _ast_Binary_hasReturnedResource_v(
+bool _ast_Binary_hasReturnedResource(
     ast_Binary this)
 {
 /* $begin(corto/ast/Binary/hasReturnedResource) */
@@ -560,7 +560,7 @@ corto_bool _ast_Binary_hasReturnedResource_v(
 /* $end */
 }
 
-corto_bool _ast_Binary_hasSideEffects_v(
+bool _ast_Binary_hasSideEffects(
     ast_Binary this)
 {
 /* $begin(corto/ast/Binary/hasSideEffects) */
@@ -585,7 +585,7 @@ corto_bool _ast_Binary_hasSideEffects_v(
 /* $end */
 }
 
-ast_Expression _ast_Binary_resolve_v(
+ast_Expression _ast_Binary_resolve(
     ast_Binary this,
     corto_type type)
 {
@@ -603,8 +603,8 @@ ast_Expression _ast_Binary_resolve_v(
             goto error;
         }
 
-        corto_setref(&this->lvalue, lvalue);
-        corto_setref(&this->rvalue, rvalue);
+        corto_ptr_setref(&this->lvalue, lvalue);
+        corto_ptr_setref(&this->rvalue, rvalue);
 
         if (ast_Binary_doConstruct(this)) {
             goto error;
@@ -619,7 +619,7 @@ error:
 /* $end */
 }
 
-corto_void _ast_Binary_setOperator(
+void _ast_Binary_setOperator(
     ast_Binary this,
     corto_operatorKind kind)
 {
@@ -648,7 +648,7 @@ corto_void _ast_Binary_setOperator(
 
     if (compoundExpr) {
         this->_operator = CORTO_ASSIGN;
-        corto_setref(&this->rvalue, compoundExpr);
+        corto_ptr_setref(&this->rvalue, compoundExpr);
         ast_Parser_collect(yparser(), compoundExpr);
     }
 
@@ -669,10 +669,10 @@ corto_void _ast_Binary_setOperator(
     case CORTO_COND_GTEQ:
     case CORTO_COND_AND:
     case CORTO_COND_OR:
-        corto_setref(&ast_Expression(this)->type, corto_bool_o);
+        corto_ptr_setref(&ast_Expression(this)->type, corto_bool_o);
         break;
     default:
-        corto_setref(&ast_Expression(this)->type, exprType);
+        corto_ptr_setref(&ast_Expression(this)->type, exprType);
         break;
     }
 
@@ -692,11 +692,11 @@ error:
 /* $end */
 }
 
-ic_node _ast_Binary_toIc_v(
+ic_node _ast_Binary_toIc(
     ast_Binary this,
     ic_program program,
     ic_storage storage,
-    corto_bool stored)
+    bool stored)
 {
 /* $begin(corto/ast/Binary/toIc) */
     ic_node returnsResult = NULL;
