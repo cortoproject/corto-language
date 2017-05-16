@@ -148,10 +148,10 @@ int16_t _ast_StaticInitializer_define(
     for(variable=0; variable<ast_Initializer(this)->variableCount; variable++) {
         o = (corto_object)ast_Object(ast_Initializer(this)->variables[variable].object)->value;
         if (corto_instanceof(corto_type(corto_type_o), o)
-                || (corto_checkAttr(o, CORTO_ATTR_SCOPED) && corto_instanceof(corto_type(corto_type_o), corto_parentof(o)))) {
+                || (corto_checkAttr(o, CORTO_ATTR_NAMED) && corto_instanceof(corto_type(corto_type_o), corto_parentof(o)))) {
             
             corto_type t = corto_typeof(o);
-            if (!corto_checkAttr(o, CORTO_ATTR_SCOPED) ||
+            if (!corto_checkAttr(o, CORTO_ATTR_NAMED) ||
                 (corto_parentof(o) && corto_checkState(corto_parentof(o), CORTO_DEFINED)) ||
                 (t->options.parentState != CORTO_DEFINED)) 
             {

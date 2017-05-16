@@ -36,7 +36,7 @@ corto_int16 ast_Initializer_findMember(corto_walk_opt* s, corto_value* v, void* 
     switch(v->kind) {
     case CORTO_MEMBER:
         if (v->is.member.t->id == (corto_uint32)-1) {
-            result = corto_value_walk(s, v, userData);
+            result = corto_walk_value(s, v, userData);
         } else {
             if ((data->lookForLocation >= 0) && ((corto_uint32)data->lookForLocation == data->count)) {
                 data->m = v->is.member.t;

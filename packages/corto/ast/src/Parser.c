@@ -74,7 +74,7 @@ void ast_Parser_warning(ast_Parser this, char* fmt, ... ) {
 corto_string ast_Parser_id(corto_object o, corto_id buffer) {
     if (!o) {
         sprintf(buffer, "null");
-    } else if (corto_checkAttr(o, CORTO_ATTR_SCOPED)) {
+    } else if (corto_checkAttr(o, CORTO_ATTR_NAMED)) {
         if (corto_parentof(o) == corto_lang_o) {
             strcpy(buffer, corto_idof(o));
         } else {
@@ -607,7 +607,7 @@ ast_Expression ast_Parser_resolve(ast_Parser this, corto_id id) {
     corto_object object = NULL;
 
     corto_object rvalueType = ast_Parser_getLvalueType(this, FALSE);
-    if (rvalueType && corto_checkAttr(rvalueType, CORTO_ATTR_SCOPED)) {
+    if (rvalueType && corto_checkAttr(rvalueType, CORTO_ATTR_NAMED)) {
         object = corto_lookup(rvalueType, id);
     }
 
@@ -885,7 +885,7 @@ corto_string _ast_Parser_argumentToString(
         goto error;
     }
 
-    if (corto_checkAttr(type, CORTO_ATTR_SCOPED)) {
+    if (corto_checkAttr(type, CORTO_ATTR_NAMED)) {
         corto_id id;
         if ((corto_parentof(type) == corto_o) || (corto_parentof(type) == corto_lang_o)) {
             str = strdup(corto_idof(type));
@@ -1903,7 +1903,7 @@ int16_t _ast_Parser_initDeclare(
              * input for the declaration */
             } else if (ast_Storage(s)->kind == Ast_ObjectStorage) {
                 corto_object o = ast_Object(s)->value;
-                if (o && corto_checkAttr(o, CORTO_ATTR_SCOPED)) {
+                if (o && corto_checkAttr(o, CORTO_ATTR_NAMED)) {
                     id = corto_idof(o);
                 }
             } else if (ast_Storage(s)->kind == Ast_LocalStorage) {

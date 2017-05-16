@@ -29,7 +29,7 @@ corto_void _test_Boolean_tc_o_boolFalse(
     test_assert(corto_checkState(o, CORTO_VALID));
     test_assert(corto_checkState(o, CORTO_DECLARED));
     test_assert(corto_checkState(o, CORTO_DEFINED));
-    test_assert(corto_checkAttr(o, CORTO_ATTR_SCOPED));
+    test_assert(corto_checkAttr(o, CORTO_ATTR_NAMED));
     test_assert(corto_checkAttr(o, CORTO_ATTR_OBSERVABLE));
     test_assert(corto_checkAttr(o, CORTO_ATTR_PERSISTENT));
     test_assert(corto_checkAttr(o, CORTO_ATTR_WRITABLE));
@@ -53,7 +53,7 @@ corto_void _test_Boolean_tc_o_boolTrue(
     test_assert(corto_checkState(o, CORTO_VALID));
     test_assert(corto_checkState(o, CORTO_DECLARED));
     test_assert(corto_checkState(o, CORTO_DEFINED));
-    test_assert(corto_checkAttr(o, CORTO_ATTR_SCOPED));
+    test_assert(corto_checkAttr(o, CORTO_ATTR_NAMED));
     test_assert(corto_checkAttr(o, CORTO_ATTR_OBSERVABLE));
     test_assert(corto_checkAttr(o, CORTO_ATTR_PERSISTENT));
     test_assert(corto_checkAttr(o, CORTO_ATTR_WRITABLE));
@@ -81,7 +81,7 @@ corto_void _test_Boolean_tc_o_myboolFalse(
     test_assert(corto_checkState(o, CORTO_VALID));
     test_assert(corto_checkState(o, CORTO_DECLARED));
     test_assert(corto_checkState(o, CORTO_DEFINED));
-    test_assert(corto_checkAttr(o, CORTO_ATTR_SCOPED));
+    test_assert(corto_checkAttr(o, CORTO_ATTR_NAMED));
     test_assert(corto_checkAttr(o, CORTO_ATTR_OBSERVABLE));
     test_assert(corto_checkAttr(o, CORTO_ATTR_PERSISTENT));
     test_assert(corto_checkAttr(o, CORTO_ATTR_WRITABLE));
@@ -110,7 +110,7 @@ corto_void _test_Boolean_tc_o_myboolTrue(
     test_assert(corto_checkState(o, CORTO_VALID));
     test_assert(corto_checkState(o, CORTO_DECLARED));
     test_assert(corto_checkState(o, CORTO_DEFINED));
-    test_assert(corto_checkAttr(o, CORTO_ATTR_SCOPED));
+    test_assert(corto_checkAttr(o, CORTO_ATTR_NAMED));
     test_assert(corto_checkAttr(o, CORTO_ATTR_OBSERVABLE));
     test_assert(corto_checkAttr(o, CORTO_ATTR_PERSISTENT));
     test_assert(corto_checkAttr(o, CORTO_ATTR_WRITABLE));
@@ -135,7 +135,7 @@ corto_void _test_Boolean_tc_t_mybool(
     test_assert(corto_checkState(t, CORTO_VALID));
     test_assert(corto_checkState(t, CORTO_DECLARED));
     test_assert(corto_checkState(t, CORTO_DEFINED));
-    test_assert(corto_checkAttr(t, CORTO_ATTR_SCOPED));
+    test_assert(corto_checkAttr(t, CORTO_ATTR_NAMED));
     test_assert(corto_checkAttr(t, CORTO_ATTR_OBSERVABLE));
     test_assert(corto_checkAttr(t, CORTO_ATTR_PERSISTENT));
     test_assert(corto_checkAttr(t, CORTO_ATTR_WRITABLE));

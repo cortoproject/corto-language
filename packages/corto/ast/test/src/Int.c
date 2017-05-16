@@ -29,7 +29,7 @@ corto_void _test_Int_tc_o_int16(
     test_assert(corto_checkState(o, CORTO_VALID));
     test_assert(corto_checkState(o, CORTO_DECLARED));
     test_assert(corto_checkState(o, CORTO_DEFINED));
-    test_assert(corto_checkAttr(o, CORTO_ATTR_SCOPED));
+    test_assert(corto_checkAttr(o, CORTO_ATTR_NAMED));
     test_assert(corto_checkAttr(o, CORTO_ATTR_OBSERVABLE));
     test_assert(corto_checkAttr(o, CORTO_ATTR_PERSISTENT));
     test_assert(corto_checkAttr(o, CORTO_ATTR_WRITABLE));
@@ -53,7 +53,7 @@ corto_void _test_Int_tc_o_int16Max(
     test_assert(corto_checkState(o, CORTO_VALID));
     test_assert(corto_checkState(o, CORTO_DECLARED));
     test_assert(corto_checkState(o, CORTO_DEFINED));
-    test_assert(corto_checkAttr(o, CORTO_ATTR_SCOPED));
+    test_assert(corto_checkAttr(o, CORTO_ATTR_NAMED));
     test_assert(corto_checkAttr(o, CORTO_ATTR_OBSERVABLE));
     test_assert(corto_checkAttr(o, CORTO_ATTR_PERSISTENT));
     test_assert(corto_checkAttr(o, CORTO_ATTR_WRITABLE));
@@ -77,7 +77,7 @@ corto_void _test_Int_tc_o_int16Min(
     test_assert(corto_checkState(o, CORTO_VALID));
     test_assert(corto_checkState(o, CORTO_DECLARED));
     test_assert(corto_checkState(o, CORTO_DEFINED));
-    test_assert(corto_checkAttr(o, CORTO_ATTR_SCOPED));
+    test_assert(corto_checkAttr(o, CORTO_ATTR_NAMED));
     test_assert(corto_checkAttr(o, CORTO_ATTR_OBSERVABLE));
     test_assert(corto_checkAttr(o, CORTO_ATTR_PERSISTENT));
     test_assert(corto_checkAttr(o, CORTO_ATTR_WRITABLE));
@@ -101,7 +101,7 @@ corto_void _test_Int_tc_o_int32(
     test_assert(corto_checkState(o, CORTO_VALID));
     test_assert(corto_checkState(o, CORTO_DECLARED));
     test_assert(corto_checkState(o, CORTO_DEFINED));
-    test_assert(corto_checkAttr(o, CORTO_ATTR_SCOPED));
+    test_assert(corto_checkAttr(o, CORTO_ATTR_NAMED));
     test_assert(corto_checkAttr(o, CORTO_ATTR_OBSERVABLE));
     test_assert(corto_checkAttr(o, CORTO_ATTR_PERSISTENT));
     test_assert(corto_checkAttr(o, CORTO_ATTR_WRITABLE));
@@ -125,7 +125,7 @@ corto_void _test_Int_tc_o_int32Max(
     test_assert(corto_checkState(o, CORTO_VALID));
     test_assert(corto_checkState(o, CORTO_DECLARED));
     test_assert(corto_checkState(o, CORTO_DEFINED));
-    test_assert(corto_checkAttr(o, CORTO_ATTR_SCOPED));
+    test_assert(corto_checkAttr(o, CORTO_ATTR_NAMED));
     test_assert(corto_checkAttr(o, CORTO_ATTR_OBSERVABLE));
     test_assert(corto_checkAttr(o, CORTO_ATTR_PERSISTENT));
     test_assert(corto_checkAttr(o, CORTO_ATTR_WRITABLE));
@@ -149,7 +149,7 @@ corto_void _test_Int_tc_o_int32Min(
     test_assert(corto_checkState(o, CORTO_VALID));
     test_assert(corto_checkState(o, CORTO_DECLARED));
     test_assert(corto_checkState(o, CORTO_DEFINED));
-    test_assert(corto_checkAttr(o, CORTO_ATTR_SCOPED));
+    test_assert(corto_checkAttr(o, CORTO_ATTR_NAMED));
     test_assert(corto_checkAttr(o, CORTO_ATTR_OBSERVABLE));
     test_assert(corto_checkAttr(o, CORTO_ATTR_PERSISTENT));
     test_assert(corto_checkAttr(o, CORTO_ATTR_WRITABLE));
@@ -173,7 +173,7 @@ corto_void _test_Int_tc_o_int64(
     test_assert(corto_checkState(o, CORTO_VALID));
     test_assert(corto_checkState(o, CORTO_DECLARED));
     test_assert(corto_checkState(o, CORTO_DEFINED));
-    test_assert(corto_checkAttr(o, CORTO_ATTR_SCOPED));
+    test_assert(corto_checkAttr(o, CORTO_ATTR_NAMED));
     test_assert(corto_checkAttr(o, CORTO_ATTR_OBSERVABLE));
     test_assert(corto_checkAttr(o, CORTO_ATTR_PERSISTENT));
     test_assert(corto_checkAttr(o, CORTO_ATTR_WRITABLE));
@@ -197,7 +197,7 @@ corto_void _test_Int_tc_o_int64Max(
     test_assert(corto_checkState(o, CORTO_VALID));
     test_assert(corto_checkState(o, CORTO_DECLARED));
     test_assert(corto_checkState(o, CORTO_DEFINED));
-    test_assert(corto_checkAttr(o, CORTO_ATTR_SCOPED));
+    test_assert(corto_checkAttr(o, CORTO_ATTR_NAMED));
     test_assert(corto_checkAttr(o, CORTO_ATTR_OBSERVABLE));
     test_assert(corto_checkAttr(o, CORTO_ATTR_PERSISTENT));
     test_assert(corto_checkAttr(o, CORTO_ATTR_WRITABLE));
@@ -221,7 +221,7 @@ corto_void _test_Int_tc_o_int64Min(
     test_assert(corto_checkState(o, CORTO_VALID));
     test_assert(corto_checkState(o, CORTO_DECLARED));
     test_assert(corto_checkState(o, CORTO_DEFINED));
-    test_assert(corto_checkAttr(o, CORTO_ATTR_SCOPED));
+    test_assert(corto_checkAttr(o, CORTO_ATTR_NAMED));
     test_assert(corto_checkAttr(o, CORTO_ATTR_OBSERVABLE));
     test_assert(corto_checkAttr(o, CORTO_ATTR_PERSISTENT));
     test_assert(corto_checkAttr(o, CORTO_ATTR_WRITABLE));
@@ -245,7 +245,7 @@ corto_void _test_Int_tc_o_int8(
     test_assert(corto_checkState(o, CORTO_VALID));
     test_assert(corto_checkState(o, CORTO_DECLARED));
     test_assert(corto_checkState(o, CORTO_DEFINED));
-    test_assert(corto_checkAttr(o, CORTO_ATTR_SCOPED));
+    test_assert(corto_checkAttr(o, CORTO_ATTR_NAMED));
     test_assert(corto_checkAttr(o, CORTO_ATTR_OBSERVABLE));
     test_assert(corto_checkAttr(o, CORTO_ATTR_PERSISTENT));
     test_assert(corto_checkAttr(o, CORTO_ATTR_WRITABLE));
@@ -269,7 +269,7 @@ corto_void _test_Int_tc_o_int8Max(
     test_assert(corto_checkState(o, CORTO_VALID));
     test_assert(corto_checkState(o, CORTO_DECLARED));
     test_assert(corto_checkState(o, CORTO_DEFINED));
-    test_assert(corto_checkAttr(o, CORTO_ATTR_SCOPED));
+    test_assert(corto_checkAttr(o, CORTO_ATTR_NAMED));
     test_assert(corto_checkAttr(o, CORTO_ATTR_OBSERVABLE));
     test_assert(corto_checkAttr(o, CORTO_ATTR_PERSISTENT));
     test_assert(corto_checkAttr(o, CORTO_ATTR_WRITABLE));
@@ -293,7 +293,7 @@ corto_void _test_Int_tc_o_int8Min(
     test_assert(corto_checkState(o, CORTO_VALID));
     test_assert(corto_checkState(o, CORTO_DECLARED));
     test_assert(corto_checkState(o, CORTO_DEFINED));
-    test_assert(corto_checkAttr(o, CORTO_ATTR_SCOPED));
+    test_assert(corto_checkAttr(o, CORTO_ATTR_NAMED));
     test_assert(corto_checkAttr(o, CORTO_ATTR_OBSERVABLE));
     test_assert(corto_checkAttr(o, CORTO_ATTR_PERSISTENT));
     test_assert(corto_checkAttr(o, CORTO_ATTR_WRITABLE));
@@ -317,7 +317,7 @@ corto_void _test_Int_tc_t_myInt16(
     test_assert(corto_checkState(t, CORTO_VALID));
     test_assert(corto_checkState(t, CORTO_DECLARED));
     test_assert(corto_checkState(t, CORTO_DEFINED));
-    test_assert(corto_checkAttr(t, CORTO_ATTR_SCOPED));
+    test_assert(corto_checkAttr(t, CORTO_ATTR_NAMED));
     test_assert(corto_checkAttr(t, CORTO_ATTR_OBSERVABLE));
     test_assert(corto_checkAttr(t, CORTO_ATTR_PERSISTENT));
     test_assert(corto_checkAttr(t, CORTO_ATTR_WRITABLE));
@@ -342,7 +342,7 @@ corto_void _test_Int_tc_t_myInt32(
     test_assert(corto_checkState(t, CORTO_VALID));
     test_assert(corto_checkState(t, CORTO_DECLARED));
     test_assert(corto_checkState(t, CORTO_DEFINED));
-    test_assert(corto_checkAttr(t, CORTO_ATTR_SCOPED));
+    test_assert(corto_checkAttr(t, CORTO_ATTR_NAMED));
     test_assert(corto_checkAttr(t, CORTO_ATTR_OBSERVABLE));
     test_assert(corto_checkAttr(t, CORTO_ATTR_PERSISTENT));
     test_assert(corto_checkAttr(t, CORTO_ATTR_WRITABLE));
@@ -367,7 +367,7 @@ corto_void _test_Int_tc_t_myInt64(
     test_assert(corto_checkState(t, CORTO_VALID));
     test_assert(corto_checkState(t, CORTO_DECLARED));
     test_assert(corto_checkState(t, CORTO_DEFINED));
-    test_assert(corto_checkAttr(t, CORTO_ATTR_SCOPED));
+    test_assert(corto_checkAttr(t, CORTO_ATTR_NAMED));
     test_assert(corto_checkAttr(t, CORTO_ATTR_OBSERVABLE));
     test_assert(corto_checkAttr(t, CORTO_ATTR_PERSISTENT));
     test_assert(corto_checkAttr(t, CORTO_ATTR_WRITABLE));
@@ -392,7 +392,7 @@ corto_void _test_Int_tc_t_myInt8(
     test_assert(corto_checkState(t, CORTO_VALID));
     test_assert(corto_checkState(t, CORTO_DECLARED));
     test_assert(corto_checkState(t, CORTO_DEFINED));
-    test_assert(corto_checkAttr(t, CORTO_ATTR_SCOPED));
+    test_assert(corto_checkAttr(t, CORTO_ATTR_NAMED));
     test_assert(corto_checkAttr(t, CORTO_ATTR_OBSERVABLE));
     test_assert(corto_checkAttr(t, CORTO_ATTR_PERSISTENT));
     test_assert(corto_checkAttr(t, CORTO_ATTR_WRITABLE));
