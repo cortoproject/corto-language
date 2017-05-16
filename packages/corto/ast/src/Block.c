@@ -136,7 +136,7 @@ ast_Expression _ast_Block_lookup(
                      * in the case of anonymous observers) using the parser-scope is safe since these functions can't be forward
                      * declared.
                      */
-                    if (corto_checkAttr(this->function, CORTO_ATTR_SCOPED)) {
+                    if (corto_checkAttr(this->function, CORTO_ATTR_NAMED)) {
                         parent = corto_parentof(this->function);
                     } else {
                         parent = yparser()->scope;

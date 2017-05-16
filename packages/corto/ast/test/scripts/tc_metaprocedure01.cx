@@ -14,7 +14,7 @@ if !cl: fail("declaration of class Point failed")
 
 // Validate state and attributes
 if cl.checkState(state::DEFINED): fail("cl.checkState(state::DEFINED)")
-if !cl.checkAttr(attr::ATTR_SCOPED): fail("!cl.checkAttr(state::SCOPED)")
+if !cl.checkAttr(attr::ATTR_NAMED): fail("!cl.checkAttr(state::SCOPED)")
 
 // Define class and check defined state
 if cl.define(): fail("failed to define class Point")
