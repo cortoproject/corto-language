@@ -623,6 +623,7 @@ ast_Expression ast_Parser_resolve(ast_Parser this, corto_id id) {
 
     if (object) {
         result = ast_Expression(ast_ObjectCreate(object));
+        corto_ptr_setstr(&ast_Object(result)->originalId, id);
         ast_Parser_collect(this, result);
         corto_release(object);
     } else {
@@ -1904,7 +1905,7 @@ int16_t _ast_Parser_initDeclare(
             } else if (ast_Storage(s)->kind == Ast_ObjectStorage) {
                 corto_object o = ast_Object(s)->value;
                 if (o && corto_checkAttr(o, CORTO_ATTR_NAMED)) {
-                    id = corto_idof(o);
+                    id = ast_Object(s)->originalId;
                 }
             } else if (ast_Storage(s)->kind == Ast_LocalStorage) {
                 id = ast_Local(s)->name;

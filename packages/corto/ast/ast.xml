@@ -248,6 +248,7 @@
                     <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
                     <override name="getValue()" returnType="word"/>
                     <member name="value" type="object"/>
+                    <member name="originalId" type="string" modifiers="hidden"/>
                 </corto:scope>
             </class>
 
