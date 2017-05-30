@@ -1582,7 +1582,7 @@ int16_t _ast_Parser_defineScope(
         if (corto_instanceof(corto_type(corto_type_o), this->scope)) {
             if (corto_define(this->scope)) {
                 corto_id id;
-                ast_Parser_error(this, "failed to define scope '%s' (%s)",
+                ast_Parser_error(this, "cannot define '%s'\n  %s",
                     ast_Parser_id(this->scope, id), corto_lasterr());
                 goto error;
             }
