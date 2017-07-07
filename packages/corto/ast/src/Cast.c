@@ -1,21 +1,12 @@
-/* $CORTO_GENERATED
- *
- * Cast.c
- *
- * Only code written between the begin and end tags will be preserved
- * when the file is regenerated.
- */
+/* This is a managed file. Do not delete this comment. */
 
 #include <corto/ast/ast.h>
 
-/* $header() */
 #include "ast__private.h"
-/* $end */
 
-int16_t _ast_Cast_construct(
+int16_t ast_Cast_construct(
     ast_Cast this)
 {
-/* $begin(corto/ast/Cast/construct) */
 
     ast_Node(this)->kind = Ast_CallExpr;
 
@@ -41,26 +32,22 @@ int16_t _ast_Cast_construct(
     return 0;
 error:
     return -1;
-/* $end */
 }
 
-bool _ast_Cast_hasReturnedResource(
+bool ast_Cast_hasReturnedResource(
     ast_Cast this)
 {
-/* $begin(corto/ast/Cast/hasReturnedResource) */
 
     return ast_Expression_hasReturnedResource(this->rvalue);
 
-/* $end */
 }
 
-ic_node _ast_Cast_toIc(
+ic_node ast_Cast_toIc(
     ast_Cast this,
     ic_program program,
     ic_storage storage,
     bool stored)
 {
-/* $begin(corto/ast/Cast/toIc) */
     ic_node lvalue, rvalue, result;
     corto_bool deref1 = IC_DEREF_VALUE, deref2 = IC_DEREF_VALUE;
     corto_type thisType = ast_Expression_getType(ast_Expression(this));
@@ -90,5 +77,5 @@ ic_node _ast_Cast_toIc(
         deref1, deref2, IC_DEREF_ADDRESS);
 
     return result;
-/* $end */
 }
+

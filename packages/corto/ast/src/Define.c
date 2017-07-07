@@ -1,35 +1,24 @@
-/* $CORTO_GENERATED
- *
- * Define.c
- *
- * Only code written between the begin and end tags will be preserved
- * when the file is regenerated.
- */
+/* This is a managed file. Do not delete this comment. */
 
 #include <corto/ast/ast.h>
 
-/* $header() */
 #include "ast__private.h"
-/* $end */
 
-int16_t _ast_Define_construct(
+int16_t ast_Define_construct(
     ast_Define this)
 {
-/* $begin(corto/ast/Define/construct) */
 
     ast_Node(this)->kind = Ast_DefineExpr;
 
     return 0;
-/* $end */
 }
 
-ic_node _ast_Define_toIc(
+ic_node ast_Define_toIc(
     ast_Define this,
     ic_program program,
     ic_storage storage,
     bool stored)
 {
-/* $begin(corto/ast/Define/toIc) */
     ic_node object;
     CORTO_UNUSED(stored);
     CORTO_UNUSED(storage);
@@ -38,5 +27,5 @@ ic_node _ast_Define_toIc(
     IC_1(program, ast_Node(this)->line, ic_define, object, IC_DEREF_ADDRESS);
 
     return NULL;
-/* $end */
 }
+

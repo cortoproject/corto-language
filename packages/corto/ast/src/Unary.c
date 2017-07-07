@@ -1,14 +1,7 @@
-/* $CORTO_GENERATED
- *
- * Unary.c
- *
- * Only code written between the begin and end tags will be preserved
- * when the file is regenerated.
- */
+/* This is a managed file. Do not delete this comment. */
 
 #include <corto/ast/ast.h>
 
-/* $header() */
 #include "ast__private.h"
 
 corto_int16 ast_Unary_doConstruct(ast_Unary this) {
@@ -37,12 +30,10 @@ corto_int16 ast_Unary_doConstruct(ast_Unary this) {
 error:
     return -1;    
 } 
-/* $end */
 
-int16_t _ast_Unary_construct(
+int16_t ast_Unary_construct(
     ast_Unary this)
 {
-/* $begin(corto/ast/Unary/construct) */
     ast_Node(this)->kind = Ast_UnaryExpr;
 
     if (this->lvalue->unresolved) {
@@ -56,15 +47,13 @@ int16_t _ast_Unary_construct(
     return 0;
 error:
     return -1;
-/* $end */
 }
 
-ast_Expression _ast_Unary_fold(
+ast_Expression ast_Unary_fold(
     ast_Unary this)
 {
-/* $begin(corto/ast/Unary/fold) */
     ast_Expression result = ast_Expression(this);
-    corto_type type = ast_Expression_getType(this);
+    corto_type type = safe_ast_Expression_getType(this);
 
     void *resultPtr, *ptr = (void*)ast_Expression_getValue(this->lvalue);
     if (ptr) {
@@ -107,30 +96,24 @@ ast_Expression _ast_Unary_fold(
     return result;
 error:
     return NULL;
-/* $end */
 }
 
-bool _ast_Unary_hasReturnedResource(
+bool ast_Unary_hasReturnedResource(
     ast_Unary this)
 {
-/* $begin(corto/ast/Unary/hasReturnedResource) */
     return ast_Expression_hasReturnedResource(this->lvalue);
-/* $end */
 }
 
-bool _ast_Unary_hasSideEffects(
+bool ast_Unary_hasSideEffects(
     ast_Unary this)
 {
-/* $begin(corto/ast/Unary/hasSideEffects) */
     return ast_Expression_hasSideEffects(this->lvalue);
-/* $end */
 }
 
-ast_Expression _ast_Unary_resolve(
+ast_Expression ast_Unary_resolve(
     ast_Unary this,
     corto_type type)
 {
-/* $begin(corto/ast/Unary/resolve) */
 
     if (ast_Expression(this)->unresolved) {
         ast_Expression lvalue = ast_Expression_resolve(this->lvalue, type);
@@ -149,16 +132,14 @@ ast_Expression _ast_Unary_resolve(
     return ast_Expression(this);
 error:
     return NULL;
-/* $end */
 }
 
-ic_node _ast_Unary_toIc(
+ic_node ast_Unary_toIc(
     ast_Unary this,
     ic_program program,
     ic_storage storage,
     bool stored)
 {
-/* $begin(corto/ast/Unary/toIc) */
     ic_storage result;
     ic_node lvalue;
     CORTO_UNUSED(stored);
@@ -197,5 +178,5 @@ ic_node _ast_Unary_toIc(
     }
 
     return (ic_node)result;
-/* $end */
 }
+

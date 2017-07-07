@@ -1,21 +1,12 @@
-/* $CORTO_GENERATED
- *
- * Element.c
- *
- * Only code written between the begin and end tags will be preserved
- * when the file is regenerated.
- */
+/* This is a managed file. Do not delete this comment. */
 
 #include <corto/ast/ast.h>
 
-/* $header() */
 #include "ast__private.h"
-/* $end */
 
-int16_t _ast_Element_construct(
+int16_t ast_Element_construct(
     ast_Element this)
 {
-/* $begin(corto/ast/Element/construct) */
     corto_type lvalueType, rvalueType;
 
     ast_Storage(this)->kind = Ast_ElementStorage;
@@ -58,16 +49,14 @@ int16_t _ast_Element_construct(
     return ast_Storage_construct(ast_Storage(this));
 error:
     return -1;
-/* $end */
 }
 
-ic_node _ast_Element_toIc(
+ic_node ast_Element_toIc(
     ast_Element this,
     ic_program program,
     ic_storage storage,
     bool stored)
 {
-/* $begin(corto/ast/Element/toIc) */
     ic_element result;
     ic_node lvalue, rvalue;
     CORTO_UNUSED(stored);
@@ -80,5 +69,5 @@ ic_node _ast_Element_toIc(
     result = ic_program_getElement(program, ic_storage(lvalue), rvalue);
 
     return (ic_node)result;
-/* $end */
 }
+

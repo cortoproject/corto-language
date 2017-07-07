@@ -1,42 +1,30 @@
-/* $CORTO_GENERATED
- *
- * Temporary.c
- *
- * Only code written between the begin and end tags will be preserved
- * when the file is regenerated.
- */
+/* This is a managed file. Do not delete this comment. */
 
 #include <corto/ast/ast.h>
-
-int16_t _ast_Temporary_construct(
+int16_t ast_Temporary_construct(
     ast_Temporary this)
 {
-/* $begin(corto/ast/Temporary/construct) */
 
     ast_Storage(this)->kind = Ast_TemporaryStorage;
     corto_ptr_setref(&ast_Expression(this)->type, this->type);
     ast_Expression(this)->isReference = this->reference;
 
     return ast_Storage_construct(ast_Storage(this));
-/* $end */
 }
 
-void _ast_Temporary_setProxy(
+void ast_Temporary_setProxy(
     ast_Temporary this,
     ast_Temporary proxy)
 {
-/* $begin(corto/ast/Temporary/setProxy) */
     corto_ptr_setref(&this->proxy, proxy);
-/* $end */
 }
 
-ic_node _ast_Temporary_toIc(
+ic_node ast_Temporary_toIc(
     ast_Temporary this,
     ic_program program,
     ic_storage storage,
     bool stored)
 {
-/* $begin(corto/ast/Temporary/toIc) */
     CORTO_UNUSED(storage);
     CORTO_UNUSED(stored);
     CORTO_UNUSED(program);
@@ -51,5 +39,5 @@ ic_node _ast_Temporary_toIc(
     }
 
     return this->ic;
-/* $end */
 }
+

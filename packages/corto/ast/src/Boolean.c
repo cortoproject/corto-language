@@ -1,32 +1,21 @@
-/* $CORTO_GENERATED
- *
- * Boolean.c
- *
- * Only code written between the begin and end tags will be preserved
- * when the file is regenerated.
- */
+/* This is a managed file. Do not delete this comment. */
 
 #include <corto/ast/ast.h>
 
-/* $header() */
 #include "ast__private.h"
-/* $end */
 
-int16_t _ast_Boolean_init(
+int16_t ast_Boolean_init(
     ast_Boolean this)
 {
-/* $begin(corto/ast/Boolean/init) */
     ast_Literal(this)->kind = Ast_Bool;
     return ast_Literal_init(ast_Literal(this));
-/* $end */
 }
 
-int16_t _ast_Boolean_serialize(
+int16_t ast_Boolean_serialize(
     ast_Boolean this,
     corto_type dstType,
     uintptr_t dst)
 {
-/* $begin(corto/ast/Boolean/serialize) */
     ast_valueKind kind;
 
     kind = ast_valueKindFromType(dstType);
@@ -58,16 +47,14 @@ int16_t _ast_Boolean_serialize(
     return 0;
 error:
     return -1;
-/* $end */
 }
 
-ic_node _ast_Boolean_toIc(
+ic_node ast_Boolean_toIc(
     ast_Boolean this,
     ic_program program,
     ic_storage storage,
     bool stored)
 {
-/* $begin(corto/ast/Boolean/toIc) */
     ic_node result;
     CORTO_UNUSED(storage);
     CORTO_UNUSED(stored);
@@ -77,5 +64,5 @@ ic_node _ast_Boolean_toIc(
     result = (ic_node)ic_literalCreate(l);
 
     return result;
-/* $end */
 }
+

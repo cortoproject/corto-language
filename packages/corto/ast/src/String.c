@@ -1,14 +1,7 @@
-/* $CORTO_GENERATED
- *
- * String.c
- *
- * Only code written between the begin and end tags will be preserved
- * when the file is regenerated.
- */
+/* This is a managed file. Do not delete this comment. */
 
 #include <corto/ast/ast.h>
 
-/* $header() */
 #include "ast__private.h"
 
 static char alphaMask[256];
@@ -152,12 +145,10 @@ error:
     return -1;
 }
 
-/* $end */
 
-int16_t _ast_String_construct(
+int16_t ast_String_construct(
     ast_String this)
 {
-/* $begin(corto/ast/String/construct) */
 
     if (!yparser()->block || !yparser()->scope) {
         goto error;
@@ -169,13 +160,11 @@ int16_t _ast_String_construct(
     return 0;
 error:
     return -1;
-/* $end */
 }
 
-uintptr_t _ast_String_getValue(
+uintptr_t ast_String_getValue(
     ast_String this)
 {
-/* $begin(corto/ast/String/getValue) */
     corto_char *ptr, ch = '\0';
     corto_word result;
 
@@ -201,24 +190,20 @@ uintptr_t _ast_String_getValue(
     }
 
     return result;
-/* $end */
 }
 
-int16_t _ast_String_init(
+int16_t ast_String_init(
     ast_String this)
 {
-/* $begin(corto/ast/String/init) */
     ast_Literal(this)->kind = Ast_Text;
     return ast_Literal_init((ast_Literal)this);
-/* $end */
 }
 
-int16_t _ast_String_serialize(
+int16_t ast_String_serialize(
     ast_String this,
     corto_type dstType,
     uintptr_t dst)
 {
-/* $begin(corto/ast/String/serialize) */
     ast_valueKind kind;
 
     kind = ast_valueKindFromType(dstType);
@@ -251,16 +236,14 @@ int16_t _ast_String_serialize(
     return 0;
 error:
     return -1;
-/* $end */
 }
 
-ic_node _ast_String_toIc(
+ic_node ast_String_toIc(
     ast_String this,
     ic_program program,
     ic_storage storage,
     bool stored)
 {
-/* $begin(corto/ast/String/toIc) */
     ic_node result = NULL;
     CORTO_UNUSED(storage);
     CORTO_UNUSED(stored);
@@ -370,5 +353,5 @@ ic_node _ast_String_toIc(
     return result;
 error:
     return NULL;
-/* $end */
 }
+

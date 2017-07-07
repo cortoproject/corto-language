@@ -1,37 +1,26 @@
-/* $CORTO_GENERATED
- *
- * Block.c
- *
- * Only code written between the begin and end tags will be preserved
- * when the file is regenerated.
- */
+/* This is a managed file. Do not delete this comment. */
 
 #include <corto/ast/ast.h>
 
-/* $header() */
 #include "ast__private.h"
-/* $end */
 
-void _ast_Block_addStatement(
+void ast_Block_addStatement(
     ast_Block this,
     ast_Node statement)
 {
-/* $begin(corto/ast/Block/addStatement) */
     if (statement) {
         corto_assert(this->statements != NULL, "initialization failed");
         ast_NodeListAppend(this->statements, statement);
     }
-/* $end */
 }
 
-ast_Local _ast_Block_declare(
+ast_Local ast_Block_declare(
     ast_Block this,
     corto_string id,
     corto_type type,
     bool isParameter,
     bool isReference)
 {
-/* $begin(corto/ast/Block/declare) */
     ast_Local result;
     ast_LocalKind kind = 0;
 
@@ -56,14 +45,12 @@ ast_Local _ast_Block_declare(
     return result;
 error:
     return NULL;
-/* $end */
 }
 
-ast_Local _ast_Block_declareReturnVariable(
+ast_Local ast_Block_declareReturnVariable(
     ast_Block this,
     corto_function function)
 {
-/* $begin(corto/ast/Block/declareReturnVariable) */
     ast_Local result;
     corto_id id;
 
@@ -79,17 +66,15 @@ ast_Local _ast_Block_declareReturnVariable(
     }
 
     return result;
-/* $end */
 }
 
-ast_Template _ast_Block_declareTemplate(
+ast_Template ast_Block_declareTemplate(
     ast_Block this,
     corto_string id,
     corto_type type,
     bool isParameter,
     bool isReference)
 {
-/* $begin(corto/ast/Block/declareTemplate) */
     ast_Template result;
 
     corto_assert(this->locals != NULL, "initialization failed");
@@ -109,14 +94,12 @@ ast_Template _ast_Block_declareTemplate(
     return result;
 error:
     return NULL;
-/* $end */
 }
 
-ast_Expression _ast_Block_lookup(
+ast_Expression ast_Block_lookup(
     ast_Block this,
     corto_string id)
 {
-/* $begin(corto/ast/Block/lookup) */
     ast_Expression result = NULL;
 
     result = ast_Expression(ast_Block_lookupLocal(this, id));
@@ -194,14 +177,12 @@ ast_Expression _ast_Block_lookup(
     return result;
 error:
     return NULL;
-/* $end */
 }
 
-ast_Local _ast_Block_lookupLocal(
+ast_Local ast_Block_lookupLocal(
     ast_Block this,
     corto_string id)
 {
-/* $begin(corto/ast/Block/lookupLocal) */
     ast_Local result = NULL;
 
     if (this->locals) {
@@ -218,14 +199,12 @@ ast_Local _ast_Block_lookupLocal(
     }
 
     return result;
-/* $end */
 }
 
-ast_Expression _ast_Block_resolve(
+ast_Expression ast_Block_resolve(
     ast_Block this,
     corto_string id)
 {
-/* $begin(corto/ast/Block/resolve) */
     ast_Expression result = NULL;
 
     if (!(result = ast_Block_lookup(this, id))) {
@@ -235,14 +214,12 @@ ast_Expression _ast_Block_resolve(
     }
 
     return result;
-/* $end */
 }
 
-ast_Local _ast_Block_resolveLocal(
+ast_Local ast_Block_resolveLocal(
     ast_Block this,
     corto_string id)
 {
-/* $begin(corto/ast/Block/resolveLocal) */
     ast_Local result = NULL;
 
     if (!(result = ast_Block_lookupLocal(this, id))) {
@@ -252,25 +229,21 @@ ast_Local _ast_Block_resolveLocal(
     }
 
     return result;
-/* $end */
 }
 
-void _ast_Block_setFunction(
+void ast_Block_setFunction(
     ast_Block this,
     corto_function function)
 {
-/* $begin(corto/ast/Block/setFunction) */
     corto_ptr_setref(&this->function, function);
-/* $end */
 }
 
-ic_node _ast_Block_toIc(
+ic_node ast_Block_toIc(
     ast_Block this,
     ic_program program,
     ic_storage storage,
     bool stored)
 {
-/* $begin(corto/ast/Block/toIc) */
     ic_scope scope;
     CORTO_UNUSED(storage);
     CORTO_UNUSED(stored);
@@ -286,16 +259,14 @@ ic_node _ast_Block_toIc(
     ic_program_popScope(program);
 
     return (ic_node)scope;
-/* $end */
 }
 
-ic_node _ast_Block_toIcBody(
+ic_node ast_Block_toIcBody(
     ast_Block this,
     ic_program program,
     ic_storage storage,
     bool stored)
 {
-/* $begin(corto/ast/Block/toIcBody) */
     ast_Node statement;
     corto_iter statementIter;
     corto_iter localIter;
@@ -328,5 +299,5 @@ ic_node _ast_Block_toIcBody(
     }
 
     return NULL;
-/* $end */
 }
+

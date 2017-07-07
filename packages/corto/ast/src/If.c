@@ -1,21 +1,12 @@
-/* $CORTO_GENERATED
- *
- * If.c
- *
- * Only code written between the begin and end tags will be preserved
- * when the file is regenerated.
- */
+/* This is a managed file. Do not delete this comment. */
 
 #include <corto/ast/ast.h>
 
-/* $header() */
 #include "ast__private.h"
-/* $end */
 
-int16_t _ast_If_construct(
+int16_t ast_If_construct(
     ast_If this)
 {
-/* $begin(corto/ast/If/construct) */
     corto_type conditionType;
 
     ast_Node(this)->kind = Ast_IfExpr;
@@ -36,24 +27,20 @@ int16_t _ast_If_construct(
     return 0;
 error:
     return -1;
-/* $end */
 }
 
-void _ast_If_noWarnUnreachable(
+void ast_If_noWarnUnreachable(
     ast_If this)
 {
-/* $begin(corto/ast/If/noWarnUnreachable) */
     this->warnUnreachable = FALSE;
-/* $end */
 }
 
-ic_node _ast_If_toIc(
+ic_node ast_If_toIc(
     ast_If this,
     ic_program program,
     ic_storage storage,
     bool stored)
 {
-/* $begin(corto/ast/If/toIc) */
     ic_storage accumulator;
     ic_label labelEval = NULL, labelEnd = NULL;
     ic_node expr = NULL;
@@ -185,5 +172,5 @@ ic_node _ast_If_toIc(
     }
 
     return NULL;
-/* $end */
 }
+

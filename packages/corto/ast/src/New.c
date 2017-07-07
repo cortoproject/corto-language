@@ -1,46 +1,33 @@
-/* $CORTO_GENERATED
- *
- * New.c
- *
- * Only code written between the begin and end tags will be preserved
- * when the file is regenerated.
- */
+/* This is a managed file. Do not delete this comment. */
 
 #include <corto/ast/ast.h>
 
-/* $header() */
 #include "ast__private.h"
-/* $end */
 
-int16_t _ast_New_construct(
+int16_t ast_New_construct(
     ast_New this)
 {
-/* $begin(corto/ast/New/construct) */
 
     ast_Node(this)->kind = Ast_NewExpr;
     corto_ptr_setref(&ast_Expression(this)->type, this->type);
     ast_Expression(this)->isReference = TRUE;
 
     return 0;
-/* $end */
 }
 
-bool _ast_New_hasSideEffects(
+bool ast_New_hasSideEffects(
     ast_New this)
 {
-/* $begin(corto/ast/New/hasSideEffects) */
     CORTO_UNUSED(this);
     return TRUE;
-/* $end */
 }
 
-ic_node _ast_New_toIc(
+ic_node ast_New_toIc(
     ast_New this,
     ic_program program,
     ic_storage storage,
     bool stored)
 {
-/* $begin(corto/ast/New/toIc) */
     ic_node type, attrs, result;
     CORTO_UNUSED(stored);
 
@@ -61,5 +48,5 @@ ic_node _ast_New_toIc(
         result, type, attrs, IC_DEREF_ADDRESS, IC_DEREF_ADDRESS, IC_DEREF_VALUE)
 
     return result;
-/* $end */
 }
+

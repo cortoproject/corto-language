@@ -1,14 +1,7 @@
-/* $CORTO_GENERATED
- *
- * Ternary.c
- *
- * Only code written between the begin and end tags will be preserved
- * when the file is regenerated.
- */
+/* This is a managed file. Do not delete this comment. */
 
 #include <corto/ast/ast.h>
 
-/* $header() */
 #include "ast__private.h"
 
 ast_Parser yparser(void);
@@ -48,12 +41,10 @@ ast_If ast_Ternary_createIf(ast_Expression condition, ast_Node ifTrue, ast_Node 
 }
 
 
-/* $end */
 
-int16_t _ast_Ternary_construct(
+int16_t ast_Ternary_construct(
     ast_Ternary this)
 {
-/* $begin(corto/ast/Ternary/construct) */
     ast_Node trueBranch=NULL, falseBranch=NULL;
     ast_Expression trueExpr, falseExpr;
     corto_type resultType = ast_Expression_getType(this->result);
@@ -81,34 +72,28 @@ int16_t _ast_Ternary_construct(
     corto_ptr_setref(&ast_Expression(this)->type, resultType);
 
     return 0;
-/* $end */
 }
 
-bool _ast_Ternary_hasReturnedResource(
+bool ast_Ternary_hasReturnedResource(
     ast_Ternary this)
 {
-/* $begin(corto/ast/Ternary/hasReturnedResource) */
     return ast_Expression_hasReturnedResource(this->condition) ||
            ast_Expression_hasReturnedResource(this->ifTrue) ||
            ast_Expression_hasReturnedResource(this->ifFalse);
-/* $end */
 }
 
-bool _ast_Ternary_hasSideEffects(
+bool ast_Ternary_hasSideEffects(
     ast_Ternary this)
 {
-/* $begin(corto/ast/Ternary/hasSideEffects) */
     return ast_Expression_hasSideEffects(this->condition) ||
            ast_Expression_hasSideEffects(this->ifTrue) ||
            ast_Expression_hasSideEffects(this->ifFalse);
-/* $end */
 }
 
-void _ast_Ternary_setOperator(
+void ast_Ternary_setOperator(
     ast_Ternary this,
     corto_operatorKind kind)
 {
-/* $begin(corto/ast/Ternary/setOperator) */
 
     if (this->ifTrueExpr && corto_instanceof(corto_type(ast_Binary_o), this->ifTrueExpr)) {
         ast_Binary_setOperator(ast_Binary(this->ifTrueExpr), kind);
@@ -117,17 +102,15 @@ void _ast_Ternary_setOperator(
         ast_Binary_setOperator(ast_Binary(this->ifFalseExpr), kind);
     }
 
-/* $end */
 }
 
-ic_node _ast_Ternary_toIc(
+ic_node ast_Ternary_toIc(
     ast_Ternary this,
     ic_program program,
     ic_storage storage,
     bool stored)
 {
-/* $begin(corto/ast/Ternary/toIc) */
     ast_If_toIc(this->ifstmt, program, storage, stored);
     return ast_Node_toIc(ast_Node(this->result), program, storage, stored);
-/* $end */
 }
+

@@ -1,21 +1,12 @@
-/* $CORTO_GENERATED
- *
- * While.c
- *
- * Only code written between the begin and end tags will be preserved
- * when the file is regenerated.
- */
+/* This is a managed file. Do not delete this comment. */
 
 #include <corto/ast/ast.h>
 
-/* $header() */
 #include "ast__private.h"
-/* $end */
 
-int16_t _ast_While_construct(
+int16_t ast_While_construct(
     ast_While this)
 {
-/* $begin(corto/ast/While/construct) */
     corto_type conditionType;
 
     ast_Node(this)->kind = Ast_WhileExpr;
@@ -35,16 +26,14 @@ int16_t _ast_While_construct(
     return 0;
 error:
     return -1;
-/* $end */
 }
 
-ic_node _ast_While_toIc(
+ic_node ast_While_toIc(
     ast_While this,
     ic_program program,
     ic_storage storage,
     bool stored)
 {
-/* $begin(corto/ast/While/toIc) */
     ic_storage accumulator;
     ic_label labelEval, labelNeq = NULL;
     ast_Expression condition = NULL;
@@ -113,5 +102,5 @@ ic_node _ast_While_toIc(
 
     return NULL;
 
-/* $end */
 }
+

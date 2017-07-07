@@ -1,14 +1,7 @@
-/* $CORTO_GENERATED
- *
- * Binary.c
- *
- * Only code written between the begin and end tags will be preserved
- * when the file is regenerated.
- */
+/* This is a managed file. Do not delete this comment. */
 
 #include <corto/ast/ast.h>
 
-/* $header() */
 #include "ast__private.h"
 
 /* Determine whether the expression is an arithmic operation */
@@ -318,7 +311,7 @@ corto_int16 ast_Binary_complexExprCompare(ast_Binary this) {
         }
         result = orResult;
     }
-    ast_Parser_addStatement(yparser(), result);
+    safe_ast_Parser_addStatement(yparser(), result);
     return 0;
 error:
     return -1;
@@ -335,7 +328,7 @@ corto_int16 ast_Binary_complexExpr(ast_Binary this) {
             if (!(result = ast_Expression(ast_createCall(this->lvalue, "copy", 1, this->rvalue)))) {
                 goto error;
             }
-            ast_Parser_addStatement(yparser(), result);
+            safe_ast_Parser_addStatement(yparser(), result);
         }
     } else if (this->_operator == CORTO_COND_EQ || this->_operator == CORTO_COND_EQ ||
             this->_operator == CORTO_COND_NEQ || this->_operator == CORTO_COND_GT ||
@@ -436,12 +429,10 @@ error:
     return -1;
 }
 
-/* $end */
 
-int16_t _ast_Binary_construct(
+int16_t ast_Binary_construct(
     ast_Binary this)
 {
-/* $begin(corto/ast/Binary/construct) */
 
     ast_Node(this)->kind = Ast_BinaryExpr;
 
@@ -460,13 +451,11 @@ int16_t _ast_Binary_construct(
     return 0;
 error:
     return -1;
-/* $end */
 }
 
-ast_Expression _ast_Binary_fold(
+ast_Expression ast_Binary_fold(
     ast_Binary this)
 {
-/* $begin(corto/ast/Binary/fold) */
     ast_Expression result = ast_Expression(this);
     void *lptr, *rptr, *resultPtr;
     corto_type type, rtype;
@@ -546,24 +535,20 @@ ast_Expression _ast_Binary_fold(
 error:
     yparser()->errSet = TRUE;
     return NULL;
-/* $end */
 }
 
-bool _ast_Binary_hasReturnedResource(
+bool ast_Binary_hasReturnedResource(
     ast_Binary this)
 {
-/* $begin(corto/ast/Binary/hasReturnedResource) */
 
     return ast_Expression_hasReturnedResource(this->lvalue) ||
         ast_Expression_hasReturnedResource(this->rvalue);
 
-/* $end */
 }
 
-bool _ast_Binary_hasSideEffects(
+bool ast_Binary_hasSideEffects(
     ast_Binary this)
 {
-/* $begin(corto/ast/Binary/hasSideEffects) */
     corto_bool result = FALSE;
 
     switch(this->_operator) {
@@ -582,14 +567,12 @@ bool _ast_Binary_hasSideEffects(
     }
 
     return result || ast_Expression_hasSideEffects(this->lvalue) || ast_Expression_hasSideEffects(this->rvalue);
-/* $end */
 }
 
-ast_Expression _ast_Binary_resolve(
+ast_Expression ast_Binary_resolve(
     ast_Binary this,
     corto_type type)
 {
-/* $begin(corto/ast/Binary/resolve) */
     ast_Expression lvalue, rvalue;
 
     if (ast_Expression(this)->unresolved) {
@@ -616,14 +599,12 @@ ast_Expression _ast_Binary_resolve(
     return ast_Expression(this);
 error:
     return NULL;
-/* $end */
 }
 
-void _ast_Binary_setOperator(
+void ast_Binary_setOperator(
     ast_Binary this,
     corto_operatorKind kind)
 {
-/* $begin(corto/ast/Binary/setOperator) */
     ast_Binary compoundExpr = NULL;
     corto_type exprType = NULL;
 
@@ -689,16 +670,14 @@ void _ast_Binary_setOperator(
 
 error:
     return;
-/* $end */
 }
 
-ic_node _ast_Binary_toIc(
+ic_node ast_Binary_toIc(
     ast_Binary this,
     ic_program program,
     ic_storage storage,
     bool stored)
 {
-/* $begin(corto/ast/Binary/toIc) */
     ic_node returnsResult = NULL;
 
     if (this->isScalar) {
@@ -771,5 +750,5 @@ ic_node _ast_Binary_toIc(
 error:
     return NULL;
 
-/* $end */
 }
+

@@ -1,14 +1,7 @@
-/* $CORTO_GENERATED
- *
- * Node.c
- *
- * Only code written between the begin and end tags will be preserved
- * when the file is regenerated.
- */
+/* This is a managed file. Do not delete this comment. */
 
 #include <corto/ast/ast.h>
 
-/* $header() */
 #include "ast__private.h"
 
 /* Optimize condition, check if condition can be evaluated at compile-time or can be unwinded */
@@ -66,30 +59,26 @@ error:
     return NULL;
 }
 
-/* $end */
 
-int16_t _ast_Node_init(
+int16_t ast_Node_init(
     ast_Node this)
 {
-/* $begin(corto/ast/Node/init) */
     this->line = yparser()->line;
     this->column = yparser()->column;
     return 0;
-/* $end */
 }
 
-ic_node _ast_Node_toIc_v(
+ic_node ast_Node_toIc_v(
     ast_Node this,
     ic_program program,
     ic_storage storage,
     bool stored)
 {
-/* $begin(corto/ast/Node/toIc) */
     CORTO_UNUSED(this);
     CORTO_UNUSED(program);
     CORTO_UNUSED(storage);
     CORTO_UNUSED(stored);
     /* No code is generated for statement */
     return NULL;
-/* $end */
 }
+

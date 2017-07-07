@@ -1,14 +1,7 @@
-/* $CORTO_GENERATED
- *
- * Member.c
- *
- * Only code written between the begin and end tags will be preserved
- * when the file is regenerated.
- */
+/* This is a managed file. Do not delete this comment. */
 
 #include <corto/ast/ast.h>
 
-/* $header() */
 #include "ast__private.h"
 
 corto_int16 ast_Member_resolveMember(ast_Member this, corto_type type, corto_string member) {
@@ -53,12 +46,10 @@ error:
     return -1;
 }
 
-/* $end */
 
-int16_t _ast_Member_construct(
+int16_t ast_Member_construct(
     ast_Member this)
 {
-/* $begin(corto/ast/Member/construct) */
 
     ast_Storage(this)->kind = Ast_MemberStorage;
     
@@ -98,24 +89,20 @@ int16_t _ast_Member_construct(
     return ast_Storage_construct(ast_Storage(this));
 error:
     return -1;
-/* $end */
 }
 
-bool _ast_Member_hasSideEffects(
+bool ast_Member_hasSideEffects(
     ast_Member this)
 {
-/* $begin(corto/ast/Member/hasSideEffects) */
     return ast_Expression_hasSideEffects(this->lvalue);
-/* $end */
 }
 
-ic_node _ast_Member_toIc(
+ic_node ast_Member_toIc(
     ast_Member this,
     ic_program program,
     ic_storage storage,
     bool stored)
 {
-/* $begin(corto/ast/Member/toIc) */
     ic_member result = NULL;
     corto_member member;
     ic_node lvalue;
@@ -152,5 +139,5 @@ ic_node _ast_Member_toIc(
     return (ic_node)result;
 error:
     return NULL;
-/* $end */
 }
+

@@ -1,21 +1,12 @@
-/* $CORTO_GENERATED
- *
- * Local.c
- *
- * Only code written between the begin and end tags will be preserved
- * when the file is regenerated.
- */
+/* This is a managed file. Do not delete this comment. */
 
 #include <corto/ast/ast.h>
 
-/* $header() */
 #include "ast__private.h"
-/* $end */
 
-int16_t _ast_Local_construct(
+int16_t ast_Local_construct(
     ast_Local this)
 {
-/* $begin(corto/ast/Local/construct) */
 
     ast_Node(this)->kind = Ast_StorageExpr;
     ast_Storage(this)->kind = Ast_LocalStorage;
@@ -23,16 +14,14 @@ int16_t _ast_Local_construct(
     ast_Expression(this)->isReference = this->reference || this->type->reference;
 
     return ast_Storage_construct(ast_Storage(this));
-/* $end */
 }
 
-ic_node _ast_Local_toIc(
+ic_node ast_Local_toIc(
     ast_Local this,
     ic_program program,
     ic_storage storage,
     bool stored)
 {
-/* $begin(corto/ast/Local/toIc) */
     ic_node result;
     CORTO_UNUSED(storage);
     CORTO_UNUSED(stored);
@@ -43,5 +32,5 @@ ic_node _ast_Local_toIc(
                 this->name);
 
     return result;
-/* $end */
 }
+

@@ -1,32 +1,21 @@
-/* $CORTO_GENERATED
- *
- * SignedInteger.c
- *
- * Only code written between the begin and end tags will be preserved
- * when the file is regenerated.
- */
+/* This is a managed file. Do not delete this comment. */
 
 #include <corto/ast/ast.h>
 
-/* $header() */
 #include "ast__private.h"
-/* $end */
 
-int16_t _ast_SignedInteger_init(
+int16_t ast_SignedInteger_init(
     ast_SignedInteger this)
 {
-/* $begin(corto/ast/SignedInteger/init) */
     ast_Literal(this)->kind = Ast_SignedInt;
     return ast_Literal_init(ast_Literal(this));
-/* $end */
 }
 
-int16_t _ast_SignedInteger_serialize(
+int16_t ast_SignedInteger_serialize(
     ast_SignedInteger this,
     corto_type dstType,
     uintptr_t dst)
 {
-/* $begin(corto/ast/SignedInteger/serialize) */
     ast_valueKind kind;
 
     kind = ast_valueKindFromType(dstType);
@@ -56,16 +45,14 @@ int16_t _ast_SignedInteger_serialize(
     return 0;
 error:
     return -1;
-/* $end */
 }
 
-ic_node _ast_SignedInteger_toIc(
+ic_node ast_SignedInteger_toIc(
     ast_SignedInteger this,
     ic_program program,
     ic_storage storage,
     bool stored)
 {
-/* $begin(corto/ast/SignedInteger/toIc) */
     ic_node result;
     CORTO_UNUSED(storage);
     CORTO_UNUSED(stored);
@@ -75,5 +62,5 @@ ic_node _ast_SignedInteger_toIc(
     result = (ic_node)ic_literalCreate(l);
 
     return result;
-/* $end */
 }
+

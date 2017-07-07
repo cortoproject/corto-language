@@ -1,22 +1,13 @@
-/* $CORTO_GENERATED
- *
- * Comma.c
- *
- * Only code written between the begin and end tags will be preserved
- * when the file is regenerated.
- */
+/* This is a managed file. Do not delete this comment. */
 
 #include <corto/ast/ast.h>
 
-/* $header() */
 #include "ast__private.h"
-/* $end */
 
-int16_t _ast_Comma_addExpression(
+int16_t ast_Comma_addExpression(
     ast_Comma this,
     ast_Expression expr)
 {
-/* $begin(corto/ast/Comma/addExpression) */
     if (expr) {
         corto_assert(this->expressions != NULL, "initialization failed");
         corto_ll_append(this->expressions, expr); corto_claim(expr);
@@ -26,14 +17,12 @@ int16_t _ast_Comma_addExpression(
     }
 
     return 0;
-/* $end */
 }
 
-ast_Expression _ast_Comma_addOrCreate(
+ast_Expression ast_Comma_addOrCreate(
     ast_Expression list,
     ast_Expression expr)
 {
-/* $begin(corto/ast/Comma/addOrCreate) */
     ast_Expression result;
     
     if (!list) {
@@ -49,13 +38,11 @@ ast_Expression _ast_Comma_addOrCreate(
     }
     
     return result;
-/* $end */
 }
 
-int16_t _ast_Comma_construct(
+int16_t ast_Comma_construct(
     ast_Comma this)
 {
-/* $begin(corto/ast/Comma/construct) */
     if (this->expressions) {
         ast_Expression firstExpr = corto_ll_get(this->expressions, 0);
 
@@ -67,13 +54,11 @@ int16_t _ast_Comma_construct(
     }
     
     return 0;
-/* $end */
 }
 
-bool _ast_Comma_hasReturnedResource(
+bool ast_Comma_hasReturnedResource(
     ast_Comma this)
 {
-/* $begin(corto/ast/Comma/hasReturnedResource) */
     corto_bool result = FALSE;
 
     corto_iter it = corto_ll_iter(this->expressions);
@@ -86,13 +71,11 @@ bool _ast_Comma_hasReturnedResource(
     }
 
     return result;
-/* $end */
 }
 
-bool _ast_Comma_hasSideEffects(
+bool ast_Comma_hasSideEffects(
     ast_Comma this)
 {
-/* $begin(corto/ast/Comma/hasSideEffects) */
     corto_bool result = FALSE;
     
     corto_iter it = corto_ll_iter(this->expressions);
@@ -105,26 +88,22 @@ bool _ast_Comma_hasSideEffects(
     }
 
     return result;
-/* $end */
 }
 
-int16_t _ast_Comma_init(
+int16_t ast_Comma_init(
     ast_Comma this)
 {
-/* $begin(corto/ast/Comma/init) */
 
     ast_Node(this)->kind = Ast_CommaExpr;
     ast_Expression(this)->type = NULL;
 
     return ast_Node_init(ast_Node(this));
-/* $end */
 }
 
-ast_Expression _ast_Comma_insertOrCreate(
+ast_Expression ast_Comma_insertOrCreate(
     ast_Expression list,
     ast_Expression expr)
 {
-/* $begin(corto/ast/Comma/insertOrCreate) */
     ast_Expression result;
     
     if (!list) {
@@ -140,16 +119,14 @@ ast_Expression _ast_Comma_insertOrCreate(
     }
     
     return result;
-/* $end */
 }
 
-ic_node _ast_Comma_toIc(
+ic_node ast_Comma_toIc(
     ast_Comma this,
     ic_program program,
     ic_storage storage,
     bool stored)
 {
-/* $begin(corto/ast/Comma/toIc) */
 
     corto_iter it = corto_ll_iter(this->expressions);
     while (corto_iter_hasNext(&it)) {
@@ -158,13 +135,11 @@ ic_node _ast_Comma_toIc(
     }
 
     return NULL;
-/* $end */
 }
 
-ast_ExpressionList _ast_Comma_toList(
+ast_ExpressionList ast_Comma_toList(
     ast_Comma this)
 {
-/* $begin(corto/ast/Comma/toList) */
 
     ast_NodeList result = corto_ll_new();
     corto_iter it = corto_ll_iter(this->expressions);
@@ -174,5 +149,5 @@ ast_ExpressionList _ast_Comma_toList(
     }
 
     return result;
-/* $end */
 }
+

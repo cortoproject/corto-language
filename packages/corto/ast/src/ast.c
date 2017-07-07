@@ -1,14 +1,7 @@
-/* $CORTO_GENERATED
- *
- * ast.c
- *
- * Only code written between the begin and end tags will be preserved
- * when the file is regenerated.
- */
+/* This is a managed file. Do not delete this comment. */
 
 #include <corto/ast/ast.h>
 
-/* $header() */
 #include "ast__private.h"
 
 corto_threadKey ast_PARSER_KEY;
@@ -133,7 +126,7 @@ ast_Call ast_createCallFromExpr(ast_Expression f, ast_Expression arguments) {
             /* No use in trying to resolve the unresolved identifier here, there
              * is no additional information available that could help resolving
              * the identifier */
-            ast_UnresolvedReference_error(f);
+            safe_ast_UnresolvedReference_error(f);
             goto error;
 
         default:
@@ -144,22 +137,20 @@ ast_Call ast_createCallFromExpr(ast_Expression f, ast_Expression arguments) {
     }
 
     if (!result) {
-        ast_CallBuilderInit(&builder);
+        corto_ptr_init(&builder, ast_CallBuilder_o);
         ast_CallBuilderAssign(&builder, name, arguments, instance, scope, yparser()->block);
         result = ast_CallBuilder_build(&builder);
-        ast_CallBuilderDeinit(&builder);
+        corto_ptr_deinit(&builder, ast_CallBuilder_o);
     }
 
     return result;
 error:
     return NULL;
 }
-/* $end */
 
-bool _ast_isOperatorAssignment(
+bool ast_isOperatorAssignment(
     corto_operatorKind _operator)
 {
-/* $begin(corto/ast/isOperatorAssignment) */
     corto_bool result;
     switch(_operator) {
     case CORTO_ASSIGN:
@@ -177,10 +168,9 @@ bool _ast_isOperatorAssignment(
         break;
     }
     return result;
-/* $end */
 }
 
-void _ast_report(
+void ast_report(
     corto_string kind,
     corto_string filename,
     uint32_t line,
@@ -188,7 +178,6 @@ void _ast_report(
     corto_string error,
     corto_string token)
 {
-/* $begin(corto/ast/report) */
     CORTO_UNUSED(token);
     CORTO_UNUSED(kind);
 
@@ -202,41 +191,35 @@ void _ast_report(
         corto_error("%d:%d: %s", line, column, error);
     }
 
-/* $end */
 }
 
-void _ast_reportError(
+void ast_reportError(
     corto_string filename,
     uint32_t line,
     uint32_t column,
     corto_string error,
     corto_string token)
 {
-/* $begin(corto/ast/reportError) */
 
     ast_report("error", filename, line, column, error, token);
 
-/* $end */
 }
 
-void _ast_reportWarning(
+void ast_reportWarning(
     corto_string filename,
     uint32_t line,
     uint32_t column,
     corto_string error,
     corto_string token)
 {
-/* $begin(corto/ast/reportWarning) */
 
     ast_report("warning", filename, line, column, error, token);
 
-/* $end */
 }
 
-ast_valueKind _ast_valueKindFromType(
+ast_valueKind ast_valueKindFromType(
     corto_type type)
 {
-/* $begin(corto/ast/valueKindFromType) */
     ast_valueKind result = Ast_Nothing;
 
     if (type->reference) {
@@ -279,16 +262,14 @@ ast_valueKind _ast_valueKindFromType(
     return result;
 error:
     return Ast_Nothing;
-/* $end */
 }
 
 int astMain(int argc, char *argv[]) {
-/* $begin(main) */
     CORTO_UNUSED(argc);
     CORTO_UNUSED(argv);
     if (corto_threadTlsKey(&ast_PARSER_KEY, NULL)) {
         return -1;
     }
     return 0;
-/* $end */
 }
+

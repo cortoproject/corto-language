@@ -1,21 +1,12 @@
-/* $CORTO_GENERATED
- *
- * Object.c
- *
- * Only code written between the begin and end tags will be preserved
- * when the file is regenerated.
- */
+/* This is a managed file. Do not delete this comment. */
 
 #include <corto/ast/ast.h>
 
-/* $header() */
 #include "ast__private.h"
-/* $end */
 
-int16_t _ast_Object_construct(
+int16_t ast_Object_construct(
     ast_Object this)
 {
-/* $begin(corto/ast/Object/construct) */
     corto_type t = corto_typeof(ast_Object(this)->value);
 
     /* TODO: this is not nice */
@@ -28,13 +19,11 @@ int16_t _ast_Object_construct(
     ast_Expression(this)->isReference = TRUE;
 
     return ast_Storage_construct(ast_Storage(this));
-/* $end */
 }
 
-uintptr_t _ast_Object_getValue(
+uintptr_t ast_Object_getValue(
     ast_Object this)
 {
-/* $begin(corto/ast/Object/getValue) */
     corto_word result = 0;
 
     /* Value of objects can only be used at compiletime when object is of
@@ -44,13 +33,11 @@ uintptr_t _ast_Object_getValue(
     }
 
     return result;
-/* $end */
 }
 
-corto_string _ast_Object_id(
+corto_string ast_Object_id(
     ast_Object this)
 {
-/* $begin(corto/ast/Object/id) */
     corto_object o = this->value;
     corto_string result = NULL;
 
@@ -59,15 +46,13 @@ corto_string _ast_Object_id(
     }
 
     return result;
-/* $end */
 }
 
-int16_t _ast_Object_serialize(
+int16_t ast_Object_serialize(
     ast_Object this,
     corto_type dstType,
     uintptr_t dst)
 {
-/* $begin(corto/ast/Object/serialize) */
     ast_valueKind kind;
 
     if (!dstType->reference) {
@@ -148,19 +133,17 @@ int16_t _ast_Object_serialize(
     return 0;
 error:
     return -1;
-/* $end */
 }
 
-ic_node _ast_Object_toIc(
+ic_node ast_Object_toIc(
     ast_Object this,
     ic_program program,
     ic_storage storage,
     bool stored)
 {
-/* $begin(corto/ast/Object/toIc) */
     CORTO_UNUSED(program);
     CORTO_UNUSED(storage);
     CORTO_UNUSED(stored);
     return ic_node(ic_program_getObject(program, this->value));;
-/* $end */
 }
+

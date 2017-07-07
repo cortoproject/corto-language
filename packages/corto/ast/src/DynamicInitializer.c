@@ -1,14 +1,7 @@
-/* $CORTO_GENERATED
- *
- * DynamicInitializer.c
- *
- * Only code written between the begin and end tags will be preserved
- * when the file is regenerated.
- */
+/* This is a managed file. Do not delete this comment. */
 
 #include <corto/ast/ast.h>
 
-/* $header() */
 #include "ast__private.h"
 
 corto_int16 ast_Initializer_assign(ast_DynamicInitializer this, ast_Expression lvalue, ast_Expression rvalue) {
@@ -110,12 +103,10 @@ error:
 
 }
 
-/* $end */
 
-int16_t _ast_DynamicInitializer_construct(
+int16_t ast_DynamicInitializer_construct(
     ast_DynamicInitializer this)
 {
-/* $begin(corto/ast/DynamicInitializer/construct) */
     corto_int8 variable;
     
     /* Copy offsets of variables into frames */
@@ -125,13 +116,11 @@ int16_t _ast_DynamicInitializer_construct(
     }
     
     return ast_Initializer_construct(ast_Initializer(this));
-/* $end */
 }
 
-int16_t _ast_DynamicInitializer_define(
+int16_t ast_DynamicInitializer_define(
     ast_DynamicInitializer this)
 {
-/* $begin(corto/ast/DynamicInitializer/define) */
     corto_int8 variable;
     
     /* Insert define operations */
@@ -145,22 +134,18 @@ int16_t _ast_DynamicInitializer_define(
     }
 
     return 0;
-/* $end */
 }
 
-bool _ast_DynamicInitializer_hasReturnedResource(
+bool ast_DynamicInitializer_hasReturnedResource(
     ast_DynamicInitializer this)
 {
-/* $begin(corto/ast/DynamicInitializer/hasReturnedResource) */
     CORTO_UNUSED(this);
     return FALSE;
-/* $end */
 }
 
-int16_t _ast_DynamicInitializer_pop(
+int16_t ast_DynamicInitializer_pop(
     ast_DynamicInitializer this)
 {
-/* $begin(corto/ast/DynamicInitializer/pop) */
     corto_uint8 fp = ast_Initializer(this)->fp;
 
     if (this->frames[fp-1].sequenceSize) {
@@ -168,13 +153,11 @@ int16_t _ast_DynamicInitializer_pop(
     }
 
     return ast_Initializer_pop_v(ast_Initializer(this));
-/* $end */
 }
 
-int16_t _ast_DynamicInitializer_push(
+int16_t ast_DynamicInitializer_push(
     ast_DynamicInitializer this)
 {
-/* $begin(corto/ast/DynamicInitializer/push) */
     corto_uint8 variable;
     corto_type t = ast_Initializer_currentType(ast_Initializer(this));
     corto_uint8 fp = ast_Initializer(this)->fp;
@@ -235,14 +218,12 @@ int16_t _ast_DynamicInitializer_push(
     return 0;
 error:
     return -1;
-/* $end */
 }
 
-int16_t _ast_DynamicInitializer_value(
+int16_t ast_DynamicInitializer_value(
     ast_DynamicInitializer this,
     ast_Expression v)
 {
-/* $begin(corto/ast/DynamicInitializer/value) */
     corto_uint32 variable;
     corto_uint32 fp = ast_Initializer(this)->fp;
     corto_type type = ast_Initializer_currentType(ast_Initializer(this));
@@ -279,5 +260,5 @@ int16_t _ast_DynamicInitializer_value(
     return ast_Initializer_next(ast_Initializer(this));
 error:
     return -1;
-/* $end */
 }
+

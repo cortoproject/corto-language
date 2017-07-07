@@ -1,21 +1,12 @@
-/* $CORTO_GENERATED
- *
- * Literal.c
- *
- * Only code written between the begin and end tags will be preserved
- * when the file is regenerated.
- */
+/* This is a managed file. Do not delete this comment. */
 
 #include <corto/ast/ast.h>
 
-/* $header() */
 #include "ast__private.h"
-/* $end */
 
-uintptr_t _ast_Literal_getValue_v(
+uintptr_t ast_Literal_getValue_v(
     ast_Literal this)
 {
-/* $begin(corto/ast/Literal/getValue) */
     corto_word result = 0;
 
     switch(this->kind) {
@@ -28,13 +19,11 @@ uintptr_t _ast_Literal_getValue_v(
     }
 
     return result;
-/* $end */
 }
 
-int16_t _ast_Literal_init(
+int16_t ast_Literal_init(
     ast_Literal this)
 {
-/* $begin(corto/ast/Literal/init) */
     if (!ast_Expression(this)->type) {
         switch(this->kind) {
         case Ast_Bool:
@@ -70,5 +59,5 @@ int16_t _ast_Literal_init(
     ast_Node(this)->kind = Ast_LiteralExpr;
 
     return ast_Node_init(ast_Node(this));
-/* $end */
 }
+

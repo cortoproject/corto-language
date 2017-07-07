@@ -1,14 +1,7 @@
-/* $CORTO_GENERATED
- *
- * CallBuilder.c
- *
- * Only code written between the begin and end tags will be preserved
- * when the file is regenerated.
- */
+/* This is a managed file. Do not delete this comment. */
 
 #include <corto/ast/ast.h>
 
-/* $header() */
 #include "ast__private.h"
 
 ast_Call ast_CallBuilder_buildMethod(ast_CallBuilder *this) {
@@ -63,12 +56,10 @@ error:
     return NULL;
 }
 
-/* $end */
 
-ast_Call _ast_CallBuilder_build(
+ast_Call ast_CallBuilder_build(
     ast_CallBuilder* this)
 {
-/* $begin(corto/ast/CallBuilder/build) */
     ast_Call result = NULL;
 
     /* Obtain signature */
@@ -133,13 +124,11 @@ ast_Call _ast_CallBuilder_build(
     return result;
 error:
     return NULL;
-/* $end */
 }
 
-int16_t _ast_CallBuilder_buildSignature(
+int16_t ast_CallBuilder_buildSignature(
     ast_CallBuilder* this)
 {
-/* $begin(corto/ast/CallBuilder/buildSignature) */
     corto_string signature;
     corto_iter argumentIter;
     ast_Expression argument;
@@ -182,5 +171,5 @@ int16_t _ast_CallBuilder_buildSignature(
     }
 
     return 0;
-/* $end */
 }
+

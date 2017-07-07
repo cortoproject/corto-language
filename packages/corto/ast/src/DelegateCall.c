@@ -1,21 +1,12 @@
-/* $CORTO_GENERATED
- *
- * DelegateCall.c
- *
- * Only code written between the begin and end tags will be preserved
- * when the file is regenerated.
- */
+/* This is a managed file. Do not delete this comment. */
 
 #include <corto/ast/ast.h>
 
-/* $header() */
 #include "ast__private.h"
-/* $end */
 
-int16_t _ast_DelegateCall_construct(
+int16_t ast_DelegateCall_construct(
     ast_DelegateCall this)
 {
-/* $begin(corto/ast/DelegateCall/construct) */
     if (!this->expr) {
         ast_Parser_error(yparser(), "no expression provided for delegate call");
         goto error;
@@ -48,5 +39,5 @@ int16_t _ast_DelegateCall_construct(
     return ast_Call_construct(ast_Call(this));
 error:
     return -1;
-/* $end */
 }
+

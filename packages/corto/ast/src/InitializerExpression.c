@@ -1,53 +1,38 @@
-/* $CORTO_GENERATED
- *
- * InitializerExpression.c
- *
- * Only code written between the begin and end tags will be preserved
- * when the file is regenerated.
- */
+/* This is a managed file. Do not delete this comment. */
 
 #include <corto/ast/ast.h>
 
-/* $header() */
 #include "ast__private.h"
-/* $end */
 
-int16_t _ast_InitializerExpression_construct(
+int16_t ast_InitializerExpression_construct(
     ast_InitializerExpression this)
 {
-/* $begin(corto/ast/InitializerExpression/construct) */
     corto_int16 result = 0;
 
     ast_Node(this)->kind = Ast_InitializerExpr;
 
     return result;
-/* $end */
 }
 
-int16_t _ast_InitializerExpression_define(
+int16_t ast_InitializerExpression_define(
     ast_InitializerExpression this)
 {
-/* $begin(corto/ast/InitializerExpression/define) */
     ast_InitOper *elem = ast_InitOperListAppendAlloc(this->operations);
     elem->kind = Ast_InitOpDefine;
     return 0;
-/* $end */
 }
 
-bool _ast_InitializerExpression_hasReturnedResource(
+bool ast_InitializerExpression_hasReturnedResource(
     ast_InitializerExpression this)
 {
-/* $begin(corto/ast/InitializerExpression/hasReturnedResource) */
     CORTO_UNUSED(this);
     return FALSE;
-/* $end */
 }
 
-int16_t _ast_InitializerExpression_insert(
+int16_t ast_InitializerExpression_insert(
     ast_InitializerExpression this,
     ast_Expression variable)
 {
-/* $begin(corto/ast/InitializerExpression/insert) */
     ast_DynamicInitializer initializer;
 
     corto_ptr_setref(&ast_Initializer(this)->variables[0].object, variable);
@@ -103,49 +88,41 @@ int16_t _ast_InitializerExpression_insert(
     return 0;
 error:
     return -1;
-/* $end */
 }
 
-int32_t _ast_InitializerExpression_member(
+int32_t ast_InitializerExpression_member(
     ast_InitializerExpression this,
     corto_string name)
 {
-/* $begin(corto/ast/InitializerExpression/member) */
     ast_InitOper *elem = ast_InitOperListAppendAlloc(this->operations);
     elem->kind = Ast_InitOpMember;
     elem->name = corto_strdup(name);
     return 0;
-/* $end */
 }
 
-int16_t _ast_InitializerExpression_pop(
+int16_t ast_InitializerExpression_pop(
     ast_InitializerExpression this)
 {
-/* $begin(corto/ast/InitializerExpression/pop) */
     ast_InitOper *elem = ast_InitOperListAppendAlloc(this->operations);
     elem->kind = Ast_InitOpPop;
     return 0;
-/* $end */
 }
 
-int16_t _ast_InitializerExpression_push(
+int16_t ast_InitializerExpression_push(
     ast_InitializerExpression this)
 {
-/* $begin(corto/ast/InitializerExpression/push) */
     ast_InitOper *elem = ast_InitOperListAppendAlloc(this->operations);
     elem->kind = Ast_InitOpPush;
     return 0;
-/* $end */
 }
 
-int16_t _ast_InitializerExpression_value(
+int16_t ast_InitializerExpression_value(
     ast_InitializerExpression this,
     ast_Expression v)
 {
-/* $begin(corto/ast/InitializerExpression/value) */
     ast_InitOper *elem = ast_InitOperListAppendAlloc(this->operations);
     elem->kind = Ast_InitOpValue;
     corto_ptr_setref(&elem->expr, v);
     return 0;
-/* $end */
 }
+

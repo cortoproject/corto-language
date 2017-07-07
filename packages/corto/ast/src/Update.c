@@ -1,14 +1,7 @@
-/* $CORTO_GENERATED
- *
- * Update.c
- *
- * Only code written between the begin and end tags will be preserved
- * when the file is regenerated.
- */
+/* This is a managed file. Do not delete this comment. */
 
 #include <corto/ast/ast.h>
 
-/* $header() */
 #include "ast__private.h"
 
 static ast_Expression ast_Update_getFirstReference(ast_Expression expr) {
@@ -37,12 +30,10 @@ error:
     return NULL;
 }
 
-/* $end */
 
-int16_t _ast_Update_construct(
+int16_t ast_Update_construct(
     ast_Update this)
 {
-/* $begin(corto/ast/Update/construct) */
     corto_iter exprIter;
     ast_Expression expr;
 
@@ -65,10 +56,9 @@ int16_t _ast_Update_construct(
     return 0;
 error:
     return -1;
-/* $end */
 }
 
-/* $header(corto/ast/Update/toIc) */
+
 static void ast_Update_begin(ast_Update this, ic_program program, ic_node expr) {
     IC_1(program, ast_Node(this)->line, ic_updatebegin, expr, IC_DEREF_ADDRESS);
 }
@@ -78,14 +68,13 @@ static void ast_Update_end(ast_Update this, ic_program program, ic_node expr, ic
         IC_DEREF_ADDRESS, IC_DEREF_VALUE, IC_DEREF_VALUE);
 }
 
-/* $end */
-ic_node _ast_Update_toIc(
+
+ic_node ast_Update_toIc(
     ast_Update this,
     ic_program program,
     ic_storage storage,
     bool stored)
 {
-/* $begin(corto/ast/Update/toIc) */
     ic_node expr, from = NULL;
     corto_iter exprIter;
     CORTO_UNUSED(storage);
@@ -133,5 +122,5 @@ ic_node _ast_Update_toIc(
     }
 
     return NULL;
-/* $end */
 }
+

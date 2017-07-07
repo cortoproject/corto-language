@@ -1,32 +1,21 @@
-/* $CORTO_GENERATED
- *
- * FloatingPoint.c
- *
- * Only code written between the begin and end tags will be preserved
- * when the file is regenerated.
- */
+/* This is a managed file. Do not delete this comment. */
 
 #include <corto/ast/ast.h>
 
-/* $header() */
 #include "ast__private.h"
-/* $end */
 
-int16_t _ast_FloatingPoint_init(
+int16_t ast_FloatingPoint_init(
     ast_FloatingPoint this)
 {
-/* $begin(corto/ast/FloatingPoint/init) */
     ast_Literal(this)->kind = Ast_Float;
     return ast_Literal_init(ast_Literal(this));
-/* $end */
 }
 
-int16_t _ast_FloatingPoint_serialize(
+int16_t ast_FloatingPoint_serialize(
     ast_FloatingPoint this,
     corto_type dstType,
     uintptr_t dst)
 {
-/* $begin(corto/ast/FloatingPoint/serialize) */
     ast_valueKind kind;
 
     kind = ast_valueKindFromType(dstType);
@@ -53,16 +42,14 @@ int16_t _ast_FloatingPoint_serialize(
     return 0;
 error:
     return -1;
-/* $end */
 }
 
-ic_node _ast_FloatingPoint_toIc(
+ic_node ast_FloatingPoint_toIc(
     ast_FloatingPoint this,
     ic_program program,
     ic_storage storage,
     bool stored)
 {
-/* $begin(corto/ast/FloatingPoint/toIc) */
     ic_node result;
     CORTO_UNUSED(program);
     CORTO_UNUSED(storage);
@@ -72,5 +59,5 @@ ic_node _ast_FloatingPoint_toIc(
     result = (ic_node)ic_literalCreate(l);
 
     return result;
-/* $end */
 }
+

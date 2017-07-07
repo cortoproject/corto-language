@@ -388,9 +388,9 @@ function_argument
         corto_id argid;
         sprintf(argid, "$%s", $2);
         if (!strcmp($2, "__line")) {
-            $$=ast_Parser_argumentToString(yparser(), corto_uint32_o, argid, FALSE); fast_op;
+            $$=safe_ast_Parser_argumentToString(yparser(), corto_uint32_o, argid, FALSE); fast_op;
         } else {
-            $$=ast_Parser_argumentToString(yparser(), corto_string_o, argid, FALSE); fast_op;
+            $$=safe_ast_Parser_argumentToString(yparser(), corto_string_o, argid, FALSE); fast_op;
         }
     }
     ;

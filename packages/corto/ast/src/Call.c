@@ -1,14 +1,7 @@
-/* $CORTO_GENERATED
- *
- * Call.c
- *
- * Only code written between the begin and end tags will be preserved
- * when the file is regenerated.
- */
+/* This is a managed file. Do not delete this comment. */
 
 #include <corto/ast/ast.h>
 
-/* $header() */
 #include "ast__private.h"
 
 /* Insert implicit casts when argument-expressions do not match */
@@ -60,12 +53,10 @@ error:
     return -1;
 }
 
-/* $end */
 
-int16_t _ast_Call_construct(
+int16_t ast_Call_construct(
     ast_Call this)
 {
-/* $begin(corto/ast/Call/construct) */
     ast_Node(this)->kind = Ast_CallExpr;
 
     /* Insert casts based on expression list and arguments */
@@ -82,35 +73,29 @@ int16_t _ast_Call_construct(
     return 0;
 error:
     return -1;
-/* $end */
 }
 
-bool _ast_Call_hasReturnedResource(
+bool ast_Call_hasReturnedResource(
     ast_Call this)
 {
-/* $begin(corto/ast/Call/hasReturnedResource) */
 
     return this->returnType->reference || 
         this->returnsReference || 
         ((this->returnType->kind == CORTO_PRIMITIVE) && (corto_primitive(this->returnType)->kind == CORTO_TEXT));
 
-/* $end */
 }
 
-bool _ast_Call_hasSideEffects(
+bool ast_Call_hasSideEffects(
     ast_Call this)
 {
-/* $begin(corto/ast/Call/hasSideEffects) */
     CORTO_UNUSED(this);
     return TRUE;
-/* $end */
 }
 
-void _ast_Call_setParameters(
+void ast_Call_setParameters(
     ast_Call this,
     corto_function function)
 {
-/* $begin(corto/ast/Call/setParameters) */
     corto_uint32 i;
 
     /* Set parameters */
@@ -124,16 +109,14 @@ void _ast_Call_setParameters(
         this->parameters.buffer[i].name = corto_strdup(function->parameters.buffer[i].name);
         this->parameters.buffer[i].passByReference = function->parameters.buffer[i].passByReference;
     }
-/* $end */
 }
 
-ic_node _ast_Call_toIc(
+ic_node ast_Call_toIc(
     ast_Call this,
     ic_program program,
     ic_storage storage,
     bool stored)
 {
-/* $begin(corto/ast/Call/toIc) */
     ic_storage result = NULL;
     ic_node function;
     ast_Expression argument = NULL;
@@ -258,5 +241,5 @@ ic_node _ast_Call_toIc(
     }
 
     return (ic_node)result;
-/* $end */
 }
+

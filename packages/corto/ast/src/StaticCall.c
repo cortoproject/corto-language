@@ -1,21 +1,12 @@
-/* $CORTO_GENERATED
- *
- * StaticCall.c
- *
- * Only code written between the begin and end tags will be preserved
- * when the file is regenerated.
- */
+/* This is a managed file. Do not delete this comment. */
 
 #include <corto/ast/ast.h>
 
-/* $header() */
 #include "ast__private.h"
-/* $end */
 
-int16_t _ast_StaticCall_construct(
+int16_t ast_StaticCall_construct(
     ast_StaticCall this)
 {
-/* $begin(corto/ast/StaticCall/construct) */
     ast_Object fExpr;
 
     fExpr = ast_ObjectCreate(this->function);
@@ -30,5 +21,5 @@ int16_t _ast_StaticCall_construct(
         (corto_procedure(corto_typeof(this->function))->thisType == corto_any_o);
 
     return ast_Call_construct(ast_Call(this));
-/* $end */
 }
+

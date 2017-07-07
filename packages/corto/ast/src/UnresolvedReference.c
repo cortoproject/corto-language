@@ -1,34 +1,23 @@
-/* $CORTO_GENERATED
- *
- * UnresolvedReference.c
- *
- * Only code written between the begin and end tags will be preserved
- * when the file is regenerated.
- */
+/* This is a managed file. Do not delete this comment. */
 
 #include <corto/ast/ast.h>
 
-/* $header() */
 #include "ast__private.h"
- /* $end */
-
-int16_t _ast_UnresolvedReference_construct(
+ 
+int16_t ast_UnresolvedReference_construct(
     ast_UnresolvedReference this)
 {
-/* $begin(corto/ast/UnresolvedReference/construct) */
 
     ast_Storage(this)->kind = Ast_UnresolvedReferenceStorage;
     ast_Expression(this)->unresolved = TRUE;
     corto_ptr_setref(&ast_Expression(this)->type, corto_void_o);
 
-    return ast_Storage_construct(this);
-/* $end */
+    return safe_ast_Storage_construct(this);
 }
 
-void _ast_UnresolvedReference_error(
+void ast_UnresolvedReference_error(
     ast_UnresolvedReference this)
 {
-/* $begin(corto/ast/UnresolvedReference/error) */
     corto_id errMsg;
 
     sprintf(errMsg, "unresolved identifier '%s'", this->ref);
@@ -41,24 +30,20 @@ void _ast_UnresolvedReference_error(
 
     yparser()->errors++;
 
-/* $end */
 }
 
-corto_string _ast_UnresolvedReference_id(
+corto_string ast_UnresolvedReference_id(
     ast_UnresolvedReference this)
 {
-/* $begin(corto/ast/UnresolvedReference/id) */
 
     return this->ref;
 
-/* $end */
 }
 
-ast_Expression _ast_UnresolvedReference_resolve(
+ast_Expression ast_UnresolvedReference_resolve(
     ast_UnresolvedReference this,
     corto_type type)
 {
-/* $begin(corto/ast/UnresolvedReference/resolve) */
     ast_Expression result = NULL;
     corto_object o = NULL;
 
@@ -78,16 +63,14 @@ ast_Expression _ast_UnresolvedReference_resolve(
     }
 
     return result;
-/* $end */
 }
 
-ic_node _ast_UnresolvedReference_toIc(
+ic_node ast_UnresolvedReference_toIc(
     ast_UnresolvedReference this,
     ic_program program,
     ic_storage storage,
     bool stored)
 {
-/* $begin(corto/ast/UnresolvedReference/toIc) */
 
     CORTO_UNUSED(this);
     CORTO_UNUSED(program);
@@ -97,5 +80,5 @@ ic_node _ast_UnresolvedReference_toIc(
     ast_UnresolvedReference_error(this);
 
     return NULL;
-/* $end */
 }
+

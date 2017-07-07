@@ -1,21 +1,12 @@
-/* $CORTO_GENERATED
- *
- * PostFix.c
- *
- * Only code written between the begin and end tags will be preserved
- * when the file is regenerated.
- */
+/* This is a managed file. Do not delete this comment. */
 
 #include <corto/ast/ast.h>
 
-/* $header() */
 #include "ast__private.h"
-/* $end */
 
-int16_t _ast_PostFix_construct(
+int16_t ast_PostFix_construct(
     ast_PostFix this)
 {
-/* $begin(corto/ast/PostFix/construct) */
     corto_type lvalueType = ast_Expression_getType(this->lvalue);
 
     /* Validate whether operation is allowed */
@@ -68,24 +59,20 @@ int16_t _ast_PostFix_construct(
     return 0;
 error:
     return -1;
-/* $end */
 }
 
-bool _ast_PostFix_hasReturnedResource(
+bool ast_PostFix_hasReturnedResource(
     ast_PostFix this)
 {
-/* $begin(corto/ast/PostFix/hasReturnedResource) */
     return ast_Expression_hasReturnedResource(this->lvalue);
-/* $end */
 }
 
-ic_node _ast_PostFix_toIc(
+ic_node ast_PostFix_toIc(
     ast_PostFix this,
     ic_program program,
     ic_storage storage,
     bool stored)
 {
-/* $begin(corto/ast/PostFix/toIc) */
     ic_storage result;
     ic_node lvalue;
     corto_type lvalueType = ast_Expression_getType(this->lvalue);
@@ -112,5 +99,5 @@ ic_node _ast_PostFix_toIc(
     }
 
     return (ic_node)lvalue;
-/* $end */
 }
+

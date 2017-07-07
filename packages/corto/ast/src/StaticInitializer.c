@@ -1,14 +1,7 @@
-/* $CORTO_GENERATED
- *
- * StaticInitializer.c
- *
- * Only code written between the begin and end tags will be preserved
- * when the file is regenerated.
- */
+/* This is a managed file. Do not delete this comment. */
 
 #include <corto/ast/ast.h>
 
-/* $header() */
 #include "ast__private.h"
 
 corto_word ast_Initializer_offset(ast_StaticInitializer this, corto_uint32 variable) {
@@ -109,12 +102,10 @@ corto_word ast_Initializer_offset(ast_StaticInitializer this, corto_uint32 varia
 error:
     return 0;
 }
-/* $end */
 
-int16_t _ast_StaticInitializer_construct(
+int16_t ast_StaticInitializer_construct(
     ast_StaticInitializer this)
 {
-/* $begin(corto/ast/StaticInitializer/construct) */
     corto_int8 variable;
 
     /* Copy offsets of variables into frames */
@@ -130,13 +121,11 @@ int16_t _ast_StaticInitializer_construct(
     return ast_Initializer_construct(ast_Initializer(this));
 error:
     return -1;
-/* $end */
 }
 
-int16_t _ast_StaticInitializer_define(
+int16_t ast_StaticInitializer_define(
     ast_StaticInitializer this)
 {
-/* $begin(corto/ast/StaticInitializer/define) */
     corto_uint32 variable;
     corto_object o;
 
@@ -178,13 +167,11 @@ int16_t _ast_StaticInitializer_define(
     return 0;
 error:
     return -1;
-/* $end */
 }
 
-int16_t _ast_StaticInitializer_push(
+int16_t ast_StaticInitializer_push(
     ast_StaticInitializer this)
 {
-/* $begin(corto/ast/StaticInitializer/push) */
     corto_uint8 variable;
 
     /* Obtain offset for all that variables being initialized */
@@ -194,14 +181,12 @@ int16_t _ast_StaticInitializer_push(
     }
 
     return ast_Initializer_push_v(ast_Initializer(this));
-/* $end */
 }
 
-int16_t _ast_StaticInitializer_value(
+int16_t ast_StaticInitializer_value(
     ast_StaticInitializer this,
     ast_Expression v)
 {
-/* $begin(corto/ast/StaticInitializer/value) */
     corto_word offset;
     corto_uint32 variable;
     corto_uint32 fp = ast_Initializer(this)->fp;
@@ -258,5 +243,5 @@ int16_t _ast_StaticInitializer_value(
     return ast_Initializer_next(ast_Initializer(this));
 error:
     return -1;
-/* $end */
 }
+

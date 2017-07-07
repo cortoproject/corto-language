@@ -1,21 +1,13 @@
-/* $CORTO_GENERATED
- *
- * Storage.c
- *
- * Only code written between the begin and end tags will be preserved
- * when the file is regenerated.
- */
+/* This is a managed file. Do not delete this comment. */
 
 #include <corto/ast/ast.h>
-
-int16_t _ast_Storage_construct(
+int16_t ast_Storage_construct(
     ast_Storage this)
 {
-/* $begin(corto/ast/Storage/construct) */
 
     ast_Node(this)->kind = Ast_StorageExpr;
     ast_Expression(this)->deref = ast_Expression(this)->type->reference ? Ast_ByReference : Ast_ByValue;
 
     return 0;
-/* $end */
 }
+

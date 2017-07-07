@@ -1,33 +1,22 @@
-/* $CORTO_GENERATED
- *
- * Null.c
- *
- * Only code written between the begin and end tags will be preserved
- * when the file is regenerated.
- */
+/* This is a managed file. Do not delete this comment. */
 
 #include <corto/ast/ast.h>
 
-/* $header() */
 #include "ast__private.h"
-/* $end */
 
-int16_t _ast_Null_init(
+int16_t ast_Null_init(
     ast_Null this)
 {
-/* $begin(corto/ast/Null/init) */
     ast_Literal(this)->kind = Ast_Nothing;
     ast_Expression(this)->type = NULL;
     return ast_Literal_init(ast_Literal(this));
-/* $end */
 }
 
-int16_t _ast_Null_serialize(
+int16_t ast_Null_serialize(
     ast_Null this,
     corto_type dstType,
     uintptr_t dst)
 {
-/* $begin(corto/ast/Null/serialize) */
     ast_valueKind kind;
     CORTO_UNUSED(this);
 
@@ -60,16 +49,14 @@ int16_t _ast_Null_serialize(
     return 0;
 error:
     return -1;
-/* $end */
 }
 
-ic_node _ast_Null_toIc(
+ic_node ast_Null_toIc(
     ast_Null this,
     ic_program program,
     ic_storage storage,
     bool stored)
 {
-/* $begin(corto/ast/Null/toIc) */
     CORTO_UNUSED(storage);
     CORTO_UNUSED(stored);
     CORTO_UNUSED(this);
@@ -77,5 +64,5 @@ ic_node _ast_Null_toIc(
 
     corto_any l = {corto_type(corto_void_o), NULL, FALSE};
     return ic_node(ic_literalCreate(l));
-/* $end */
 }
+
