@@ -17,7 +17,7 @@ int cx_loadFile(corto_string file, int argc, char* argv[], void* ctx) {
 int cxMain(int argc, char *argv[]) {
 /* $begin(main) */
 
-    corto_loaderRegister("cx", cx_loadFile, NULL);
+    corto_load_register("cx", cx_loadFile, NULL);
 
     return 0;
 /* $end */
