@@ -6,7 +6,7 @@
  * when the file is regenerated.
  */
 
-#include <corto/ext/cx/cx.h>
+#include <driver/ext/cx/cx.h>
 
 /* $header() */
 int cx_loadFile(corto_string file, int argc, char* argv[], void* ctx) {

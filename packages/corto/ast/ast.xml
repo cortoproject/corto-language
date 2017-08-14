@@ -1,4 +1,4 @@
-<corto xmlns:corto="http://corto.io/packages/corto/fmt/xml">
+<corto xmlns:corto="http://corto.io/packages/driver/fmt/xml">
     <corto:package name="corto" url="http://corto.io/doc/corto">
         <corto:package name="ast" url="http://corto.io/doc/corto/ast">
             <!-- Enumeration representing the values that can be represented in hyve -->

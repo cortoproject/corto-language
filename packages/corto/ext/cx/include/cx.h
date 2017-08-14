@@ -8,7 +8,7 @@
 #define CORTO_EXT_CX_H
 
 #include <corto/corto.h>
-#include <corto/ext/cx/_project.h>
+#include <driver/ext/cx/_project.h>
 #include <corto/c/c.h>
 #include <corto/ast/ast.h>
 
