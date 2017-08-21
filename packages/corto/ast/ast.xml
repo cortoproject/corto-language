@@ -584,7 +584,7 @@
                     <overridable name="pushKey()" returnType="int16"/>
                     <overridable name="popKey()" returnType="int16"/>
                     <overridable name="valueKey(Expression key)" returnType="int16"/>
-                    <overridable name="define()" returnType="int16"/>
+                    <overridable name="defineObject()" returnType="int16"/>
                     <overridable name="next()" returnType="int16"/>
                     <method name="initFrame()" returnType="uint16"/>
                 </corto:scope>
@@ -604,7 +604,7 @@
                     <member name="frames" type="array{StaticInitializerFrame,64}" modifiers="private|local"/>
                     <override name="push()" returnType="int16"/>
                     <override name="value(Expression v)" returnType="int16"/>
-                    <override name="define()" returnType="int16"/>
+                    <override name="defineObject()" returnType="int16"/>
                 </corto:scope>
             </class>
 
@@ -625,7 +625,7 @@
                     <override name="push()" returnType="int16"/>
                     <override name="pop()" returnType="int16"/>
                     <override name="value(Expression v)" returnType="int16"/>
-                    <override name="define()" returnType="int16"/>
+                    <override name="defineObject()" returnType="int16"/>
                     <override name="hasReturnedResource()" returnType="bool"/>
                 </corto:scope>
             </class>
@@ -658,7 +658,7 @@
                     <method name="pop()" returnType="int16"/>
                     <method name="value(Expression v)" returnType="int16"/>
                     <method name="member(string name)" returnType="int32"/>
-                    <method name="define()" returnType="int16"/>
+                    <method name="defineObject()" returnType="int16"/>
                     <method name="insert(Expression variable)" returnType="int16"/>
                     <override name="hasReturnedResource()" returnType="bool"/>
                 </corto:scope>
@@ -778,7 +778,7 @@
                     <method name="declaration(type type,string id,bool isReference)" returnType="Storage"/>
                     <method name="declareFunction(type returnType,string id,type kind,bool returnsReference)" returnType="Storage"/>
                     <method name="declareFunctionParams(Storage function)" returnType="ast/Block"/>
-                    <method name="define()" returnType="int16"/>
+                    <method name="defineObject()" returnType="int16"/>
                     <method name="defineScope()" returnType="int16"/>
                     <method name="defineVariable(Storage object)" returnType="int16"/>
                     <method name="with()" returnType="int16"/>

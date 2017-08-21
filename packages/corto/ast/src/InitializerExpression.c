@@ -14,7 +14,7 @@ int16_t ast_InitializerExpression_construct(
     return result;
 }
 
-int16_t ast_InitializerExpression_define(
+int16_t ast_InitializerExpression_defineObject(
     ast_InitializerExpression this)
 {
     ast_InitOper *elem = ast_InitOperListAppendAlloc(this->operations);
@@ -66,7 +66,7 @@ int16_t ast_InitializerExpression_insert(
             }
             break;
         case Ast_InitOpDefine:
-            if (ast_DynamicInitializer_define(initializer)) {
+            if (ast_DynamicInitializer_defineObject(initializer)) {
                 goto error;
             }
             break;

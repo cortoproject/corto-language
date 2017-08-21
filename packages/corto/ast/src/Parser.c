@@ -338,7 +338,7 @@ ast_Expression ast_Parser_delegateAssignment(ast_Parser this, ast_Expression lva
     ast_InitializerExpression_member(result, "procedure");
     ast_InitializerExpression_value(result, functionExpr);
     ast_InitializerExpression_pop(result);
-    ast_InitializerExpression_define(result);
+    ast_InitializerExpression_defineObject(result);
     ast_Parser_collect(this, result);
 
     corto_dealloc(signature);
@@ -1508,13 +1508,13 @@ error:
     return NULL;
 }
 
-int16_t ast_Parser_define(
+int16_t ast_Parser_defineObject(
     ast_Parser this)
 {
     ast_CHECK_ERRSET(this);
 
     if ((this->initializerCount >= 0) && this->initializers[this->initializerCount]) {
-        if (ast_Initializer_define(this->initializers[this->initializerCount])) {
+        if (ast_Initializer_defineObject(this->initializers[this->initializerCount])) {
             goto error;
         }
         corto_ptr_setref(&this->initializers[this->initializerCount], NULL);

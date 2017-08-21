@@ -123,7 +123,7 @@ error:
     return -1;
 }
 
-int16_t ast_StaticInitializer_define(
+int16_t ast_StaticInitializer_defineObject(
     ast_StaticInitializer this)
 {
     corto_uint32 variable;
@@ -162,7 +162,7 @@ int16_t ast_StaticInitializer_define(
         }
     }
 
-    ast_Initializer_define_v(ast_Initializer(this));
+    ast_Initializer_defineObject_v(ast_Initializer(this));
 
     return 0;
 error:

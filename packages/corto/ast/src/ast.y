@@ -225,7 +225,7 @@ statements
     ;
 
 statement_nodecl
-    : expr ENDL                 {ast_Parser_addStatement(yparser(), $1); fast_op; ast_Parser_define(yparser()); fast_op;}
+    : expr ENDL                 {ast_Parser_addStatement(yparser(), $1); fast_op; ast_Parser_defineObject(yparser()); fast_op;}
     | if_statement              {ast_Parser_addStatement(yparser(), $1); fast_op;}
     | while_statement           {ast_Parser_addStatement(yparser(), $1); fast_op;}
     | scope_statement           {$<Variable>$ = ast_Parser_pushScope(yparser()); ast_Parser_pushLvalue(yparser(),NULL, FALSE); fast_op;} scope {ast_Parser_popScope(yparser(),$<Variable>2); fast_op;}
@@ -697,7 +697,7 @@ identifier
     } initializer_braces {
         $$ = $<Variable>2;
         if ($$) {
-            ast_Parser_define(yparser()); fast_op;
+            ast_Parser_defineObject(yparser()); fast_op;
         }
     }
     ;

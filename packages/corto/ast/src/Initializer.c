@@ -205,7 +205,7 @@ corto_type ast_Initializer_currentType(
     return ast_Parser_initGetType(this, NULL);
 }
 
-int16_t ast_Initializer_define_v(
+int16_t ast_Initializer_defineObject_v(
     ast_Initializer this)
 {
     CORTO_UNUSED(this);

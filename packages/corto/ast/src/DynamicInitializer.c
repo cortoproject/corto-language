@@ -118,7 +118,7 @@ int16_t ast_DynamicInitializer_construct(
     return ast_Initializer_construct(ast_Initializer(this));
 }
 
-int16_t ast_DynamicInitializer_define(
+int16_t ast_DynamicInitializer_defineObject(
     ast_DynamicInitializer this)
 {
     corto_int8 variable;
@@ -130,7 +130,7 @@ int16_t ast_DynamicInitializer_define(
             ast_Parser_addStatement(yparser(), ast_Node(defineExpr));
             ast_Parser_collect(yparser(), defineExpr);
         }
-        ast_Initializer_define_v(ast_Initializer(this));
+        ast_Initializer_defineObject_v(ast_Initializer(this));
     }
 
     return 0;

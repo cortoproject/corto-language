@@ -4,8 +4,8 @@
  * Only modify inside the header-end and body-end sections.
  */
 
-#ifndef CORTO_EXT_CX_H
-#define CORTO_EXT_CX_H
+#ifndef DRIVER_EXT_CX_H
+#define DRIVER_EXT_CX_H
 
 #include <corto/corto.h>
 #include <driver/ext/cx/_project.h>
