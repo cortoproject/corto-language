@@ -26,9 +26,9 @@ corto_void _test_Void_tc_object(
     corto_object o = corto_resolve(root_o, "o_object");
     test_assert(o != NULL);
     test_assert(corto_typeof(o) == corto_object_o);
-    test_assert(corto_checkState(o, CORTO_VALID));
+    test_assert(corto_checkState(o, CORTO_OBJECT_IS_VALID));
     test_assert(corto_checkState(o, CORTO_DECLARED));
-    test_assert(corto_checkState(o, CORTO_DEFINED));
+    test_assert(corto_checkState(o, CORTO_VALID));
     test_assert(corto_checkAttr(o, CORTO_ATTR_NAMED));
     test_assert(corto_checkAttr(o, CORTO_ATTR_OBSERVABLE));
     test_assert(corto_checkAttr(o, CORTO_ATTR_PERSISTENT));
@@ -46,9 +46,9 @@ corto_void _test_Void_tc_void(
     corto_object o = corto_resolve(root_o, "o_void");
     test_assert(o != NULL);
     test_assert(corto_typeof(o) == corto_void_o);
-    test_assert(corto_checkState(o, CORTO_VALID));
+    test_assert(corto_checkState(o, CORTO_OBJECT_IS_VALID));
     test_assert(corto_checkState(o, CORTO_DECLARED));
-    test_assert(corto_checkState(o, CORTO_DEFINED));
+    test_assert(corto_checkState(o, CORTO_VALID));
     test_assert(corto_checkAttr(o, CORTO_ATTR_NAMED));
     test_assert(corto_checkAttr(o, CORTO_ATTR_OBSERVABLE));
     test_assert(corto_checkAttr(o, CORTO_ATTR_PERSISTENT));

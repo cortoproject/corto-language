@@ -141,8 +141,8 @@ int16_t ast_StaticInitializer_defineObject(
             
             corto_type t = corto_typeof(o);
             if (!corto_checkAttr(o, CORTO_ATTR_NAMED) ||
-                (corto_parentof(o) && corto_checkState(corto_parentof(o), CORTO_DEFINED)) ||
-                (t->options.parentState != CORTO_DEFINED)) 
+                (corto_parentof(o) && corto_checkState(corto_parentof(o), CORTO_VALID)) ||
+                (t->options.parentState != CORTO_VALID)) 
             {
                 if (corto_define(o)) {
                     corto_id id1;
