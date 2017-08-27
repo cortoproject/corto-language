@@ -1400,6 +1400,10 @@ ast_Storage ast_Parser_declareFunction(
 
                 corto_ptr_setref(&function->returnType, returnType);
                 function->returnsReference = returnsReference;
+
+                if (corto_define(function)) {
+                    goto error;
+                }
             }
         } else {
             if (strcmp(id, corto_idof(function))) {
@@ -1537,7 +1541,9 @@ int16_t ast_Parser_defineScope(
             goto error;
         }
 
-        if (corto_instanceof(corto_type(corto_type_o), this->scope)) {
+        if (corto_instanceof(corto_type_o, this->scope) || 
+            corto_instanceof(corto_package_o, this->scope)) 
+        {
             if (corto_define(this->scope)) {
                 corto_id id;
                 ast_Parser_error(this, "cannot define '%s'\n  %s",
@@ -3213,10 +3219,7 @@ error:
 int16_t ast_Parser_with(
     ast_Parser this)
 {
-
-    if (ast_Parser_pushScope(yparser())) {
-        goto error;
-    }
+    ast_Parser_pushScope(yparser());
 
     if (ast_Parser_defineScope(this)) {
         goto error;
