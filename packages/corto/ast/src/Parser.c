@@ -1602,10 +1602,9 @@ void ast_Parser_destruct(
         while(corto_iter_hasNext(&iter)) {
             corto_dealloc(corto_iter_next(&iter));
         }
-        corto_ll_free(this->heapCollected);
+        corto_ll_clear(this->heapCollected);
     }
 
-    this->heapCollected = NULL;
     corto_ptr_setref(&this->scope, NULL);
 
     memset(this->variables, 0, sizeof(this->variables));
@@ -1691,8 +1690,7 @@ int16_t ast_Parser_finalize(
             corto_release(binding->impl);
             corto_dealloc(binding);
         }
-        corto_ll_free(this->bindings);
-        this->bindings = NULL;
+        corto_ll_clear(this->bindings);
     }
 
     return 0;
