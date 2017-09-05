@@ -28,7 +28,7 @@ void ast_Parser_error(ast_Parser this, char* fmt, ... ) {
     }
 
     va_start(args, fmt);
-    corto_vasprintf(&err, fmt, args);
+    err = corto_vasprintf(fmt, args);
     va_end(args);
 
     ast_reportError(this->filename, this->column ? line : line - 1, this->column, err, token);
@@ -2486,7 +2486,7 @@ int16_t ast_Parser_parseFunction(
         ast_Expression(resultLocal)->deref = isReference ? Ast_ByReference : Ast_ByValue;
         returnType = f->returnType;
         corto_string prev = parser->source;
-        corto_asprintf(&parser->source, "_ = %s", parser->source);
+        parser->source = corto_asprintf("_ = %s", parser->source);
         corto_dealloc(prev);
     }
 

@@ -360,7 +360,7 @@ function_arguments
     ;
 
 function_argument_inout
-    : argument_inout ':' function_argument {corto_asprintf(&$$, "%s:%s", $1, $3); corto_dealloc($3);}
+    : argument_inout ':' function_argument {$$ = corto_asprintf("%s:%s", $1, $3); corto_dealloc($3);}
     | function_argument
     ;
 
