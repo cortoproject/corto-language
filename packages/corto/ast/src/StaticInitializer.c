@@ -4,6 +4,11 @@
 
 #include "ast__private.h"
 
+static
+int comparator(void *t, const void *ptr1, const void *ptr2) {
+    return corto_ptr_compare(ptr1, t, ptr2);
+}
+
 corto_word ast_Initializer_offset(ast_StaticInitializer this, corto_uint32 variable) {
     corto_word result, base;
     corto_uint16 fp = ast_Initializer(this)->fp;
@@ -56,7 +61,7 @@ corto_word ast_Initializer_offset(ast_StaticInitializer this, corto_uint32 varia
                 }
                 corto_ll_append(*(corto_ll*)base, (void*)result);
                 if (!result) {
-                    result = (corto_word)corto_ll_getPtr(*(corto_ll*)base, corto_ll_size(*(corto_ll*)base)-1);
+                    result = (corto_word)corto_ll_getPtr(*(corto_ll*)base, corto_ll_count(*(corto_ll*)base)-1);
                 }
                 break;
             }
@@ -66,13 +71,13 @@ corto_word ast_Initializer_offset(ast_StaticInitializer this, corto_uint32 varia
                     if (corto_collection_requiresAlloc(elementType)) {
                         result = (corto_word)corto_calloc(elementSize);
                     }
-                    if (!*(corto_rbtree*)base) {
-                        *(corto_rbtree*)base = corto_rb_new(frame->type);
+                    if (!*(corto_rb*)base) {
+                        *(corto_rb*)base = corto_rb_new(comparator, frame->type);
                     }
-                    corto_rb_set(*(corto_rbtree*)base, (void*)this->frames[fp].keyPtr[variable], (void*)result);
+                    corto_rb_set(*(corto_rb*)base, (void*)this->frames[fp].keyPtr[variable], (void*)result);
                     if (!result) {
                         if (this->frames[fp].keyPtr[variable]) {
-                            result = (corto_word)corto_rb_getPtr(*(corto_rbtree*)base, (void*)this->frames[fp].keyPtr[variable]);
+                            result = (corto_word)corto_rb_findPtr(*(corto_rb*)base, (void*)this->frames[fp].keyPtr[variable]);
                         } else {
                             ast_Parser_error(yparser(), "cannot set element without keyvalue");
                             goto error;
@@ -138,13 +143,13 @@ int16_t ast_StaticInitializer_defineObject(
         o = (corto_object)ast_Object(ast_Initializer(this)->variables[variable].object)->value;
         if (corto_instanceof(corto_type(corto_type_o), o)
                 || (corto_checkAttr(o, CORTO_ATTR_NAMED) && corto_instanceof(corto_type(corto_type_o), corto_parentof(o)))) {
-            
+
             corto_type t = corto_typeof(o);
             if (!corto_checkAttr(o, CORTO_ATTR_NAMED) ||
                 (corto_parentof(o) && corto_checkState(corto_parentof(o), CORTO_VALID)) ||
-                (t->options.parentState != CORTO_VALID)) 
+                (t->options.parentState != CORTO_VALID))
             {
-                if (corto_define(o)) {
+                if (!corto(NULL, NULL, NULL, o, NULL, NULL, -1, CORTO_DO_DEFINE)) {
                     corto_id id1;
                     ast_Parser_error(yparser(), "failed to define '%s': %s",
                             ast_Parser_id(o, id1),
@@ -244,4 +249,3 @@ int16_t ast_StaticInitializer_value(
 error:
     return -1;
 }
-

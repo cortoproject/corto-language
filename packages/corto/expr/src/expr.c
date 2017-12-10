@@ -19,7 +19,7 @@ static corto_int16 corto_expr_getParamName(char *out, char *id) {
     *outPtr = '\0';
 
     if (outPtr == out) {
-        corto_seterr("invalid parameter name: %s", id);
+        corto_throw("invalid parameter name: %s", id);
         goto error;
     }
 
@@ -70,7 +70,7 @@ static char* corto_expr_toCortoExpr(corto_function f, char *expr) {
 static corto_int16 corto_expr_setParamType(corto_parameter *p, corto_string typeId) {
     corto_type type = corto_resolve(NULL, typeId);
     if (!type) {
-        corto_seterr("unresolved type '%s'", typeId);
+        corto_throw("unresolved type '%s'", typeId);
         goto error;
     }
     p->type = type;
@@ -83,7 +83,7 @@ static corto_int16 corto_expr_finalize(corto_expr *out, corto_expr_opt *opt, cha
     char *cortoExpr;
 
     if (!(cortoExpr = corto_expr_toCortoExpr(f, expr))) {
-        corto_seterr("corto: expr: parser error (toCorto) '%s': %s", expr, corto_lasterr());
+        corto_throw("corto: expr: parser error (toCorto) '%s': %s", expr, corto_lasterr());
         goto error;
     }
 
@@ -93,7 +93,7 @@ static corto_int16 corto_expr_finalize(corto_expr *out, corto_expr_opt *opt, cha
     }
 
     if (ast_Parser_parseFunction(f, cortoExpr, opt ? opt->inverse : FALSE)) {
-        corto_seterr("corto: expr: failed to parse '%s': %s", cortoExpr, corto_lasterr());
+        corto_throw("corto: expr: failed to parse '%s': %s", cortoExpr, corto_lasterr());
         goto error;
     }
 
@@ -115,14 +115,14 @@ corto_int16 corto_expr_comp(corto_expr *out, corto_expr_opt *opt, char *expr, ..
     va_start(list, expr);
     for (ptr = expr; ptr && *ptr && (ptr = strchr(ptr, '%')); ptr ++) {
         if (!(length = corto_expr_addParam(f, ptr + 1))) {
-            corto_seterr("corto: expr: failed to add parameter for expr '%s': %s", expr, corto_lasterr());
+            corto_throw("corto: expr: failed to add parameter for expr '%s': %s", expr, corto_lasterr());
             goto error;
         }
 
         if (length != prev) {
             corto_parameter *p = &f->parameters.buffer[length - 1];
             if (corto_expr_setParamType(p, va_arg(list, char*))) {
-                corto_seterr("corto: expr: failed to set parameter type for '%s': %s", expr, corto_lasterr());
+                corto_throw("corto: expr: failed to set parameter type for '%s': %s", expr, corto_lasterr());
                 goto error;
             }
             prev = length;
@@ -146,14 +146,14 @@ corto_int16 corto_expr_compb(corto_expr *out, corto_expr_opt *opt, char *expr, c
 
     for (ptr = expr; ptr && *ptr && (ptr = strchr(ptr, '%')); ptr ++) {
         if (!(length = corto_expr_addParam(f, ptr + 1))) {
-            corto_seterr("corto: expr: failed to add parameter for expr '%s': %s", expr, corto_lasterr());
+            corto_throw("corto: expr: failed to add parameter for expr '%s': %s", expr, corto_lasterr());
             goto error;
         }
 
         if (length != prev) {
             corto_parameter *p = &f->parameters.buffer[length - 1];
             if (corto_expr_setParamType(p, types[length - 1])) {
-                corto_seterr("corto: expr: failed to set parameter type for '%s': %s", expr, corto_lasterr());
+                corto_throw("corto: expr: failed to set parameter type for '%s': %s", expr, corto_lasterr());
                 goto error;
             }
             prev = length;
@@ -210,7 +210,7 @@ void corto_expr_free(corto_expr *expr) {
 
 /* $end */
 
-int exprMain(int argc, char *argv[]) {
+int cortomain(int argc, char *argv[]) {
 /* $begin(main) */
 
     /* Insert implementation */

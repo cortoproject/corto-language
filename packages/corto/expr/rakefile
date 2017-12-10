@@ -1,6 +1,0 @@
-
-PACKAGE = 'corto/expr'
-
-USE_PACKAGE = ['corto/ast']
-
-require "#{ENV['CORTO_BUILD']}/package"

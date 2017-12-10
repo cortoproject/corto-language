@@ -28,7 +28,7 @@ int16_t ast_DelegateCall_construct(
         corto_ptr_setref(&ast_Call(this)->returnType, type->returnType);
         ast_Call(this)->returnsReference = type->returnsReference;
 
-        corto_parameterSeqSize(&ast_Call(this)->parameters, type->parameters.length);
+        corto_parameterSeqResize(&ast_Call(this)->parameters, type->parameters.length);
 
         for (i = 0; i < type->parameters.length; i++) {
             corto_ptr_setref(&ast_Call(this)->parameters.buffer[i].type, type->parameters.buffer[i].type);
@@ -40,4 +40,3 @@ int16_t ast_DelegateCall_construct(
 error:
     return -1;
 }
-

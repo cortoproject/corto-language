@@ -10,6 +10,7 @@
 #include <corto/corto.h>
 #include <corto/expr/_project.h>
 #include <corto/c/c.h>
+#include <corto/ast/c/c.h>
 #include <corto/ast/ast.h>
 
 /* $header() */

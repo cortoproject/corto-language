@@ -10,6 +10,7 @@
 #include <corto/corto.h>
 #include <corto/corto.h>
 #include <corto/ast/_project.h>
+#include <corto/ic/c/c.h>
 #include <corto/c/c.h>
 #include <corto/ic/ic.h>
 

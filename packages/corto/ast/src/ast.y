@@ -18,11 +18,11 @@ int yy_scan_string(const char* str);
 #define POPCOMPLEX() ast_Parser_popComplexType(yparser()); fast_op;
 
 /* Thread local storage key for parser */
-extern corto_threadKey ast_PARSER_KEY;
+extern corto_tls ast_PARSER_KEY;
 
 /* Obtain parser */
 ast_Parser yparser(void) {
-    return (ast_Parser)corto_threadTlsGet(ast_PARSER_KEY);
+    return (ast_Parser)corto_tls_get(ast_PARSER_KEY);
 }
 
 #define fast_err(...) _fast_err(__VA_ARGS__); YYERROR;

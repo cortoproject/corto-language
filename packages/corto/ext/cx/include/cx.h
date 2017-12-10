@@ -9,6 +9,7 @@
 
 #include <corto/corto.h>
 #include <driver/ext/cx/_project.h>
+#include <corto/ast/c/c.h>
 #include <corto/c/c.h>
 #include <corto/ast/ast.h>
 

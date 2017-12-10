@@ -11,7 +11,7 @@ int16_t ast_Comma_addExpression(
     if (expr) {
         corto_assert(this->expressions != NULL, "initialization failed");
         corto_ll_append(this->expressions, expr); corto_claim(expr);
-        if (corto_ll_size(this->expressions) == 1) {
+        if (corto_ll_count(this->expressions) == 1) {
             corto_ptr_setref(&ast_Expression(this)->type, expr->type);
         }
     }

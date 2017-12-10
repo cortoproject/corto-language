@@ -1,12 +1,12 @@
 {
-    "id": "driver/ext/cx",
+    "id": "corto/ast",
     "type": "package",
     "value": {
         "author": "Sander Mertens",
         "organization": "cortoproject",
         "repository": "https://github.com/cortoproject/corto-language",
         "license": "MIT",        
-        "description": "cx extension for corto",
-        "use": ["corto/ast"]
+        "description": "Parser for corto language files",
+        "use": ["corto/ast/c", "corto/ic"]
     }
 }

@@ -1,11 +1,8 @@
 /* This is a managed file. Do not delete this comment. */
 
 #include <corto/ast/ast.h>
-
 #include "ast__private.h"
-
-corto_threadKey ast_PARSER_KEY;
-
+corto_tls ast_PARSER_KEY;
 /* Run a corto file */
 int ast_loadFile(corto_string file, int argc, char* argv[]) {
     corto_char* source;
@@ -19,21 +16,22 @@ int ast_loadFile(corto_string file, int argc, char* argv[]) {
         seq.buffer[i] = argv[i];
     }
 
-    source = corto_fileLoad(file);
+    source = corto_file_load(file);
     if (source) {
         /* Create parser */
         p = ast_ParserCreate(source, file);
         if (!p) {
-            corto_seterr("failed to create parser for '%s': %s", file, corto_lasterr());
+            corto_throw("failed to create parser for '%s'", file);
             goto error;
         }
 
         /* Parse & run script */
         ast_Parser_parse(p, seq);
         if (p->errors) {
-            corto_seterr("found %d errors", p->errors);
+            corto_throw("found %d errors", p->errors);
             goto error;
         }
+
         corto_release(p);
         corto_dealloc(source);
     } else {
@@ -41,7 +39,6 @@ int ast_loadFile(corto_string file, int argc, char* argv[]) {
     }
 
     corto_dealloc(seq.buffer);
-
     return 0;
 error:
     return -1;
@@ -80,11 +77,12 @@ ast_Call ast_createCall(ast_Expression instance, corto_string function, corto_ui
             arg = va_arg(arglist, ast_Expression);
             ast_Comma_addExpression(ast_Comma(args), arg);
         }
+
     } else if (numArgs) {
         args = va_arg(arglist, ast_Expression);
     }
-    va_end(arglist);
 
+    va_end(arglist);
     if (args) {
         ast_Parser_collect(yparser(), args);
     }
@@ -112,28 +110,25 @@ ast_Call ast_createCallFromExpr(ast_Expression f, ast_Expression arguments) {
         case Ast_LocalStorage:
             strcpy(name, ast_Local(f)->name);
             break;
-
         case Ast_MemberStorage:
             instance = ast_Member(f)->lvalue;
             strcpy(name, ast_String(ast_Member(f)->rvalue)->value);
             break;
-
         case Ast_ElementStorage:
             result = ast_Call(ast_DelegateCallCreate(NULL, arguments, f));
             break;
-
         case Ast_UnresolvedReferenceStorage:
             /* No use in trying to resolve the unresolved identifier here, there
              * is no additional information available that could help resolving
              * the identifier */
             safe_ast_UnresolvedReference_error(f);
             goto error;
-
         default:
             ast_Parser_error(yparser(), "'%s' expression is not callable",
                 corto_idof(corto_enum_constant(ast_storageKind_o, ast_Storage(f)->kind)));
             goto error;
         }
+
     }
 
     if (!result) {
@@ -167,6 +162,7 @@ bool ast_isOperatorAssignment(
         result = FALSE;
         break;
     }
+
     return result;
 }
 
@@ -183,8 +179,9 @@ void ast_report(
 
     if (yparser()->repl) {
         if (!yparser()->errors) {
-            corto_seterr("%d: %s", column, error);
+            corto_throw("%d: %s", column, error);
         }
+
     } else if(filename) {
         corto_error("%s:%d:%d: %s", filename, line, column, error);
     } else {
@@ -257,6 +254,7 @@ ast_valueKind ast_valueKindFromType(
             result = Ast_Enum;
             break;
         }
+
     }
 
     return result;
@@ -264,12 +262,12 @@ error:
     return Ast_Nothing;
 }
 
-int astMain(int argc, char *argv[]) {
+int cortomain(int argc, char *argv[]) {
     CORTO_UNUSED(argc);
     CORTO_UNUSED(argv);
-    if (corto_threadTlsKey(&ast_PARSER_KEY, NULL)) {
+    if (corto_tls_new(&ast_PARSER_KEY, NULL)) {
         return -1;
     }
+
     return 0;
 }
-

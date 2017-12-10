@@ -124,7 +124,7 @@ ast_Expression ast_Expression_literalFromType(corto_type type, corto_type exprTy
     ast_Expression result = NULL;
 
     if (type->kind != CORTO_PRIMITIVE) {
-        corto_seterr("cannot create literal from non-primitive type '%s'",
+        corto_throw("cannot create literal from non-primitive type '%s'",
             corto_fullpath(NULL, type));
         goto error;
     }
@@ -347,7 +347,7 @@ ast_Expression ast_Expression_fromList(
 
     /* Convert list to comma expression */
     if (list) {
-        if (corto_ll_size(list) == 1) {
+        if (corto_ll_count(list) == 1) {
             result = corto_ll_get(list, 0);
         } else {
             corto_ll toList = corto_ll_new(); /* Copy list */

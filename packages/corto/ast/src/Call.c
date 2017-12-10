@@ -79,8 +79,8 @@ bool ast_Call_hasReturnedResource(
     ast_Call this)
 {
 
-    return this->returnType->reference || 
-        this->returnsReference || 
+    return this->returnType->reference ||
+        this->returnsReference ||
         ((this->returnType->kind == CORTO_PRIMITIVE) && (corto_primitive(this->returnType)->kind == CORTO_TEXT));
 
 }
@@ -102,7 +102,7 @@ void ast_Call_setParameters(
     corto_ptr_setref(&this->returnType, function->returnType);
     this->returnsReference = function->returnsReference;
 
-    corto_parameterSeqSize(&this->parameters, function->parameters.length);
+    corto_parameterSeqResize(&this->parameters, function->parameters.length);
 
     for (i = 0; i < function->parameters.length; i++) {
         corto_ptr_setref(&this->parameters.buffer[i].type, function->parameters.buffer[i].type);
@@ -141,7 +141,7 @@ ic_node ast_Call_toIc(
     if (this->arguments) {
         arguments = ast_Expression_toList(this->arguments);
         if (arguments) {
-            argumentCount = corto_ll_size(arguments);
+            argumentCount = corto_ll_count(arguments);
         }
     }
 
@@ -227,8 +227,8 @@ ic_node ast_Call_toIc(
     function = ast_Node_toIc(ast_Node(this->functionExpr), program, storage, stored);
 
     IC_3(program, ast_Node(this)->line, ic_call, result, function, NULL,
-        (this->returnType->reference || this->returnsReference) ? IC_DEREF_ADDRESS : IC_DEREF_VALUE, 
-        IC_DEREF_VALUE, 
+        (this->returnType->reference || this->returnsReference) ? IC_DEREF_ADDRESS : IC_DEREF_VALUE,
+        IC_DEREF_VALUE,
         IC_DEREF_VALUE);
 
     while(argumentStorageCount) {
@@ -242,4 +242,3 @@ ic_node ast_Call_toIc(
 
     return (ic_node)result;
 }
-

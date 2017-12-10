@@ -450,7 +450,7 @@ corto_ll ast_OptimizeExpr_reduceExpression(ast_Expression e) {
     }
 
     /* Reduce subexpressions */
-    if (corto_ll_size(elems) > 1) {
+    if (corto_ll_count(elems) > 1) {
         corto_iter it = corto_ll_iter(elems);
         while (corto_iter_hasNext(&it)) {
             ast_OptimizeExpr_exprElem *elem = corto_iter_next(&it);
@@ -465,7 +465,7 @@ corto_ll ast_OptimizeExpr_reduceExpression(ast_Expression e) {
     /* Combine expressions with same variable */
     ast_OptimizeExpr_exprElem *elem;
     corto_int32 i = 0;
-    corto_operatorKind firstOperator;
+    corto_operatorKind firstOperator = 0;
     while ((elem = corto_ll_takeFirst(elems))) {
         corto_bool found = FALSE;
         corto_iter it = corto_ll_iter(final);

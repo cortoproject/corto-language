@@ -253,7 +253,7 @@ ic_node ast_String_toIc(
         goto error;
     }
 
-    if (!corto_ll_size(this->elements)) {
+    if (!corto_ll_count(this->elements)) {
         corto_any l = {corto_type(corto_string_o), &this->value, FALSE};
         result = (ic_node)ic_literalCreate(l);
     } else {
@@ -261,7 +261,7 @@ ic_node ast_String_toIc(
             corto_iter elementIter;
             ast_Expression element;
             ic_node icElement1, icElement2;
-            corto_uint32 elementCount = corto_ll_size(this->elements);
+            corto_uint32 elementCount = corto_ll_count(this->elements);
             corto_bool stored = FALSE;
             ic_node dummy;
             corto_uint32 accPushCount = 0;

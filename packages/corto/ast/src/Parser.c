@@ -8,7 +8,7 @@
 /*#define ast_PARSER_DEBUG*/
 #define fast_err ast_Parser_reset(this); this->errSet = TRUE; this->errLine = __LINE__;
 
-extern corto_threadKey ast_PARSER_KEY;
+extern corto_tls ast_PARSER_KEY;
 
 void ast_Parser_error(ast_Parser this, char* fmt, ... ) {
     va_list args;
@@ -118,9 +118,10 @@ corto_int16 ast_Parser_toIc(ast_Parser this, corto_stringSeq argv) {
 
     ic_program_assemble(program);
     ret = ic_program_run(program, 0, argv);
-    corto_threadTlsSet(ast_PARSER_KEY, this);
+    corto_tls_set(ast_PARSER_KEY, this);
     if (ret) {
-        ast_Parser_error(this, "%s", corto_lasterr());
+        corto_raise();
+        ast_Parser_error(this, "");
         goto error;
     }
 
@@ -462,8 +463,8 @@ ast_Expression ast_Parser_explodeComma(ast_Parser this, ast_Expression lvalues, 
 
     lvalueList = ast_Expression_toList(lvalues);
     rvalueList = ast_Expression_toList(rvalues);
-    lvalueCount = corto_ll_size(lvalueList);
-    rvalueCount = corto_ll_size(rvalueList);
+    lvalueCount = corto_ll_count(lvalueList);
+    rvalueCount = corto_ll_count(rvalueList);
 
     if ((rvalueCount > 1) && (lvalueCount == 1)) {
         /* Only temporarily store rvalue if it has side effects */
@@ -517,8 +518,8 @@ ast_Expression ast_Parser_expandComma(ast_Parser this, ast_Expression lvalues, a
 
     lvalueList = ast_Expression_toList(lvalues);
     rvalueList = ast_Expression_toList(rvalues);
-    lvalueCount = corto_ll_size(lvalueList);
-    rvalueCount = corto_ll_size(rvalueList);
+    lvalueCount = corto_ll_count(lvalueList);
+    rvalueCount = corto_ll_count(rvalueList);
 
     /* If there is more than one lvalue assign rvalue to temporary value first. This will assure that rvalue is evaluated
      * only once. */
@@ -538,7 +539,7 @@ ast_Expression ast_Parser_expandComma(ast_Parser this, ast_Expression lvalues, a
         expandMode = EXPAND_BOTH;
     } else {
         ast_Parser_error(this, "mismatch in expression count of binary operation (left = %d, right = %d)",
-                          corto_ll_size(lvalueList), corto_ll_size(rvalueList));
+                          corto_ll_count(lvalueList), corto_ll_count(rvalueList));
         goto error;
     }
 
@@ -758,7 +759,7 @@ ast_Expression ast_Parser_parseIntern(ast_Parser parser, corto_object scope, cor
 
     /* Find last executed expression */
     if (parser->block) {
-        if (corto_ll_size(parser->block->statements)) {
+        if (corto_ll_count(parser->block->statements)) {
             ast_Node lastNode = corto_ll_last(parser->block->statements);
 
             /* If node is an expression, store expression in variable so it can be resolved later */
@@ -897,7 +898,7 @@ corto_string ast_Parser_argumentToString(
         }
         str = corto_buffer_str(&walkData.buffer);
         if (!str) {
-            corto_seterr("failed to serialize anonymous type to string");
+            corto_throw("failed to serialize anonymous type to string");
             goto error;
         }
     }
@@ -1121,7 +1122,7 @@ ast_Expression ast_Parser_callExpr(
                 /* If function is a type, insert cast */
                 if (o && corto_instanceof(corto_type(corto_type_o), o)) {
                     corto_ll exprs = ast_Expression_toList(arguments);
-                    if (corto_ll_size(exprs) != 1) {
+                    if (corto_ll_count(exprs) != 1) {
                         ast_Parser_error(this, "invalid number of parameters for cast (expected 1)");
                         ast_Expression_cleanList(exprs);
                         goto error;
@@ -1246,7 +1247,7 @@ int16_t ast_Parser_construct(
 {
     CORTO_UNUSED(this);
     ast_Parser_reset(this);
-    corto_threadTlsSet(ast_PARSER_KEY, this);
+    corto_tls_set(ast_PARSER_KEY, this);
     return 0;
 }
 
@@ -1300,16 +1301,17 @@ ast_Storage ast_Parser_declaration(
         corto_assert(this->block != NULL, "no valid code-block set in parser context.");
 
         if (!this->pass) {
-            o = corto_declareChild(this->scope, id, type);
+            o = corto(this->scope, id, type, NULL, NULL, NULL, -1,
+                CORTO_DO_RECURSIVE_DECLARE | CORTO_DO_FORCE_TYPE);
             if (!o) {
-                ast_Parser_error(this, "cannot declare '%s': %s",
-                    id,
-                    corto_lasterr());
+                corto_raise();
+                ast_Parser_error(this, "cannot declare '%s'",
+                    id);
                 goto error;
             }
         } else {
-            o = corto_lookup(this->scope, id);
-            corto_assert(o != NULL, "object disappeared in 2nd pass");
+            o = corto(this->scope, id, NULL, NULL, NULL, NULL, -1, 0);
+            corto_assert(o != NULL, "object '%s' disappeared in 2nd pass", id);
             corto_release(o);
         }
         if (o) {
@@ -1391,17 +1393,18 @@ ast_Storage ast_Parser_declareFunction(
                     ast_Parser_error(this, "object '%s' specified as returntype is not a type.", ast_Parser_id(returnType, id));
                     goto error;
                 }
-
-                function = corto_declareChild(this->scope, id, kind);
+                function = corto(this->scope, id, kind, NULL, NULL, NULL, -1,
+                    CORTO_DO_DECLARE | CORTO_DO_FORCE_TYPE);
                 if (!function) {
-                    ast_Parser_error(this, "%s", corto_lasterr());
+                    corto_raise();
+                    ast_Parser_error(this, "");
                     goto error;
                 }
 
                 corto_ptr_setref(&function->returnType, returnType);
                 function->returnsReference = returnsReference;
 
-                if (corto_define(function)) {
+                if (!corto(NULL, NULL, NULL, function, NULL, NULL, -1, CORTO_DO_DEFINE)) {
                     goto error;
                 }
             }
@@ -1541,10 +1544,10 @@ int16_t ast_Parser_defineScope(
             goto error;
         }
 
-        if (corto_instanceof(corto_type_o, this->scope) || 
-            corto_instanceof(corto_package_o, this->scope)) 
+        if (corto_instanceof(corto_type_o, this->scope) ||
+            corto_instanceof(corto_package_o, this->scope))
         {
-            if (corto_define(this->scope)) {
+            if (!corto(NULL, NULL, NULL, this->scope, NULL, NULL, -1, CORTO_DO_DEFINE)) {
                 corto_id id;
                 ast_Parser_error(this, "cannot define '%s'\n  %s",
                     ast_Parser_id(this->scope, id), corto_lasterr());
@@ -1572,7 +1575,7 @@ int16_t ast_Parser_defineVariable(
     ast_CHECK_ERRSET(this);
 
     if ((ast_Node(object)->kind == Ast_StorageExpr) && (ast_Storage(object)->kind == Ast_ObjectStorage)) {
-        if (corto_define(ast_Object(object)->value)) {
+        if (!corto(NULL, NULL, NULL, ast_Object(object)->value, NULL, NULL, -1, CORTO_DO_DEFINE)) {
             corto_id id1;
             ast_Parser_error(this, "failed to define '%s': %s",
                     ast_Parser_id(ast_Object(object)->value, id1),
@@ -2399,7 +2402,7 @@ ast_Expression ast_Parser_parseExpression(
     if (block) {
         /* Block should contain exactly one expression */
         if (block->statements) {
-            if (corto_ll_size(block->statements) == 1) {
+            if (corto_ll_count(block->statements) == 1) {
                 ast_Node node;
                 node = corto_ll_get(block->statements, 0);
                 if (corto_instanceof(corto_type(ast_Expression_o), node)) {
@@ -2447,7 +2450,7 @@ int16_t ast_Parser_parseFunction(
     /* Create parser */
     ast_Parser parser = ast_ParserCreate(expr, NULL);
     if (!parser) {
-        corto_seterr("failed to create parser: %s", corto_lasterr());
+        corto_throw("failed to create parser: %s", corto_lasterr());
         goto error;
     }
 
@@ -2456,7 +2459,7 @@ int16_t ast_Parser_parseFunction(
     /* Create block that contains local variables for function arguments */
     ast_Block block = ast_BlockCreate(NULL);
     if (!block) {
-        corto_seterr("failed to create code block: %s", corto_lasterr());
+        corto_throw("failed to create code block: %s", corto_lasterr());
         goto error;
     }
 
@@ -2465,7 +2468,7 @@ int16_t ast_Parser_parseFunction(
     for (i = 0; i < f->parameters.length; i++) {
         corto_parameter *p = &f->parameters.buffer[i];
         if (!ast_Block_declare(block, p->name, p->type, TRUE, p->passByReference)) {
-            corto_seterr("failed to declare parameter '%s': %s", p->name, corto_lasterr());
+            corto_throw("failed to declare parameter '%s': %s", p->name, corto_lasterr());
             goto error;
         }
     }
@@ -2479,7 +2482,7 @@ int16_t ast_Parser_parseFunction(
             FALSE,
             isReference);
         if (!resultLocal) {
-            corto_seterr("failed to create return variable: %s", corto_lasterr());
+            corto_throw("failed to create return variable: %s", corto_lasterr());
             goto error;
         }
         resultLocal->kind = Ast_LocalReturn;
@@ -2521,7 +2524,7 @@ int16_t ast_Parser_parseFunction(
             resultLocal = ast_Block_declare(parser->block, "_", result->type, FALSE,
                 result->isReference);
             if (!resultLocal) {
-                corto_seterr("failed to create return variable: %s", corto_lasterr());
+                corto_throw("failed to create return variable: %s", corto_lasterr());
                 goto error;
             }
             ast_Expression(resultLocal)->deref = result->isReference ? Ast_ByReference : Ast_ByValue;
@@ -2536,7 +2539,7 @@ int16_t ast_Parser_parseFunction(
     /* Create program for intermediate code */
     program = ic_programCreate(parser->filename);
     if (!program) {
-        corto_seterr("failed to create intermediate code program: %s", corto_lasterr());
+        corto_throw("failed to create intermediate code program: %s", corto_lasterr());
         goto error;
     }
 
@@ -2552,8 +2555,8 @@ int16_t ast_Parser_parseFunction(
     }
 
     /* If code contains bindings, expression contains nested functions */
-    if (parser->bindings && corto_ll_size(parser->bindings)) {
-        corto_seterr("nested functions are invalid");
+    if (parser->bindings && corto_ll_count(parser->bindings)) {
+        corto_throw("nested functions are invalid");
         goto error;
     }
 
@@ -2810,7 +2813,10 @@ void ast_Parser_popScope(
         corto_int32 i;
         for (i = 0; i < objects.length; i ++) {
             if (!corto_checkState(objects.buffer[i], CORTO_VALID)) {
-                corto_define(objects.buffer[i]);
+                if (!corto(NULL, NULL, NULL, objects.buffer[i], NULL, NULL, -1, CORTO_DO_DEFINE)) {
+                    corto_raise();
+                    ast_Parser_error(this, "cannot define");
+                }
             }
         }
         corto_scopeRelease(objects);
@@ -3227,4 +3233,3 @@ int16_t ast_Parser_with(
 error:
     return -1;
 }
-

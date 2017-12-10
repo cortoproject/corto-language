@@ -7,18 +7,13 @@
  */
 
 #include <driver/ext/cx/cx.h>
-
-/* $header() */
 int cx_loadFile(corto_string file, int argc, char* argv[], void* ctx) {
     return ast_loadFile(file, argc, argv);
 }
-/* $end */
 
-int cxMain(int argc, char *argv[]) {
-/* $begin(main) */
+int cortomain(int argc, char *argv[]) {
 
     corto_load_register("cx", cx_loadFile, NULL);
 
     return 0;
-/* $end */
 }
