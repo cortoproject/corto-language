@@ -1,0 +1,5635 @@
+Terminals unused in grammar
+
+   ERROR
+   ARROW_LEFT
+   ARROW_RIGHT
+
+
+State 68 conflicts: 1 shift/reduce
+State 154 conflicts: 1 shift/reduce
+
+
+Grammar
+
+    0 $accept: code $end
+
+    1 code: statements
+
+    2 statements: statement
+    3           | statements statement
+    4           | error
+
+    5 statement_nodecl: expr ENDL
+    6                 | if_statement
+    7                 | while_statement
+
+    8 @1: %empty
+
+    9 statement_nodecl: scope_statement @1 scope
+   10                 | block
+   11                 | ENDL
+   12                 | TAB
+
+   13 statement: statement_nodecl
+   14          | package_declaration ENDL
+   15          | in_declaration ENDL
+   16          | import_declaration ENDL
+   17          | declaration ENDL
+   18          | function_declaration ENDL
+   19          | function_implementation
+
+   20 scope: SCOPE INDENT statements DEDENT
+   21      | SCOPE statement
+
+   22 $@2: %empty
+
+   23 scope: SCOPEPRE $@2 INDENT statements DEDENT
+
+   24 $@3: %empty
+
+   25 scope: SCOPEPRE $@3 statement
+
+   26 scope_statement: expr
+   27                | declaration
+
+   28 block_start: ':' INDENT
+
+   29 $@4: %empty
+
+   30 block: block_start statements $@4 DEDENT
+
+   31 @5: %empty
+
+   32 block: ':' @5 statement
+
+   33 @6: %empty
+
+   34 function_implementation: function_declaration @6 block
+
+   35 @7: %empty
+
+   36 function_implementation: function_declaration @7 '=' expr ENDL
+
+   37 function_declaration: identifier any_id function_argumentList
+   38                     | identifier any_id function_argumentList identifier_string
+   39                     | identifier GID function_argumentList
+   40                     | identifier '&' any_id function_argumentList
+   41                     | identifier '&' any_id function_argumentList identifier_string
+   42                     | identifier '&' GID function_argumentList
+
+   43 function_argumentList: '(' ')'
+   44                      | '(' function_arguments ')'
+
+   45 function_arguments: function_argument_inout
+   46                   | function_arguments ',' function_argument_inout
+
+   47 function_argument_inout: argument_inout ':' function_argument
+   48                        | function_argument
+
+   49 argument_inout: ID
+   50               | KW_IN
+
+   51 function_argument: identifier any_id
+   52                  | identifier '&' any_id
+   53                  | '$' any_id
+
+   54 package_declaration: PACKAGE GID
+   55                    | PACKAGE ID
+
+   56 import_declaration: IMPORT GID
+
+   57 in_declaration: KW_IN declaration
+
+   58 declaration: identifier declaration_list
+   59            | KW_DEFAULT declaration_list
+
+   60 $@8: %empty
+
+   61 declaration: KW_LOCAL $@8 declaration_ref
+
+   62 declaration_ref: identifier declaration_list
+   63                | identifier '&' declaration_list
+
+   64 declaration_list: declaration_id
+   65                 | declaration_list ',' declaration_id
+
+   66 declaration_id: any_id
+   67               | GID
+   68               | KW_IN
+
+   69 initializer: init_list_value
+   70            | initializer ',' init_list_value
+
+   71 init_list_value: init_value
+   72                | init_list_colon
+
+   73 init_value: initializer_braces
+   74           | logical_or_expr
+
+   75 $@9: %empty
+
+   76 $@10: %empty
+
+   77 initializer_braces: '{' $@9 initializer $@10 '}'
+   78                   | '{' '}'
+
+   79 init_list_colon: init_colon
+   80                | init_list_colon init_colon
+
+   81 $@11: %empty
+
+   82 init_colon: any_id '=' $@11 init_value
+   83           | init_key '=' init_value
+
+   84 $@12: %empty
+
+   85 init_key: '@' $@12 initializer_braces
+   86         | literal_expr
+
+   87 literal_expr: BOOLEAN
+   88             | CHARACTER
+   89             | INTEGER
+   90             | SIGNEDINTEGER
+   91             | FLOATINGPOINT
+   92             | STRING
+   93             | NUL
+
+   94 $@13: %empty
+
+   95 bracket_expr: '(' $@13 assignment_expr ')'
+
+   96 primary_expr: bracket_expr
+   97             | literal_expr
+   98             | identifier
+
+   99 iter_expr: primary_expr
+  100          | '*' iter_expr
+
+  101 postfix_expr: iter_expr
+
+  102 $@14: %empty
+
+  103 postfix_expr: postfix_expr $@14 '[' expr ']'
+  104             | postfix_expr '(' ')'
+  105             | postfix_expr bracket_expr
+  106             | postfix_expr '.' any_id
+  107             | postfix_expr INC
+  108             | postfix_expr DEC
+
+  109 unary_expr: postfix_expr
+  110           | unary_operator postfix_expr
+
+  111 unary_operator: '-'
+  112               | '~'
+  113               | '!'
+  114               | LNOT
+  115               | INC
+  116               | DEC
+  117               | '&'
+
+  118 multiplicative_expr: unary_expr
+
+  119 $@15: %empty
+
+  120 $@16: %empty
+
+  121 multiplicative_expr: multiplicative_expr $@15 multiplicative_operator unary_expr $@16
+
+  122 multiplicative_operator: '*'
+  123                        | '/'
+  124                        | '%'
+
+  125 additive_expr: multiplicative_expr
+
+  126 $@17: %empty
+
+  127 $@18: %empty
+
+  128 additive_expr: additive_expr $@17 additive_operator multiplicative_expr $@18
+
+  129 additive_operator: '+'
+  130                  | '-'
+
+  131 shift_expr: additive_expr
+
+  132 $@19: %empty
+
+  133 $@20: %empty
+
+  134 shift_expr: shift_expr $@19 SHIFT_LEFT additive_expr $@20
+
+  135 $@21: %empty
+
+  136 $@22: %empty
+
+  137 shift_expr: shift_expr $@21 SHIFT_RIGHT additive_expr $@22
+
+  138 and_expr: shift_expr
+
+  139 $@23: %empty
+
+  140 $@24: %empty
+
+  141 and_expr: and_expr $@23 '&' shift_expr $@24
+
+  142 xor_expr: and_expr
+
+  143 $@25: %empty
+
+  144 $@26: %empty
+
+  145 xor_expr: xor_expr $@25 '^' and_expr $@26
+
+  146 or_expr: xor_expr
+
+  147 $@27: %empty
+
+  148 $@28: %empty
+
+  149 or_expr: or_expr $@27 '|' xor_expr $@28
+
+  150 boolean_expr: or_expr
+
+  151 $@29: %empty
+
+  152 $@30: %empty
+
+  153 boolean_expr: boolean_expr $@29 boolean_operator or_expr $@30
+
+  154 boolean_operator: '<'
+  155                 | '>'
+  156                 | LEQ
+  157                 | GEQ
+
+  158 equality_expr: boolean_expr
+
+  159 $@31: %empty
+
+  160 $@32: %empty
+
+  161 equality_expr: equality_expr $@31 equality_operator boolean_expr $@32
+
+  162 equality_operator: EQ
+  163                  | NEQ
+
+  164 logical_and_expr: equality_expr
+
+  165 $@33: %empty
+
+  166 $@34: %empty
+
+  167 logical_and_expr: logical_and_expr $@33 LAND equality_expr $@34
+
+  168 logical_or_expr: logical_and_expr
+
+  169 $@35: %empty
+
+  170 $@36: %empty
+
+  171 logical_or_expr: logical_or_expr $@35 LOR logical_and_expr $@36
+
+  172 @37: %empty
+
+  173 initializer_expr: @37 initializer_braces
+  174                 | logical_or_expr
+
+  175 conditional_expr: initializer_expr
+  176                 | initializer_expr '?' conditional_expr ':' conditional_expr
+
+  177 comma_expr: conditional_expr
+  178           | comma_expr ',' conditional_expr
+
+  179 assignment_expr: comma_expr
+
+  180 $@38: %empty
+
+  181 $@39: %empty
+
+  182 assignment_expr: assignment_expr $@38 assignment_operator comma_expr $@39
+
+  183 assignment_operator: '='
+  184                    | ADD_ASSIGN
+  185                    | SUB_ASSIGN
+  186                    | MUL_ASSIGN
+  187                    | DIV_ASSIGN
+  188                    | AND_ASSIGN
+  189                    | OR_ASSIGN
+  190                    | UPDATE_ASSIGN
+
+  191 declaration_expr: assignment_expr
+
+  192 $@40: %empty
+
+  193 declaration_expr: assignment_expr ':' $@40 initializer
+  194                 | assignment_expr ':'
+
+  195 $@41: %empty
+
+  196 declaration_expr: declaration ':' $@41 initializer
+
+  197 $@42: %empty
+
+  198 $@43: %empty
+
+  199 declaration_expr: declaration '{' $@42 initializer $@43 '}'
+
+  200 $@44: %empty
+
+  201 declaration_expr: declaration '{' $@44 '}'
+  202                 | declaration ':'
+
+  203 $@45: %empty
+
+  204 declaration_expr: declaration '=' $@45 comma_expr
+
+  205 expr: declaration_expr
+
+  206 identifier: identifier_id
+
+  207 @46: %empty
+
+  208 identifier: identifier @46 initializer_braces
+
+  209 identifier_id: identifier_string
+
+  210 identifier_string: GID
+  211                  | any_id
+
+  212 any_id: ID
+  213       | '@' KW_IF
+  214       | '@' KW_ELSE
+  215       | '@' KW_WHILE
+  216       | '@' KW_SWITCH
+  217       | '@' KW_CASE
+  218       | '@' KW_DEFAULT
+  219       | '@' KW_BREAK
+  220       | '@' KW_FOR
+  221       | '@' KW_TRY
+  222       | '@' KW_CATCH
+  223       | '@' KW_IMPORT
+  224       | '@' KW_LOCAL
+  225       | '@' LAND
+  226       | '@' LOR
+  227       | '@' LNOT
+  228       | '@' SCOPE
+
+  229 if_statement: if_start block
+  230             | if_start block KW_ELSE block
+  231             | if_start block KW_ELSE if_statement
+
+  232 if_start: KW_IF assignment_expr
+
+  233 while_statement: while_until block
+  234                | while_until ENDL
+
+  235 while_until: KW_WHILE assignment_expr
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'!' (33) 113
+'$' (36) 53
+'%' (37) 124
+'&' (38) 40 41 42 52 63 117 141
+'(' (40) 43 44 95 104
+')' (41) 43 44 95 104
+'*' (42) 100 122
+'+' (43) 129
+',' (44) 46 65 70 178
+'-' (45) 111 130
+'.' (46) 106
+'/' (47) 123
+':' (58) 28 32 47 176 193 194 196 202
+'<' (60) 154
+'=' (61) 36 82 83 183 204
+'>' (62) 155
+'?' (63) 176
+'@' (64) 85 213 214 215 216 217 218 219 220 221 222 223 224 225 226
+    227 228
+'[' (91) 103
+']' (93) 103
+'^' (94) 145
+'{' (123) 77 78 199 201
+'|' (124) 149
+'}' (125) 77 78 199 201
+'~' (126) 112
+error (256) 4
+ERROR (258)
+BOOLEAN (259) 87
+CHARACTER (260) 88
+INTEGER (261) 89
+SIGNEDINTEGER (262) 90
+FLOATINGPOINT (263) 91
+STRING (264) 92
+NUL (265) 93
+ID (266) 49 55 212
+GID (267) 39 42 54 56 67 210
+PACKAGE (268) 54 55
+IMPORT (269) 56
+MUL_ASSIGN (270) 186
+DIV_ASSIGN (271) 187
+ADD_ASSIGN (272) 184
+SUB_ASSIGN (273) 185
+OR_ASSIGN (274) 189
+AND_ASSIGN (275) 188
+UPDATE_ASSIGN (276) 190
+LOR (277) 171 226
+LAND (278) 167 225
+LNOT (279) 114 227
+LEQ (280) 156
+GEQ (281) 157
+EQ (282) 162
+NEQ (283) 163
+INC (284) 107 115
+DEC (285) 108 116
+SCOPE (286) 20 21 228
+SCOPEPRE (287) 23 25
+SHIFT_LEFT (288) 134
+SHIFT_RIGHT (289) 137
+ARROW_LEFT (290)
+ARROW_RIGHT (291)
+ENDL (292) 5 11 14 15 16 17 18 36 234
+TAB (293) 12
+INDENT (294) 20 23 28
+DEDENT (295) 20 23 30
+KW_IF (296) 213 232
+KW_ELSE (297) 214 230 231
+KW_WHILE (298) 215 235
+KW_SWITCH (299) 216
+KW_CASE (300) 217
+KW_DEFAULT (301) 59 218
+KW_BREAK (302) 219
+KW_FOR (303) 220
+KW_TRY (304) 221
+KW_CATCH (305) 222
+KW_IN (306) 50 57 68
+KW_IMPORT (307) 223
+KW_LOCAL (308) 61 224
+
+
+Nonterminals, with rules where they appear
+
+$accept (79)
+    on left: 0
+code (80)
+    on left: 1, on right: 0
+statements (81)
+    on left: 2 3 4, on right: 1 3 20 23 30
+statement_nodecl (82)
+    on left: 5 6 7 9 10 11 12, on right: 13
+@1 (83)
+    on left: 8, on right: 9
+statement (84)
+    on left: 13 14 15 16 17 18 19, on right: 2 3 21 25 32
+scope (85)
+    on left: 20 21 23 25, on right: 9
+$@2 (86)
+    on left: 22, on right: 23
+$@3 (87)
+    on left: 24, on right: 25
+scope_statement (88)
+    on left: 26 27, on right: 9
+block_start (89)
+    on left: 28, on right: 30
+block (90)
+    on left: 30 32, on right: 10 34 229 230 231 233
+$@4 (91)
+    on left: 29, on right: 30
+@5 (92)
+    on left: 31, on right: 32
+function_implementation (93)
+    on left: 34 36, on right: 19
+@6 (94)
+    on left: 33, on right: 34
+@7 (95)
+    on left: 35, on right: 36
+function_declaration (96)
+    on left: 37 38 39 40 41 42, on right: 18 34 36
+function_argumentList (97)
+    on left: 43 44, on right: 37 38 39 40 41 42
+function_arguments (98)
+    on left: 45 46, on right: 44 46
+function_argument_inout (99)
+    on left: 47 48, on right: 45 46
+argument_inout (100)
+    on left: 49 50, on right: 47
+function_argument (101)
+    on left: 51 52 53, on right: 47 48
+package_declaration (102)
+    on left: 54 55, on right: 14
+import_declaration (103)
+    on left: 56, on right: 16
+in_declaration (104)
+    on left: 57, on right: 15
+declaration (105)
+    on left: 58 59 61, on right: 17 27 57 196 199 201 202 204
+$@8 (106)
+    on left: 60, on right: 61
+declaration_ref (107)
+    on left: 62 63, on right: 61
+declaration_list (108)
+    on left: 64 65, on right: 58 59 62 63 65
+declaration_id (109)
+    on left: 66 67 68, on right: 64 65
+initializer (110)
+    on left: 69 70, on right: 70 77 193 196 199
+init_list_value (111)
+    on left: 71 72, on right: 69 70
+init_value (112)
+    on left: 73 74, on right: 71 82 83
+initializer_braces (113)
+    on left: 77 78, on right: 73 85 173 208
+$@9 (114)
+    on left: 75, on right: 77
+$@10 (115)
+    on left: 76, on right: 77
+init_list_colon (116)
+    on left: 79 80, on right: 72 80
+init_colon (117)
+    on left: 82 83, on right: 79 80
+$@11 (118)
+    on left: 81, on right: 82
+init_key (119)
+    on left: 85 86, on right: 83
+$@12 (120)
+    on left: 84, on right: 85
+literal_expr (121)
+    on left: 87 88 89 90 91 92 93, on right: 86 97
+bracket_expr (122)
+    on left: 95, on right: 96 105
+$@13 (123)
+    on left: 94, on right: 95
+primary_expr (124)
+    on left: 96 97 98, on right: 99
+iter_expr (125)
+    on left: 99 100, on right: 100 101
+postfix_expr (126)
+    on left: 101 103 104 105 106 107 108, on right: 103 104 105 106
+    107 108 109 110
+$@14 (127)
+    on left: 102, on right: 103
+unary_expr (128)
+    on left: 109 110, on right: 118 121
+unary_operator (129)
+    on left: 111 112 113 114 115 116 117, on right: 110
+multiplicative_expr (130)
+    on left: 118 121, on right: 121 125 128
+$@15 (131)
+    on left: 119, on right: 121
+$@16 (132)
+    on left: 120, on right: 121
+multiplicative_operator (133)
+    on left: 122 123 124, on right: 121
+additive_expr (134)
+    on left: 125 128, on right: 128 131 134 137
+$@17 (135)
+    on left: 126, on right: 128
+$@18 (136)
+    on left: 127, on right: 128
+additive_operator (137)
+    on left: 129 130, on right: 128
+shift_expr (138)
+    on left: 131 134 137, on right: 134 137 138 141
+$@19 (139)
+    on left: 132, on right: 134
+$@20 (140)
+    on left: 133, on right: 134
+$@21 (141)
+    on left: 135, on right: 137
+$@22 (142)
+    on left: 136, on right: 137
+and_expr (143)
+    on left: 138 141, on right: 141 142 145
+$@23 (144)
+    on left: 139, on right: 141
+$@24 (145)
+    on left: 140, on right: 141
+xor_expr (146)
+    on left: 142 145, on right: 145 146 149
+$@25 (147)
+    on left: 143, on right: 145
+$@26 (148)
+    on left: 144, on right: 145
+or_expr (149)
+    on left: 146 149, on right: 149 150 153
+$@27 (150)
+    on left: 147, on right: 149
+$@28 (151)
+    on left: 148, on right: 149
+boolean_expr (152)
+    on left: 150 153, on right: 153 158 161
+$@29 (153)
+    on left: 151, on right: 153
+$@30 (154)
+    on left: 152, on right: 153
+boolean_operator (155)
+    on left: 154 155 156 157, on right: 153
+equality_expr (156)
+    on left: 158 161, on right: 161 164 167
+$@31 (157)
+    on left: 159, on right: 161
+$@32 (158)
+    on left: 160, on right: 161
+equality_operator (159)
+    on left: 162 163, on right: 161
+logical_and_expr (160)
+    on left: 164 167, on right: 167 168 171
+$@33 (161)
+    on left: 165, on right: 167
+$@34 (162)
+    on left: 166, on right: 167
+logical_or_expr (163)
+    on left: 168 171, on right: 74 171 174
+$@35 (164)
+    on left: 169, on right: 171
+$@36 (165)
+    on left: 170, on right: 171
+initializer_expr (166)
+    on left: 173 174, on right: 175 176
+@37 (167)
+    on left: 172, on right: 173
+conditional_expr (168)
+    on left: 175 176, on right: 176 177 178
+comma_expr (169)
+    on left: 177 178, on right: 178 179 182 204
+assignment_expr (170)
+    on left: 179 182, on right: 95 182 191 193 194 232 235
+$@38 (171)
+    on left: 180, on right: 182
+$@39 (172)
+    on left: 181, on right: 182
+assignment_operator (173)
+    on left: 183 184 185 186 187 188 189 190, on right: 182
+declaration_expr (174)
+    on left: 191 193 194 196 199 201 202 204, on right: 205
+$@40 (175)
+    on left: 192, on right: 193
+$@41 (176)
+    on left: 195, on right: 196
+$@42 (177)
+    on left: 197, on right: 199
+$@43 (178)
+    on left: 198, on right: 199
+$@44 (179)
+    on left: 200, on right: 201
+$@45 (180)
+    on left: 203, on right: 204
+expr (181)
+    on left: 205, on right: 5 26 36 103
+identifier (182)
+    on left: 206 208, on right: 37 38 39 40 41 42 51 52 58 62 63 98
+    208
+@46 (183)
+    on left: 207, on right: 208
+identifier_id (184)
+    on left: 209, on right: 206
+identifier_string (185)
+    on left: 210 211, on right: 38 41 209
+any_id (186)
+    on left: 212 213 214 215 216 217 218 219 220 221 222 223 224 225
+    226 227 228, on right: 37 38 40 41 51 52 53 66 82 106 211
+if_statement (187)
+    on left: 229 230 231, on right: 6 231
+if_start (188)
+    on left: 232, on right: 229 230 231
+while_statement (189)
+    on left: 233 234, on right: 7
+while_until (190)
+    on left: 235, on right: 233 234
+
+
+State 0
+
+    0 $accept: . code $end
+
+    error          shift, and go to state 1
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    GID            shift, and go to state 10
+    PACKAGE        shift, and go to state 11
+    IMPORT         shift, and go to state 12
+    LNOT           shift, and go to state 13
+    INC            shift, and go to state 14
+    DEC            shift, and go to state 15
+    ENDL           shift, and go to state 16
+    TAB            shift, and go to state 17
+    KW_IF          shift, and go to state 18
+    KW_WHILE       shift, and go to state 19
+    KW_DEFAULT     shift, and go to state 20
+    KW_IN          shift, and go to state 21
+    KW_LOCAL       shift, and go to state 22
+    ':'            shift, and go to state 23
+    '&'            shift, and go to state 24
+    '('            shift, and go to state 25
+    '@'            shift, and go to state 26
+    '*'            shift, and go to state 27
+    '-'            shift, and go to state 28
+    '~'            shift, and go to state 29
+    '!'            shift, and go to state 30
+
+    '{'  reduce using rule 172 (@37)
+
+    code                     go to state 31
+    statements               go to state 32
+    statement_nodecl         go to state 33
+    statement                go to state 34
+    scope_statement          go to state 35
+    block_start              go to state 36
+    block                    go to state 37
+    function_implementation  go to state 38
+    function_declaration     go to state 39
+    package_declaration      go to state 40
+    import_declaration       go to state 41
+    in_declaration           go to state 42
+    declaration              go to state 43
+    literal_expr             go to state 44
+    bracket_expr             go to state 45
+    primary_expr             go to state 46
+    iter_expr                go to state 47
+    postfix_expr             go to state 48
+    unary_expr               go to state 49
+    unary_operator           go to state 50
+    multiplicative_expr      go to state 51
+    additive_expr            go to state 52
+    shift_expr               go to state 53
+    and_expr                 go to state 54
+    xor_expr                 go to state 55
+    or_expr                  go to state 56
+    boolean_expr             go to state 57
+    equality_expr            go to state 58
+    logical_and_expr         go to state 59
+    logical_or_expr          go to state 60
+    initializer_expr         go to state 61
+    @37                      go to state 62
+    conditional_expr         go to state 63
+    comma_expr               go to state 64
+    assignment_expr          go to state 65
+    declaration_expr         go to state 66
+    expr                     go to state 67
+    identifier               go to state 68
+    identifier_id            go to state 69
+    identifier_string        go to state 70
+    any_id                   go to state 71
+    if_statement             go to state 72
+    if_start                 go to state 73
+    while_statement          go to state 74
+    while_until              go to state 75
+
+
+State 1
+
+    4 statements: error .
+
+    $default  reduce using rule 4 (statements)
+
+
+State 2
+
+   87 literal_expr: BOOLEAN .
+
+    $default  reduce using rule 87 (literal_expr)
+
+
+State 3
+
+   88 literal_expr: CHARACTER .
+
+    $default  reduce using rule 88 (literal_expr)
+
+
+State 4
+
+   89 literal_expr: INTEGER .
+
+    $default  reduce using rule 89 (literal_expr)
+
+
+State 5
+
+   90 literal_expr: SIGNEDINTEGER .
+
+    $default  reduce using rule 90 (literal_expr)
+
+
+State 6
+
+   91 literal_expr: FLOATINGPOINT .
+
+    $default  reduce using rule 91 (literal_expr)
+
+
+State 7
+
+   92 literal_expr: STRING .
+
+    $default  reduce using rule 92 (literal_expr)
+
+
+State 8
+
+   93 literal_expr: NUL .
+
+    $default  reduce using rule 93 (literal_expr)
+
+
+State 9
+
+  212 any_id: ID .
+
+    $default  reduce using rule 212 (any_id)
+
+
+State 10
+
+  210 identifier_string: GID .
+
+    $default  reduce using rule 210 (identifier_string)
+
+
+State 11
+
+   54 package_declaration: PACKAGE . GID
+   55                    | PACKAGE . ID
+
+    ID   shift, and go to state 76
+    GID  shift, and go to state 77
+
+
+State 12
+
+   56 import_declaration: IMPORT . GID
+
+    GID  shift, and go to state 78
+
+
+State 13
+
+  114 unary_operator: LNOT .
+
+    $default  reduce using rule 114 (unary_operator)
+
+
+State 14
+
+  115 unary_operator: INC .
+
+    $default  reduce using rule 115 (unary_operator)
+
+
+State 15
+
+  116 unary_operator: DEC .
+
+    $default  reduce using rule 116 (unary_operator)
+
+
+State 16
+
+   11 statement_nodecl: ENDL .
+
+    $default  reduce using rule 11 (statement_nodecl)
+
+
+State 17
+
+   12 statement_nodecl: TAB .
+
+    $default  reduce using rule 12 (statement_nodecl)
+
+
+State 18
+
+  232 if_start: KW_IF . assignment_expr
+
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    GID            shift, and go to state 10
+    LNOT           shift, and go to state 13
+    INC            shift, and go to state 14
+    DEC            shift, and go to state 15
+    '&'            shift, and go to state 24
+    '('            shift, and go to state 25
+    '@'            shift, and go to state 26
+    '*'            shift, and go to state 27
+    '-'            shift, and go to state 28
+    '~'            shift, and go to state 29
+    '!'            shift, and go to state 30
+
+    $default  reduce using rule 172 (@37)
+
+    literal_expr         go to state 44
+    bracket_expr         go to state 45
+    primary_expr         go to state 46
+    iter_expr            go to state 47
+    postfix_expr         go to state 48
+    unary_expr           go to state 49
+    unary_operator       go to state 50
+    multiplicative_expr  go to state 51
+    additive_expr        go to state 52
+    shift_expr           go to state 53
+    and_expr             go to state 54
+    xor_expr             go to state 55
+    or_expr              go to state 56
+    boolean_expr         go to state 57
+    equality_expr        go to state 58
+    logical_and_expr     go to state 59
+    logical_or_expr      go to state 60
+    initializer_expr     go to state 61
+    @37                  go to state 62
+    conditional_expr     go to state 63
+    comma_expr           go to state 64
+    assignment_expr      go to state 79
+    identifier           go to state 80
+    identifier_id        go to state 69
+    identifier_string    go to state 70
+    any_id               go to state 71
+
+
+State 19
+
+  235 while_until: KW_WHILE . assignment_expr
+
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    GID            shift, and go to state 10
+    LNOT           shift, and go to state 13
+    INC            shift, and go to state 14
+    DEC            shift, and go to state 15
+    '&'            shift, and go to state 24
+    '('            shift, and go to state 25
+    '@'            shift, and go to state 26
+    '*'            shift, and go to state 27
+    '-'            shift, and go to state 28
+    '~'            shift, and go to state 29
+    '!'            shift, and go to state 30
+
+    $default  reduce using rule 172 (@37)
+
+    literal_expr         go to state 44
+    bracket_expr         go to state 45
+    primary_expr         go to state 46
+    iter_expr            go to state 47
+    postfix_expr         go to state 48
+    unary_expr           go to state 49
+    unary_operator       go to state 50
+    multiplicative_expr  go to state 51
+    additive_expr        go to state 52
+    shift_expr           go to state 53
+    and_expr             go to state 54
+    xor_expr             go to state 55
+    or_expr              go to state 56
+    boolean_expr         go to state 57
+    equality_expr        go to state 58
+    logical_and_expr     go to state 59
+    logical_or_expr      go to state 60
+    initializer_expr     go to state 61
+    @37                  go to state 62
+    conditional_expr     go to state 63
+    comma_expr           go to state 64
+    assignment_expr      go to state 81
+    identifier           go to state 80
+    identifier_id        go to state 69
+    identifier_string    go to state 70
+    any_id               go to state 71
+
+
+State 20
+
+   59 declaration: KW_DEFAULT . declaration_list
+
+    ID     shift, and go to state 9
+    GID    shift, and go to state 82
+    KW_IN  shift, and go to state 83
+    '@'    shift, and go to state 26
+
+    declaration_list  go to state 84
+    declaration_id    go to state 85
+    any_id            go to state 86
+
+
+State 21
+
+   57 in_declaration: KW_IN . declaration
+
+    ID          shift, and go to state 9
+    GID         shift, and go to state 10
+    KW_DEFAULT  shift, and go to state 20
+    KW_LOCAL    shift, and go to state 22
+    '@'         shift, and go to state 26
+
+    declaration        go to state 87
+    identifier         go to state 88
+    identifier_id      go to state 69
+    identifier_string  go to state 70
+    any_id             go to state 71
+
+
+State 22
+
+   61 declaration: KW_LOCAL . $@8 declaration_ref
+
+    $default  reduce using rule 60 ($@8)
+
+    $@8  go to state 89
+
+
+State 23
+
+   28 block_start: ':' . INDENT
+   32 block: ':' . @5 statement
+
+    INDENT  shift, and go to state 90
+
+    $default  reduce using rule 31 (@5)
+
+    @5  go to state 91
+
+
+State 24
+
+  117 unary_operator: '&' .
+
+    $default  reduce using rule 117 (unary_operator)
+
+
+State 25
+
+   95 bracket_expr: '(' . $@13 assignment_expr ')'
+
+    $default  reduce using rule 94 ($@13)
+
+    $@13  go to state 92
+
+
+State 26
+
+  213 any_id: '@' . KW_IF
+  214       | '@' . KW_ELSE
+  215       | '@' . KW_WHILE
+  216       | '@' . KW_SWITCH
+  217       | '@' . KW_CASE
+  218       | '@' . KW_DEFAULT
+  219       | '@' . KW_BREAK
+  220       | '@' . KW_FOR
+  221       | '@' . KW_TRY
+  222       | '@' . KW_CATCH
+  223       | '@' . KW_IMPORT
+  224       | '@' . KW_LOCAL
+  225       | '@' . LAND
+  226       | '@' . LOR
+  227       | '@' . LNOT
+  228       | '@' . SCOPE
+
+    LOR         shift, and go to state 93
+    LAND        shift, and go to state 94
+    LNOT        shift, and go to state 95
+    SCOPE       shift, and go to state 96
+    KW_IF       shift, and go to state 97
+    KW_ELSE     shift, and go to state 98
+    KW_WHILE    shift, and go to state 99
+    KW_SWITCH   shift, and go to state 100
+    KW_CASE     shift, and go to state 101
+    KW_DEFAULT  shift, and go to state 102
+    KW_BREAK    shift, and go to state 103
+    KW_FOR      shift, and go to state 104
+    KW_TRY      shift, and go to state 105
+    KW_CATCH    shift, and go to state 106
+    KW_IMPORT   shift, and go to state 107
+    KW_LOCAL    shift, and go to state 108
+
+
+State 27
+
+  100 iter_expr: '*' . iter_expr
+
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    GID            shift, and go to state 10
+    '('            shift, and go to state 25
+    '@'            shift, and go to state 26
+    '*'            shift, and go to state 27
+
+    literal_expr       go to state 44
+    bracket_expr       go to state 45
+    primary_expr       go to state 46
+    iter_expr          go to state 109
+    identifier         go to state 80
+    identifier_id      go to state 69
+    identifier_string  go to state 70
+    any_id             go to state 71
+
+
+State 28
+
+  111 unary_operator: '-' .
+
+    $default  reduce using rule 111 (unary_operator)
+
+
+State 29
+
+  112 unary_operator: '~' .
+
+    $default  reduce using rule 112 (unary_operator)
+
+
+State 30
+
+  113 unary_operator: '!' .
+
+    $default  reduce using rule 113 (unary_operator)
+
+
+State 31
+
+    0 $accept: code . $end
+
+    $end  shift, and go to state 110
+
+
+State 32
+
+    1 code: statements .
+    3 statements: statements . statement
+
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    GID            shift, and go to state 10
+    PACKAGE        shift, and go to state 11
+    IMPORT         shift, and go to state 12
+    LNOT           shift, and go to state 13
+    INC            shift, and go to state 14
+    DEC            shift, and go to state 15
+    ENDL           shift, and go to state 16
+    TAB            shift, and go to state 17
+    KW_IF          shift, and go to state 18
+    KW_WHILE       shift, and go to state 19
+    KW_DEFAULT     shift, and go to state 20
+    KW_IN          shift, and go to state 21
+    KW_LOCAL       shift, and go to state 22
+    ':'            shift, and go to state 23
+    '&'            shift, and go to state 24
+    '('            shift, and go to state 25
+    '@'            shift, and go to state 26
+    '*'            shift, and go to state 27
+    '-'            shift, and go to state 28
+    '~'            shift, and go to state 29
+    '!'            shift, and go to state 30
+
+    '{'       reduce using rule 172 (@37)
+    $default  reduce using rule 1 (code)
+
+    statement_nodecl         go to state 33
+    statement                go to state 111
+    scope_statement          go to state 35
+    block_start              go to state 36
+    block                    go to state 37
+    function_implementation  go to state 38
+    function_declaration     go to state 39
+    package_declaration      go to state 40
+    import_declaration       go to state 41
+    in_declaration           go to state 42
+    declaration              go to state 43
+    literal_expr             go to state 44
+    bracket_expr             go to state 45
+    primary_expr             go to state 46
+    iter_expr                go to state 47
+    postfix_expr             go to state 48
+    unary_expr               go to state 49
+    unary_operator           go to state 50
+    multiplicative_expr      go to state 51
+    additive_expr            go to state 52
+    shift_expr               go to state 53
+    and_expr                 go to state 54
+    xor_expr                 go to state 55
+    or_expr                  go to state 56
+    boolean_expr             go to state 57
+    equality_expr            go to state 58
+    logical_and_expr         go to state 59
+    logical_or_expr          go to state 60
+    initializer_expr         go to state 61
+    @37                      go to state 62
+    conditional_expr         go to state 63
+    comma_expr               go to state 64
+    assignment_expr          go to state 65
+    declaration_expr         go to state 66
+    expr                     go to state 67
+    identifier               go to state 68
+    identifier_id            go to state 69
+    identifier_string        go to state 70
+    any_id                   go to state 71
+    if_statement             go to state 72
+    if_start                 go to state 73
+    while_statement          go to state 74
+    while_until              go to state 75
+
+
+State 33
+
+   13 statement: statement_nodecl .
+
+    $default  reduce using rule 13 (statement)
+
+
+State 34
+
+    2 statements: statement .
+
+    $default  reduce using rule 2 (statements)
+
+
+State 35
+
+    9 statement_nodecl: scope_statement . @1 scope
+
+    $default  reduce using rule 8 (@1)
+
+    @1  go to state 112
+
+
+State 36
+
+   30 block: block_start . statements $@4 DEDENT
+
+    error          shift, and go to state 1
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    GID            shift, and go to state 10
+    PACKAGE        shift, and go to state 11
+    IMPORT         shift, and go to state 12
+    LNOT           shift, and go to state 13
+    INC            shift, and go to state 14
+    DEC            shift, and go to state 15
+    ENDL           shift, and go to state 16
+    TAB            shift, and go to state 17
+    KW_IF          shift, and go to state 18
+    KW_WHILE       shift, and go to state 19
+    KW_DEFAULT     shift, and go to state 20
+    KW_IN          shift, and go to state 21
+    KW_LOCAL       shift, and go to state 22
+    ':'            shift, and go to state 23
+    '&'            shift, and go to state 24
+    '('            shift, and go to state 25
+    '@'            shift, and go to state 26
+    '*'            shift, and go to state 27
+    '-'            shift, and go to state 28
+    '~'            shift, and go to state 29
+    '!'            shift, and go to state 30
+
+    '{'  reduce using rule 172 (@37)
+
+    statements               go to state 113
+    statement_nodecl         go to state 33
+    statement                go to state 34
+    scope_statement          go to state 35
+    block_start              go to state 36
+    block                    go to state 37
+    function_implementation  go to state 38
+    function_declaration     go to state 39
+    package_declaration      go to state 40
+    import_declaration       go to state 41
+    in_declaration           go to state 42
+    declaration              go to state 43
+    literal_expr             go to state 44
+    bracket_expr             go to state 45
+    primary_expr             go to state 46
+    iter_expr                go to state 47
+    postfix_expr             go to state 48
+    unary_expr               go to state 49
+    unary_operator           go to state 50
+    multiplicative_expr      go to state 51
+    additive_expr            go to state 52
+    shift_expr               go to state 53
+    and_expr                 go to state 54
+    xor_expr                 go to state 55
+    or_expr                  go to state 56
+    boolean_expr             go to state 57
+    equality_expr            go to state 58
+    logical_and_expr         go to state 59
+    logical_or_expr          go to state 60
+    initializer_expr         go to state 61
+    @37                      go to state 62
+    conditional_expr         go to state 63
+    comma_expr               go to state 64
+    assignment_expr          go to state 65
+    declaration_expr         go to state 66
+    expr                     go to state 67
+    identifier               go to state 68
+    identifier_id            go to state 69
+    identifier_string        go to state 70
+    any_id                   go to state 71
+    if_statement             go to state 72
+    if_start                 go to state 73
+    while_statement          go to state 74
+    while_until              go to state 75
+
+
+State 37
+
+   10 statement_nodecl: block .
+
+    $default  reduce using rule 10 (statement_nodecl)
+
+
+State 38
+
+   19 statement: function_implementation .
+
+    $default  reduce using rule 19 (statement)
+
+
+State 39
+
+   18 statement: function_declaration . ENDL
+   34 function_implementation: function_declaration . @6 block
+   36                        | function_declaration . @7 '=' expr ENDL
+
+    ENDL  shift, and go to state 114
+
+    '='       reduce using rule 35 (@7)
+    $default  reduce using rule 33 (@6)
+
+    @6  go to state 115
+    @7  go to state 116
+
+
+State 40
+
+   14 statement: package_declaration . ENDL
+
+    ENDL  shift, and go to state 117
+
+
+State 41
+
+   16 statement: import_declaration . ENDL
+
+    ENDL  shift, and go to state 118
+
+
+State 42
+
+   15 statement: in_declaration . ENDL
+
+    ENDL  shift, and go to state 119
+
+
+State 43
+
+   17 statement: declaration . ENDL
+   27 scope_statement: declaration .
+  196 declaration_expr: declaration . ':' $@41 initializer
+  199                 | declaration . '{' $@42 initializer $@43 '}'
+  201                 | declaration . '{' $@44 '}'
+  202                 | declaration . ':'
+  204                 | declaration . '=' $@45 comma_expr
+
+    ENDL  shift, and go to state 120
+    ':'   shift, and go to state 121
+    '='   shift, and go to state 122
+    '{'   shift, and go to state 123
+
+    $default  reduce using rule 27 (scope_statement)
+
+
+State 44
+
+   97 primary_expr: literal_expr .
+
+    $default  reduce using rule 97 (primary_expr)
+
+
+State 45
+
+   96 primary_expr: bracket_expr .
+
+    $default  reduce using rule 96 (primary_expr)
+
+
+State 46
+
+   99 iter_expr: primary_expr .
+
+    $default  reduce using rule 99 (iter_expr)
+
+
+State 47
+
+  101 postfix_expr: iter_expr .
+
+    $default  reduce using rule 101 (postfix_expr)
+
+
+State 48
+
+  103 postfix_expr: postfix_expr . $@14 '[' expr ']'
+  104             | postfix_expr . '(' ')'
+  105             | postfix_expr . bracket_expr
+  106             | postfix_expr . '.' any_id
+  107             | postfix_expr . INC
+  108             | postfix_expr . DEC
+  109 unary_expr: postfix_expr .
+
+    INC  shift, and go to state 124
+    DEC  shift, and go to state 125
+    '('  shift, and go to state 126
+    '.'  shift, and go to state 127
+
+    '['       reduce using rule 102 ($@14)
+    $default  reduce using rule 109 (unary_expr)
+
+    bracket_expr  go to state 128
+    $@14          go to state 129
+
+
+State 49
+
+  118 multiplicative_expr: unary_expr .
+
+    $default  reduce using rule 118 (multiplicative_expr)
+
+
+State 50
+
+  110 unary_expr: unary_operator . postfix_expr
+
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    GID            shift, and go to state 10
+    '('            shift, and go to state 25
+    '@'            shift, and go to state 26
+    '*'            shift, and go to state 27
+
+    literal_expr       go to state 44
+    bracket_expr       go to state 45
+    primary_expr       go to state 46
+    iter_expr          go to state 47
+    postfix_expr       go to state 130
+    identifier         go to state 80
+    identifier_id      go to state 69
+    identifier_string  go to state 70
+    any_id             go to state 71
+
+
+State 51
+
+  121 multiplicative_expr: multiplicative_expr . $@15 multiplicative_operator unary_expr $@16
+  125 additive_expr: multiplicative_expr .
+
+    '*'       reduce using rule 119 ($@15)
+    '/'       reduce using rule 119 ($@15)
+    '%'       reduce using rule 119 ($@15)
+    $default  reduce using rule 125 (additive_expr)
+
+    $@15  go to state 131
+
+
+State 52
+
+  128 additive_expr: additive_expr . $@17 additive_operator multiplicative_expr $@18
+  131 shift_expr: additive_expr .
+
+    '-'       reduce using rule 126 ($@17)
+    '+'       reduce using rule 126 ($@17)
+    $default  reduce using rule 131 (shift_expr)
+
+    $@17  go to state 132
+
+
+State 53
+
+  134 shift_expr: shift_expr . $@19 SHIFT_LEFT additive_expr $@20
+  137           | shift_expr . $@21 SHIFT_RIGHT additive_expr $@22
+  138 and_expr: shift_expr .
+
+    SHIFT_LEFT   reduce using rule 132 ($@19)
+    SHIFT_RIGHT  reduce using rule 135 ($@21)
+    $default     reduce using rule 138 (and_expr)
+
+    $@19  go to state 133
+    $@21  go to state 134
+
+
+State 54
+
+  141 and_expr: and_expr . $@23 '&' shift_expr $@24
+  142 xor_expr: and_expr .
+
+    '&'       reduce using rule 139 ($@23)
+    $default  reduce using rule 142 (xor_expr)
+
+    $@23  go to state 135
+
+
+State 55
+
+  145 xor_expr: xor_expr . $@25 '^' and_expr $@26
+  146 or_expr: xor_expr .
+
+    '^'       reduce using rule 143 ($@25)
+    $default  reduce using rule 146 (or_expr)
+
+    $@25  go to state 136
+
+
+State 56
+
+  149 or_expr: or_expr . $@27 '|' xor_expr $@28
+  150 boolean_expr: or_expr .
+
+    '|'       reduce using rule 147 ($@27)
+    $default  reduce using rule 150 (boolean_expr)
+
+    $@27  go to state 137
+
+
+State 57
+
+  153 boolean_expr: boolean_expr . $@29 boolean_operator or_expr $@30
+  158 equality_expr: boolean_expr .
+
+    LEQ       reduce using rule 151 ($@29)
+    GEQ       reduce using rule 151 ($@29)
+    '<'       reduce using rule 151 ($@29)
+    '>'       reduce using rule 151 ($@29)
+    $default  reduce using rule 158 (equality_expr)
+
+    $@29  go to state 138
+
+
+State 58
+
+  161 equality_expr: equality_expr . $@31 equality_operator boolean_expr $@32
+  164 logical_and_expr: equality_expr .
+
+    EQ        reduce using rule 159 ($@31)
+    NEQ       reduce using rule 159 ($@31)
+    $default  reduce using rule 164 (logical_and_expr)
+
+    $@31  go to state 139
+
+
+State 59
+
+  167 logical_and_expr: logical_and_expr . $@33 LAND equality_expr $@34
+  168 logical_or_expr: logical_and_expr .
+
+    LAND      reduce using rule 165 ($@33)
+    $default  reduce using rule 168 (logical_or_expr)
+
+    $@33  go to state 140
+
+
+State 60
+
+  171 logical_or_expr: logical_or_expr . $@35 LOR logical_and_expr $@36
+  174 initializer_expr: logical_or_expr .
+
+    LOR       reduce using rule 169 ($@35)
+    $default  reduce using rule 174 (initializer_expr)
+
+    $@35  go to state 141
+
+
+State 61
+
+  175 conditional_expr: initializer_expr .
+  176                 | initializer_expr . '?' conditional_expr ':' conditional_expr
+
+    '?'  shift, and go to state 142
+
+    $default  reduce using rule 175 (conditional_expr)
+
+
+State 62
+
+  173 initializer_expr: @37 . initializer_braces
+
+    '{'  shift, and go to state 143
+
+    initializer_braces  go to state 144
+
+
+State 63
+
+  177 comma_expr: conditional_expr .
+
+    $default  reduce using rule 177 (comma_expr)
+
+
+State 64
+
+  178 comma_expr: comma_expr . ',' conditional_expr
+  179 assignment_expr: comma_expr .
+
+    ','  shift, and go to state 145
+
+    $default  reduce using rule 179 (assignment_expr)
+
+
+State 65
+
+  182 assignment_expr: assignment_expr . $@38 assignment_operator comma_expr $@39
+  191 declaration_expr: assignment_expr .
+  193                 | assignment_expr . ':' $@40 initializer
+  194                 | assignment_expr . ':'
+
+    ':'  shift, and go to state 146
+
+    SCOPE     reduce using rule 191 (declaration_expr)
+    SCOPEPRE  reduce using rule 191 (declaration_expr)
+    ENDL      reduce using rule 191 (declaration_expr)
+    ']'       reduce using rule 191 (declaration_expr)
+    $default  reduce using rule 180 ($@38)
+
+    $@38  go to state 147
+
+
+State 66
+
+  205 expr: declaration_expr .
+
+    $default  reduce using rule 205 (expr)
+
+
+State 67
+
+    5 statement_nodecl: expr . ENDL
+   26 scope_statement: expr .
+
+    ENDL  shift, and go to state 148
+
+    $default  reduce using rule 26 (scope_statement)
+
+
+State 68
+
+   37 function_declaration: identifier . any_id function_argumentList
+   38                     | identifier . any_id function_argumentList identifier_string
+   39                     | identifier . GID function_argumentList
+   40                     | identifier . '&' any_id function_argumentList
+   41                     | identifier . '&' any_id function_argumentList identifier_string
+   42                     | identifier . '&' GID function_argumentList
+   58 declaration: identifier . declaration_list
+   98 primary_expr: identifier .
+  208 identifier: identifier . @46 initializer_braces
+
+    ID     shift, and go to state 9
+    GID    shift, and go to state 149
+    KW_IN  shift, and go to state 83
+    '&'    shift, and go to state 150
+    '@'    shift, and go to state 26
+
+    '&'       [reduce using rule 98 (primary_expr)]
+    '{'       reduce using rule 207 (@46)
+    $default  reduce using rule 98 (primary_expr)
+
+    declaration_list  go to state 151
+    declaration_id    go to state 85
+    @46               go to state 152
+    any_id            go to state 153
+
+
+State 69
+
+  206 identifier: identifier_id .
+
+    $default  reduce using rule 206 (identifier)
+
+
+State 70
+
+  209 identifier_id: identifier_string .
+
+    $default  reduce using rule 209 (identifier_id)
+
+
+State 71
+
+  211 identifier_string: any_id .
+
+    $default  reduce using rule 211 (identifier_string)
+
+
+State 72
+
+    6 statement_nodecl: if_statement .
+
+    $default  reduce using rule 6 (statement_nodecl)
+
+
+State 73
+
+  229 if_statement: if_start . block
+  230             | if_start . block KW_ELSE block
+  231             | if_start . block KW_ELSE if_statement
+
+    ':'  shift, and go to state 23
+
+    block_start  go to state 36
+    block        go to state 154
+
+
+State 74
+
+    7 statement_nodecl: while_statement .
+
+    $default  reduce using rule 7 (statement_nodecl)
+
+
+State 75
+
+  233 while_statement: while_until . block
+  234                | while_until . ENDL
+
+    ENDL  shift, and go to state 155
+    ':'   shift, and go to state 23
+
+    block_start  go to state 36
+    block        go to state 156
+
+
+State 76
+
+   55 package_declaration: PACKAGE ID .
+
+    $default  reduce using rule 55 (package_declaration)
+
+
+State 77
+
+   54 package_declaration: PACKAGE GID .
+
+    $default  reduce using rule 54 (package_declaration)
+
+
+State 78
+
+   56 import_declaration: IMPORT GID .
+
+    $default  reduce using rule 56 (import_declaration)
+
+
+State 79
+
+  182 assignment_expr: assignment_expr . $@38 assignment_operator comma_expr $@39
+  232 if_start: KW_IF assignment_expr .
+
+    ':'       reduce using rule 232 (if_start)
+    $default  reduce using rule 180 ($@38)
+
+    $@38  go to state 147
+
+
+State 80
+
+   98 primary_expr: identifier .
+  208 identifier: identifier . @46 initializer_braces
+
+    '{'       reduce using rule 207 (@46)
+    $default  reduce using rule 98 (primary_expr)
+
+    @46  go to state 152
+
+
+State 81
+
+  182 assignment_expr: assignment_expr . $@38 assignment_operator comma_expr $@39
+  235 while_until: KW_WHILE assignment_expr .
+
+    ENDL      reduce using rule 235 (while_until)
+    ':'       reduce using rule 235 (while_until)
+    $default  reduce using rule 180 ($@38)
+
+    $@38  go to state 147
+
+
+State 82
+
+   67 declaration_id: GID .
+
+    $default  reduce using rule 67 (declaration_id)
+
+
+State 83
+
+   68 declaration_id: KW_IN .
+
+    $default  reduce using rule 68 (declaration_id)
+
+
+State 84
+
+   59 declaration: KW_DEFAULT declaration_list .
+   65 declaration_list: declaration_list . ',' declaration_id
+
+    ','  shift, and go to state 157
+
+    $default  reduce using rule 59 (declaration)
+
+
+State 85
+
+   64 declaration_list: declaration_id .
+
+    $default  reduce using rule 64 (declaration_list)
+
+
+State 86
+
+   66 declaration_id: any_id .
+
+    $default  reduce using rule 66 (declaration_id)
+
+
+State 87
+
+   57 in_declaration: KW_IN declaration .
+
+    $default  reduce using rule 57 (in_declaration)
+
+
+State 88
+
+   58 declaration: identifier . declaration_list
+  208 identifier: identifier . @46 initializer_braces
+
+    ID     shift, and go to state 9
+    GID    shift, and go to state 82
+    KW_IN  shift, and go to state 83
+    '@'    shift, and go to state 26
+
+    $default  reduce using rule 207 (@46)
+
+    declaration_list  go to state 151
+    declaration_id    go to state 85
+    @46               go to state 152
+    any_id            go to state 86
+
+
+State 89
+
+   61 declaration: KW_LOCAL $@8 . declaration_ref
+
+    ID   shift, and go to state 9
+    GID  shift, and go to state 10
+    '@'  shift, and go to state 26
+
+    declaration_ref    go to state 158
+    identifier         go to state 159
+    identifier_id      go to state 69
+    identifier_string  go to state 70
+    any_id             go to state 71
+
+
+State 90
+
+   28 block_start: ':' INDENT .
+
+    $default  reduce using rule 28 (block_start)
+
+
+State 91
+
+   32 block: ':' @5 . statement
+
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    GID            shift, and go to state 10
+    PACKAGE        shift, and go to state 11
+    IMPORT         shift, and go to state 12
+    LNOT           shift, and go to state 13
+    INC            shift, and go to state 14
+    DEC            shift, and go to state 15
+    ENDL           shift, and go to state 16
+    TAB            shift, and go to state 17
+    KW_IF          shift, and go to state 18
+    KW_WHILE       shift, and go to state 19
+    KW_DEFAULT     shift, and go to state 20
+    KW_IN          shift, and go to state 21
+    KW_LOCAL       shift, and go to state 22
+    ':'            shift, and go to state 23
+    '&'            shift, and go to state 24
+    '('            shift, and go to state 25
+    '@'            shift, and go to state 26
+    '*'            shift, and go to state 27
+    '-'            shift, and go to state 28
+    '~'            shift, and go to state 29
+    '!'            shift, and go to state 30
+
+    $default  reduce using rule 172 (@37)
+
+    statement_nodecl         go to state 33
+    statement                go to state 160
+    scope_statement          go to state 35
+    block_start              go to state 36
+    block                    go to state 37
+    function_implementation  go to state 38
+    function_declaration     go to state 39
+    package_declaration      go to state 40
+    import_declaration       go to state 41
+    in_declaration           go to state 42
+    declaration              go to state 43
+    literal_expr             go to state 44
+    bracket_expr             go to state 45
+    primary_expr             go to state 46
+    iter_expr                go to state 47
+    postfix_expr             go to state 48
+    unary_expr               go to state 49
+    unary_operator           go to state 50
+    multiplicative_expr      go to state 51
+    additive_expr            go to state 52
+    shift_expr               go to state 53
+    and_expr                 go to state 54
+    xor_expr                 go to state 55
+    or_expr                  go to state 56
+    boolean_expr             go to state 57
+    equality_expr            go to state 58
+    logical_and_expr         go to state 59
+    logical_or_expr          go to state 60
+    initializer_expr         go to state 61
+    @37                      go to state 62
+    conditional_expr         go to state 63
+    comma_expr               go to state 64
+    assignment_expr          go to state 65
+    declaration_expr         go to state 66
+    expr                     go to state 67
+    identifier               go to state 68
+    identifier_id            go to state 69
+    identifier_string        go to state 70
+    any_id                   go to state 71
+    if_statement             go to state 72
+    if_start                 go to state 73
+    while_statement          go to state 74
+    while_until              go to state 75
+
+
+State 92
+
+   95 bracket_expr: '(' $@13 . assignment_expr ')'
+
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    GID            shift, and go to state 10
+    LNOT           shift, and go to state 13
+    INC            shift, and go to state 14
+    DEC            shift, and go to state 15
+    '&'            shift, and go to state 24
+    '('            shift, and go to state 25
+    '@'            shift, and go to state 26
+    '*'            shift, and go to state 27
+    '-'            shift, and go to state 28
+    '~'            shift, and go to state 29
+    '!'            shift, and go to state 30
+
+    $default  reduce using rule 172 (@37)
+
+    literal_expr         go to state 44
+    bracket_expr         go to state 45
+    primary_expr         go to state 46
+    iter_expr            go to state 47
+    postfix_expr         go to state 48
+    unary_expr           go to state 49
+    unary_operator       go to state 50
+    multiplicative_expr  go to state 51
+    additive_expr        go to state 52
+    shift_expr           go to state 53
+    and_expr             go to state 54
+    xor_expr             go to state 55
+    or_expr              go to state 56
+    boolean_expr         go to state 57
+    equality_expr        go to state 58
+    logical_and_expr     go to state 59
+    logical_or_expr      go to state 60
+    initializer_expr     go to state 61
+    @37                  go to state 62
+    conditional_expr     go to state 63
+    comma_expr           go to state 64
+    assignment_expr      go to state 161
+    identifier           go to state 80
+    identifier_id        go to state 69
+    identifier_string    go to state 70
+    any_id               go to state 71
+
+
+State 93
+
+  226 any_id: '@' LOR .
+
+    $default  reduce using rule 226 (any_id)
+
+
+State 94
+
+  225 any_id: '@' LAND .
+
+    $default  reduce using rule 225 (any_id)
+
+
+State 95
+
+  227 any_id: '@' LNOT .
+
+    $default  reduce using rule 227 (any_id)
+
+
+State 96
+
+  228 any_id: '@' SCOPE .
+
+    $default  reduce using rule 228 (any_id)
+
+
+State 97
+
+  213 any_id: '@' KW_IF .
+
+    $default  reduce using rule 213 (any_id)
+
+
+State 98
+
+  214 any_id: '@' KW_ELSE .
+
+    $default  reduce using rule 214 (any_id)
+
+
+State 99
+
+  215 any_id: '@' KW_WHILE .
+
+    $default  reduce using rule 215 (any_id)
+
+
+State 100
+
+  216 any_id: '@' KW_SWITCH .
+
+    $default  reduce using rule 216 (any_id)
+
+
+State 101
+
+  217 any_id: '@' KW_CASE .
+
+    $default  reduce using rule 217 (any_id)
+
+
+State 102
+
+  218 any_id: '@' KW_DEFAULT .
+
+    $default  reduce using rule 218 (any_id)
+
+
+State 103
+
+  219 any_id: '@' KW_BREAK .
+
+    $default  reduce using rule 219 (any_id)
+
+
+State 104
+
+  220 any_id: '@' KW_FOR .
+
+    $default  reduce using rule 220 (any_id)
+
+
+State 105
+
+  221 any_id: '@' KW_TRY .
+
+    $default  reduce using rule 221 (any_id)
+
+
+State 106
+
+  222 any_id: '@' KW_CATCH .
+
+    $default  reduce using rule 222 (any_id)
+
+
+State 107
+
+  223 any_id: '@' KW_IMPORT .
+
+    $default  reduce using rule 223 (any_id)
+
+
+State 108
+
+  224 any_id: '@' KW_LOCAL .
+
+    $default  reduce using rule 224 (any_id)
+
+
+State 109
+
+  100 iter_expr: '*' iter_expr .
+
+    $default  reduce using rule 100 (iter_expr)
+
+
+State 110
+
+    0 $accept: code $end .
+
+    $default  accept
+
+
+State 111
+
+    3 statements: statements statement .
+
+    $default  reduce using rule 3 (statements)
+
+
+State 112
+
+    9 statement_nodecl: scope_statement @1 . scope
+
+    SCOPE     shift, and go to state 162
+    SCOPEPRE  shift, and go to state 163
+
+    scope  go to state 164
+
+
+State 113
+
+    3 statements: statements . statement
+   30 block: block_start statements . $@4 DEDENT
+
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    GID            shift, and go to state 10
+    PACKAGE        shift, and go to state 11
+    IMPORT         shift, and go to state 12
+    LNOT           shift, and go to state 13
+    INC            shift, and go to state 14
+    DEC            shift, and go to state 15
+    ENDL           shift, and go to state 16
+    TAB            shift, and go to state 17
+    KW_IF          shift, and go to state 18
+    KW_WHILE       shift, and go to state 19
+    KW_DEFAULT     shift, and go to state 20
+    KW_IN          shift, and go to state 21
+    KW_LOCAL       shift, and go to state 22
+    ':'            shift, and go to state 23
+    '&'            shift, and go to state 24
+    '('            shift, and go to state 25
+    '@'            shift, and go to state 26
+    '*'            shift, and go to state 27
+    '-'            shift, and go to state 28
+    '~'            shift, and go to state 29
+    '!'            shift, and go to state 30
+
+    '{'       reduce using rule 172 (@37)
+    $default  reduce using rule 29 ($@4)
+
+    statement_nodecl         go to state 33
+    statement                go to state 111
+    scope_statement          go to state 35
+    block_start              go to state 36
+    block                    go to state 37
+    $@4                      go to state 165
+    function_implementation  go to state 38
+    function_declaration     go to state 39
+    package_declaration      go to state 40
+    import_declaration       go to state 41
+    in_declaration           go to state 42
+    declaration              go to state 43
+    literal_expr             go to state 44
+    bracket_expr             go to state 45
+    primary_expr             go to state 46
+    iter_expr                go to state 47
+    postfix_expr             go to state 48
+    unary_expr               go to state 49
+    unary_operator           go to state 50
+    multiplicative_expr      go to state 51
+    additive_expr            go to state 52
+    shift_expr               go to state 53
+    and_expr                 go to state 54
+    xor_expr                 go to state 55
+    or_expr                  go to state 56
+    boolean_expr             go to state 57
+    equality_expr            go to state 58
+    logical_and_expr         go to state 59
+    logical_or_expr          go to state 60
+    initializer_expr         go to state 61
+    @37                      go to state 62
+    conditional_expr         go to state 63
+    comma_expr               go to state 64
+    assignment_expr          go to state 65
+    declaration_expr         go to state 66
+    expr                     go to state 67
+    identifier               go to state 68
+    identifier_id            go to state 69
+    identifier_string        go to state 70
+    any_id                   go to state 71
+    if_statement             go to state 72
+    if_start                 go to state 73
+    while_statement          go to state 74
+    while_until              go to state 75
+
+
+State 114
+
+   18 statement: function_declaration ENDL .
+
+    $default  reduce using rule 18 (statement)
+
+
+State 115
+
+   34 function_implementation: function_declaration @6 . block
+
+    ':'  shift, and go to state 23
+
+    block_start  go to state 36
+    block        go to state 166
+
+
+State 116
+
+   36 function_implementation: function_declaration @7 . '=' expr ENDL
+
+    '='  shift, and go to state 167
+
+
+State 117
+
+   14 statement: package_declaration ENDL .
+
+    $default  reduce using rule 14 (statement)
+
+
+State 118
+
+   16 statement: import_declaration ENDL .
+
+    $default  reduce using rule 16 (statement)
+
+
+State 119
+
+   15 statement: in_declaration ENDL .
+
+    $default  reduce using rule 15 (statement)
+
+
+State 120
+
+   17 statement: declaration ENDL .
+
+    $default  reduce using rule 17 (statement)
+
+
+State 121
+
+  196 declaration_expr: declaration ':' . $@41 initializer
+  202                 | declaration ':' .
+
+    SCOPE     reduce using rule 202 (declaration_expr)
+    SCOPEPRE  reduce using rule 202 (declaration_expr)
+    ENDL      reduce using rule 202 (declaration_expr)
+    ']'       reduce using rule 202 (declaration_expr)
+    $default  reduce using rule 195 ($@41)
+
+    $@41  go to state 168
+
+
+State 122
+
+  204 declaration_expr: declaration '=' . $@45 comma_expr
+
+    $default  reduce using rule 203 ($@45)
+
+    $@45  go to state 169
+
+
+State 123
+
+  199 declaration_expr: declaration '{' . $@42 initializer $@43 '}'
+  201                 | declaration '{' . $@44 '}'
+
+    '}'       reduce using rule 200 ($@44)
+    $default  reduce using rule 197 ($@42)
+
+    $@42  go to state 170
+    $@44  go to state 171
+
+
+State 124
+
+  107 postfix_expr: postfix_expr INC .
+
+    $default  reduce using rule 107 (postfix_expr)
+
+
+State 125
+
+  108 postfix_expr: postfix_expr DEC .
+
+    $default  reduce using rule 108 (postfix_expr)
+
+
+State 126
+
+   95 bracket_expr: '(' . $@13 assignment_expr ')'
+  104 postfix_expr: postfix_expr '(' . ')'
+
+    ')'  shift, and go to state 172
+
+    $default  reduce using rule 94 ($@13)
+
+    $@13  go to state 92
+
+
+State 127
+
+  106 postfix_expr: postfix_expr '.' . any_id
+
+    ID   shift, and go to state 9
+    '@'  shift, and go to state 26
+
+    any_id  go to state 173
+
+
+State 128
+
+  105 postfix_expr: postfix_expr bracket_expr .
+
+    $default  reduce using rule 105 (postfix_expr)
+
+
+State 129
+
+  103 postfix_expr: postfix_expr $@14 . '[' expr ']'
+
+    '['  shift, and go to state 174
+
+
+State 130
+
+  103 postfix_expr: postfix_expr . $@14 '[' expr ']'
+  104             | postfix_expr . '(' ')'
+  105             | postfix_expr . bracket_expr
+  106             | postfix_expr . '.' any_id
+  107             | postfix_expr . INC
+  108             | postfix_expr . DEC
+  110 unary_expr: unary_operator postfix_expr .
+
+    INC  shift, and go to state 124
+    DEC  shift, and go to state 125
+    '('  shift, and go to state 126
+    '.'  shift, and go to state 127
+
+    '['       reduce using rule 102 ($@14)
+    $default  reduce using rule 110 (unary_expr)
+
+    bracket_expr  go to state 128
+    $@14          go to state 129
+
+
+State 131
+
+  121 multiplicative_expr: multiplicative_expr $@15 . multiplicative_operator unary_expr $@16
+
+    '*'  shift, and go to state 175
+    '/'  shift, and go to state 176
+    '%'  shift, and go to state 177
+
+    multiplicative_operator  go to state 178
+
+
+State 132
+
+  128 additive_expr: additive_expr $@17 . additive_operator multiplicative_expr $@18
+
+    '-'  shift, and go to state 179
+    '+'  shift, and go to state 180
+
+    additive_operator  go to state 181
+
+
+State 133
+
+  134 shift_expr: shift_expr $@19 . SHIFT_LEFT additive_expr $@20
+
+    SHIFT_LEFT  shift, and go to state 182
+
+
+State 134
+
+  137 shift_expr: shift_expr $@21 . SHIFT_RIGHT additive_expr $@22
+
+    SHIFT_RIGHT  shift, and go to state 183
+
+
+State 135
+
+  141 and_expr: and_expr $@23 . '&' shift_expr $@24
+
+    '&'  shift, and go to state 184
+
+
+State 136
+
+  145 xor_expr: xor_expr $@25 . '^' and_expr $@26
+
+    '^'  shift, and go to state 185
+
+
+State 137
+
+  149 or_expr: or_expr $@27 . '|' xor_expr $@28
+
+    '|'  shift, and go to state 186
+
+
+State 138
+
+  153 boolean_expr: boolean_expr $@29 . boolean_operator or_expr $@30
+
+    LEQ  shift, and go to state 187
+    GEQ  shift, and go to state 188
+    '<'  shift, and go to state 189
+    '>'  shift, and go to state 190
+
+    boolean_operator  go to state 191
+
+
+State 139
+
+  161 equality_expr: equality_expr $@31 . equality_operator boolean_expr $@32
+
+    EQ   shift, and go to state 192
+    NEQ  shift, and go to state 193
+
+    equality_operator  go to state 194
+
+
+State 140
+
+  167 logical_and_expr: logical_and_expr $@33 . LAND equality_expr $@34
+
+    LAND  shift, and go to state 195
+
+
+State 141
+
+  171 logical_or_expr: logical_or_expr $@35 . LOR logical_and_expr $@36
+
+    LOR  shift, and go to state 196
+
+
+State 142
+
+  176 conditional_expr: initializer_expr '?' . conditional_expr ':' conditional_expr
+
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    GID            shift, and go to state 10
+    LNOT           shift, and go to state 13
+    INC            shift, and go to state 14
+    DEC            shift, and go to state 15
+    '&'            shift, and go to state 24
+    '('            shift, and go to state 25
+    '@'            shift, and go to state 26
+    '*'            shift, and go to state 27
+    '-'            shift, and go to state 28
+    '~'            shift, and go to state 29
+    '!'            shift, and go to state 30
+
+    $default  reduce using rule 172 (@37)
+
+    literal_expr         go to state 44
+    bracket_expr         go to state 45
+    primary_expr         go to state 46
+    iter_expr            go to state 47
+    postfix_expr         go to state 48
+    unary_expr           go to state 49
+    unary_operator       go to state 50
+    multiplicative_expr  go to state 51
+    additive_expr        go to state 52
+    shift_expr           go to state 53
+    and_expr             go to state 54
+    xor_expr             go to state 55
+    or_expr              go to state 56
+    boolean_expr         go to state 57
+    equality_expr        go to state 58
+    logical_and_expr     go to state 59
+    logical_or_expr      go to state 60
+    initializer_expr     go to state 61
+    @37                  go to state 62
+    conditional_expr     go to state 197
+    identifier           go to state 80
+    identifier_id        go to state 69
+    identifier_string    go to state 70
+    any_id               go to state 71
+
+
+State 143
+
+   77 initializer_braces: '{' . $@9 initializer $@10 '}'
+   78                   | '{' . '}'
+
+    '}'  shift, and go to state 198
+
+    $default  reduce using rule 75 ($@9)
+
+    $@9  go to state 199
+
+
+State 144
+
+  173 initializer_expr: @37 initializer_braces .
+
+    $default  reduce using rule 173 (initializer_expr)
+
+
+State 145
+
+  178 comma_expr: comma_expr ',' . conditional_expr
+
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    GID            shift, and go to state 10
+    LNOT           shift, and go to state 13
+    INC            shift, and go to state 14
+    DEC            shift, and go to state 15
+    '&'            shift, and go to state 24
+    '('            shift, and go to state 25
+    '@'            shift, and go to state 26
+    '*'            shift, and go to state 27
+    '-'            shift, and go to state 28
+    '~'            shift, and go to state 29
+    '!'            shift, and go to state 30
+
+    $default  reduce using rule 172 (@37)
+
+    literal_expr         go to state 44
+    bracket_expr         go to state 45
+    primary_expr         go to state 46
+    iter_expr            go to state 47
+    postfix_expr         go to state 48
+    unary_expr           go to state 49
+    unary_operator       go to state 50
+    multiplicative_expr  go to state 51
+    additive_expr        go to state 52
+    shift_expr           go to state 53
+    and_expr             go to state 54
+    xor_expr             go to state 55
+    or_expr              go to state 56
+    boolean_expr         go to state 57
+    equality_expr        go to state 58
+    logical_and_expr     go to state 59
+    logical_or_expr      go to state 60
+    initializer_expr     go to state 61
+    @37                  go to state 62
+    conditional_expr     go to state 200
+    identifier           go to state 80
+    identifier_id        go to state 69
+    identifier_string    go to state 70
+    any_id               go to state 71
+
+
+State 146
+
+  193 declaration_expr: assignment_expr ':' . $@40 initializer
+  194                 | assignment_expr ':' .
+
+    SCOPE     reduce using rule 194 (declaration_expr)
+    SCOPEPRE  reduce using rule 194 (declaration_expr)
+    ENDL      reduce using rule 194 (declaration_expr)
+    ']'       reduce using rule 194 (declaration_expr)
+    $default  reduce using rule 192 ($@40)
+
+    $@40  go to state 201
+
+
+State 147
+
+  182 assignment_expr: assignment_expr $@38 . assignment_operator comma_expr $@39
+
+    MUL_ASSIGN     shift, and go to state 202
+    DIV_ASSIGN     shift, and go to state 203
+    ADD_ASSIGN     shift, and go to state 204
+    SUB_ASSIGN     shift, and go to state 205
+    OR_ASSIGN      shift, and go to state 206
+    AND_ASSIGN     shift, and go to state 207
+    UPDATE_ASSIGN  shift, and go to state 208
+    '='            shift, and go to state 209
+
+    assignment_operator  go to state 210
+
+
+State 148
+
+    5 statement_nodecl: expr ENDL .
+
+    $default  reduce using rule 5 (statement_nodecl)
+
+
+State 149
+
+   39 function_declaration: identifier GID . function_argumentList
+   67 declaration_id: GID .
+
+    '('  shift, and go to state 211
+
+    $default  reduce using rule 67 (declaration_id)
+
+    function_argumentList  go to state 212
+
+
+State 150
+
+   40 function_declaration: identifier '&' . any_id function_argumentList
+   41                     | identifier '&' . any_id function_argumentList identifier_string
+   42                     | identifier '&' . GID function_argumentList
+
+    ID   shift, and go to state 9
+    GID  shift, and go to state 213
+    '@'  shift, and go to state 26
+
+    any_id  go to state 214
+
+
+State 151
+
+   58 declaration: identifier declaration_list .
+   65 declaration_list: declaration_list . ',' declaration_id
+
+    ','  shift, and go to state 157
+
+    $default  reduce using rule 58 (declaration)
+
+
+State 152
+
+  208 identifier: identifier @46 . initializer_braces
+
+    '{'  shift, and go to state 143
+
+    initializer_braces  go to state 215
+
+
+State 153
+
+   37 function_declaration: identifier any_id . function_argumentList
+   38                     | identifier any_id . function_argumentList identifier_string
+   66 declaration_id: any_id .
+
+    '('  shift, and go to state 211
+
+    $default  reduce using rule 66 (declaration_id)
+
+    function_argumentList  go to state 216
+
+
+State 154
+
+  229 if_statement: if_start block .
+  230             | if_start block . KW_ELSE block
+  231             | if_start block . KW_ELSE if_statement
+
+    KW_ELSE  shift, and go to state 217
+
+    KW_ELSE   [reduce using rule 229 (if_statement)]
+    $default  reduce using rule 229 (if_statement)
+
+
+State 155
+
+  234 while_statement: while_until ENDL .
+
+    $default  reduce using rule 234 (while_statement)
+
+
+State 156
+
+  233 while_statement: while_until block .
+
+    $default  reduce using rule 233 (while_statement)
+
+
+State 157
+
+   65 declaration_list: declaration_list ',' . declaration_id
+
+    ID     shift, and go to state 9
+    GID    shift, and go to state 82
+    KW_IN  shift, and go to state 83
+    '@'    shift, and go to state 26
+
+    declaration_id  go to state 218
+    any_id          go to state 86
+
+
+State 158
+
+   61 declaration: KW_LOCAL $@8 declaration_ref .
+
+    $default  reduce using rule 61 (declaration)
+
+
+State 159
+
+   62 declaration_ref: identifier . declaration_list
+   63                | identifier . '&' declaration_list
+  208 identifier: identifier . @46 initializer_braces
+
+    ID     shift, and go to state 9
+    GID    shift, and go to state 82
+    KW_IN  shift, and go to state 83
+    '&'    shift, and go to state 219
+    '@'    shift, and go to state 26
+
+    $default  reduce using rule 207 (@46)
+
+    declaration_list  go to state 220
+    declaration_id    go to state 85
+    @46               go to state 152
+    any_id            go to state 86
+
+
+State 160
+
+   32 block: ':' @5 statement .
+
+    $default  reduce using rule 32 (block)
+
+
+State 161
+
+   95 bracket_expr: '(' $@13 assignment_expr . ')'
+  182 assignment_expr: assignment_expr . $@38 assignment_operator comma_expr $@39
+
+    ')'  shift, and go to state 221
+
+    $default  reduce using rule 180 ($@38)
+
+    $@38  go to state 147
+
+
+State 162
+
+   20 scope: SCOPE . INDENT statements DEDENT
+   21      | SCOPE . statement
+
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    GID            shift, and go to state 10
+    PACKAGE        shift, and go to state 11
+    IMPORT         shift, and go to state 12
+    LNOT           shift, and go to state 13
+    INC            shift, and go to state 14
+    DEC            shift, and go to state 15
+    ENDL           shift, and go to state 16
+    TAB            shift, and go to state 17
+    INDENT         shift, and go to state 222
+    KW_IF          shift, and go to state 18
+    KW_WHILE       shift, and go to state 19
+    KW_DEFAULT     shift, and go to state 20
+    KW_IN          shift, and go to state 21
+    KW_LOCAL       shift, and go to state 22
+    ':'            shift, and go to state 23
+    '&'            shift, and go to state 24
+    '('            shift, and go to state 25
+    '@'            shift, and go to state 26
+    '*'            shift, and go to state 27
+    '-'            shift, and go to state 28
+    '~'            shift, and go to state 29
+    '!'            shift, and go to state 30
+
+    $default  reduce using rule 172 (@37)
+
+    statement_nodecl         go to state 33
+    statement                go to state 223
+    scope_statement          go to state 35
+    block_start              go to state 36
+    block                    go to state 37
+    function_implementation  go to state 38
+    function_declaration     go to state 39
+    package_declaration      go to state 40
+    import_declaration       go to state 41
+    in_declaration           go to state 42
+    declaration              go to state 43
+    literal_expr             go to state 44
+    bracket_expr             go to state 45
+    primary_expr             go to state 46
+    iter_expr                go to state 47
+    postfix_expr             go to state 48
+    unary_expr               go to state 49
+    unary_operator           go to state 50
+    multiplicative_expr      go to state 51
+    additive_expr            go to state 52
+    shift_expr               go to state 53
+    and_expr                 go to state 54
+    xor_expr                 go to state 55
+    or_expr                  go to state 56
+    boolean_expr             go to state 57
+    equality_expr            go to state 58
+    logical_and_expr         go to state 59
+    logical_or_expr          go to state 60
+    initializer_expr         go to state 61
+    @37                      go to state 62
+    conditional_expr         go to state 63
+    comma_expr               go to state 64
+    assignment_expr          go to state 65
+    declaration_expr         go to state 66
+    expr                     go to state 67
+    identifier               go to state 68
+    identifier_id            go to state 69
+    identifier_string        go to state 70
+    any_id                   go to state 71
+    if_statement             go to state 72
+    if_start                 go to state 73
+    while_statement          go to state 74
+    while_until              go to state 75
+
+
+State 163
+
+   23 scope: SCOPEPRE . $@2 INDENT statements DEDENT
+   25      | SCOPEPRE . $@3 statement
+
+    INDENT    reduce using rule 22 ($@2)
+    $default  reduce using rule 24 ($@3)
+
+    $@2  go to state 224
+    $@3  go to state 225
+
+
+State 164
+
+    9 statement_nodecl: scope_statement @1 scope .
+
+    $default  reduce using rule 9 (statement_nodecl)
+
+
+State 165
+
+   30 block: block_start statements $@4 . DEDENT
+
+    DEDENT  shift, and go to state 226
+
+
+State 166
+
+   34 function_implementation: function_declaration @6 block .
+
+    $default  reduce using rule 34 (function_implementation)
+
+
+State 167
+
+   36 function_implementation: function_declaration @7 '=' . expr ENDL
+
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    GID            shift, and go to state 10
+    LNOT           shift, and go to state 13
+    INC            shift, and go to state 14
+    DEC            shift, and go to state 15
+    KW_DEFAULT     shift, and go to state 20
+    KW_LOCAL       shift, and go to state 22
+    '&'            shift, and go to state 24
+    '('            shift, and go to state 25
+    '@'            shift, and go to state 26
+    '*'            shift, and go to state 27
+    '-'            shift, and go to state 28
+    '~'            shift, and go to state 29
+    '!'            shift, and go to state 30
+
+    $default  reduce using rule 172 (@37)
+
+    declaration          go to state 227
+    literal_expr         go to state 44
+    bracket_expr         go to state 45
+    primary_expr         go to state 46
+    iter_expr            go to state 47
+    postfix_expr         go to state 48
+    unary_expr           go to state 49
+    unary_operator       go to state 50
+    multiplicative_expr  go to state 51
+    additive_expr        go to state 52
+    shift_expr           go to state 53
+    and_expr             go to state 54
+    xor_expr             go to state 55
+    or_expr              go to state 56
+    boolean_expr         go to state 57
+    equality_expr        go to state 58
+    logical_and_expr     go to state 59
+    logical_or_expr      go to state 60
+    initializer_expr     go to state 61
+    @37                  go to state 62
+    conditional_expr     go to state 63
+    comma_expr           go to state 64
+    assignment_expr      go to state 65
+    declaration_expr     go to state 66
+    expr                 go to state 228
+    identifier           go to state 229
+    identifier_id        go to state 69
+    identifier_string    go to state 70
+    any_id               go to state 71
+
+
+State 168
+
+  196 declaration_expr: declaration ':' $@41 . initializer
+
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    GID            shift, and go to state 10
+    LNOT           shift, and go to state 13
+    INC            shift, and go to state 14
+    DEC            shift, and go to state 15
+    '&'            shift, and go to state 24
+    '('            shift, and go to state 25
+    '{'            shift, and go to state 143
+    '@'            shift, and go to state 230
+    '*'            shift, and go to state 27
+    '-'            shift, and go to state 28
+    '~'            shift, and go to state 29
+    '!'            shift, and go to state 30
+
+    initializer          go to state 231
+    init_list_value      go to state 232
+    init_value           go to state 233
+    initializer_braces   go to state 234
+    init_list_colon      go to state 235
+    init_colon           go to state 236
+    init_key             go to state 237
+    literal_expr         go to state 238
+    bracket_expr         go to state 45
+    primary_expr         go to state 46
+    iter_expr            go to state 47
+    postfix_expr         go to state 48
+    unary_expr           go to state 49
+    unary_operator       go to state 50
+    multiplicative_expr  go to state 51
+    additive_expr        go to state 52
+    shift_expr           go to state 53
+    and_expr             go to state 54
+    xor_expr             go to state 55
+    or_expr              go to state 56
+    boolean_expr         go to state 57
+    equality_expr        go to state 58
+    logical_and_expr     go to state 59
+    logical_or_expr      go to state 239
+    identifier           go to state 80
+    identifier_id        go to state 69
+    identifier_string    go to state 70
+    any_id               go to state 240
+
+
+State 169
+
+  204 declaration_expr: declaration '=' $@45 . comma_expr
+
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    GID            shift, and go to state 10
+    LNOT           shift, and go to state 13
+    INC            shift, and go to state 14
+    DEC            shift, and go to state 15
+    '&'            shift, and go to state 24
+    '('            shift, and go to state 25
+    '@'            shift, and go to state 26
+    '*'            shift, and go to state 27
+    '-'            shift, and go to state 28
+    '~'            shift, and go to state 29
+    '!'            shift, and go to state 30
+
+    $default  reduce using rule 172 (@37)
+
+    literal_expr         go to state 44
+    bracket_expr         go to state 45
+    primary_expr         go to state 46
+    iter_expr            go to state 47
+    postfix_expr         go to state 48
+    unary_expr           go to state 49
+    unary_operator       go to state 50
+    multiplicative_expr  go to state 51
+    additive_expr        go to state 52
+    shift_expr           go to state 53
+    and_expr             go to state 54
+    xor_expr             go to state 55
+    or_expr              go to state 56
+    boolean_expr         go to state 57
+    equality_expr        go to state 58
+    logical_and_expr     go to state 59
+    logical_or_expr      go to state 60
+    initializer_expr     go to state 61
+    @37                  go to state 62
+    conditional_expr     go to state 63
+    comma_expr           go to state 241
+    identifier           go to state 80
+    identifier_id        go to state 69
+    identifier_string    go to state 70
+    any_id               go to state 71
+
+
+State 170
+
+  199 declaration_expr: declaration '{' $@42 . initializer $@43 '}'
+
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    GID            shift, and go to state 10
+    LNOT           shift, and go to state 13
+    INC            shift, and go to state 14
+    DEC            shift, and go to state 15
+    '&'            shift, and go to state 24
+    '('            shift, and go to state 25
+    '{'            shift, and go to state 143
+    '@'            shift, and go to state 230
+    '*'            shift, and go to state 27
+    '-'            shift, and go to state 28
+    '~'            shift, and go to state 29
+    '!'            shift, and go to state 30
+
+    initializer          go to state 242
+    init_list_value      go to state 232
+    init_value           go to state 233
+    initializer_braces   go to state 234
+    init_list_colon      go to state 235
+    init_colon           go to state 236
+    init_key             go to state 237
+    literal_expr         go to state 238
+    bracket_expr         go to state 45
+    primary_expr         go to state 46
+    iter_expr            go to state 47
+    postfix_expr         go to state 48
+    unary_expr           go to state 49
+    unary_operator       go to state 50
+    multiplicative_expr  go to state 51
+    additive_expr        go to state 52
+    shift_expr           go to state 53
+    and_expr             go to state 54
+    xor_expr             go to state 55
+    or_expr              go to state 56
+    boolean_expr         go to state 57
+    equality_expr        go to state 58
+    logical_and_expr     go to state 59
+    logical_or_expr      go to state 239
+    identifier           go to state 80
+    identifier_id        go to state 69
+    identifier_string    go to state 70
+    any_id               go to state 240
+
+
+State 171
+
+  201 declaration_expr: declaration '{' $@44 . '}'
+
+    '}'  shift, and go to state 243
+
+
+State 172
+
+  104 postfix_expr: postfix_expr '(' ')' .
+
+    $default  reduce using rule 104 (postfix_expr)
+
+
+State 173
+
+  106 postfix_expr: postfix_expr '.' any_id .
+
+    $default  reduce using rule 106 (postfix_expr)
+
+
+State 174
+
+  103 postfix_expr: postfix_expr $@14 '[' . expr ']'
+
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    GID            shift, and go to state 10
+    LNOT           shift, and go to state 13
+    INC            shift, and go to state 14
+    DEC            shift, and go to state 15
+    KW_DEFAULT     shift, and go to state 20
+    KW_LOCAL       shift, and go to state 22
+    '&'            shift, and go to state 24
+    '('            shift, and go to state 25
+    '@'            shift, and go to state 26
+    '*'            shift, and go to state 27
+    '-'            shift, and go to state 28
+    '~'            shift, and go to state 29
+    '!'            shift, and go to state 30
+
+    $default  reduce using rule 172 (@37)
+
+    declaration          go to state 227
+    literal_expr         go to state 44
+    bracket_expr         go to state 45
+    primary_expr         go to state 46
+    iter_expr            go to state 47
+    postfix_expr         go to state 48
+    unary_expr           go to state 49
+    unary_operator       go to state 50
+    multiplicative_expr  go to state 51
+    additive_expr        go to state 52
+    shift_expr           go to state 53
+    and_expr             go to state 54
+    xor_expr             go to state 55
+    or_expr              go to state 56
+    boolean_expr         go to state 57
+    equality_expr        go to state 58
+    logical_and_expr     go to state 59
+    logical_or_expr      go to state 60
+    initializer_expr     go to state 61
+    @37                  go to state 62
+    conditional_expr     go to state 63
+    comma_expr           go to state 64
+    assignment_expr      go to state 65
+    declaration_expr     go to state 66
+    expr                 go to state 244
+    identifier           go to state 229
+    identifier_id        go to state 69
+    identifier_string    go to state 70
+    any_id               go to state 71
+
+
+State 175
+
+  122 multiplicative_operator: '*' .
+
+    $default  reduce using rule 122 (multiplicative_operator)
+
+
+State 176
+
+  123 multiplicative_operator: '/' .
+
+    $default  reduce using rule 123 (multiplicative_operator)
+
+
+State 177
+
+  124 multiplicative_operator: '%' .
+
+    $default  reduce using rule 124 (multiplicative_operator)
+
+
+State 178
+
+  121 multiplicative_expr: multiplicative_expr $@15 multiplicative_operator . unary_expr $@16
+
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    GID            shift, and go to state 10
+    LNOT           shift, and go to state 13
+    INC            shift, and go to state 14
+    DEC            shift, and go to state 15
+    '&'            shift, and go to state 24
+    '('            shift, and go to state 25
+    '@'            shift, and go to state 26
+    '*'            shift, and go to state 27
+    '-'            shift, and go to state 28
+    '~'            shift, and go to state 29
+    '!'            shift, and go to state 30
+
+    literal_expr       go to state 44
+    bracket_expr       go to state 45
+    primary_expr       go to state 46
+    iter_expr          go to state 47
+    postfix_expr       go to state 48
+    unary_expr         go to state 245
+    unary_operator     go to state 50
+    identifier         go to state 80
+    identifier_id      go to state 69
+    identifier_string  go to state 70
+    any_id             go to state 71
+
+
+State 179
+
+  130 additive_operator: '-' .
+
+    $default  reduce using rule 130 (additive_operator)
+
+
+State 180
+
+  129 additive_operator: '+' .
+
+    $default  reduce using rule 129 (additive_operator)
+
+
+State 181
+
+  128 additive_expr: additive_expr $@17 additive_operator . multiplicative_expr $@18
+
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    GID            shift, and go to state 10
+    LNOT           shift, and go to state 13
+    INC            shift, and go to state 14
+    DEC            shift, and go to state 15
+    '&'            shift, and go to state 24
+    '('            shift, and go to state 25
+    '@'            shift, and go to state 26
+    '*'            shift, and go to state 27
+    '-'            shift, and go to state 28
+    '~'            shift, and go to state 29
+    '!'            shift, and go to state 30
+
+    literal_expr         go to state 44
+    bracket_expr         go to state 45
+    primary_expr         go to state 46
+    iter_expr            go to state 47
+    postfix_expr         go to state 48
+    unary_expr           go to state 49
+    unary_operator       go to state 50
+    multiplicative_expr  go to state 246
+    identifier           go to state 80
+    identifier_id        go to state 69
+    identifier_string    go to state 70
+    any_id               go to state 71
+
+
+State 182
+
+  134 shift_expr: shift_expr $@19 SHIFT_LEFT . additive_expr $@20
+
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    GID            shift, and go to state 10
+    LNOT           shift, and go to state 13
+    INC            shift, and go to state 14
+    DEC            shift, and go to state 15
+    '&'            shift, and go to state 24
+    '('            shift, and go to state 25
+    '@'            shift, and go to state 26
+    '*'            shift, and go to state 27
+    '-'            shift, and go to state 28
+    '~'            shift, and go to state 29
+    '!'            shift, and go to state 30
+
+    literal_expr         go to state 44
+    bracket_expr         go to state 45
+    primary_expr         go to state 46
+    iter_expr            go to state 47
+    postfix_expr         go to state 48
+    unary_expr           go to state 49
+    unary_operator       go to state 50
+    multiplicative_expr  go to state 51
+    additive_expr        go to state 247
+    identifier           go to state 80
+    identifier_id        go to state 69
+    identifier_string    go to state 70
+    any_id               go to state 71
+
+
+State 183
+
+  137 shift_expr: shift_expr $@21 SHIFT_RIGHT . additive_expr $@22
+
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    GID            shift, and go to state 10
+    LNOT           shift, and go to state 13
+    INC            shift, and go to state 14
+    DEC            shift, and go to state 15
+    '&'            shift, and go to state 24
+    '('            shift, and go to state 25
+    '@'            shift, and go to state 26
+    '*'            shift, and go to state 27
+    '-'            shift, and go to state 28
+    '~'            shift, and go to state 29
+    '!'            shift, and go to state 30
+
+    literal_expr         go to state 44
+    bracket_expr         go to state 45
+    primary_expr         go to state 46
+    iter_expr            go to state 47
+    postfix_expr         go to state 48
+    unary_expr           go to state 49
+    unary_operator       go to state 50
+    multiplicative_expr  go to state 51
+    additive_expr        go to state 248
+    identifier           go to state 80
+    identifier_id        go to state 69
+    identifier_string    go to state 70
+    any_id               go to state 71
+
+
+State 184
+
+  141 and_expr: and_expr $@23 '&' . shift_expr $@24
+
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    GID            shift, and go to state 10
+    LNOT           shift, and go to state 13
+    INC            shift, and go to state 14
+    DEC            shift, and go to state 15
+    '&'            shift, and go to state 24
+    '('            shift, and go to state 25
+    '@'            shift, and go to state 26
+    '*'            shift, and go to state 27
+    '-'            shift, and go to state 28
+    '~'            shift, and go to state 29
+    '!'            shift, and go to state 30
+
+    literal_expr         go to state 44
+    bracket_expr         go to state 45
+    primary_expr         go to state 46
+    iter_expr            go to state 47
+    postfix_expr         go to state 48
+    unary_expr           go to state 49
+    unary_operator       go to state 50
+    multiplicative_expr  go to state 51
+    additive_expr        go to state 52
+    shift_expr           go to state 249
+    identifier           go to state 80
+    identifier_id        go to state 69
+    identifier_string    go to state 70
+    any_id               go to state 71
+
+
+State 185
+
+  145 xor_expr: xor_expr $@25 '^' . and_expr $@26
+
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    GID            shift, and go to state 10
+    LNOT           shift, and go to state 13
+    INC            shift, and go to state 14
+    DEC            shift, and go to state 15
+    '&'            shift, and go to state 24
+    '('            shift, and go to state 25
+    '@'            shift, and go to state 26
+    '*'            shift, and go to state 27
+    '-'            shift, and go to state 28
+    '~'            shift, and go to state 29
+    '!'            shift, and go to state 30
+
+    literal_expr         go to state 44
+    bracket_expr         go to state 45
+    primary_expr         go to state 46
+    iter_expr            go to state 47
+    postfix_expr         go to state 48
+    unary_expr           go to state 49
+    unary_operator       go to state 50
+    multiplicative_expr  go to state 51
+    additive_expr        go to state 52
+    shift_expr           go to state 53
+    and_expr             go to state 250
+    identifier           go to state 80
+    identifier_id        go to state 69
+    identifier_string    go to state 70
+    any_id               go to state 71
+
+
+State 186
+
+  149 or_expr: or_expr $@27 '|' . xor_expr $@28
+
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    GID            shift, and go to state 10
+    LNOT           shift, and go to state 13
+    INC            shift, and go to state 14
+    DEC            shift, and go to state 15
+    '&'            shift, and go to state 24
+    '('            shift, and go to state 25
+    '@'            shift, and go to state 26
+    '*'            shift, and go to state 27
+    '-'            shift, and go to state 28
+    '~'            shift, and go to state 29
+    '!'            shift, and go to state 30
+
+    literal_expr         go to state 44
+    bracket_expr         go to state 45
+    primary_expr         go to state 46
+    iter_expr            go to state 47
+    postfix_expr         go to state 48
+    unary_expr           go to state 49
+    unary_operator       go to state 50
+    multiplicative_expr  go to state 51
+    additive_expr        go to state 52
+    shift_expr           go to state 53
+    and_expr             go to state 54
+    xor_expr             go to state 251
+    identifier           go to state 80
+    identifier_id        go to state 69
+    identifier_string    go to state 70
+    any_id               go to state 71
+
+
+State 187
+
+  156 boolean_operator: LEQ .
+
+    $default  reduce using rule 156 (boolean_operator)
+
+
+State 188
+
+  157 boolean_operator: GEQ .
+
+    $default  reduce using rule 157 (boolean_operator)
+
+
+State 189
+
+  154 boolean_operator: '<' .
+
+    $default  reduce using rule 154 (boolean_operator)
+
+
+State 190
+
+  155 boolean_operator: '>' .
+
+    $default  reduce using rule 155 (boolean_operator)
+
+
+State 191
+
+  153 boolean_expr: boolean_expr $@29 boolean_operator . or_expr $@30
+
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    GID            shift, and go to state 10
+    LNOT           shift, and go to state 13
+    INC            shift, and go to state 14
+    DEC            shift, and go to state 15
+    '&'            shift, and go to state 24
+    '('            shift, and go to state 25
+    '@'            shift, and go to state 26
+    '*'            shift, and go to state 27
+    '-'            shift, and go to state 28
+    '~'            shift, and go to state 29
+    '!'            shift, and go to state 30
+
+    literal_expr         go to state 44
+    bracket_expr         go to state 45
+    primary_expr         go to state 46
+    iter_expr            go to state 47
+    postfix_expr         go to state 48
+    unary_expr           go to state 49
+    unary_operator       go to state 50
+    multiplicative_expr  go to state 51
+    additive_expr        go to state 52
+    shift_expr           go to state 53
+    and_expr             go to state 54
+    xor_expr             go to state 55
+    or_expr              go to state 252
+    identifier           go to state 80
+    identifier_id        go to state 69
+    identifier_string    go to state 70
+    any_id               go to state 71
+
+
+State 192
+
+  162 equality_operator: EQ .
+
+    $default  reduce using rule 162 (equality_operator)
+
+
+State 193
+
+  163 equality_operator: NEQ .
+
+    $default  reduce using rule 163 (equality_operator)
+
+
+State 194
+
+  161 equality_expr: equality_expr $@31 equality_operator . boolean_expr $@32
+
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    GID            shift, and go to state 10
+    LNOT           shift, and go to state 13
+    INC            shift, and go to state 14
+    DEC            shift, and go to state 15
+    '&'            shift, and go to state 24
+    '('            shift, and go to state 25
+    '@'            shift, and go to state 26
+    '*'            shift, and go to state 27
+    '-'            shift, and go to state 28
+    '~'            shift, and go to state 29
+    '!'            shift, and go to state 30
+
+    literal_expr         go to state 44
+    bracket_expr         go to state 45
+    primary_expr         go to state 46
+    iter_expr            go to state 47
+    postfix_expr         go to state 48
+    unary_expr           go to state 49
+    unary_operator       go to state 50
+    multiplicative_expr  go to state 51
+    additive_expr        go to state 52
+    shift_expr           go to state 53
+    and_expr             go to state 54
+    xor_expr             go to state 55
+    or_expr              go to state 56
+    boolean_expr         go to state 253
+    identifier           go to state 80
+    identifier_id        go to state 69
+    identifier_string    go to state 70
+    any_id               go to state 71
+
+
+State 195
+
+  167 logical_and_expr: logical_and_expr $@33 LAND . equality_expr $@34
+
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    GID            shift, and go to state 10
+    LNOT           shift, and go to state 13
+    INC            shift, and go to state 14
+    DEC            shift, and go to state 15
+    '&'            shift, and go to state 24
+    '('            shift, and go to state 25
+    '@'            shift, and go to state 26
+    '*'            shift, and go to state 27
+    '-'            shift, and go to state 28
+    '~'            shift, and go to state 29
+    '!'            shift, and go to state 30
+
+    literal_expr         go to state 44
+    bracket_expr         go to state 45
+    primary_expr         go to state 46
+    iter_expr            go to state 47
+    postfix_expr         go to state 48
+    unary_expr           go to state 49
+    unary_operator       go to state 50
+    multiplicative_expr  go to state 51
+    additive_expr        go to state 52
+    shift_expr           go to state 53
+    and_expr             go to state 54
+    xor_expr             go to state 55
+    or_expr              go to state 56
+    boolean_expr         go to state 57
+    equality_expr        go to state 254
+    identifier           go to state 80
+    identifier_id        go to state 69
+    identifier_string    go to state 70
+    any_id               go to state 71
+
+
+State 196
+
+  171 logical_or_expr: logical_or_expr $@35 LOR . logical_and_expr $@36
+
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    GID            shift, and go to state 10
+    LNOT           shift, and go to state 13
+    INC            shift, and go to state 14
+    DEC            shift, and go to state 15
+    '&'            shift, and go to state 24
+    '('            shift, and go to state 25
+    '@'            shift, and go to state 26
+    '*'            shift, and go to state 27
+    '-'            shift, and go to state 28
+    '~'            shift, and go to state 29
+    '!'            shift, and go to state 30
+
+    literal_expr         go to state 44
+    bracket_expr         go to state 45
+    primary_expr         go to state 46
+    iter_expr            go to state 47
+    postfix_expr         go to state 48
+    unary_expr           go to state 49
+    unary_operator       go to state 50
+    multiplicative_expr  go to state 51
+    additive_expr        go to state 52
+    shift_expr           go to state 53
+    and_expr             go to state 54
+    xor_expr             go to state 55
+    or_expr              go to state 56
+    boolean_expr         go to state 57
+    equality_expr        go to state 58
+    logical_and_expr     go to state 255
+    identifier           go to state 80
+    identifier_id        go to state 69
+    identifier_string    go to state 70
+    any_id               go to state 71
+
+
+State 197
+
+  176 conditional_expr: initializer_expr '?' conditional_expr . ':' conditional_expr
+
+    ':'  shift, and go to state 256
+
+
+State 198
+
+   78 initializer_braces: '{' '}' .
+
+    $default  reduce using rule 78 (initializer_braces)
+
+
+State 199
+
+   77 initializer_braces: '{' $@9 . initializer $@10 '}'
+
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    GID            shift, and go to state 10
+    LNOT           shift, and go to state 13
+    INC            shift, and go to state 14
+    DEC            shift, and go to state 15
+    '&'            shift, and go to state 24
+    '('            shift, and go to state 25
+    '{'            shift, and go to state 143
+    '@'            shift, and go to state 230
+    '*'            shift, and go to state 27
+    '-'            shift, and go to state 28
+    '~'            shift, and go to state 29
+    '!'            shift, and go to state 30
+
+    initializer          go to state 257
+    init_list_value      go to state 232
+    init_value           go to state 233
+    initializer_braces   go to state 234
+    init_list_colon      go to state 235
+    init_colon           go to state 236
+    init_key             go to state 237
+    literal_expr         go to state 238
+    bracket_expr         go to state 45
+    primary_expr         go to state 46
+    iter_expr            go to state 47
+    postfix_expr         go to state 48
+    unary_expr           go to state 49
+    unary_operator       go to state 50
+    multiplicative_expr  go to state 51
+    additive_expr        go to state 52
+    shift_expr           go to state 53
+    and_expr             go to state 54
+    xor_expr             go to state 55
+    or_expr              go to state 56
+    boolean_expr         go to state 57
+    equality_expr        go to state 58
+    logical_and_expr     go to state 59
+    logical_or_expr      go to state 239
+    identifier           go to state 80
+    identifier_id        go to state 69
+    identifier_string    go to state 70
+    any_id               go to state 240
+
+
+State 200
+
+  178 comma_expr: comma_expr ',' conditional_expr .
+
+    $default  reduce using rule 178 (comma_expr)
+
+
+State 201
+
+  193 declaration_expr: assignment_expr ':' $@40 . initializer
+
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    GID            shift, and go to state 10
+    LNOT           shift, and go to state 13
+    INC            shift, and go to state 14
+    DEC            shift, and go to state 15
+    '&'            shift, and go to state 24
+    '('            shift, and go to state 25
+    '{'            shift, and go to state 143
+    '@'            shift, and go to state 230
+    '*'            shift, and go to state 27
+    '-'            shift, and go to state 28
+    '~'            shift, and go to state 29
+    '!'            shift, and go to state 30
+
+    initializer          go to state 258
+    init_list_value      go to state 232
+    init_value           go to state 233
+    initializer_braces   go to state 234
+    init_list_colon      go to state 235
+    init_colon           go to state 236
+    init_key             go to state 237
+    literal_expr         go to state 238
+    bracket_expr         go to state 45
+    primary_expr         go to state 46
+    iter_expr            go to state 47
+    postfix_expr         go to state 48
+    unary_expr           go to state 49
+    unary_operator       go to state 50
+    multiplicative_expr  go to state 51
+    additive_expr        go to state 52
+    shift_expr           go to state 53
+    and_expr             go to state 54
+    xor_expr             go to state 55
+    or_expr              go to state 56
+    boolean_expr         go to state 57
+    equality_expr        go to state 58
+    logical_and_expr     go to state 59
+    logical_or_expr      go to state 239
+    identifier           go to state 80
+    identifier_id        go to state 69
+    identifier_string    go to state 70
+    any_id               go to state 240
+
+
+State 202
+
+  186 assignment_operator: MUL_ASSIGN .
+
+    $default  reduce using rule 186 (assignment_operator)
+
+
+State 203
+
+  187 assignment_operator: DIV_ASSIGN .
+
+    $default  reduce using rule 187 (assignment_operator)
+
+
+State 204
+
+  184 assignment_operator: ADD_ASSIGN .
+
+    $default  reduce using rule 184 (assignment_operator)
+
+
+State 205
+
+  185 assignment_operator: SUB_ASSIGN .
+
+    $default  reduce using rule 185 (assignment_operator)
+
+
+State 206
+
+  189 assignment_operator: OR_ASSIGN .
+
+    $default  reduce using rule 189 (assignment_operator)
+
+
+State 207
+
+  188 assignment_operator: AND_ASSIGN .
+
+    $default  reduce using rule 188 (assignment_operator)
+
+
+State 208
+
+  190 assignment_operator: UPDATE_ASSIGN .
+
+    $default  reduce using rule 190 (assignment_operator)
+
+
+State 209
+
+  183 assignment_operator: '=' .
+
+    $default  reduce using rule 183 (assignment_operator)
+
+
+State 210
+
+  182 assignment_expr: assignment_expr $@38 assignment_operator . comma_expr $@39
+
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    GID            shift, and go to state 10
+    LNOT           shift, and go to state 13
+    INC            shift, and go to state 14
+    DEC            shift, and go to state 15
+    '&'            shift, and go to state 24
+    '('            shift, and go to state 25
+    '@'            shift, and go to state 26
+    '*'            shift, and go to state 27
+    '-'            shift, and go to state 28
+    '~'            shift, and go to state 29
+    '!'            shift, and go to state 30
+
+    $default  reduce using rule 172 (@37)
+
+    literal_expr         go to state 44
+    bracket_expr         go to state 45
+    primary_expr         go to state 46
+    iter_expr            go to state 47
+    postfix_expr         go to state 48
+    unary_expr           go to state 49
+    unary_operator       go to state 50
+    multiplicative_expr  go to state 51
+    additive_expr        go to state 52
+    shift_expr           go to state 53
+    and_expr             go to state 54
+    xor_expr             go to state 55
+    or_expr              go to state 56
+    boolean_expr         go to state 57
+    equality_expr        go to state 58
+    logical_and_expr     go to state 59
+    logical_or_expr      go to state 60
+    initializer_expr     go to state 61
+    @37                  go to state 62
+    conditional_expr     go to state 63
+    comma_expr           go to state 259
+    identifier           go to state 80
+    identifier_id        go to state 69
+    identifier_string    go to state 70
+    any_id               go to state 71
+
+
+State 211
+
+   43 function_argumentList: '(' . ')'
+   44                      | '(' . function_arguments ')'
+
+    ID     shift, and go to state 260
+    GID    shift, and go to state 10
+    KW_IN  shift, and go to state 261
+    ')'    shift, and go to state 262
+    '$'    shift, and go to state 263
+    '@'    shift, and go to state 26
+
+    function_arguments       go to state 264
+    function_argument_inout  go to state 265
+    argument_inout           go to state 266
+    function_argument        go to state 267
+    identifier               go to state 268
+    identifier_id            go to state 69
+    identifier_string        go to state 70
+    any_id                   go to state 71
+
+
+State 212
+
+   39 function_declaration: identifier GID function_argumentList .
+
+    $default  reduce using rule 39 (function_declaration)
+
+
+State 213
+
+   42 function_declaration: identifier '&' GID . function_argumentList
+
+    '('  shift, and go to state 211
+
+    function_argumentList  go to state 269
+
+
+State 214
+
+   40 function_declaration: identifier '&' any_id . function_argumentList
+   41                     | identifier '&' any_id . function_argumentList identifier_string
+
+    '('  shift, and go to state 211
+
+    function_argumentList  go to state 270
+
+
+State 215
+
+  208 identifier: identifier @46 initializer_braces .
+
+    $default  reduce using rule 208 (identifier)
+
+
+State 216
+
+   37 function_declaration: identifier any_id function_argumentList .
+   38                     | identifier any_id function_argumentList . identifier_string
+
+    ID   shift, and go to state 9
+    GID  shift, and go to state 10
+    '@'  shift, and go to state 26
+
+    $default  reduce using rule 37 (function_declaration)
+
+    identifier_string  go to state 271
+    any_id             go to state 71
+
+
+State 217
+
+  230 if_statement: if_start block KW_ELSE . block
+  231             | if_start block KW_ELSE . if_statement
+
+    KW_IF  shift, and go to state 18
+    ':'    shift, and go to state 23
+
+    block_start   go to state 36
+    block         go to state 272
+    if_statement  go to state 273
+    if_start      go to state 73
+
+
+State 218
+
+   65 declaration_list: declaration_list ',' declaration_id .
+
+    $default  reduce using rule 65 (declaration_list)
+
+
+State 219
+
+   63 declaration_ref: identifier '&' . declaration_list
+
+    ID     shift, and go to state 9
+    GID    shift, and go to state 82
+    KW_IN  shift, and go to state 83
+    '@'    shift, and go to state 26
+
+    declaration_list  go to state 274
+    declaration_id    go to state 85
+    any_id            go to state 86
+
+
+State 220
+
+   62 declaration_ref: identifier declaration_list .
+   65 declaration_list: declaration_list . ',' declaration_id
+
+    ','  shift, and go to state 157
+
+    $default  reduce using rule 62 (declaration_ref)
+
+
+State 221
+
+   95 bracket_expr: '(' $@13 assignment_expr ')' .
+
+    $default  reduce using rule 95 (bracket_expr)
+
+
+State 222
+
+   20 scope: SCOPE INDENT . statements DEDENT
+
+    error          shift, and go to state 1
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    GID            shift, and go to state 10
+    PACKAGE        shift, and go to state 11
+    IMPORT         shift, and go to state 12
+    LNOT           shift, and go to state 13
+    INC            shift, and go to state 14
+    DEC            shift, and go to state 15
+    ENDL           shift, and go to state 16
+    TAB            shift, and go to state 17
+    KW_IF          shift, and go to state 18
+    KW_WHILE       shift, and go to state 19
+    KW_DEFAULT     shift, and go to state 20
+    KW_IN          shift, and go to state 21
+    KW_LOCAL       shift, and go to state 22
+    ':'            shift, and go to state 23
+    '&'            shift, and go to state 24
+    '('            shift, and go to state 25
+    '@'            shift, and go to state 26
+    '*'            shift, and go to state 27
+    '-'            shift, and go to state 28
+    '~'            shift, and go to state 29
+    '!'            shift, and go to state 30
+
+    '{'  reduce using rule 172 (@37)
+
+    statements               go to state 275
+    statement_nodecl         go to state 33
+    statement                go to state 34
+    scope_statement          go to state 35
+    block_start              go to state 36
+    block                    go to state 37
+    function_implementation  go to state 38
+    function_declaration     go to state 39
+    package_declaration      go to state 40
+    import_declaration       go to state 41
+    in_declaration           go to state 42
+    declaration              go to state 43
+    literal_expr             go to state 44
+    bracket_expr             go to state 45
+    primary_expr             go to state 46
+    iter_expr                go to state 47
+    postfix_expr             go to state 48
+    unary_expr               go to state 49
+    unary_operator           go to state 50
+    multiplicative_expr      go to state 51
+    additive_expr            go to state 52
+    shift_expr               go to state 53
+    and_expr                 go to state 54
+    xor_expr                 go to state 55
+    or_expr                  go to state 56
+    boolean_expr             go to state 57
+    equality_expr            go to state 58
+    logical_and_expr         go to state 59
+    logical_or_expr          go to state 60
+    initializer_expr         go to state 61
+    @37                      go to state 62
+    conditional_expr         go to state 63
+    comma_expr               go to state 64
+    assignment_expr          go to state 65
+    declaration_expr         go to state 66
+    expr                     go to state 67
+    identifier               go to state 68
+    identifier_id            go to state 69
+    identifier_string        go to state 70
+    any_id                   go to state 71
+    if_statement             go to state 72
+    if_start                 go to state 73
+    while_statement          go to state 74
+    while_until              go to state 75
+
+
+State 223
+
+   21 scope: SCOPE statement .
+
+    $default  reduce using rule 21 (scope)
+
+
+State 224
+
+   23 scope: SCOPEPRE $@2 . INDENT statements DEDENT
+
+    INDENT  shift, and go to state 276
+
+
+State 225
+
+   25 scope: SCOPEPRE $@3 . statement
+
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    GID            shift, and go to state 10
+    PACKAGE        shift, and go to state 11
+    IMPORT         shift, and go to state 12
+    LNOT           shift, and go to state 13
+    INC            shift, and go to state 14
+    DEC            shift, and go to state 15
+    ENDL           shift, and go to state 16
+    TAB            shift, and go to state 17
+    KW_IF          shift, and go to state 18
+    KW_WHILE       shift, and go to state 19
+    KW_DEFAULT     shift, and go to state 20
+    KW_IN          shift, and go to state 21
+    KW_LOCAL       shift, and go to state 22
+    ':'            shift, and go to state 23
+    '&'            shift, and go to state 24
+    '('            shift, and go to state 25
+    '@'            shift, and go to state 26
+    '*'            shift, and go to state 27
+    '-'            shift, and go to state 28
+    '~'            shift, and go to state 29
+    '!'            shift, and go to state 30
+
+    $default  reduce using rule 172 (@37)
+
+    statement_nodecl         go to state 33
+    statement                go to state 277
+    scope_statement          go to state 35
+    block_start              go to state 36
+    block                    go to state 37
+    function_implementation  go to state 38
+    function_declaration     go to state 39
+    package_declaration      go to state 40
+    import_declaration       go to state 41
+    in_declaration           go to state 42
+    declaration              go to state 43
+    literal_expr             go to state 44
+    bracket_expr             go to state 45
+    primary_expr             go to state 46
+    iter_expr                go to state 47
+    postfix_expr             go to state 48
+    unary_expr               go to state 49
+    unary_operator           go to state 50
+    multiplicative_expr      go to state 51
+    additive_expr            go to state 52
+    shift_expr               go to state 53
+    and_expr                 go to state 54
+    xor_expr                 go to state 55
+    or_expr                  go to state 56
+    boolean_expr             go to state 57
+    equality_expr            go to state 58
+    logical_and_expr         go to state 59
+    logical_or_expr          go to state 60
+    initializer_expr         go to state 61
+    @37                      go to state 62
+    conditional_expr         go to state 63
+    comma_expr               go to state 64
+    assignment_expr          go to state 65
+    declaration_expr         go to state 66
+    expr                     go to state 67
+    identifier               go to state 68
+    identifier_id            go to state 69
+    identifier_string        go to state 70
+    any_id                   go to state 71
+    if_statement             go to state 72
+    if_start                 go to state 73
+    while_statement          go to state 74
+    while_until              go to state 75
+
+
+State 226
+
+   30 block: block_start statements $@4 DEDENT .
+
+    $default  reduce using rule 30 (block)
+
+
+State 227
+
+  196 declaration_expr: declaration . ':' $@41 initializer
+  199                 | declaration . '{' $@42 initializer $@43 '}'
+  201                 | declaration . '{' $@44 '}'
+  202                 | declaration . ':'
+  204                 | declaration . '=' $@45 comma_expr
+
+    ':'  shift, and go to state 121
+    '='  shift, and go to state 122
+    '{'  shift, and go to state 123
+
+
+State 228
+
+   36 function_implementation: function_declaration @7 '=' expr . ENDL
+
+    ENDL  shift, and go to state 278
+
+
+State 229
+
+   58 declaration: identifier . declaration_list
+   98 primary_expr: identifier .
+  208 identifier: identifier . @46 initializer_braces
+
+    ID     shift, and go to state 9
+    GID    shift, and go to state 82
+    KW_IN  shift, and go to state 83
+    '@'    shift, and go to state 26
+
+    '{'       reduce using rule 207 (@46)
+    $default  reduce using rule 98 (primary_expr)
+
+    declaration_list  go to state 151
+    declaration_id    go to state 85
+    @46               go to state 152
+    any_id            go to state 86
+
+
+State 230
+
+   85 init_key: '@' . $@12 initializer_braces
+  213 any_id: '@' . KW_IF
+  214       | '@' . KW_ELSE
+  215       | '@' . KW_WHILE
+  216       | '@' . KW_SWITCH
+  217       | '@' . KW_CASE
+  218       | '@' . KW_DEFAULT
+  219       | '@' . KW_BREAK
+  220       | '@' . KW_FOR
+  221       | '@' . KW_TRY
+  222       | '@' . KW_CATCH
+  223       | '@' . KW_IMPORT
+  224       | '@' . KW_LOCAL
+  225       | '@' . LAND
+  226       | '@' . LOR
+  227       | '@' . LNOT
+  228       | '@' . SCOPE
+
+    LOR         shift, and go to state 93
+    LAND        shift, and go to state 94
+    LNOT        shift, and go to state 95
+    SCOPE       shift, and go to state 96
+    KW_IF       shift, and go to state 97
+    KW_ELSE     shift, and go to state 98
+    KW_WHILE    shift, and go to state 99
+    KW_SWITCH   shift, and go to state 100
+    KW_CASE     shift, and go to state 101
+    KW_DEFAULT  shift, and go to state 102
+    KW_BREAK    shift, and go to state 103
+    KW_FOR      shift, and go to state 104
+    KW_TRY      shift, and go to state 105
+    KW_CATCH    shift, and go to state 106
+    KW_IMPORT   shift, and go to state 107
+    KW_LOCAL    shift, and go to state 108
+
+    $default  reduce using rule 84 ($@12)
+
+    $@12  go to state 279
+
+
+State 231
+
+   70 initializer: initializer . ',' init_list_value
+  196 declaration_expr: declaration ':' $@41 initializer .
+
+    ','  shift, and go to state 280
+
+    $default  reduce using rule 196 (declaration_expr)
+
+
+State 232
+
+   69 initializer: init_list_value .
+
+    $default  reduce using rule 69 (initializer)
+
+
+State 233
+
+   71 init_list_value: init_value .
+
+    $default  reduce using rule 71 (init_list_value)
+
+
+State 234
+
+   73 init_value: initializer_braces .
+
+    $default  reduce using rule 73 (init_value)
+
+
+State 235
+
+   72 init_list_value: init_list_colon .
+   80 init_list_colon: init_list_colon . init_colon
+
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    '@'            shift, and go to state 230
+
+    $default  reduce using rule 72 (init_list_value)
+
+    init_colon    go to state 281
+    init_key      go to state 237
+    literal_expr  go to state 282
+    any_id        go to state 283
+
+
+State 236
+
+   79 init_list_colon: init_colon .
+
+    $default  reduce using rule 79 (init_list_colon)
+
+
+State 237
+
+   83 init_colon: init_key . '=' init_value
+
+    '='  shift, and go to state 284
+
+
+State 238
+
+   86 init_key: literal_expr .
+   97 primary_expr: literal_expr .
+
+    '='       reduce using rule 86 (init_key)
+    $default  reduce using rule 97 (primary_expr)
+
+
+State 239
+
+   74 init_value: logical_or_expr .
+  171 logical_or_expr: logical_or_expr . $@35 LOR logical_and_expr $@36
+
+    LOR       reduce using rule 169 ($@35)
+    $default  reduce using rule 74 (init_value)
+
+    $@35  go to state 141
+
+
+State 240
+
+   82 init_colon: any_id . '=' $@11 init_value
+  211 identifier_string: any_id .
+
+    '='  shift, and go to state 285
+
+    $default  reduce using rule 211 (identifier_string)
+
+
+State 241
+
+  178 comma_expr: comma_expr . ',' conditional_expr
+  204 declaration_expr: declaration '=' $@45 comma_expr .
+
+    ','  shift, and go to state 145
+
+    $default  reduce using rule 204 (declaration_expr)
+
+
+State 242
+
+   70 initializer: initializer . ',' init_list_value
+  199 declaration_expr: declaration '{' $@42 initializer . $@43 '}'
+
+    ','  shift, and go to state 280
+
+    $default  reduce using rule 198 ($@43)
+
+    $@43  go to state 286
+
+
+State 243
+
+  201 declaration_expr: declaration '{' $@44 '}' .
+
+    $default  reduce using rule 201 (declaration_expr)
+
+
+State 244
+
+  103 postfix_expr: postfix_expr $@14 '[' expr . ']'
+
+    ']'  shift, and go to state 287
+
+
+State 245
+
+  121 multiplicative_expr: multiplicative_expr $@15 multiplicative_operator unary_expr . $@16
+
+    $default  reduce using rule 120 ($@16)
+
+    $@16  go to state 288
+
+
+State 246
+
+  121 multiplicative_expr: multiplicative_expr . $@15 multiplicative_operator unary_expr $@16
+  128 additive_expr: additive_expr $@17 additive_operator multiplicative_expr . $@18
+
+    '*'       reduce using rule 119 ($@15)
+    '/'       reduce using rule 119 ($@15)
+    '%'       reduce using rule 119 ($@15)
+    $default  reduce using rule 127 ($@18)
+
+    $@15  go to state 131
+    $@18  go to state 289
+
+
+State 247
+
+  128 additive_expr: additive_expr . $@17 additive_operator multiplicative_expr $@18
+  134 shift_expr: shift_expr $@19 SHIFT_LEFT additive_expr . $@20
+
+    '-'       reduce using rule 126 ($@17)
+    '+'       reduce using rule 126 ($@17)
+    $default  reduce using rule 133 ($@20)
+
+    $@17  go to state 132
+    $@20  go to state 290
+
+
+State 248
+
+  128 additive_expr: additive_expr . $@17 additive_operator multiplicative_expr $@18
+  137 shift_expr: shift_expr $@21 SHIFT_RIGHT additive_expr . $@22
+
+    '-'       reduce using rule 126 ($@17)
+    '+'       reduce using rule 126 ($@17)
+    $default  reduce using rule 136 ($@22)
+
+    $@17  go to state 132
+    $@22  go to state 291
+
+
+State 249
+
+  134 shift_expr: shift_expr . $@19 SHIFT_LEFT additive_expr $@20
+  137           | shift_expr . $@21 SHIFT_RIGHT additive_expr $@22
+  141 and_expr: and_expr $@23 '&' shift_expr . $@24
+
+    SHIFT_LEFT   reduce using rule 132 ($@19)
+    SHIFT_RIGHT  reduce using rule 135 ($@21)
+    $default     reduce using rule 140 ($@24)
+
+    $@19  go to state 133
+    $@21  go to state 134
+    $@24  go to state 292
+
+
+State 250
+
+  141 and_expr: and_expr . $@23 '&' shift_expr $@24
+  145 xor_expr: xor_expr $@25 '^' and_expr . $@26
+
+    '&'       reduce using rule 139 ($@23)
+    $default  reduce using rule 144 ($@26)
+
+    $@23  go to state 135
+    $@26  go to state 293
+
+
+State 251
+
+  145 xor_expr: xor_expr . $@25 '^' and_expr $@26
+  149 or_expr: or_expr $@27 '|' xor_expr . $@28
+
+    '^'       reduce using rule 143 ($@25)
+    $default  reduce using rule 148 ($@28)
+
+    $@25  go to state 136
+    $@28  go to state 294
+
+
+State 252
+
+  149 or_expr: or_expr . $@27 '|' xor_expr $@28
+  153 boolean_expr: boolean_expr $@29 boolean_operator or_expr . $@30
+
+    '|'       reduce using rule 147 ($@27)
+    $default  reduce using rule 152 ($@30)
+
+    $@27  go to state 137
+    $@30  go to state 295
+
+
+State 253
+
+  153 boolean_expr: boolean_expr . $@29 boolean_operator or_expr $@30
+  161 equality_expr: equality_expr $@31 equality_operator boolean_expr . $@32
+
+    LEQ       reduce using rule 151 ($@29)
+    GEQ       reduce using rule 151 ($@29)
+    '<'       reduce using rule 151 ($@29)
+    '>'       reduce using rule 151 ($@29)
+    $default  reduce using rule 160 ($@32)
+
+    $@29  go to state 138
+    $@32  go to state 296
+
+
+State 254
+
+  161 equality_expr: equality_expr . $@31 equality_operator boolean_expr $@32
+  167 logical_and_expr: logical_and_expr $@33 LAND equality_expr . $@34
+
+    EQ        reduce using rule 159 ($@31)
+    NEQ       reduce using rule 159 ($@31)
+    $default  reduce using rule 166 ($@34)
+
+    $@31  go to state 139
+    $@34  go to state 297
+
+
+State 255
+
+  167 logical_and_expr: logical_and_expr . $@33 LAND equality_expr $@34
+  171 logical_or_expr: logical_or_expr $@35 LOR logical_and_expr . $@36
+
+    LAND      reduce using rule 165 ($@33)
+    $default  reduce using rule 170 ($@36)
+
+    $@33  go to state 140
+    $@36  go to state 298
+
+
+State 256
+
+  176 conditional_expr: initializer_expr '?' conditional_expr ':' . conditional_expr
+
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    GID            shift, and go to state 10
+    LNOT           shift, and go to state 13
+    INC            shift, and go to state 14
+    DEC            shift, and go to state 15
+    '&'            shift, and go to state 24
+    '('            shift, and go to state 25
+    '@'            shift, and go to state 26
+    '*'            shift, and go to state 27
+    '-'            shift, and go to state 28
+    '~'            shift, and go to state 29
+    '!'            shift, and go to state 30
+
+    $default  reduce using rule 172 (@37)
+
+    literal_expr         go to state 44
+    bracket_expr         go to state 45
+    primary_expr         go to state 46
+    iter_expr            go to state 47
+    postfix_expr         go to state 48
+    unary_expr           go to state 49
+    unary_operator       go to state 50
+    multiplicative_expr  go to state 51
+    additive_expr        go to state 52
+    shift_expr           go to state 53
+    and_expr             go to state 54
+    xor_expr             go to state 55
+    or_expr              go to state 56
+    boolean_expr         go to state 57
+    equality_expr        go to state 58
+    logical_and_expr     go to state 59
+    logical_or_expr      go to state 60
+    initializer_expr     go to state 61
+    @37                  go to state 62
+    conditional_expr     go to state 299
+    identifier           go to state 80
+    identifier_id        go to state 69
+    identifier_string    go to state 70
+    any_id               go to state 71
+
+
+State 257
+
+   70 initializer: initializer . ',' init_list_value
+   77 initializer_braces: '{' $@9 initializer . $@10 '}'
+
+    ','  shift, and go to state 280
+
+    $default  reduce using rule 76 ($@10)
+
+    $@10  go to state 300
+
+
+State 258
+
+   70 initializer: initializer . ',' init_list_value
+  193 declaration_expr: assignment_expr ':' $@40 initializer .
+
+    ','  shift, and go to state 280
+
+    $default  reduce using rule 193 (declaration_expr)
+
+
+State 259
+
+  178 comma_expr: comma_expr . ',' conditional_expr
+  182 assignment_expr: assignment_expr $@38 assignment_operator comma_expr . $@39
+
+    ','  shift, and go to state 145
+
+    $default  reduce using rule 181 ($@39)
+
+    $@39  go to state 301
+
+
+State 260
+
+   49 argument_inout: ID .
+  212 any_id: ID .
+
+    ':'       reduce using rule 49 (argument_inout)
+    $default  reduce using rule 212 (any_id)
+
+
+State 261
+
+   50 argument_inout: KW_IN .
+
+    $default  reduce using rule 50 (argument_inout)
+
+
+State 262
+
+   43 function_argumentList: '(' ')' .
+
+    $default  reduce using rule 43 (function_argumentList)
+
+
+State 263
+
+   53 function_argument: '$' . any_id
+
+    ID   shift, and go to state 9
+    '@'  shift, and go to state 26
+
+    any_id  go to state 302
+
+
+State 264
+
+   44 function_argumentList: '(' function_arguments . ')'
+   46 function_arguments: function_arguments . ',' function_argument_inout
+
+    ')'  shift, and go to state 303
+    ','  shift, and go to state 304
+
+
+State 265
+
+   45 function_arguments: function_argument_inout .
+
+    $default  reduce using rule 45 (function_arguments)
+
+
+State 266
+
+   47 function_argument_inout: argument_inout . ':' function_argument
+
+    ':'  shift, and go to state 305
+
+
+State 267
+
+   48 function_argument_inout: function_argument .
+
+    $default  reduce using rule 48 (function_argument_inout)
+
+
+State 268
+
+   51 function_argument: identifier . any_id
+   52                  | identifier . '&' any_id
+  208 identifier: identifier . @46 initializer_braces
+
+    ID   shift, and go to state 9
+    '&'  shift, and go to state 306
+    '@'  shift, and go to state 26
+
+    $default  reduce using rule 207 (@46)
+
+    @46     go to state 152
+    any_id  go to state 307
+
+
+State 269
+
+   42 function_declaration: identifier '&' GID function_argumentList .
+
+    $default  reduce using rule 42 (function_declaration)
+
+
+State 270
+
+   40 function_declaration: identifier '&' any_id function_argumentList .
+   41                     | identifier '&' any_id function_argumentList . identifier_string
+
+    ID   shift, and go to state 9
+    GID  shift, and go to state 10
+    '@'  shift, and go to state 26
+
+    $default  reduce using rule 40 (function_declaration)
+
+    identifier_string  go to state 308
+    any_id             go to state 71
+
+
+State 271
+
+   38 function_declaration: identifier any_id function_argumentList identifier_string .
+
+    $default  reduce using rule 38 (function_declaration)
+
+
+State 272
+
+  230 if_statement: if_start block KW_ELSE block .
+
+    $default  reduce using rule 230 (if_statement)
+
+
+State 273
+
+  231 if_statement: if_start block KW_ELSE if_statement .
+
+    $default  reduce using rule 231 (if_statement)
+
+
+State 274
+
+   63 declaration_ref: identifier '&' declaration_list .
+   65 declaration_list: declaration_list . ',' declaration_id
+
+    ','  shift, and go to state 157
+
+    $default  reduce using rule 63 (declaration_ref)
+
+
+State 275
+
+    3 statements: statements . statement
+   20 scope: SCOPE INDENT statements . DEDENT
+
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    GID            shift, and go to state 10
+    PACKAGE        shift, and go to state 11
+    IMPORT         shift, and go to state 12
+    LNOT           shift, and go to state 13
+    INC            shift, and go to state 14
+    DEC            shift, and go to state 15
+    ENDL           shift, and go to state 16
+    TAB            shift, and go to state 17
+    DEDENT         shift, and go to state 309
+    KW_IF          shift, and go to state 18
+    KW_WHILE       shift, and go to state 19
+    KW_DEFAULT     shift, and go to state 20
+    KW_IN          shift, and go to state 21
+    KW_LOCAL       shift, and go to state 22
+    ':'            shift, and go to state 23
+    '&'            shift, and go to state 24
+    '('            shift, and go to state 25
+    '@'            shift, and go to state 26
+    '*'            shift, and go to state 27
+    '-'            shift, and go to state 28
+    '~'            shift, and go to state 29
+    '!'            shift, and go to state 30
+
+    $default  reduce using rule 172 (@37)
+
+    statement_nodecl         go to state 33
+    statement                go to state 111
+    scope_statement          go to state 35
+    block_start              go to state 36
+    block                    go to state 37
+    function_implementation  go to state 38
+    function_declaration     go to state 39
+    package_declaration      go to state 40
+    import_declaration       go to state 41
+    in_declaration           go to state 42
+    declaration              go to state 43
+    literal_expr             go to state 44
+    bracket_expr             go to state 45
+    primary_expr             go to state 46
+    iter_expr                go to state 47
+    postfix_expr             go to state 48
+    unary_expr               go to state 49
+    unary_operator           go to state 50
+    multiplicative_expr      go to state 51
+    additive_expr            go to state 52
+    shift_expr               go to state 53
+    and_expr                 go to state 54
+    xor_expr                 go to state 55
+    or_expr                  go to state 56
+    boolean_expr             go to state 57
+    equality_expr            go to state 58
+    logical_and_expr         go to state 59
+    logical_or_expr          go to state 60
+    initializer_expr         go to state 61
+    @37                      go to state 62
+    conditional_expr         go to state 63
+    comma_expr               go to state 64
+    assignment_expr          go to state 65
+    declaration_expr         go to state 66
+    expr                     go to state 67
+    identifier               go to state 68
+    identifier_id            go to state 69
+    identifier_string        go to state 70
+    any_id                   go to state 71
+    if_statement             go to state 72
+    if_start                 go to state 73
+    while_statement          go to state 74
+    while_until              go to state 75
+
+
+State 276
+
+   23 scope: SCOPEPRE $@2 INDENT . statements DEDENT
+
+    error          shift, and go to state 1
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    GID            shift, and go to state 10
+    PACKAGE        shift, and go to state 11
+    IMPORT         shift, and go to state 12
+    LNOT           shift, and go to state 13
+    INC            shift, and go to state 14
+    DEC            shift, and go to state 15
+    ENDL           shift, and go to state 16
+    TAB            shift, and go to state 17
+    KW_IF          shift, and go to state 18
+    KW_WHILE       shift, and go to state 19
+    KW_DEFAULT     shift, and go to state 20
+    KW_IN          shift, and go to state 21
+    KW_LOCAL       shift, and go to state 22
+    ':'            shift, and go to state 23
+    '&'            shift, and go to state 24
+    '('            shift, and go to state 25
+    '@'            shift, and go to state 26
+    '*'            shift, and go to state 27
+    '-'            shift, and go to state 28
+    '~'            shift, and go to state 29
+    '!'            shift, and go to state 30
+
+    '{'  reduce using rule 172 (@37)
+
+    statements               go to state 310
+    statement_nodecl         go to state 33
+    statement                go to state 34
+    scope_statement          go to state 35
+    block_start              go to state 36
+    block                    go to state 37
+    function_implementation  go to state 38
+    function_declaration     go to state 39
+    package_declaration      go to state 40
+    import_declaration       go to state 41
+    in_declaration           go to state 42
+    declaration              go to state 43
+    literal_expr             go to state 44
+    bracket_expr             go to state 45
+    primary_expr             go to state 46
+    iter_expr                go to state 47
+    postfix_expr             go to state 48
+    unary_expr               go to state 49
+    unary_operator           go to state 50
+    multiplicative_expr      go to state 51
+    additive_expr            go to state 52
+    shift_expr               go to state 53
+    and_expr                 go to state 54
+    xor_expr                 go to state 55
+    or_expr                  go to state 56
+    boolean_expr             go to state 57
+    equality_expr            go to state 58
+    logical_and_expr         go to state 59
+    logical_or_expr          go to state 60
+    initializer_expr         go to state 61
+    @37                      go to state 62
+    conditional_expr         go to state 63
+    comma_expr               go to state 64
+    assignment_expr          go to state 65
+    declaration_expr         go to state 66
+    expr                     go to state 67
+    identifier               go to state 68
+    identifier_id            go to state 69
+    identifier_string        go to state 70
+    any_id                   go to state 71
+    if_statement             go to state 72
+    if_start                 go to state 73
+    while_statement          go to state 74
+    while_until              go to state 75
+
+
+State 277
+
+   25 scope: SCOPEPRE $@3 statement .
+
+    $default  reduce using rule 25 (scope)
+
+
+State 278
+
+   36 function_implementation: function_declaration @7 '=' expr ENDL .
+
+    $default  reduce using rule 36 (function_implementation)
+
+
+State 279
+
+   85 init_key: '@' $@12 . initializer_braces
+
+    '{'  shift, and go to state 143
+
+    initializer_braces  go to state 311
+
+
+State 280
+
+   70 initializer: initializer ',' . init_list_value
+
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    GID            shift, and go to state 10
+    LNOT           shift, and go to state 13
+    INC            shift, and go to state 14
+    DEC            shift, and go to state 15
+    '&'            shift, and go to state 24
+    '('            shift, and go to state 25
+    '{'            shift, and go to state 143
+    '@'            shift, and go to state 230
+    '*'            shift, and go to state 27
+    '-'            shift, and go to state 28
+    '~'            shift, and go to state 29
+    '!'            shift, and go to state 30
+
+    init_list_value      go to state 312
+    init_value           go to state 233
+    initializer_braces   go to state 234
+    init_list_colon      go to state 235
+    init_colon           go to state 236
+    init_key             go to state 237
+    literal_expr         go to state 238
+    bracket_expr         go to state 45
+    primary_expr         go to state 46
+    iter_expr            go to state 47
+    postfix_expr         go to state 48
+    unary_expr           go to state 49
+    unary_operator       go to state 50
+    multiplicative_expr  go to state 51
+    additive_expr        go to state 52
+    shift_expr           go to state 53
+    and_expr             go to state 54
+    xor_expr             go to state 55
+    or_expr              go to state 56
+    boolean_expr         go to state 57
+    equality_expr        go to state 58
+    logical_and_expr     go to state 59
+    logical_or_expr      go to state 239
+    identifier           go to state 80
+    identifier_id        go to state 69
+    identifier_string    go to state 70
+    any_id               go to state 240
+
+
+State 281
+
+   80 init_list_colon: init_list_colon init_colon .
+
+    $default  reduce using rule 80 (init_list_colon)
+
+
+State 282
+
+   86 init_key: literal_expr .
+
+    $default  reduce using rule 86 (init_key)
+
+
+State 283
+
+   82 init_colon: any_id . '=' $@11 init_value
+
+    '='  shift, and go to state 285
+
+
+State 284
+
+   83 init_colon: init_key '=' . init_value
+
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    GID            shift, and go to state 10
+    LNOT           shift, and go to state 13
+    INC            shift, and go to state 14
+    DEC            shift, and go to state 15
+    '&'            shift, and go to state 24
+    '('            shift, and go to state 25
+    '{'            shift, and go to state 143
+    '@'            shift, and go to state 26
+    '*'            shift, and go to state 27
+    '-'            shift, and go to state 28
+    '~'            shift, and go to state 29
+    '!'            shift, and go to state 30
+
+    init_value           go to state 313
+    initializer_braces   go to state 234
+    literal_expr         go to state 44
+    bracket_expr         go to state 45
+    primary_expr         go to state 46
+    iter_expr            go to state 47
+    postfix_expr         go to state 48
+    unary_expr           go to state 49
+    unary_operator       go to state 50
+    multiplicative_expr  go to state 51
+    additive_expr        go to state 52
+    shift_expr           go to state 53
+    and_expr             go to state 54
+    xor_expr             go to state 55
+    or_expr              go to state 56
+    boolean_expr         go to state 57
+    equality_expr        go to state 58
+    logical_and_expr     go to state 59
+    logical_or_expr      go to state 239
+    identifier           go to state 80
+    identifier_id        go to state 69
+    identifier_string    go to state 70
+    any_id               go to state 71
+
+
+State 285
+
+   82 init_colon: any_id '=' . $@11 init_value
+
+    $default  reduce using rule 81 ($@11)
+
+    $@11  go to state 314
+
+
+State 286
+
+  199 declaration_expr: declaration '{' $@42 initializer $@43 . '}'
+
+    '}'  shift, and go to state 315
+
+
+State 287
+
+  103 postfix_expr: postfix_expr $@14 '[' expr ']' .
+
+    $default  reduce using rule 103 (postfix_expr)
+
+
+State 288
+
+  121 multiplicative_expr: multiplicative_expr $@15 multiplicative_operator unary_expr $@16 .
+
+    $default  reduce using rule 121 (multiplicative_expr)
+
+
+State 289
+
+  128 additive_expr: additive_expr $@17 additive_operator multiplicative_expr $@18 .
+
+    $default  reduce using rule 128 (additive_expr)
+
+
+State 290
+
+  134 shift_expr: shift_expr $@19 SHIFT_LEFT additive_expr $@20 .
+
+    $default  reduce using rule 134 (shift_expr)
+
+
+State 291
+
+  137 shift_expr: shift_expr $@21 SHIFT_RIGHT additive_expr $@22 .
+
+    $default  reduce using rule 137 (shift_expr)
+
+
+State 292
+
+  141 and_expr: and_expr $@23 '&' shift_expr $@24 .
+
+    $default  reduce using rule 141 (and_expr)
+
+
+State 293
+
+  145 xor_expr: xor_expr $@25 '^' and_expr $@26 .
+
+    $default  reduce using rule 145 (xor_expr)
+
+
+State 294
+
+  149 or_expr: or_expr $@27 '|' xor_expr $@28 .
+
+    $default  reduce using rule 149 (or_expr)
+
+
+State 295
+
+  153 boolean_expr: boolean_expr $@29 boolean_operator or_expr $@30 .
+
+    $default  reduce using rule 153 (boolean_expr)
+
+
+State 296
+
+  161 equality_expr: equality_expr $@31 equality_operator boolean_expr $@32 .
+
+    $default  reduce using rule 161 (equality_expr)
+
+
+State 297
+
+  167 logical_and_expr: logical_and_expr $@33 LAND equality_expr $@34 .
+
+    $default  reduce using rule 167 (logical_and_expr)
+
+
+State 298
+
+  171 logical_or_expr: logical_or_expr $@35 LOR logical_and_expr $@36 .
+
+    $default  reduce using rule 171 (logical_or_expr)
+
+
+State 299
+
+  176 conditional_expr: initializer_expr '?' conditional_expr ':' conditional_expr .
+
+    $default  reduce using rule 176 (conditional_expr)
+
+
+State 300
+
+   77 initializer_braces: '{' $@9 initializer $@10 . '}'
+
+    '}'  shift, and go to state 316
+
+
+State 301
+
+  182 assignment_expr: assignment_expr $@38 assignment_operator comma_expr $@39 .
+
+    $default  reduce using rule 182 (assignment_expr)
+
+
+State 302
+
+   53 function_argument: '$' any_id .
+
+    $default  reduce using rule 53 (function_argument)
+
+
+State 303
+
+   44 function_argumentList: '(' function_arguments ')' .
+
+    $default  reduce using rule 44 (function_argumentList)
+
+
+State 304
+
+   46 function_arguments: function_arguments ',' . function_argument_inout
+
+    ID     shift, and go to state 260
+    GID    shift, and go to state 10
+    KW_IN  shift, and go to state 261
+    '$'    shift, and go to state 263
+    '@'    shift, and go to state 26
+
+    function_argument_inout  go to state 317
+    argument_inout           go to state 266
+    function_argument        go to state 267
+    identifier               go to state 268
+    identifier_id            go to state 69
+    identifier_string        go to state 70
+    any_id                   go to state 71
+
+
+State 305
+
+   47 function_argument_inout: argument_inout ':' . function_argument
+
+    ID   shift, and go to state 9
+    GID  shift, and go to state 10
+    '$'  shift, and go to state 263
+    '@'  shift, and go to state 26
+
+    function_argument  go to state 318
+    identifier         go to state 268
+    identifier_id      go to state 69
+    identifier_string  go to state 70
+    any_id             go to state 71
+
+
+State 306
+
+   52 function_argument: identifier '&' . any_id
+
+    ID   shift, and go to state 9
+    '@'  shift, and go to state 26
+
+    any_id  go to state 319
+
+
+State 307
+
+   51 function_argument: identifier any_id .
+
+    $default  reduce using rule 51 (function_argument)
+
+
+State 308
+
+   41 function_declaration: identifier '&' any_id function_argumentList identifier_string .
+
+    $default  reduce using rule 41 (function_declaration)
+
+
+State 309
+
+   20 scope: SCOPE INDENT statements DEDENT .
+
+    $default  reduce using rule 20 (scope)
+
+
+State 310
+
+    3 statements: statements . statement
+   23 scope: SCOPEPRE $@2 INDENT statements . DEDENT
+
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    GID            shift, and go to state 10
+    PACKAGE        shift, and go to state 11
+    IMPORT         shift, and go to state 12
+    LNOT           shift, and go to state 13
+    INC            shift, and go to state 14
+    DEC            shift, and go to state 15
+    ENDL           shift, and go to state 16
+    TAB            shift, and go to state 17
+    DEDENT         shift, and go to state 320
+    KW_IF          shift, and go to state 18
+    KW_WHILE       shift, and go to state 19
+    KW_DEFAULT     shift, and go to state 20
+    KW_IN          shift, and go to state 21
+    KW_LOCAL       shift, and go to state 22
+    ':'            shift, and go to state 23
+    '&'            shift, and go to state 24
+    '('            shift, and go to state 25
+    '@'            shift, and go to state 26
+    '*'            shift, and go to state 27
+    '-'            shift, and go to state 28
+    '~'            shift, and go to state 29
+    '!'            shift, and go to state 30
+
+    $default  reduce using rule 172 (@37)
+
+    statement_nodecl         go to state 33
+    statement                go to state 111
+    scope_statement          go to state 35
+    block_start              go to state 36
+    block                    go to state 37
+    function_implementation  go to state 38
+    function_declaration     go to state 39
+    package_declaration      go to state 40
+    import_declaration       go to state 41
+    in_declaration           go to state 42
+    declaration              go to state 43
+    literal_expr             go to state 44
+    bracket_expr             go to state 45
+    primary_expr             go to state 46
+    iter_expr                go to state 47
+    postfix_expr             go to state 48
+    unary_expr               go to state 49
+    unary_operator           go to state 50
+    multiplicative_expr      go to state 51
+    additive_expr            go to state 52
+    shift_expr               go to state 53
+    and_expr                 go to state 54
+    xor_expr                 go to state 55
+    or_expr                  go to state 56
+    boolean_expr             go to state 57
+    equality_expr            go to state 58
+    logical_and_expr         go to state 59
+    logical_or_expr          go to state 60
+    initializer_expr         go to state 61
+    @37                      go to state 62
+    conditional_expr         go to state 63
+    comma_expr               go to state 64
+    assignment_expr          go to state 65
+    declaration_expr         go to state 66
+    expr                     go to state 67
+    identifier               go to state 68
+    identifier_id            go to state 69
+    identifier_string        go to state 70
+    any_id                   go to state 71
+    if_statement             go to state 72
+    if_start                 go to state 73
+    while_statement          go to state 74
+    while_until              go to state 75
+
+
+State 311
+
+   85 init_key: '@' $@12 initializer_braces .
+
+    $default  reduce using rule 85 (init_key)
+
+
+State 312
+
+   70 initializer: initializer ',' init_list_value .
+
+    $default  reduce using rule 70 (initializer)
+
+
+State 313
+
+   83 init_colon: init_key '=' init_value .
+
+    $default  reduce using rule 83 (init_colon)
+
+
+State 314
+
+   82 init_colon: any_id '=' $@11 . init_value
+
+    BOOLEAN        shift, and go to state 2
+    CHARACTER      shift, and go to state 3
+    INTEGER        shift, and go to state 4
+    SIGNEDINTEGER  shift, and go to state 5
+    FLOATINGPOINT  shift, and go to state 6
+    STRING         shift, and go to state 7
+    NUL            shift, and go to state 8
+    ID             shift, and go to state 9
+    GID            shift, and go to state 10
+    LNOT           shift, and go to state 13
+    INC            shift, and go to state 14
+    DEC            shift, and go to state 15
+    '&'            shift, and go to state 24
+    '('            shift, and go to state 25
+    '{'            shift, and go to state 143
+    '@'            shift, and go to state 26
+    '*'            shift, and go to state 27
+    '-'            shift, and go to state 28
+    '~'            shift, and go to state 29
+    '!'            shift, and go to state 30
+
+    init_value           go to state 321
+    initializer_braces   go to state 234
+    literal_expr         go to state 44
+    bracket_expr         go to state 45
+    primary_expr         go to state 46
+    iter_expr            go to state 47
+    postfix_expr         go to state 48
+    unary_expr           go to state 49
+    unary_operator       go to state 50
+    multiplicative_expr  go to state 51
+    additive_expr        go to state 52
+    shift_expr           go to state 53
+    and_expr             go to state 54
+    xor_expr             go to state 55
+    or_expr              go to state 56
+    boolean_expr         go to state 57
+    equality_expr        go to state 58
+    logical_and_expr     go to state 59
+    logical_or_expr      go to state 239
+    identifier           go to state 80
+    identifier_id        go to state 69
+    identifier_string    go to state 70
+    any_id               go to state 71
+
+
+State 315
+
+  199 declaration_expr: declaration '{' $@42 initializer $@43 '}' .
+
+    $default  reduce using rule 199 (declaration_expr)
+
+
+State 316
+
+   77 initializer_braces: '{' $@9 initializer $@10 '}' .
+
+    $default  reduce using rule 77 (initializer_braces)
+
+
+State 317
+
+   46 function_arguments: function_arguments ',' function_argument_inout .
+
+    $default  reduce using rule 46 (function_arguments)
+
+
+State 318
+
+   47 function_argument_inout: argument_inout ':' function_argument .
+
+    $default  reduce using rule 47 (function_argument_inout)
+
+
+State 319
+
+   52 function_argument: identifier '&' any_id .
+
+    $default  reduce using rule 52 (function_argument)
+
+
+State 320
+
+   23 scope: SCOPEPRE $@2 INDENT statements DEDENT .
+
+    $default  reduce using rule 23 (scope)
+
+
+State 321
+
+   82 init_colon: any_id '=' $@11 init_value .
+
+    $default  reduce using rule 82 (init_colon)
