@@ -1,7 +1,0 @@
-boolean t_mybool{}
-
-bool o_boolTrue: true
-bool o_boolFalse: false
-
-t_mybool o_myboolTrue: true
-t_mybool o_myboolFalse: false

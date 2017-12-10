@@ -1,8 +1,0 @@
-
-string o_alphanum: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890"
-string o_specialchars: "`~!@#$%^&*()-_=+\\|[]{};:'\",.<>/?"
-string o_newline: "\n"
-string o_slash: "\\"
-string o_quote: "\""
-string o_empty: "\0"
-string o_null: null
