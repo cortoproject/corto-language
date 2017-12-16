@@ -5,8 +5,8 @@
         "author": "Sander Mertens",
         "organization": "cortoproject",
         "repository": "https://github.com/cortoproject/corto-language",
-        "license": "MIT",        
+        "license": "MIT",
         "description": "Parser for corto language files",
-        "use": ["corto/ast/c", "corto/ic"]
+        "use": ["corto/ic"]
     }
 }

@@ -1357,6 +1357,9 @@ ast_Storage ast_Parser_declareFunction(
                 goto error;
             }
             corto_release(o);
+        } else {
+            /* corto_lookup might have raised an error about an ambiguous lookup */
+            corto_catch();
         }
 
         /* This could be an implementation after a forward declaration so try to resolve
@@ -1549,8 +1552,8 @@ int16_t ast_Parser_defineScope(
         {
             if (!corto(NULL, NULL, NULL, this->scope, NULL, NULL, -1, CORTO_DO_DEFINE)) {
                 corto_id id;
-                ast_Parser_error(this, "cannot define '%s'\n  %s",
-                    ast_Parser_id(this->scope, id), corto_lasterr());
+                ast_Parser_error(this, "cannot define '%s'\n",
+                    ast_Parser_id(this->scope, id));
                 goto error;
             }
         } else {

@@ -1,14 +1,11 @@
 /* This is a managed file. Do not delete this comment. */
 
 #include <corto/ast/ast.h>
-
 #include "ast__private.h"
-
 /*#define CORTO_INIT_DEBUG*/
 #ifdef CORTO_INIT_DEBUG
 static int indent;
 #endif
-
 typedef struct ast_Initializer_findMember_t {
     corto_int32 lookForLocation;
     corto_string lookForString;
@@ -17,7 +14,6 @@ typedef struct ast_Initializer_findMember_t {
     corto_uint32 current;
     corto_member m;
 }ast_Initializer_findMember_t;
-
 /* Walk members, look it up */
 corto_int16 ast_Initializer_findMember(corto_walk_opt* s, corto_value* v, void* userData) {
     corto_uint32 result;
@@ -41,9 +37,12 @@ corto_int16 ast_Initializer_findMember(corto_walk_opt* s, corto_value* v, void* 
                 if (data->current >= data->count) {
                     goto found;
                 }
+
             }
+
             data->count++;
         }
+
         break;
     default:
         corto_assert(0, "invalid valueKind for member-callback.");
@@ -64,6 +63,7 @@ corto_walk_opt ast_findMemberSerializer(corto_bool findHidden) {
     if (!findHidden) {
         s.access |= CORTO_HIDDEN;
     }
+
     s.accessKind = CORTO_NOT;
     s.traceKind = CORTO_WALK_TRACE_NEVER;
     s.aliasAction = CORTO_WALK_ALIAS_FOLLOW;
@@ -89,7 +89,6 @@ corto_type ast_Parser_initGetType(ast_Initializer this, corto_member *m_out) {
             case CORTO_COMPOSITE: {
                 corto_walk_opt s;
                 ast_Initializer_findMember_t walkData;
-
                 if (!this->frames[this->fp].member) {
                     s = ast_findMemberSerializer(FALSE);
                     walkData.id = 0;
@@ -102,20 +101,25 @@ corto_type ast_Parser_initGetType(ast_Initializer this, corto_member *m_out) {
                 } else {
                     walkData.m = this->frames[this->fp].member;
                 }
+
                 if (walkData.m) {
                     result = walkData.m->type;
                     if (m_out) {
                         *m_out = walkData.m;
                     }
+
                 } else {
                     /* If m_out is not set this function is not used to determine the type
                      * for setting a value in an initializer. */
                     if (m_out) {
                         ast_Parser_error(yparser(), "member out of range");
                     }
+
                 }
+
                 break;
             }
+
             case CORTO_COLLECTION:
                 result = corto_collection(t)->elementType;
                 break;
@@ -131,11 +135,16 @@ corto_type ast_Parser_initGetType(ast_Initializer this, corto_member *m_out) {
                             "too many elements for non-composite\\collection type '%s'", ast_Parser_id(t, id));
                         result = NULL;
                     }
+
                 }
+
                 break;
             }
+
             }
+
         }
+
     } else {
         if (this->frames[0].location == 0) {
             result = this->frames[0].type;
@@ -148,13 +157,13 @@ corto_type ast_Parser_initGetType(ast_Initializer this, corto_member *m_out) {
                 ast_Parser_error(yparser(), "excess elements in initializer for primitive type '%s' (location=%d)",
                             ast_Parser_id(this->frames[0].type, id), this->frames[0].location);
             }
+
         }
+
     }
 
     return result;
 }
-
-
 
 int16_t ast_Initializer_construct(
     ast_Initializer this)
@@ -173,8 +182,8 @@ int16_t ast_Initializer_construct(
         /* corto_ptr_setref(&this->rvalueType, t); */
         this->frames[variable].location = 0;
     }
-    this->fp = 0;
 
+    this->fp = 0;
 #ifdef CORTO_INIT_DEBUG
     {
         corto_id id, id2;
@@ -182,18 +191,18 @@ int16_t ast_Initializer_construct(
             indent, " ", yparser()->line, ast_Parser_id(corto_typeof(this), id), this, ast_Parser_id(t, id2));
         indent++;
     }
-#endif
 
+#endif
     /* If type of initializer is either a composite or a collection type, do an initial push */
     if ((((t->kind == CORTO_COMPOSITE) && (corto_interface(t)->kind != CORTO_DELEGATE)) || (t->kind == CORTO_COLLECTION))) {
         if (ast_Initializer_push(this)) {
             goto error;
         }
+
     }
 
     ast_Node(this)->kind = Ast_InitializerExpr;
     corto_ptr_setref(&ast_Expression(this)->type, t);
-
     return 0;
 error:
     return -1;
@@ -216,6 +225,7 @@ int16_t ast_Initializer_defineObject_v(
         printf("%*s%d[%s %p]: define\n",
                indent, " ", yparser()->line, ast_Parser_id(corto_typeof(this), id), this);
     }
+
 #endif
     return 0;
 }
@@ -240,6 +250,7 @@ uint16_t ast_Initializer_initFrame(
         if (t->kind == CORTO_COMPOSITE) {
             corto_metawalk(&s, t, &walkData);
         }
+
         if (walkData.m) {
             this->frames[this->fp].location = walkData.id;
             corto_ptr_setref(&this->frames[this->fp].member, walkData.m);
@@ -253,7 +264,9 @@ uint16_t ast_Initializer_initFrame(
             } else {
                 corto_ptr_setref(&this->frames[this->fp].type, NULL);
             }
+
         }
+
     }
 
     return 0;
@@ -274,7 +287,6 @@ int32_t ast_Initializer_member_v(
 
     t = this->frames[this->fp-1].type;
     s = ast_findMemberSerializer(TRUE);
-
     walkData.id = 0;
     walkData.count = 0;
     walkData.lookForLocation = -1;
@@ -284,6 +296,7 @@ int32_t ast_Initializer_member_v(
     if (t->kind == CORTO_COMPOSITE) {
         corto_metawalk(&s, t, &walkData);
     }
+
     if (walkData.m) {
         /* this->frames[this->fp].location = walkData.id; */
         corto_ptr_setref(&this->frames[this->fp].member, walkData.m);
@@ -318,18 +331,16 @@ int16_t ast_Initializer_next_v(
                this->frames[this->fp].type?ast_Parser_id(this->frames[this->fp].type, id2):NULL,
                this->frames[this->fp].member?corto_idof(this->frames[this->fp].member):NULL);
     }
-#endif
 
+#endif
     return 0;
 }
 
 int8_t ast_Initializer_pop_v(
     ast_Initializer this)
 {
-
     if (this->fp) {
         this->fp--;
-
 #ifdef CORTO_INIT_DEBUG
     {
         corto_id id;
@@ -338,6 +349,7 @@ int8_t ast_Initializer_pop_v(
             indent, " ", yparser()->line,
             ast_Parser_id(corto_typeof(this), id), this, this->fp, this->frames[this->fp].location);
     }
+
 #endif
         ast_Initializer_next(this);
     }
@@ -372,6 +384,7 @@ int16_t ast_Initializer_push_v(
                    this->frames[this->fp].member?corto_idof(this->frames[this->fp].member):NULL);
             indent++;
         }
+
 #endif
     } else {
         corto_id id;
@@ -412,4 +425,3 @@ int16_t ast_Initializer_valueKey_v(
     this->frames[this->fp].isKey = TRUE;
     return ast_Initializer_value(this, key);
 }
-
