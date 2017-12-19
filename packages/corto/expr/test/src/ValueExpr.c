@@ -79,7 +79,7 @@ corto_void _test_ValueExpr_tc_compositeObject(
     corto_expr e;
     corto_int16 ret;
 
-    test_Point *a = corto_createChild(root_o, "a", test_Point_o);
+    test_Point *a = corto_create(root_o, "a", test_Point_o);
     test_assert(a != NULL);
     a->x = 10;
     a->y = 20;
@@ -200,7 +200,7 @@ corto_void _test_ValueExpr_tc_primitiveObject(
     corto_expr e;
     corto_int16 ret;
 
-    corto_int32 *a = corto_createChild(root_o, "a", corto_int32_o);
+    corto_int32 *a = corto_create(root_o, "a", corto_int32_o);
     test_assert(a != NULL);
     *a = 10;
 
@@ -260,7 +260,7 @@ corto_void _test_ValueExpr_tc_referenceArg(
     corto_expr e;
     corto_int16 ret;
 
-    test_PointRef a = corto_createChild(root_o, "a", test_PointRef_o);
+    test_PointRef a = corto_create(root_o, "a", test_PointRef_o);
     test_assert(a != NULL);
     a->x = 10;
     a->y = 20;
@@ -295,7 +295,7 @@ corto_void _test_ValueExpr_tc_referenceObject(
     corto_expr e;
     corto_int16 ret;
 
-    test_PointRef a = corto_createChild(root_o, "a", test_PointRef_o);
+    test_PointRef a = corto_create(root_o, "a", test_PointRef_o);
     test_assert(a != NULL);
     a->x = 10;
     a->y = 20;

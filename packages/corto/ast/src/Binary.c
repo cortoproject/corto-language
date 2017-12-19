@@ -140,7 +140,7 @@ corto_int16 ast_Binary_cast(ast_Binary this, corto_type *returnType) {
     }
 
     /* If objects are not scoped, verify whether they're equal */
-    if (!corto_checkAttr(lvalueType, CORTO_ATTR_NAMED) && !corto_checkAttr(rvalueType, CORTO_ATTR_NAMED)) {
+    if (!corto_check_attr(lvalueType, CORTO_ATTR_NAMED) && !corto_check_attr(rvalueType, CORTO_ATTR_NAMED)) {
         if (corto_compare(lvalueType, rvalueType) == CORTO_EQ) {
             equal = TRUE;
         }

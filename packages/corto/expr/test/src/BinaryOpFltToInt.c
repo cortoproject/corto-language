@@ -15,8 +15,8 @@ corto_void _test_BinaryOpFltToInt_tc_OM(
     corto_int16 ret;
     corto_expr e;
 
-    corto_int32 *a = corto_createChild(root_o, "a", corto_int32_o);
-    test_PointFlt *b = corto_createChild(root_o, "b", test_PointFlt_o);
+    corto_int32 *a = corto_create(root_o, "a", corto_int32_o);
+    test_PointFlt *b = corto_create(root_o, "b", test_PointFlt_o);
     *a = 10;
     b->x = 20.5;
     
@@ -42,8 +42,8 @@ corto_void _test_BinaryOpFltToInt_tc_OO(
     corto_int16 ret;
     corto_expr e;
 
-    corto_int32 *a = corto_createChild(root_o, "a", corto_int32_o);
-    corto_float32 *b = corto_createChild(root_o, "b", corto_float32_o);
+    corto_int32 *a = corto_create(root_o, "a", corto_int32_o);
+    corto_float32 *b = corto_create(root_o, "b", corto_float32_o);
     *a = 10;
     *b = 20.5;
     
@@ -69,7 +69,7 @@ corto_void _test_BinaryOpFltToInt_tc_OR(
     corto_int16 ret;
     corto_expr e;
 
-    corto_int32 *a = corto_createChild(root_o, "a", corto_int32_o);
+    corto_int32 *a = corto_create(root_o, "a", corto_int32_o);
     *a = 10;
     
     ret = corto_expr_comp(&e, NULL, "float32 b = 20.5; a + b");
@@ -94,7 +94,7 @@ corto_void _test_BinaryOpFltToInt_tc_OV(
     corto_int16 ret;
     corto_expr e;
 
-    corto_int32 *a = corto_createChild(root_o, "a", corto_int32_o);
+    corto_int32 *a = corto_create(root_o, "a", corto_int32_o);
     *a = 10;
     
     ret = corto_expr_comp(&e, NULL, "a + 20.5");
@@ -119,7 +119,7 @@ corto_void _test_BinaryOpFltToInt_tc_RM(
     corto_int16 ret;
     corto_expr e;
 
-    test_PointFlt *b = corto_createChild(root_o, "b", test_PointFlt_o);
+    test_PointFlt *b = corto_create(root_o, "b", test_PointFlt_o);
     b->x = 20.5;
     
     ret = corto_expr_comp(&e, NULL, "int32 a = 10; a + b.x");
@@ -144,7 +144,7 @@ corto_void _test_BinaryOpFltToInt_tc_RO(
     corto_int16 ret;
     corto_expr e;
 
-    corto_float32 *b = corto_createChild(root_o, "b", corto_float32_o);
+    corto_float32 *b = corto_create(root_o, "b", corto_float32_o);
     *b = 20.5;
     
     ret = corto_expr_comp(&e, NULL, "int32 a = 10; a + b");
@@ -213,7 +213,7 @@ corto_void _test_BinaryOpFltToInt_tc_VM(
     corto_int16 ret;
     corto_expr e;
 
-    test_PointFlt *b = corto_createChild(root_o, "b", test_PointFlt_o);
+    test_PointFlt *b = corto_create(root_o, "b", test_PointFlt_o);
     b->x = 20.5;
     
     ret = corto_expr_comp(&e, NULL, "10 + b.x");
@@ -238,7 +238,7 @@ corto_void _test_BinaryOpFltToInt_tc_VO(
     corto_int16 ret;
     corto_expr e;
 
-    corto_float32 *b = corto_createChild(root_o, "b", corto_float32_o);
+    corto_float32 *b = corto_create(root_o, "b", corto_float32_o);
     *b = 20.5;
     
     ret = corto_expr_comp(&e, NULL, "10 + b");

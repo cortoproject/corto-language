@@ -109,7 +109,7 @@ error:
 corto_int16 corto_expr_comp(corto_expr *out, corto_expr_opt *opt, char *expr, ...) {
     corto_int32 prev = 0, length;
     char *ptr;
-    corto_function f = corto_declare(corto_function_o);
+    corto_function f = corto_declare(NULL, NULL, corto_function_o);
     va_list list;
 
     va_start(list, expr);
@@ -142,7 +142,7 @@ error:
 corto_int16 corto_expr_compb(corto_expr *out, corto_expr_opt *opt, char *expr, char **types) {
     corto_int32 prev = 0, length;
     char *ptr;
-    corto_function f = corto_declare(corto_function_o);
+    corto_function f = corto_declare(NULL, NULL, corto_function_o);
 
     for (ptr = expr; ptr && *ptr && (ptr = strchr(ptr, '%')); ptr ++) {
         if (!(length = corto_expr_addParam(f, ptr + 1))) {

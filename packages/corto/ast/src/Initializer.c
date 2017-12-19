@@ -8,7 +8,7 @@ static int indent;
 #endif
 typedef struct ast_Initializer_findMember_t {
     corto_int32 lookForLocation;
-    corto_string lookForString;
+    const char *lookForString;
     corto_uint32 id;
     corto_uint32 count;
     corto_uint32 current;
@@ -274,7 +274,7 @@ uint16_t ast_Initializer_initFrame(
 
 int32_t ast_Initializer_member_v(
     ast_Initializer this,
-    corto_string name)
+    const char *name)
 {
     corto_walk_opt s;
     corto_type t;

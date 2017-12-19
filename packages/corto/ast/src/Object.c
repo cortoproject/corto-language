@@ -41,7 +41,7 @@ corto_string ast_Object_id(
     corto_object o = this->value;
     corto_string result = NULL;
 
-    if (o && corto_checkAttr(o, CORTO_ATTR_NAMED)) {
+    if (o && corto_check_attr(o, CORTO_ATTR_NAMED)) {
         result = corto_idof(o);
     }
 

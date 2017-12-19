@@ -334,9 +334,9 @@ ast_Expression ast_OptimizeExpr_combine(
 
     /*printf("combine: %s\n out=%s\n outLiteral=%s\n eLiteral=%s\n",
         corto_ptr_str(&oper, corto_operatorKind_o, 0),
-        out ? corto_contentof(NULL, "text/corto-color", out) : "-",
-        outLiteral ? corto_contentof(NULL, "text/corto-color", outLiteral) : "-",
-        eLiteral ? corto_contentof(NULL, "text/corto-color", eLiteral) : "-");*/
+        out ? corto_serialize_value(NULL, "text/corto-color", out) : "-",
+        outLiteral ? corto_serialize_value(NULL, "text/corto-color", outLiteral) : "-",
+        eLiteral ? corto_serialize_value(NULL, "text/corto-color", eLiteral) : "-");*/
 
     corto_value outValue, eValue;
     if (outLiteral) {
@@ -470,7 +470,7 @@ corto_ll ast_OptimizeExpr_reduceExpression(ast_Expression e) {
         corto_bool found = FALSE;
         corto_iter it = corto_ll_iter(final);
 
-        /*printf("elem = %s\n", corto_contentof(NULL, "text/corto-color", elem->e));*/
+        /*printf("elem = %s\n", corto_serialize_value(NULL, "text/corto-color", elem->e));*/
 
         while (corto_iter_hasNext(&it) && !found) {
             ast_OptimizeExpr_exprElem *finalElem = corto_iter_next(&it);
@@ -480,22 +480,22 @@ corto_ll ast_OptimizeExpr_reduceExpression(ast_Expression e) {
             ast_OptimizeExpr_getTerm(finalElem->e, &aFinal, &bFinal, &varFinal);
 
             /*printf("expr:\n expr=%s, a=%d, b=%s, var=%s\n",
-                expr ? corto_contentof(NULL, "text/corto-color", expr) : "-",
+                expr ? corto_serialize_value(NULL, "text/corto-color", expr) : "-",
                 a,
-                b ? corto_contentof(NULL, "text/corto-color", b) : "-",
-                var ? corto_contentof(NULL, "text/corto-color", var) : "-");
+                b ? corto_serialize_value(NULL, "text/corto-color", b) : "-",
+                var ? corto_serialize_value(NULL, "text/corto-color", var) : "-");
             printf("final:\n expr=%s, a=%d, b=%s, var=%s\n",
-                exprFinal ? corto_contentof(NULL, "text/corto-color", exprFinal) : "-",
+                exprFinal ? corto_serialize_value(NULL, "text/corto-color", exprFinal) : "-",
                 aFinal,
-                bFinal ? corto_contentof(NULL, "text/corto-color", bFinal) : "-",
-                varFinal ? corto_contentof(NULL, "text/corto-color", varFinal) : "-");*/
+                bFinal ? corto_serialize_value(NULL, "text/corto-color", bFinal) : "-",
+                varFinal ? corto_serialize_value(NULL, "text/corto-color", varFinal) : "-");*/
 
             if ((var == varFinal) && (a == aFinal)) {
                 finalElem->e = ast_OptimizeExpr_combine(expr, bFinal, b, elem->oper);
                 elem = finalElem;
                 found = TRUE;
                 /*printf("combined: [%p] %s\n", finalElem,
-                    finalElem->e ? corto_contentof(NULL, "text/corto-color", finalElem->e) : "-");*/
+                    finalElem->e ? corto_serialize_value(NULL, "text/corto-color", finalElem->e) : "-");*/
             }
         }
         if (!found) {

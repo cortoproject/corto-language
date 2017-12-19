@@ -167,12 +167,12 @@ bool ast_isOperatorAssignment(
 }
 
 void ast_report(
-    corto_string kind,
-    corto_string filename,
+    const char *kind,
+    const char *filename,
     uint32_t line,
     uint32_t column,
-    corto_string error,
-    corto_string token)
+    const char *error,
+    const char *token)
 {
     CORTO_UNUSED(token);
     CORTO_UNUSED(kind);
@@ -191,11 +191,11 @@ void ast_report(
 }
 
 void ast_reportError(
-    corto_string filename,
+    const char *filename,
     uint32_t line,
     uint32_t column,
-    corto_string error,
-    corto_string token)
+    const char *error,
+    const char *token)
 {
 
     ast_report("error", filename, line, column, error, token);
@@ -203,11 +203,11 @@ void ast_reportError(
 }
 
 void ast_reportWarning(
-    corto_string filename,
+    const char *filename,
     uint32_t line,
     uint32_t column,
-    corto_string error,
-    corto_string token)
+    const char *error,
+    const char *token)
 {
 
     ast_report("warning", filename, line, column, error, token);
@@ -271,3 +271,4 @@ int cortomain(int argc, char *argv[]) {
 
     return 0;
 }
+

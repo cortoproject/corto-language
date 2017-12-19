@@ -86,7 +86,7 @@ corto_void _test_Expr_tc_assignObject(
 /* $begin(test/Expr/tc_assignObject) */
     corto_int16 ret;
     corto_expr e;
-    corto_int32 *a = corto_createChild(root_o, "a", corto_int32_o);
+    corto_int32 *a = corto_create(root_o, "a", corto_int32_o);
     
     ret = corto_expr_comp(&e, NULL, "/a = 10");
     test_assert(ret == 0);
@@ -111,7 +111,7 @@ corto_void _test_Expr_tc_assignObjectMixedType(
 /* $begin(test/Expr/tc_assignObjectMixedType) */
     corto_int16 ret;
     corto_expr e;
-    corto_int32 *a = corto_createChild(root_o, "a", corto_int32_o);
+    corto_int32 *a = corto_create(root_o, "a", corto_int32_o);
     
     ret = corto_expr_comp(&e, NULL, "/a = 10.5");
     test_assert(ret == 0);
@@ -507,7 +507,7 @@ corto_void _test_Expr_tc_primitiveObject(
     corto_int16 ret;
     corto_expr e;
 
-    corto_int32 *a = corto_createChild(root_o, "a", corto_int32_o);
+    corto_int32 *a = corto_create(root_o, "a", corto_int32_o);
     *a = 10;
     
     ret = corto_expr_comp(&e, NULL, "a");
@@ -541,7 +541,7 @@ corto_void _test_Expr_tc_primitiveObjectValue(
         .returnsReference = FALSE
     };
 
-    corto_int32 *a = corto_createChild(root_o, "a", corto_int32_o);
+    corto_int32 *a = corto_create(root_o, "a", corto_int32_o);
     *a = 10;
     
     ret = corto_expr_comp(&e, &opt, "a");

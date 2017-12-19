@@ -1,9 +1,7 @@
 /* This is a managed file. Do not delete this comment. */
 
 #include <corto/ast/ast.h>
-
 #include "ast__private.h"
-
 void ast_Block_addStatement(
     ast_Block this,
     ast_Node statement)
@@ -12,11 +10,12 @@ void ast_Block_addStatement(
         corto_assert(this->statements != NULL, "initialization failed");
         ast_NodeListAppend(this->statements, statement);
     }
+
 }
 
 ast_Local ast_Block_declare(
     ast_Block this,
-    corto_string id,
+    const char *id,
     corto_type type,
     bool isParameter,
     bool isReference)
@@ -70,7 +69,7 @@ ast_Local ast_Block_declareReturnVariable(
 
 ast_Template ast_Block_declareTemplate(
     ast_Block this,
-    corto_string id,
+    const char *id,
     corto_type type,
     bool isParameter,
     bool isReference)
@@ -98,7 +97,7 @@ error:
 
 ast_Expression ast_Block_lookup(
     ast_Block this,
-    corto_string id)
+    const char *id)
 {
     ast_Expression result = NULL;
 
@@ -119,7 +118,7 @@ ast_Expression ast_Block_lookup(
                      * in the case of anonymous observers) using the parser-scope is safe since these functions can't be forward
                      * declared.
                      */
-                    if (corto_checkAttr(this->function, CORTO_ATTR_NAMED)) {
+                    if (corto_check_attr(this->function, CORTO_ATTR_NAMED)) {
                         parent = corto_parentof(this->function);
                     } else {
                         parent = yparser()->scope;
@@ -143,7 +142,6 @@ ast_Expression ast_Block_lookup(
                     }
 
                     m = corto_interface_resolveMember(corto_interface(parent), id);
-
                     /* If 'this' is not yet declared, lookup is used while declaring
                      * function parameters. */
                     if (thisLocal) {
@@ -167,11 +165,17 @@ ast_Expression ast_Block_lookup(
                                 ast_Parser_collect(yparser(), memberIdExpr);
                                 ast_Parser_collect(yparser(), result);
                             }
+
                         }
+
                     }
+
                 }
+
             }
+
         }
+
     }
 
     return result;
@@ -181,7 +185,7 @@ error:
 
 ast_Local ast_Block_lookupLocal(
     ast_Block this,
-    corto_string id)
+    const char *id)
 {
     ast_Local result = NULL;
 
@@ -195,7 +199,9 @@ ast_Local ast_Block_lookupLocal(
                 result = local;
                 break;
             }
+
         }
+
     }
 
     return result;
@@ -203,7 +209,7 @@ ast_Local ast_Block_lookupLocal(
 
 ast_Expression ast_Block_resolve(
     ast_Block this,
-    corto_string id)
+    const char *id)
 {
     ast_Expression result = NULL;
 
@@ -211,6 +217,7 @@ ast_Expression ast_Block_resolve(
         if (this->parent && !this->function) {
             result = ast_Block_resolve(this->parent, id);
         }
+
     }
 
     return result;
@@ -218,7 +225,7 @@ ast_Expression ast_Block_resolve(
 
 ast_Local ast_Block_resolveLocal(
     ast_Block this,
-    corto_string id)
+    const char *id)
 {
     ast_Local result = NULL;
 
@@ -226,6 +233,7 @@ ast_Local ast_Block_resolveLocal(
         if (this->parent && !this->function) {
             result = ast_Block_resolveLocal(this->parent, id);
         }
+
     }
 
     return result;
@@ -257,7 +265,6 @@ ic_node ast_Block_toIc(
     }
 
     ic_program_popScope(program);
-
     return (ic_node)scope;
 }
 
@@ -288,6 +295,7 @@ ic_node ast_Block_toIcBody(
                     local->kind == Ast_LocalParameter,
                     local->kind == Ast_LocalReturn);
         }
+
     }
 
     if (this->statements) {
@@ -296,6 +304,7 @@ ic_node ast_Block_toIcBody(
             statement = corto_iter_next(&statementIter);
             ast_Node_toIc(statement, program, NULL, FALSE);
         }
+
     }
 
     return NULL;

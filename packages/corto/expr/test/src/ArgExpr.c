@@ -92,7 +92,7 @@ corto_void _test_ArgExpr_tc_assignObject(
 /* $begin(test/ArgExpr/tc_assignObject) */
     corto_int16 ret;
     corto_expr e;
-    corto_int32 *a = corto_createChild(root_o, "a", corto_int32_o);
+    corto_int32 *a = corto_create(root_o, "a", corto_int32_o);
     
     ret = corto_expr_comp(&e, NULL, "/a = %a", "int32");
     test_assert(ret == 0);
@@ -119,7 +119,7 @@ corto_void _test_ArgExpr_tc_assignObjectMixedType(
 /* $begin(test/ArgExpr/tc_assignObjectMixedType) */
     corto_int16 ret;
     corto_expr e;
-    corto_int32 *a = corto_createChild(root_o, "a", corto_int32_o);
+    corto_int32 *a = corto_create(root_o, "a", corto_int32_o);
     
     ret = corto_expr_comp(&e, NULL, "/a = %a", "float32");
     test_assert(ret == 0);

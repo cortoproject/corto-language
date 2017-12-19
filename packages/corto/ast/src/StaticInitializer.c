@@ -142,11 +142,11 @@ int16_t ast_StaticInitializer_defineObject(
     for(variable=0; variable<ast_Initializer(this)->variableCount; variable++) {
         o = (corto_object)ast_Object(ast_Initializer(this)->variables[variable].object)->value;
         if (corto_instanceof(corto_type(corto_type_o), o)
-                || (corto_checkAttr(o, CORTO_ATTR_NAMED) && corto_instanceof(corto_type(corto_type_o), corto_parentof(o)))) {
+                || (corto_check_attr(o, CORTO_ATTR_NAMED) && corto_instanceof(corto_type(corto_type_o), corto_parentof(o)))) {
 
             corto_type t = corto_typeof(o);
-            if (!corto_checkAttr(o, CORTO_ATTR_NAMED) ||
-                (corto_parentof(o) && corto_checkState(corto_parentof(o), CORTO_VALID)) ||
+            if (!corto_check_attr(o, CORTO_ATTR_NAMED) ||
+                (corto_parentof(o) && corto_check_state(corto_parentof(o), CORTO_VALID)) ||
                 (t->options.parentState != CORTO_VALID))
             {
                 if (!corto(NULL, NULL, NULL, o, NULL, NULL, -1, CORTO_DO_DEFINE)) {
