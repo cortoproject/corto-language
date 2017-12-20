@@ -23,7 +23,7 @@ corto_void _test_Expr_tc_assign(
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertint(result, 10);
     test_assert(!corto_lookup(NULL, "a"));
 
@@ -48,7 +48,7 @@ corto_void _test_Expr_tc_assignExplicitVar(
     test_assert(!corto_lookup(NULL, "a"));
 
     corto_int32 result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertint(result, 10);
 
     corto_expr_free(&e);
@@ -72,7 +72,7 @@ corto_void _test_Expr_tc_assignMixedType(
     test_assert(!corto_lookup(NULL, "a"));
 
     corto_int32 result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertint(result, 10);
 
     corto_expr_free(&e);
@@ -96,7 +96,7 @@ corto_void _test_Expr_tc_assignObject(
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertint(result, 10);
     test_assertint(*a, 10);
 
@@ -121,7 +121,7 @@ corto_void _test_Expr_tc_assignObjectMixedType(
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertint(result, 10);
     test_assertint(*a, 10);
 
@@ -145,7 +145,7 @@ corto_void _test_Expr_tc_cast(
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertint(result, 30);
 
     corto_expr_free(&e);
@@ -168,7 +168,7 @@ corto_void _test_Expr_tc_castString(
     test_assert(e.function->parameters.length == 0);
 
     corto_string result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertstr(result, "1020");
 
     corto_expr_free(&e);
@@ -192,7 +192,7 @@ corto_void _test_Expr_tc_composite(
     test_assert(e.function->parameters.length == 0);
 
     test_Point result = {0, 0};
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertint(result.x, 10);
     test_assertint(result.y, 20);
 
@@ -216,7 +216,7 @@ corto_void _test_Expr_tc_compositeCast(
     test_assert(e.function->parameters.length == 0);
 
     test_Point result = {0, 0};
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertint(result.x, 10);
     test_assertint(result.y, 20);
 
@@ -240,7 +240,7 @@ corto_void _test_Expr_tc_cond(
     test_assert(e.function->parameters.length == 0);
 
     corto_bool result = FALSE;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertint(result, TRUE);
 
     corto_expr_free(&e);
@@ -263,7 +263,7 @@ corto_void _test_Expr_tc_div(
     test_assert(e.function->parameters.length == 0);
 
     corto_float64 result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertflt(result, 10 / 2);
 
     corto_expr_free(&e);
@@ -286,7 +286,7 @@ corto_void _test_Expr_tc_primitive(
     test_assert(e.function->parameters.length == 0);
 
     corto_uint64 result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertint(result, 10);
 
     corto_expr_free(&e);
@@ -309,7 +309,7 @@ corto_void _test_Expr_tc_primitive16(
     test_assert(e.function->parameters.length == 0);
 
     corto_uint16 result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertint(result, 10);
 
     corto_expr_free(&e);
@@ -332,7 +332,7 @@ corto_void _test_Expr_tc_primitive32(
     test_assert(e.function->parameters.length == 0);
 
     corto_uint32 result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertint(result, 10);
 
     corto_expr_free(&e);
@@ -355,7 +355,7 @@ corto_void _test_Expr_tc_primitive8(
     test_assert(e.function->parameters.length == 0);
 
     corto_uint8 result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertint(result, 10);
 
     corto_expr_free(&e);
@@ -378,7 +378,7 @@ corto_void _test_Expr_tc_primitiveBinary(
     test_assert(e.function->parameters.length == 0);
 
     corto_uint64 result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertint(result, 30);
 
     corto_expr_free(&e);
@@ -401,7 +401,7 @@ corto_void _test_Expr_tc_primitiveBinaryMixedType(
     test_assert(e.function->parameters.length == 0);
 
     corto_float64 result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertint(result, 10 + 20.5);
 
     corto_expr_free(&e);
@@ -424,7 +424,7 @@ corto_void _test_Expr_tc_primitiveBool(
     test_assert(e.function->parameters.length == 0);
 
     corto_bool result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertflt(result, TRUE);
 
     corto_expr_free(&e);
@@ -447,7 +447,7 @@ corto_void _test_Expr_tc_primitiveDbl(
     test_assert(e.function->parameters.length == 0);
 
     corto_float64 result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertflt(result, 10.5);
 
     corto_expr_free(&e);
@@ -470,7 +470,7 @@ corto_void _test_Expr_tc_primitiveFlt(
     test_assert(e.function->parameters.length == 0);
 
     corto_float32 result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertflt(result, (corto_float32)10.5);
 
     corto_expr_free(&e);
@@ -493,7 +493,7 @@ corto_void _test_Expr_tc_primitiveNot(
     test_assert(e.function->parameters.length == 0);
 
     corto_bool result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertflt(result, FALSE);
 
     corto_expr_free(&e);
@@ -518,7 +518,7 @@ corto_void _test_Expr_tc_primitiveObject(
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 *result = NULL;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assert(result != NULL);
     test_assertint(*(corto_int32*)result, 10);
     corto_release(result);
@@ -552,7 +552,7 @@ corto_void _test_Expr_tc_primitiveObjectValue(
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertint(result, 10);
 
     corto_expr_free(&e);
@@ -574,7 +574,7 @@ corto_void _test_Expr_tc_primitiveParentheses(
     test_assert(e.function->parameters.length == 0);
 
     corto_uint64 result = 0;
-    corto_callb(e.function, &result, NULL);
+    corto_invokeb(e.function, &result, NULL);
     test_assertint(result, 50);
 
     corto_expr_free(&e);
@@ -597,7 +597,7 @@ corto_void _test_Expr_tc_stringConcat(
     test_assert(e.function->parameters.length == 0);
 
     corto_string result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertstr(result, "Hello World");
 
     corto_expr_free(&e);

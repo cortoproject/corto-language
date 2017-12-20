@@ -27,7 +27,7 @@ corto_void _test_BinaryOp_tc_OM(
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertint(result, 30);
 
     corto_expr_free(&e);
@@ -54,7 +54,7 @@ corto_void _test_BinaryOp_tc_OO(
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertint(result, 30);
 
     corto_expr_free(&e);
@@ -79,7 +79,7 @@ corto_void _test_BinaryOp_tc_OR(
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertint(result, 30);
 
     corto_expr_free(&e);
@@ -104,7 +104,7 @@ corto_void _test_BinaryOp_tc_OV(
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertint(result, 30);
 
     corto_expr_free(&e);
@@ -129,7 +129,7 @@ corto_void _test_BinaryOp_tc_RM(
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertint(result, 30);
 
     corto_expr_free(&e);
@@ -154,7 +154,7 @@ corto_void _test_BinaryOp_tc_RO(
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertint(result, 30);
 
     corto_expr_free(&e);
@@ -176,7 +176,7 @@ corto_void _test_BinaryOp_tc_RR(
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertint(result, 30);
 
     corto_expr_free(&e);
@@ -198,7 +198,7 @@ corto_void _test_BinaryOp_tc_RV(
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertint(result, 30);
 
     corto_expr_free(&e);
@@ -223,7 +223,7 @@ corto_void _test_BinaryOp_tc_VM(
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertint(result, 30);
 
     corto_expr_free(&e);
@@ -248,7 +248,7 @@ corto_void _test_BinaryOp_tc_VO(
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertint(result, 30);
 
     corto_expr_free(&e);
@@ -270,7 +270,7 @@ corto_void _test_BinaryOp_tc_VR(
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertint(result, 30);
 
     corto_expr_free(&e);
@@ -292,7 +292,7 @@ corto_void _test_BinaryOp_tc_VV(
     test_assert(e.function->parameters.length == 0);
 
     corto_uint64 result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertint(result, 30);
 
     corto_expr_free(&e);

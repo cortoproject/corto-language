@@ -1330,8 +1330,7 @@ ast_Storage ast_Parser_declaration(
         corto_object o = NULL;
         corto_assert(this->block != NULL, "no valid code-block set in parser context.");
         if (!this->pass) {
-            o = corto(this->scope, id, type, NULL, NULL, NULL, -1,
-                CORTO_DO_RECURSIVE_DECLARE | CORTO_DO_FORCE_TYPE);
+            o = corto_declare(this->scope, id, type);
             if (!o) {
                 corto_raise();
                 ast_Parser_error(this, "cannot declare '%s'",
@@ -1340,7 +1339,7 @@ ast_Storage ast_Parser_declaration(
             }
 
         } else {
-            o = corto(this->scope, id, NULL, NULL, NULL, NULL, -1, 0);
+            o = corto(CORTO_LOOKUP, {.parent = this->scope, .id = id});
             corto_assert(o != NULL, "object '%s' disappeared in 2nd pass", id);
             corto_release(o);
         }
@@ -1432,8 +1431,9 @@ ast_Storage ast_Parser_declareFunction(
                     goto error;
                 }
 
-                function = corto(this->scope, id, kind, NULL, NULL, NULL, -1,
-                    CORTO_DO_DECLARE | CORTO_DO_FORCE_TYPE);
+                function = corto(CORTO_DECLARE|CORTO_FORCE_TYPE, {
+                    .parent = this->scope, .id = id, .type = kind
+                });
                 if (!function) {
                     corto_raise();
                     ast_Parser_error(this, "");
@@ -1442,7 +1442,7 @@ ast_Storage ast_Parser_declareFunction(
 
                 corto_ptr_setref(&function->returnType, returnType);
                 function->returnsReference = returnsReference;
-                if (!corto(NULL, NULL, NULL, function, NULL, NULL, -1, CORTO_DO_DEFINE)) {
+                if (!corto(CORTO_DEFINE, {.object = function})) {
                     goto error;
                 }
 
@@ -1592,7 +1592,7 @@ int16_t ast_Parser_defineScope(
         if (corto_instanceof(corto_type_o, this->scope) ||
             corto_instanceof(corto_package_o, this->scope))
         {
-            if (!corto(NULL, NULL, NULL, this->scope, NULL, NULL, -1, CORTO_DO_DEFINE)) {
+            if (!corto(CORTO_DEFINE, {.object = this->scope})) {
                 corto_id id;
                 ast_Parser_error(this, "cannot define '%s'\n",
                     ast_Parser_id(this->scope, id));
@@ -1622,7 +1622,7 @@ int16_t ast_Parser_defineVariable(
     ast_CHECK_ERRSET(this);
 
     if ((ast_Node(object)->kind == Ast_StorageExpr) && (ast_Storage(object)->kind == Ast_ObjectStorage)) {
-        if (!corto(NULL, NULL, NULL, ast_Object(object)->value, NULL, NULL, -1, CORTO_DO_DEFINE)) {
+        if (!corto(CORTO_DEFINE, {.object = ast_Object(object)->value})) {
             corto_id id1;
             ast_Parser_error(this, "failed to define '%s': %s",
                     ast_Parser_id(ast_Object(object)->value, id1),
@@ -2884,7 +2884,7 @@ void ast_Parser_popScope(
         corto_int32 i;
         for (i = 0; i < objects.length; i ++) {
             if (!corto_check_state(objects.buffer[i], CORTO_VALID)) {
-                if (!corto(NULL, NULL, NULL, objects.buffer[i], NULL, NULL, -1, CORTO_DO_DEFINE)) {
+                if (!corto(CORTO_DEFINE, {.object = objects.buffer[i]})) {
                     corto_raise();
                     ast_Parser_error(this, "cannot define");
                 }

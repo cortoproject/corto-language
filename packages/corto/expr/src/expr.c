@@ -175,7 +175,7 @@ corto_int16 corto_expr_run(corto_expr *expr, corto_value *out, ...) {
     void *ptr = &dummy;
 
     va_start(args, out);
-    corto_callv(expr->function, ptr, args);
+    corto_invokev(expr->function, ptr, args);
     va_end(args);
 
     if (expr->function->returnsReference) {
@@ -192,7 +192,7 @@ corto_int16 corto_expr_runb(corto_expr *expr, corto_value *out, void **args) {
     corto_uint64 dummy;
     void *ptr = &dummy;
 
-    corto_callb(expr->function, ptr, args);
+    corto_invokeb(expr->function, ptr, args);
 
     if (expr->function->returnsReference) {
         *out = corto_value_object(*(corto_object*)ptr, NULL);

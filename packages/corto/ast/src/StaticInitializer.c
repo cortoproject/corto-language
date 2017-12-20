@@ -149,7 +149,7 @@ int16_t ast_StaticInitializer_defineObject(
                 (corto_parentof(o) && corto_check_state(corto_parentof(o), CORTO_VALID)) ||
                 (t->options.parentState != CORTO_VALID))
             {
-                if (!corto(NULL, NULL, NULL, o, NULL, NULL, -1, CORTO_DO_DEFINE)) {
+                if (!corto(CORTO_DEFINE, {.object = o})) {
                     corto_id id1;
                     ast_Parser_error(yparser(), "failed to define '%s': %s",
                             ast_Parser_id(o, id1),
