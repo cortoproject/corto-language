@@ -3382,7 +3382,7 @@ int fast_yparse(ast_Parser parser, corto_uint32 line, corto_uint32 column) {
     }
 
     if (!parser->scope) {
-        corto_ptr_setref(&parser->scope, root_o);
+        corto_set_ref(&parser->scope, root_o);
     }
 
     /* Compensate for insertion of the extra \n */

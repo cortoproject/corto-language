@@ -154,8 +154,8 @@ int16_t ast_String_construct(
         goto error;
     }
 
-    corto_ptr_setref(&this->block, yparser()->block);
-    corto_ptr_setref(&this->scope, yparser()->scope);
+    corto_set_ref(&this->block, yparser()->block);
+    corto_set_ref(&this->scope, yparser()->scope);
 
     return 0;
 error:
@@ -221,7 +221,7 @@ int16_t ast_String_serialize(
             ast_Parser_error(yparser(), "unresolved object '%s'", this->value);
             goto error;
         }
-        corto_ptr_setref(&dst, o);
+        corto_set_ref(&dst, o);
         corto_release(o);
         break;
     }

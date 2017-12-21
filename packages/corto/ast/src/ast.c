@@ -102,7 +102,7 @@ ast_Call ast_createCallFromExpr(ast_Expression f, ast_Expression arguments) {
 
         case Ast_ObjectStorage: {
             corto_object o = ast_Object(f)->value;
-            corto_signatureName(corto_idof(o), name);
+            corto_sig_name(corto_idof(o), name);
             scope = corto_parentof(o);
             break;
         }

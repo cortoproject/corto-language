@@ -44,7 +44,7 @@ corto_int16 ast_Call_insertCasts(ast_Call this) {
 
             i++;
         }
-        corto_ptr_setref(&this->arguments, ast_Expression_fromList(arguments));
+        corto_set_ref(&this->arguments, ast_Expression_fromList(arguments));
         ast_Expression_cleanList(arguments);
     }
 
@@ -64,7 +64,7 @@ int16_t ast_Call_construct(
         goto error;
     }
 
-    corto_ptr_setref(&ast_Expression(this)->type, this->returnType);
+    corto_set_ref(&ast_Expression(this)->type, this->returnType);
     ast_Expression(this)->isReference =
         this->returnsReference || this->returnType->reference;
 
@@ -99,13 +99,13 @@ void ast_Call_setParameters(
     corto_uint32 i;
 
     /* Set parameters */
-    corto_ptr_setref(&this->returnType, function->returnType);
+    corto_set_ref(&this->returnType, function->returnType);
     this->returnsReference = function->returnsReference;
 
     corto_parameterSeqResize(&this->parameters, function->parameters.length);
 
     for (i = 0; i < function->parameters.length; i++) {
-        corto_ptr_setref(&this->parameters.buffer[i].type, function->parameters.buffer[i].type);
+        corto_set_ref(&this->parameters.buffer[i].type, function->parameters.buffer[i].type);
         this->parameters.buffer[i].name = corto_strdup(function->parameters.buffer[i].name);
         this->parameters.buffer[i].passByReference = function->parameters.buffer[i].passByReference;
     }

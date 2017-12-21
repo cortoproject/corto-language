@@ -33,13 +33,13 @@ int16_t ast_PostFix_construct(
                 goto error;
                 break;       
             }
-            corto_ptr_setref(&ast_Expression(this)->type, lvalueType);
+            corto_set_ref(&ast_Expression(this)->type, lvalueType);
             break;
 
         case CORTO_ITERATOR:
             if (this->_operator == CORTO_INC) {
                 /* The result of an expression that increments an iterator is a boolean */
-                corto_ptr_setref(&ast_Expression(this)->type, corto_bool_o);
+                corto_set_ref(&ast_Expression(this)->type, corto_bool_o);
             } else {
                 ast_Parser_error(yparser(), "invalid operator for iterator");
                 goto error;

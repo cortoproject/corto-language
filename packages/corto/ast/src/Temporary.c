@@ -6,7 +6,7 @@ int16_t ast_Temporary_construct(
 {
 
     ast_Storage(this)->kind = Ast_TemporaryStorage;
-    corto_ptr_setref(&ast_Expression(this)->type, this->type);
+    corto_set_ref(&ast_Expression(this)->type, this->type);
     ast_Expression(this)->isReference = this->reference;
 
     return ast_Storage_construct(ast_Storage(this));
@@ -16,7 +16,7 @@ void ast_Temporary_setProxy(
     ast_Temporary this,
     ast_Temporary proxy)
 {
-    corto_ptr_setref(&this->proxy, proxy);
+    corto_set_ref(&this->proxy, proxy);
 }
 
 ic_node ast_Temporary_toIc(
@@ -31,11 +31,11 @@ ic_node ast_Temporary_toIc(
 
     if (!this->proxy && !this->ic) {
         ic_node acc = ic_node(ic_accumulatorCreate(NULL, this->type, this->reference || this->type->reference, FALSE));
-        corto_ptr_setref(&this->ic, acc);
+        corto_set_ref(&this->ic, acc);
         corto_release(acc);
     } else if (this->proxy) {
         ic_node acc = ast_Temporary_toIc(this->proxy, program, storage, stored);
-        corto_ptr_setref(&this->ic, acc);
+        corto_set_ref(&this->ic, acc);
     }
 
     return this->ic;

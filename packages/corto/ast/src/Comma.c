@@ -12,7 +12,7 @@ int16_t ast_Comma_addExpression(
         corto_assert(this->expressions != NULL, "initialization failed");
         corto_ll_append(this->expressions, expr); corto_claim(expr);
         if (corto_ll_count(this->expressions) == 1) {
-            corto_ptr_setref(&ast_Expression(this)->type, expr->type);
+            corto_set_ref(&ast_Expression(this)->type, expr->type);
         }
     }
 
@@ -48,7 +48,7 @@ int16_t ast_Comma_construct(
 
         if (yparser()->line == 8) {
             if (firstExpr) {
-                corto_ptr_setref(&ast_Expression(this)->type, firstExpr->type);
+                corto_set_ref(&ast_Expression(this)->type, firstExpr->type);
             }
         }
     }

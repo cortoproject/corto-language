@@ -33,8 +33,8 @@ int16_t ast_InitializerExpression_insert(
 {
     ast_DynamicInitializer initializer;
 
-    corto_ptr_setref(&ast_Initializer(this)->variables[0].object, variable);
-    corto_ptr_setref(&ast_Expression(this)->type, variable->type);
+    corto_set_ref(&ast_Initializer(this)->variables[0].object, variable);
+    corto_set_ref(&ast_Expression(this)->type, variable->type);
 
     ast_Expression var = ast_Initializer(this)->variables[0].object;
     if (ast_Storage(var)->kind == Ast_TemporaryStorage) {
@@ -124,7 +124,7 @@ int16_t ast_InitializerExpression_value(
 {
     ast_InitOper *elem = ast_InitOperListAppendAlloc(this->operations);
     elem->kind = Ast_InitOpValue;
-    corto_ptr_setref(&elem->expr, v);
+    corto_set_ref(&elem->expr, v);
     return 0;
 }
 

@@ -54,7 +54,7 @@ ast_Local ast_Block_declareReturnVariable(
     corto_id id;
 
     /* Get name of function from signature */
-    corto_signatureName(corto_idof(function), id);
+    corto_sig_name(corto_idof(function), id);
 
     corto_assert(this->locals != NULL, "initialization failed");
 
@@ -243,7 +243,7 @@ void ast_Block_setFunction(
     ast_Block this,
     corto_function function)
 {
-    corto_ptr_setref(&this->function, function);
+    corto_set_ref(&this->function, function);
 }
 
 ic_node ast_Block_toIc(

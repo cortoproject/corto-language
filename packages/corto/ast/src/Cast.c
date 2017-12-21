@@ -15,7 +15,7 @@ int16_t ast_Cast_construct(
     if (rvalueType) {
         if ((this->isReference && rvalueType->reference && (rvalueType->kind == CORTO_VOID)) ||
            (corto_type_castable(this->lvalue, rvalueType) || corto_type_castable(rvalueType, this->lvalue))) {
-            corto_ptr_setref(&ast_Expression(this)->type, this->lvalue);
+            corto_set_ref(&ast_Expression(this)->type, this->lvalue);
             ast_Expression(this)->isReference = this->lvalue->reference || this->isReference;
         } else {
             corto_id id1, id2;
@@ -26,7 +26,7 @@ int16_t ast_Cast_construct(
     } else {
         /* If type of rvalue is unknown, cast is performed at runtime. Set type even though to introduce the
          * type barrier for code using this expression. */
-        corto_ptr_setref(&ast_Expression(this)->type, this->lvalue);
+        corto_set_ref(&ast_Expression(this)->type, this->lvalue);
     }
 
     return 0;

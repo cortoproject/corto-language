@@ -114,7 +114,7 @@ corto_type ast_Expression_narrowType(ast_Expression expr) {
 ast_Expression ast_Expression_narrow(ast_Expression expr) {
 
     if (ast_Node(expr)->kind == Ast_LiteralExpr) {
-        corto_ptr_setref(&expr->type, ast_Expression_narrowType(expr));
+        corto_set_ref(&expr->type, ast_Expression_narrowType(expr));
     }
 
     return expr;
@@ -249,7 +249,7 @@ ast_Expression ast_Expression_cast(
                 result = ast_Expression_literalFromType(type, exprType, value);
 
                 if (result){
-                    corto_ptr_setref(&ast_Expression(result)->type, type);
+                    corto_set_ref(&ast_Expression(result)->type, type);
                 }
             } else {
                 /* TODO: This functionality must be pushed down to the assembler. For all this function is concerned a cast

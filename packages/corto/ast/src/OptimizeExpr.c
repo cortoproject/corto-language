@@ -83,8 +83,8 @@ ast_Expression ast_OptimizeExpr_reorderExpression(ast_Expression expr) {
             ast_Binary(expr)->_operator = oper = CORTO_ADD;
         }
 
-        corto_ptr_setref(&ast_Binary(expr)->lvalue, left);
-        corto_ptr_setref(&ast_Binary(expr)->rvalue, right);
+        corto_set_ref(&ast_Binary(expr)->lvalue, left);
+        corto_set_ref(&ast_Binary(expr)->rvalue, right);
 
         if ((oper == CORTO_MUL) || (oper == CORTO_DIV)) {
             if (ast_Node(left)->kind == Ast_BinaryExpr) {
