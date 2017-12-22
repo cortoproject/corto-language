@@ -88,7 +88,7 @@ static corto_int16 corto_expr_finalize(corto_expr *out, corto_expr_opt *opt, cha
     }
 
     if (opt) {
-        corto_ptr_setref(&f->returnType, opt->returnType);
+        corto_set_ref(&f->returnType, opt->returnType);
         f->returnsReference = opt->returnsReference;
     }
 
@@ -109,7 +109,7 @@ error:
 corto_int16 corto_expr_comp(corto_expr *out, corto_expr_opt *opt, char *expr, ...) {
     corto_int32 prev = 0, length;
     char *ptr;
-    corto_function f = corto_declare(corto_function_o);
+    corto_function f = corto_declare(NULL, NULL, corto_function_o);
     va_list list;
 
     va_start(list, expr);
@@ -142,7 +142,7 @@ error:
 corto_int16 corto_expr_compb(corto_expr *out, corto_expr_opt *opt, char *expr, char **types) {
     corto_int32 prev = 0, length;
     char *ptr;
-    corto_function f = corto_declare(corto_function_o);
+    corto_function f = corto_declare(NULL, NULL, corto_function_o);
 
     for (ptr = expr; ptr && *ptr && (ptr = strchr(ptr, '%')); ptr ++) {
         if (!(length = corto_expr_addParam(f, ptr + 1))) {
@@ -175,7 +175,7 @@ corto_int16 corto_expr_run(corto_expr *expr, corto_value *out, ...) {
     void *ptr = &dummy;
 
     va_start(args, out);
-    corto_callv(expr->function, ptr, args);
+    corto_invokev(expr->function, ptr, args);
     va_end(args);
 
     if (expr->function->returnsReference) {
@@ -192,7 +192,7 @@ corto_int16 corto_expr_runb(corto_expr *expr, corto_value *out, void **args) {
     corto_uint64 dummy;
     void *ptr = &dummy;
 
-    corto_callb(expr->function, ptr, args);
+    corto_invokeb(expr->function, ptr, args);
 
     if (expr->function->returnsReference) {
         *out = corto_value_object(*(corto_object*)ptr, NULL);

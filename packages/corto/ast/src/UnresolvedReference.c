@@ -10,7 +10,7 @@ int16_t ast_UnresolvedReference_construct(
 
     ast_Storage(this)->kind = Ast_UnresolvedReferenceStorage;
     ast_Expression(this)->unresolved = TRUE;
-    corto_ptr_setref(&ast_Expression(this)->type, corto_void_o);
+    corto_set_ref(&ast_Expression(this)->type, corto_void_o);
 
     return safe_ast_Storage_construct(this);
 }

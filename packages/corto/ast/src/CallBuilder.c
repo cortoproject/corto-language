@@ -87,7 +87,7 @@ ast_Call ast_CallBuilder_build(
             } else if ((l = ast_Block_resolveLocal(this->block, "this"))) {
                 if (corto_type_resolveProcedure(l->type, this->signature)) {
                     /* Set instance to 'this' */
-                    corto_ptr_setref(&this->instance, l);
+                    corto_set_ref(&this->instance, l);
                     result = ast_CallBuilder_buildMethod(this);
                 }           
             }
@@ -136,7 +136,7 @@ int16_t ast_CallBuilder_buildSignature(
 
     if (!strchr(this->name, '(')) {
         /* Build request-signature */
-        signature = corto_signatureOpen(this->name);
+        signature = corto_sig_open(this->name);
 
         if (this->arguments) {
             corto_ll arguments = ast_Expression_toList(this->arguments);
@@ -159,13 +159,13 @@ int16_t ast_CallBuilder_buildSignature(
 
                 flags |= argument->isReference ? CORTO_PARAMETER_REFERENCE : 0;
                 flags |= (argument->deref == Ast_ByReference) ? CORTO_PARAMETER_FORCEREFERENCE : 0;
-                signature = corto_signatureAdd(signature, corto_type(argumentType), flags);
+                signature = corto_sig_add(signature, corto_type(argumentType), flags);
             }
             ast_Expression_cleanList(arguments);
         }
 
         /* Store signature for when a method needs to be resolved at runtime */
-        this->signature = corto_signatureClose(signature);
+        this->signature = corto_sig_close(signature);
     } else {
         this->signature = corto_strdup(this->name);
     }

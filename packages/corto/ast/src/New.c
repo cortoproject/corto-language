@@ -9,7 +9,7 @@ int16_t ast_New_construct(
 {
 
     ast_Node(this)->kind = Ast_NewExpr;
-    corto_ptr_setref(&ast_Expression(this)->type, this->type);
+    corto_set_ref(&ast_Expression(this)->type, this->type);
     ast_Expression(this)->isReference = TRUE;
 
     return 0;

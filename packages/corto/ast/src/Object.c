@@ -15,7 +15,7 @@ int16_t ast_Object_construct(
     }
 
     ast_Storage(this)->kind = Ast_ObjectStorage;
-    corto_ptr_setref(&ast_Expression(this)->type, t);
+    corto_set_ref(&ast_Expression(this)->type, t);
     ast_Expression(this)->isReference = TRUE;
 
     return ast_Storage_construct(ast_Storage(this));
@@ -41,7 +41,7 @@ corto_string ast_Object_id(
     corto_object o = this->value;
     corto_string result = NULL;
 
-    if (o && corto_checkAttr(o, CORTO_ATTR_NAMED)) {
+    if (o && corto_check_attr(o, CORTO_ATTR_NAMED)) {
         result = corto_idof(o);
     }
 
@@ -78,8 +78,8 @@ int16_t ast_Object_serialize(
                 vSrc = corto_value_value(ast_Object(this)->value, corto_type(srcType));
                 corto_value_copy(&vDst, &vSrc);
             } else if ((srcType->kind == CORTO_COMPOSITE) && (corto_interface(srcType)->kind == CORTO_PROCEDURE)) {
-                corto_ptr_setref(&((corto_delegatedata *)dst)->procedure, ast_Object(this)->value);
-                corto_ptr_setref(&((corto_delegatedata *)dst)->instance, NULL);
+                corto_set_ref(&((corto_delegatedata *)dst)->procedure, ast_Object(this)->value);
+                corto_set_ref(&((corto_delegatedata *)dst)->instance, NULL);
             }
 
         } else if (corto_instanceof((corto_type)dstType, ast_Object(this)->value)) {
@@ -119,7 +119,7 @@ int16_t ast_Object_serialize(
             if (*(corto_object*)dst) {
                 corto_release(*(corto_object*)dst);
             }
-            corto_ptr_setref((corto_object*)dst, ast_Object(this)->value);
+            corto_set_ref((corto_object*)dst, ast_Object(this)->value);
             break;
         default: {
             corto_id id;
@@ -146,4 +146,3 @@ ic_node ast_Object_toIc(
     CORTO_UNUSED(stored);
     return ic_node(ic_program_getObject(program, this->value));;
 }
-

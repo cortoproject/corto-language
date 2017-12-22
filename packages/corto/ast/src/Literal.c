@@ -27,28 +27,28 @@ int16_t ast_Literal_init(
     if (!ast_Expression(this)->type) {
         switch(this->kind) {
         case Ast_Bool:
-            corto_ptr_setref(&ast_Expression(this)->type, corto_bool_o);
+            corto_set_ref(&ast_Expression(this)->type, corto_bool_o);
             break;
         case Ast_Char:
-            corto_ptr_setref(&ast_Expression(this)->type, corto_char_o);
+            corto_set_ref(&ast_Expression(this)->type, corto_char_o);
             break;
         case Ast_Int:
-            corto_ptr_setref(&ast_Expression(this)->type, corto_uint64_o);
+            corto_set_ref(&ast_Expression(this)->type, corto_uint64_o);
             break;
         case Ast_SignedInt:
-            corto_ptr_setref(&ast_Expression(this)->type, corto_int64_o);
+            corto_set_ref(&ast_Expression(this)->type, corto_int64_o);
             break;
         case Ast_Float:
-            corto_ptr_setref(&ast_Expression(this)->type, corto_float64_o);
+            corto_set_ref(&ast_Expression(this)->type, corto_float64_o);
             break;
         case Ast_Text:
-            corto_ptr_setref(&ast_Expression(this)->type, corto_string_o);
+            corto_set_ref(&ast_Expression(this)->type, corto_string_o);
             break;
         case Ast_Enum:
-            corto_ptr_setref(&ast_Expression(this)->type, corto_uint32_o);
+            corto_set_ref(&ast_Expression(this)->type, corto_uint32_o);
             break;
         case Ast_Ref:
-            corto_ptr_setref(&ast_Expression(this)->type, corto_object_o);
+            corto_set_ref(&ast_Expression(this)->type, corto_object_o);
             break;
         case Ast_Nothing:
             /* No type. */

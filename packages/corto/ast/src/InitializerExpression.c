@@ -1,9 +1,7 @@
 /* This is a managed file. Do not delete this comment. */
 
 #include <corto/ast/ast.h>
-
 #include "ast__private.h"
-
 int16_t ast_InitializerExpression_construct(
     ast_InitializerExpression this)
 {
@@ -35,8 +33,8 @@ int16_t ast_InitializerExpression_insert(
 {
     ast_DynamicInitializer initializer;
 
-    corto_ptr_setref(&ast_Initializer(this)->variables[0].object, variable);
-    corto_ptr_setref(&ast_Expression(this)->type, variable->type);
+    corto_set_ref(&ast_Initializer(this)->variables[0].object, variable);
+    corto_set_ref(&ast_Expression(this)->type, variable->type);
 
     ast_Expression var = ast_Initializer(this)->variables[0].object;
     if (ast_Storage(var)->kind == Ast_TemporaryStorage) {
@@ -49,7 +47,6 @@ int16_t ast_InitializerExpression_insert(
     /* Note that since I'm passing MY list of variables, I need to fix the reference count! */
     corto_claim(ast_Initializer(this)->variables[0].object);
     initializer = ast_DynamicInitializerCreate(ast_Initializer(this)->variables, 1, this->assignValue);
-
     /* Walk operations */
     corto_iter it = corto_ll_iter(this->operations);
     while (corto_iter_hasNext(&it)) {
@@ -59,32 +56,37 @@ int16_t ast_InitializerExpression_insert(
             if (ast_DynamicInitializer_push(initializer)) {
                 goto error;
             }
+
             break;
         case Ast_InitOpPop:
             if (ast_DynamicInitializer_pop(initializer)) {
                 goto error;
             }
+
             break;
         case Ast_InitOpDefine:
             if (ast_DynamicInitializer_defineObject(initializer)) {
                 goto error;
             }
+
             break;
         case Ast_InitOpValue:
             if (ast_DynamicInitializer_value(initializer, elem->expr)) {
                 goto error;
             }
+
             break;
         case Ast_InitOpMember:
             if (ast_Initializer_member(ast_Initializer(initializer), elem->name)) {
                 goto error;
             }
+
            break;
         }
+
     }
 
     corto_release(initializer);
-
     return 0;
 error:
     return -1;
@@ -92,7 +94,7 @@ error:
 
 int32_t ast_InitializerExpression_member(
     ast_InitializerExpression this,
-    corto_string name)
+    const char *name)
 {
     ast_InitOper *elem = ast_InitOperListAppendAlloc(this->operations);
     elem->kind = Ast_InitOpMember;
@@ -122,7 +124,7 @@ int16_t ast_InitializerExpression_value(
 {
     ast_InitOper *elem = ast_InitOperListAppendAlloc(this->operations);
     elem->kind = Ast_InitOpValue;
-    corto_ptr_setref(&elem->expr, v);
+    corto_set_ref(&elem->expr, v);
     return 0;
 }
 

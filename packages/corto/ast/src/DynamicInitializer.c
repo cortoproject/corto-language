@@ -112,7 +112,7 @@ int16_t ast_DynamicInitializer_construct(
     /* Copy offsets of variables into frames */
     for(variable=0; variable<ast_Initializer(this)->variableCount; variable++) {
         ast_Expression var = ast_Initializer(this)->variables[variable].object;
-        corto_ptr_setref(&this->frames[0].expr[variable], var);
+        corto_set_ref(&this->frames[0].expr[variable], var);
     }
     
     return ast_Initializer_construct(ast_Initializer(this));
@@ -174,7 +174,7 @@ int16_t ast_DynamicInitializer_push(
 
     /* Obtain expression for all variables being initialized */
     for(variable=0; variable<ast_Initializer(this)->variableCount; variable++) {
-        corto_ptr_setref(&this->frames[fp].expr[variable], ast_Initializer_expr(this, variable, NULL));
+        corto_set_ref(&this->frames[fp].expr[variable], ast_Initializer_expr(this, variable, NULL));
     }
 
     if (ast_Initializer_push_v(ast_Initializer(this))) {
@@ -191,7 +191,7 @@ int16_t ast_DynamicInitializer_push(
         * of sequence::size(uint32). This way there is no need for keeping track of a size-expression per variable. Note: the
         * native type of a ast::Integer is uint64. */
         size = ast_Integer(ast_Expression_cast(ast_Expression(size), corto_type(corto_uint32_o), FALSE));
-        corto_ptr_setref(&this->frames[fp].sequenceSize, size);
+        corto_set_ref(&this->frames[fp].sequenceSize, size);
         
         for(variable=0; variable<ast_Initializer(this)->variableCount; variable++) {
             ast_Node statement;
@@ -212,7 +212,7 @@ int16_t ast_DynamicInitializer_push(
             }
         }
     } else {
-        corto_ptr_setref(&this->frames[fp].sequenceSize, NULL);
+        corto_set_ref(&this->frames[fp].sequenceSize, NULL);
     }
     
     return 0;
@@ -251,7 +251,7 @@ int16_t ast_DynamicInitializer_value(
     /* Serialize value to all variables being initialized */
     for(variable=0; variable<ast_Initializer(this)->variableCount; variable++) {
         if (ast_Initializer(this)->frames[fp].isKey) {
-            corto_ptr_setref(&this->frames[fp].keyExpr[variable], v);
+            corto_set_ref(&this->frames[fp].keyExpr[variable], v);
         } else {
             ast_Initializer_expr(this, variable, v);
         }

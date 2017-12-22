@@ -64,12 +64,12 @@ int16_t ast_Ternary_construct(
     ast_Parser_blockPop(yparser());
 
     /* Store both expressions in this */
-    corto_ptr_setref(&this->ifTrueExpr, trueExpr);
-    corto_ptr_setref(&this->ifFalseExpr, falseExpr);
+    corto_set_ref(&this->ifTrueExpr, trueExpr);
+    corto_set_ref(&this->ifFalseExpr, falseExpr);
     
     /* Create condition */
     this->ifstmt = ast_Ternary_createIf(this->condition, trueBranch, falseBranch);
-    corto_ptr_setref(&ast_Expression(this)->type, resultType);
+    corto_set_ref(&ast_Expression(this)->type, resultType);
 
     return 0;
 }

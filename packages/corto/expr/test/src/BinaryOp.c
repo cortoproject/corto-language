@@ -15,8 +15,8 @@ corto_void _test_BinaryOp_tc_OM(
     corto_int16 ret;
     corto_expr e;
 
-    corto_int32 *a = corto_createChild(root_o, "a", corto_int32_o);
-    test_Point *b = corto_createChild(root_o, "b", test_Point_o);
+    corto_int32 *a = corto_create(root_o, "a", corto_int32_o);
+    test_Point *b = corto_create(root_o, "b", test_Point_o);
     *a = 10;
     b->x = 20;
     
@@ -27,7 +27,7 @@ corto_void _test_BinaryOp_tc_OM(
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertint(result, 30);
 
     corto_expr_free(&e);
@@ -42,8 +42,8 @@ corto_void _test_BinaryOp_tc_OO(
     corto_int16 ret;
     corto_expr e;
 
-    corto_int32 *a = corto_createChild(root_o, "a", corto_int32_o);
-    corto_int32 *b = corto_createChild(root_o, "b", corto_int32_o);
+    corto_int32 *a = corto_create(root_o, "a", corto_int32_o);
+    corto_int32 *b = corto_create(root_o, "b", corto_int32_o);
     *a = 10;
     *b = 20;
     
@@ -54,7 +54,7 @@ corto_void _test_BinaryOp_tc_OO(
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertint(result, 30);
 
     corto_expr_free(&e);
@@ -69,7 +69,7 @@ corto_void _test_BinaryOp_tc_OR(
     corto_int16 ret;
     corto_expr e;
 
-    corto_int32 *a = corto_createChild(root_o, "a", corto_int32_o);
+    corto_int32 *a = corto_create(root_o, "a", corto_int32_o);
     *a = 10;
     
     ret = corto_expr_comp(&e, NULL, "int32 b = 20; a + b");
@@ -79,7 +79,7 @@ corto_void _test_BinaryOp_tc_OR(
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertint(result, 30);
 
     corto_expr_free(&e);
@@ -94,7 +94,7 @@ corto_void _test_BinaryOp_tc_OV(
     corto_int16 ret;
     corto_expr e;
 
-    corto_int32 *a = corto_createChild(root_o, "a", corto_int32_o);
+    corto_int32 *a = corto_create(root_o, "a", corto_int32_o);
     *a = 10;
     
     ret = corto_expr_comp(&e, NULL, "a + 20");
@@ -104,7 +104,7 @@ corto_void _test_BinaryOp_tc_OV(
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertint(result, 30);
 
     corto_expr_free(&e);
@@ -119,7 +119,7 @@ corto_void _test_BinaryOp_tc_RM(
     corto_int16 ret;
     corto_expr e;
 
-    test_Point *b = corto_createChild(root_o, "b", test_Point_o);
+    test_Point *b = corto_create(root_o, "b", test_Point_o);
     b->x = 20;
     
     ret = corto_expr_comp(&e, NULL, "int32 a = 10; a + b.x");
@@ -129,7 +129,7 @@ corto_void _test_BinaryOp_tc_RM(
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertint(result, 30);
 
     corto_expr_free(&e);
@@ -144,7 +144,7 @@ corto_void _test_BinaryOp_tc_RO(
     corto_int16 ret;
     corto_expr e;
 
-    corto_int32 *b = corto_createChild(root_o, "b", corto_int32_o);
+    corto_int32 *b = corto_create(root_o, "b", corto_int32_o);
     *b = 20;
     
     ret = corto_expr_comp(&e, NULL, "int32 a = 10; a + b");
@@ -154,7 +154,7 @@ corto_void _test_BinaryOp_tc_RO(
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertint(result, 30);
 
     corto_expr_free(&e);
@@ -176,7 +176,7 @@ corto_void _test_BinaryOp_tc_RR(
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertint(result, 30);
 
     corto_expr_free(&e);
@@ -198,7 +198,7 @@ corto_void _test_BinaryOp_tc_RV(
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertint(result, 30);
 
     corto_expr_free(&e);
@@ -213,7 +213,7 @@ corto_void _test_BinaryOp_tc_VM(
     corto_int16 ret;
     corto_expr e;
 
-    test_Point *b = corto_createChild(root_o, "b", test_Point_o);
+    test_Point *b = corto_create(root_o, "b", test_Point_o);
     b->x = 20;
     
     ret = corto_expr_comp(&e, NULL, "10 + b.x");
@@ -223,7 +223,7 @@ corto_void _test_BinaryOp_tc_VM(
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertint(result, 30);
 
     corto_expr_free(&e);
@@ -238,7 +238,7 @@ corto_void _test_BinaryOp_tc_VO(
     corto_int16 ret;
     corto_expr e;
 
-    corto_int32 *b = corto_createChild(root_o, "b", corto_int32_o);
+    corto_int32 *b = corto_create(root_o, "b", corto_int32_o);
     *b = 20;
     
     ret = corto_expr_comp(&e, NULL, "10 + b");
@@ -248,7 +248,7 @@ corto_void _test_BinaryOp_tc_VO(
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertint(result, 30);
 
     corto_expr_free(&e);
@@ -270,7 +270,7 @@ corto_void _test_BinaryOp_tc_VR(
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertint(result, 30);
 
     corto_expr_free(&e);
@@ -292,7 +292,7 @@ corto_void _test_BinaryOp_tc_VV(
     test_assert(e.function->parameters.length == 0);
 
     corto_uint64 result = 0;
-    corto_call(e.function, &result);
+    corto_invoke(e.function, &result);
     test_assertint(result, 30);
 
     corto_expr_free(&e);
