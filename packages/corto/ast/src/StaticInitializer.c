@@ -151,9 +151,8 @@ int16_t ast_StaticInitializer_defineObject(
             {
                 if (!corto(CORTO_DEFINE, {.object = o})) {
                     corto_id id1;
-                    ast_Parser_error(yparser(), "failed to define '%s': %s",
-                            ast_Parser_id(o, id1),
-                            corto_lasterr());
+                    ast_Parser_error(yparser(), "failed to define '%s",
+                            ast_Parser_id(o, id1));
                     goto error;
                 }
             }

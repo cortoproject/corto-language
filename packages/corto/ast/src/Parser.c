@@ -1486,8 +1486,8 @@ ast_Storage ast_Parser_declareFunction(
             *bptr = '\0';
             corto_object function = corto_lookup(this->scope, query);
             corto_assert(function != NULL,
-                "object '%s' should still be in '%s' in 2nd pass (%s)",
-                query, corto_fullpath(NULL, this->scope), corto_lasterr());
+                "object '%s' should still be in '%s' in 2nd pass",
+                query, corto_fullpath(NULL, this->scope));
             result = ast_Storage(ast_ObjectCreate(function));
             ast_Parser_collect(this, result);
             corto_release(function);
@@ -1624,9 +1624,8 @@ int16_t ast_Parser_defineVariable(
     if ((ast_Node(object)->kind == Ast_StorageExpr) && (ast_Storage(object)->kind == Ast_ObjectStorage)) {
         if (!corto(CORTO_DEFINE, {.object = ast_Object(object)->value})) {
             corto_id id1;
-            ast_Parser_error(this, "failed to define '%s': %s",
-                    ast_Parser_id(ast_Object(object)->value, id1),
-                    corto_lasterr());
+            ast_Parser_error(this, "failed to define '%s'",
+                    ast_Parser_id(ast_Object(object)->value, id1));
             goto error;
         }
 
@@ -2517,7 +2516,7 @@ int16_t ast_Parser_parseFunction(
     /* Create parser */
     ast_Parser parser = ast_ParserCreate(expr, NULL);
     if (!parser) {
-        corto_throw("failed to create parser: %s", corto_lasterr());
+        corto_throw("failed to create parser");
         goto error;
     }
 
@@ -2525,7 +2524,7 @@ int16_t ast_Parser_parseFunction(
     /* Create block that contains local variables for function arguments */
     ast_Block block = ast_BlockCreate(NULL);
     if (!block) {
-        corto_throw("failed to create code block: %s", corto_lasterr());
+        corto_throw("failed to create code block");
         goto error;
     }
 
@@ -2533,7 +2532,7 @@ int16_t ast_Parser_parseFunction(
     for (i = 0; i < f->parameters.length; i++) {
         corto_parameter *p = &f->parameters.buffer[i];
         if (!ast_Block_declare(block, p->name, p->type, TRUE, p->passByReference)) {
-            corto_throw("failed to declare parameter '%s': %s", p->name, corto_lasterr());
+            corto_throw("failed to declare parameter '%s'", p->name);
             goto error;
         }
 
@@ -2548,7 +2547,7 @@ int16_t ast_Parser_parseFunction(
             FALSE,
             isReference);
         if (!resultLocal) {
-            corto_throw("failed to create return variable: %s", corto_lasterr());
+            corto_throw("failed to create return variable");
             goto error;
         }
 
@@ -2587,7 +2586,7 @@ int16_t ast_Parser_parseFunction(
             resultLocal = ast_Block_declare(parser->block, "_", result->type, FALSE,
                 result->isReference);
             if (!resultLocal) {
-                corto_throw("failed to create return variable: %s", corto_lasterr());
+                corto_throw("failed to create return variable");
                 goto error;
             }
 
@@ -2604,7 +2603,7 @@ int16_t ast_Parser_parseFunction(
     /* Create program for intermediate code */
     program = ic_programCreate(parser->filename);
     if (!program) {
-        corto_throw("failed to create intermediate code program: %s", corto_lasterr());
+        corto_throw("failed to create intermediate code program");
         goto error;
     }
 
