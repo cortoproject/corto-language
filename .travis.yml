@@ -21,5 +21,8 @@ install:
   - rake
   - cd corto-language
 
+install:
+  - curl https://corto.io/ci-dev | sh
+
 script:
-  - CORTO_VERBOSITY=TRACE corto test --verbose
+  - cd corto-src/corto-language && corto test
