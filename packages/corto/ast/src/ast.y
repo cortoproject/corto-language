@@ -131,7 +131,7 @@ error:
 %token INDENT DEDENT
 
 /* Keywords */
-%token KW_IF KW_ELSE KW_WHILE KW_SWITCH KW_CASE KW_DEFAULT KW_BREAK KW_FOR
+%token KW_IF KW_ELSE KW_WHILE KW_SWITCH KW_CASE KW_BREAK KW_FOR
 %token KW_TRY KW_CATCH KW_IN
 %token KW_IMPORT
 %token KW_LOCAL
@@ -422,10 +422,6 @@ in_declaration
 
 declaration
     : identifier declaration_list { $$ = ast_declarationSeqDo($1, &$2, FALSE); fast_op; }
-    | KW_DEFAULT declaration_list {
-        corto_object type = ast_Parser_lookup(yparser(), "default");
-        $$ = ast_declarationSeqDo(type, &$2, FALSE); fast_op;
-    }
     | KW_LOCAL {yparser()->isLocal = TRUE;} declaration_ref     {$$=$3;}
     ;
 
@@ -718,7 +714,6 @@ any_id
     | '@' KW_WHILE {$$ = "while";}
     | '@' KW_SWITCH {$$ = "switch";}
     | '@' KW_CASE {$$ = "case";}
-    | '@' KW_DEFAULT {$$ = "default";}
     | '@' KW_BREAK {$$ = "break";}
     | '@' KW_FOR {$$ = "for";}
     | '@' KW_TRY {$$ = "try";}

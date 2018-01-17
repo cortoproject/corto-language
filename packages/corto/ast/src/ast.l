@@ -195,7 +195,6 @@ gid (("::"|"/")*{id})+
 "while"                         TOKEN; return KW_WHILE;
 "switch"                        TOKEN; return KW_SWITCH;
 "case"                          TOKEN; return KW_CASE;
-"default"                       TOKEN; return KW_DEFAULT;
 "break"                         TOKEN; return KW_BREAK;
 "for"                           TOKEN; return KW_FOR;
 "try"                           TOKEN; return KW_TRY;

@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.0.2.  */
+/* A Bison parser, made by GNU Bison 3.0.4.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -30,8 +30,8 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-#ifndef YY_YY_SRC_Y_TAB_H_INCLUDED
-# define YY_YY_SRC_Y_TAB_H_INCLUDED
+#ifndef YY_YY_Y_TAB_H_INCLUDED
+# define YY_YY_Y_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -88,14 +88,13 @@ extern int yydebug;
     KW_WHILE = 298,
     KW_SWITCH = 299,
     KW_CASE = 300,
-    KW_DEFAULT = 301,
-    KW_BREAK = 302,
-    KW_FOR = 303,
-    KW_TRY = 304,
-    KW_CATCH = 305,
-    KW_IN = 306,
-    KW_IMPORT = 307,
-    KW_LOCAL = 308
+    KW_BREAK = 301,
+    KW_FOR = 302,
+    KW_TRY = 303,
+    KW_CATCH = 304,
+    KW_IN = 305,
+    KW_IMPORT = 306,
+    KW_LOCAL = 307
   };
 #endif
 /* Tokens.  */
@@ -142,21 +141,20 @@ extern int yydebug;
 #define KW_WHILE 298
 #define KW_SWITCH 299
 #define KW_CASE 300
-#define KW_DEFAULT 301
-#define KW_BREAK 302
-#define KW_FOR 303
-#define KW_TRY 304
-#define KW_CATCH 305
-#define KW_IN 306
-#define KW_IMPORT 307
-#define KW_LOCAL 308
+#define KW_BREAK 301
+#define KW_FOR 302
+#define KW_TRY 303
+#define KW_CATCH 304
+#define KW_IN 305
+#define KW_IMPORT 306
+#define KW_LOCAL 307
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef union YYSTYPE YYSTYPE;
+
 union YYSTYPE
 {
-#line 145 "src/ast.y" /* yacc.c:1909  */
+#line 145 "ast.y" /* yacc.c:1909  */
 
     /* Literals */
     corto_bool Boolean;
@@ -177,8 +175,10 @@ union YYSTYPE
     ast_ParserNew New;
     ast_Storage Variable;
 
-#line 181 "src/y.tab.h" /* yacc.c:1909  */
+#line 179 "y.tab.h" /* yacc.c:1909  */
 };
+
+typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif
@@ -188,4 +188,4 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 
-#endif /* !YY_YY_SRC_Y_TAB_H_INCLUDED  */
+#endif /* !YY_YY_Y_TAB_H_INCLUDED  */
