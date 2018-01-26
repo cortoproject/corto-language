@@ -53,7 +53,7 @@ void ast_declarationSeqInsert( ast_ParserDeclarationSeq *seq, ast_ParserDeclarat
 ast_Expression ast_declarationSeqDo(ast_Storage type, ast_ParserDeclarationSeq *declarations, corto_bool isReference)
 {
     unsigned int i;
-    ast_Comma result = ast_CommaCreate();
+    ast_Comma result = ast_Comma_create(NULL, NULL);
     ast_Expression expr = NULL;
 
     ast_Parser_collect(yparser(), result);
@@ -483,13 +483,13 @@ init_key
 /* Expressions */
 /* ======================================================================== */
 literal_expr
-    : BOOLEAN               {$$=ast_BooleanCreate($1); ast_Parser_collect(yparser(), $$);}
-    | CHARACTER             {$$=ast_CharacterCreate($1); ast_Parser_collect(yparser(), $$);}
-    | INTEGER               {$$=ast_IntegerCreate($1); ast_Parser_collect(yparser(), $$);}
-    | SIGNEDINTEGER         {$$=ast_SignedIntegerCreate($1); ast_Parser_collect(yparser(), $$);}
-    | FLOATINGPOINT         {$$=ast_FloatingPointCreate($1); ast_Parser_collect(yparser(), $$);}
-    | STRING                {$$=ast_StringCreate($1); ast_Parser_collect(yparser(), $$);}
-    | NUL                   {$$=ast_NullCreate(); ast_Parser_collect(yparser(), $$);}
+    : BOOLEAN               {$$=ast_Boolean_create(NULL, NULL, $1); ast_Parser_collect(yparser(), $$);}
+    | CHARACTER             {$$=ast_Character_create(NULL, NULL, $1); ast_Parser_collect(yparser(), $$);}
+    | INTEGER               {$$=ast_Integer_create(NULL, NULL, $1); ast_Parser_collect(yparser(), $$);}
+    | SIGNEDINTEGER         {$$=ast_SignedInteger_create(NULL, NULL, $1); ast_Parser_collect(yparser(), $$);}
+    | FLOATINGPOINT         {$$=ast_FloatingPoint_create(NULL, NULL, $1); ast_Parser_collect(yparser(), $$);}
+    | STRING                {$$=ast_String_create(NULL, NULL, $1); ast_Parser_collect(yparser(), $$);}
+    | NUL                   {$$=ast_Null_create(NULL, NULL); ast_Parser_collect(yparser(), $$);}
     ;
 
 bracket_expr
@@ -512,7 +512,7 @@ postfix_expr
     | postfix_expr {PUSHCOMPLEX($1)} '[' expr ']' {$$ = ast_Parser_elementExpr(yparser(), $1, $4); fast_op; POPCOMPLEX()}
     | postfix_expr '(' ')'                        {$$ = ast_Parser_callExpr(yparser(), $1, NULL); fast_op;}
     | postfix_expr bracket_expr                   {$$ = ast_Parser_callExpr(yparser(), $1, $2); fast_op;}
-    | postfix_expr '.' any_id                     {ast_String str = ast_StringCreate($3); if (!str) {YYERROR;} $$ = ast_Parser_memberExpr(yparser(), $1, ast_Expression(str)); corto_release(str); fast_op;}
+    | postfix_expr '.' any_id                     {ast_String str = ast_String_create(NULL, NULL, $3); if (!str) {YYERROR;} $$ = ast_Parser_memberExpr(yparser(), $1, ast_Expression(str)); corto_release(str); fast_op;}
     | postfix_expr INC                            {$$ = ast_Parser_postfixExpr(yparser(), $1, CORTO_INC); fast_op}
     | postfix_expr DEC                            {$$ = ast_Parser_postfixExpr(yparser(), $1, CORTO_DEC); fast_op}
     ;
@@ -621,7 +621,7 @@ comma_expr
     | comma_expr ',' conditional_expr {
         if ($1 && $3) {
             if (ast_Node($1)->kind != Ast_CommaExpr) {
-                $$ = ast_CommaCreate(); fast_op;
+                $$ = ast_Comma_create(NULL, NULL); fast_op;
                 ast_Comma_addExpression($$, $1); fast_op;
                 ast_Parser_collect(yparser(), $$); fast_op;
             }
@@ -783,12 +783,12 @@ int fast_yparse(ast_Parser parser, corto_uint32 line, corto_uint32 column) {
     parser->column = column;
 
     if (!parser->block) {
-        parser->block = ast_BlockCreate(NULL);
+        parser->block = ast_Block_create(NULL, NULL, NULL);
         parser->block->isRoot = TRUE;
 
         /* Declare argv variable */
         corto_type t = corto_resolve(NULL, "sequence{string}");
-        ast_Block_declare(parser->block, "argv", t, TRUE, FALSE);
+        ast_Block_declareVar(parser->block, "argv", t, TRUE, FALSE);
         corto_release(t);
 
         yparser()->blockCount = 0;

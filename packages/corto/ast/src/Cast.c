@@ -63,7 +63,7 @@ ic_node ast_Cast_toIc(
             FALSE);
     }
 
-    lvalue = (ic_node)ic_objectCreate(this->lvalue);
+    lvalue = (ic_node)ic_object_create(NULL, NULL, this->lvalue);
     rvalue = ast_Node_toIc(ast_Node(this->rvalue), program, (ic_storage)NULL, TRUE);
 
     if ((this->rvalue->deref == Ast_ByReference) || thisType->reference) {

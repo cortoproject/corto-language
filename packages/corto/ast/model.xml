@@ -298,7 +298,7 @@
                     <member name="function" type="function" modifiers="readonly"/>
                     <member name="while" type="ast/While" modifiers="readonly"/>
                     <method name="setFunction(function function"/>
-                    <method name="declare(string id,type type,bool isParameter,bool isReference)" returnType="ast/Local"/>
+                    <method name="declareVar(string id,type type,bool isParameter,bool isReference)" returnType="ast/Local"/>
                     <method name="declareTemplate(string id,type type,bool isParameter,bool isReference)" returnType="ast/Template"/>
                     <method name="declareReturnVariable(function function)" returnType="ast/Local"/>
                     <method name="lookup(string id)" returnType="ast/Expression"/>
@@ -782,7 +782,7 @@
                     <method name="defineScope()" returnType="int16"/>
                     <method name="defineVariable(Storage object)" returnType="int16"/>
                     <method name="with()" returnType="int16"/>
-                    
+
                     <!-- Bind function to implementation -->
                     <method name="bind(ast/Storage function,ast/Block block)" returnType="int16"/>
                     <method name="bindOneliner(ast/Storage function,ast/Block block,ast/Expression expr)" returnType="int16"/>

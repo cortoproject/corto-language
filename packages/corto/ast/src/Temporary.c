@@ -30,7 +30,7 @@ ic_node ast_Temporary_toIc(
     CORTO_UNUSED(program);
 
     if (!this->proxy && !this->ic) {
-        ic_node acc = ic_node(ic_accumulatorCreate(NULL, this->type, this->reference || this->type->reference, FALSE));
+        ic_node acc = ic_node(ic_accumulator_create(NULL, NULL, NULL, this->type, this->reference || this->type->reference, FALSE));
         corto_set_ref(&this->ic, acc);
         corto_release(acc);
     } else if (this->proxy) {

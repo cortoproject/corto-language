@@ -15,7 +15,7 @@ int16_t ast_InitializerExpression_construct(
 int16_t ast_InitializerExpression_defineObject(
     ast_InitializerExpression this)
 {
-    ast_InitOper *elem = ast_InitOperListAppendAlloc(this->operations);
+    ast_InitOper *elem = ast_InitOperList_append_alloc(this->operations);
     elem->kind = Ast_InitOpDefine;
     return 0;
 }
@@ -38,7 +38,7 @@ int16_t ast_InitializerExpression_insert(
 
     ast_Expression var = ast_Initializer(this)->variables[0].object;
     if (ast_Storage(var)->kind == Ast_TemporaryStorage) {
-        ast_Init init = ast_InitCreate(ast_Storage(var));
+        ast_Init init = ast_Init_create(NULL, NULL, ast_Storage(var));
         ast_Parser_addStatement(yparser(), ast_Node(init));
         ast_Parser_collect(yparser(), init);
     }
@@ -46,7 +46,7 @@ int16_t ast_InitializerExpression_insert(
     /* Create initializer */
     /* Note that since I'm passing MY list of variables, I need to fix the reference count! */
     corto_claim(ast_Initializer(this)->variables[0].object);
-    initializer = ast_DynamicInitializerCreate(ast_Initializer(this)->variables, 1, this->assignValue);
+    initializer = ast_DynamicInitializer_create(NULL, NULL, ast_Initializer(this)->variables, 1, this->assignValue);
     /* Walk operations */
     corto_iter it = corto_ll_iter(this->operations);
     while (corto_iter_hasNext(&it)) {
@@ -96,7 +96,7 @@ int32_t ast_InitializerExpression_member(
     ast_InitializerExpression this,
     const char *name)
 {
-    ast_InitOper *elem = ast_InitOperListAppendAlloc(this->operations);
+    ast_InitOper *elem = ast_InitOperList_append_alloc(this->operations);
     elem->kind = Ast_InitOpMember;
     elem->name = corto_strdup(name);
     return 0;
@@ -105,7 +105,7 @@ int32_t ast_InitializerExpression_member(
 int16_t ast_InitializerExpression_pop(
     ast_InitializerExpression this)
 {
-    ast_InitOper *elem = ast_InitOperListAppendAlloc(this->operations);
+    ast_InitOper *elem = ast_InitOperList_append_alloc(this->operations);
     elem->kind = Ast_InitOpPop;
     return 0;
 }
@@ -113,7 +113,7 @@ int16_t ast_InitializerExpression_pop(
 int16_t ast_InitializerExpression_push(
     ast_InitializerExpression this)
 {
-    ast_InitOper *elem = ast_InitOperListAppendAlloc(this->operations);
+    ast_InitOper *elem = ast_InitOperList_append_alloc(this->operations);
     elem->kind = Ast_InitOpPush;
     return 0;
 }
@@ -122,7 +122,7 @@ int16_t ast_InitializerExpression_value(
     ast_InitializerExpression this,
     ast_Expression v)
 {
-    ast_InitOper *elem = ast_InitOperListAppendAlloc(this->operations);
+    ast_InitOper *elem = ast_InitOperList_append_alloc(this->operations);
     elem->kind = Ast_InitOpValue;
     corto_set_ref(&elem->expr, v);
     return 0;

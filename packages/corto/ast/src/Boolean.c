@@ -61,7 +61,7 @@ ic_node ast_Boolean_toIc(
     CORTO_UNUSED(program);
 
     corto_any l = {corto_type(corto_bool_o), &this->value, FALSE};
-    result = (ic_node)ic_literalCreate(l);
+    result = (ic_node)ic_literal_create(NULL, NULL, l);
 
     return result;
 }

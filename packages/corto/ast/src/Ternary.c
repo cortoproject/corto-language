@@ -16,8 +16,8 @@ ast_If ast_Ternary_createIf(ast_Expression condition, ast_Node ifTrue, ast_Node 
     ast_If result;
     
     if (corto_instanceof(corto_type(ast_Block_o), ifTrue)) {
-        trueBlock = ast_BlockCreate(yparser()->block);
-        falseBlock = ast_BlockCreate(yparser()->block);
+        trueBlock = ast_Block_create(NULL, NULL, yparser()->block);
+        falseBlock = ast_Block_create(NULL, NULL, yparser()->block);
         ast_Block_addStatement(trueBlock, ast_Node(ifTrue));
         ast_Block_addStatement(falseBlock, ast_Node(ifFalse));
         ast_Parser_collect(yparser(), trueBlock);
@@ -27,8 +27,8 @@ ast_If ast_Ternary_createIf(ast_Expression condition, ast_Node ifTrue, ast_Node 
         falseBlock = ast_Block(ifFalse);
     }
     
-    falseIf = ast_IfCreate(NULL, falseBlock, NULL);
-    result = ast_IfCreate(condition, trueBlock, falseIf);
+    falseIf = ast_If_create(NULL, NULL, NULL, falseBlock, NULL);
+    result = ast_If_create(NULL, NULL, condition, trueBlock, falseIf);
     
     /* Because a ternary operator always has a true and false branch it there is not much use
      * in reporting unreachable code. If a ternary operator has a compile-time resolvable

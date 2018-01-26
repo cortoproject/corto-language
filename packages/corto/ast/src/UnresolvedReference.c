@@ -59,7 +59,7 @@ ast_Expression ast_UnresolvedReference_resolve(
     }
 
     if (o) {
-        result = ast_Expression(ast_ObjectCreate(o));
+        result = ast_Expression(ast_Object_create(NULL, NULL, o));
     }
 
     return result;

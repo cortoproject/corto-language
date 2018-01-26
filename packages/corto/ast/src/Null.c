@@ -63,6 +63,6 @@ ic_node ast_Null_toIc(
     CORTO_UNUSED(program);
 
     corto_any l = {corto_type(corto_void_o), NULL, FALSE};
-    return ic_node(ic_literalCreate(l));
+    return ic_node(ic_literal_create(NULL, NULL, l));
 }
 

@@ -19,7 +19,7 @@ int ast_loadFile(corto_string file, int argc, char* argv[]) {
     source = corto_file_load(file);
     if (source) {
         /* Create parser */
-        p = ast_ParserCreate(source, file);
+        p = ast_Parser_create(NULL, NULL, source, file);
         if (!p) {
             corto_throw("failed to create parser for '%s'", file);
             goto error;
@@ -51,7 +51,7 @@ ast_Call ast_createCallWithArguments(ast_Expression instance, corto_string funct
 
     /* Initialize builder */
     corto_ptr_init(&builder, ast_CallBuilder_o);
-    ast_CallBuilderAssign(&builder,
+    ast_CallBuilder_assign(&builder,
         function,
         arguments,
         instance,
@@ -72,7 +72,7 @@ ast_Call ast_createCall(ast_Expression instance, corto_string function, corto_ui
     /* Create comma-expression if there is more than one argument */
     va_start(arglist, numArgs);
     if (numArgs > 1) {
-        args = ast_Expression(ast_CommaCreate());
+        args = ast_Expression(ast_Comma_create(NULL, NULL));
         for(i=0; i<numArgs; i++) {
             arg = va_arg(arglist, ast_Expression);
             ast_Comma_addExpression(ast_Comma(args), arg);
@@ -115,7 +115,7 @@ ast_Call ast_createCallFromExpr(ast_Expression f, ast_Expression arguments) {
             strcpy(name, ast_String(ast_Member(f)->rvalue)->value);
             break;
         case Ast_ElementStorage:
-            result = ast_Call(ast_DelegateCallCreate(NULL, arguments, f));
+            result = ast_Call(ast_DelegateCall_create(NULL, NULL, NULL, arguments, f));
             break;
         case Ast_UnresolvedReferenceStorage:
             /* No use in trying to resolve the unresolved identifier here, there
@@ -133,7 +133,7 @@ ast_Call ast_createCallFromExpr(ast_Expression f, ast_Expression arguments) {
 
     if (!result) {
         corto_ptr_init(&builder, ast_CallBuilder_o);
-        ast_CallBuilderAssign(&builder, name, arguments, instance, scope, yparser()->block);
+        ast_CallBuilder_assign(&builder, name, arguments, instance, scope, yparser()->block);
         result = ast_CallBuilder_build(&builder);
         corto_ptr_deinit(&builder, ast_CallBuilder_o);
     }

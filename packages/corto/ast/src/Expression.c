@@ -134,45 +134,45 @@ ast_Expression ast_Expression_literalFromType(corto_type type, corto_type exprTy
     case CORTO_BOOLEAN: {
         corto_bool dstValue = FALSE;
         corto_ptr_cast(corto_primitive(exprType), value, corto_primitive(corto_bool_o), &dstValue);
-        result = ast_Expression(ast_BooleanCreate(dstValue));
+        result = ast_Expression(ast_Boolean_create(NULL, NULL, dstValue));
         break;
     }
     case CORTO_CHARACTER: {
         corto_char dstValue;
         corto_ptr_cast(corto_primitive(exprType), value, corto_primitive(corto_char_o), &dstValue);
-        result = ast_Expression(ast_CharacterCreate(dstValue));
+        result = ast_Expression(ast_Character_create(NULL, NULL, dstValue));
         break;
     }
     case CORTO_BINARY:
     case CORTO_UINTEGER: {
         corto_uint64 dstValue;
         corto_ptr_cast(corto_primitive(exprType), value, corto_primitive(corto_uint64_o), &dstValue);
-        result = ast_Expression(ast_IntegerCreate(dstValue));
+        result = ast_Expression(ast_Integer_create(NULL, NULL, dstValue));
         break;
     }
     case CORTO_INTEGER: {
         corto_int64 dstValue;
         corto_ptr_cast(corto_primitive(exprType), value, corto_primitive(corto_int64_o), &dstValue);
-        result = ast_Expression(ast_SignedIntegerCreate(dstValue));
+        result = ast_Expression(ast_SignedInteger_create(NULL, NULL, dstValue));
         break;
     }
     case CORTO_FLOAT: {
         corto_float64 dstValue;
         corto_ptr_cast(corto_primitive(exprType), value, type, &dstValue);
-        result = ast_Expression(ast_FloatingPointCreate(dstValue));
+        result = ast_Expression(ast_FloatingPoint_create(NULL, NULL, dstValue));
         break;
     }
     case CORTO_TEXT: {
         corto_string dstValue;
         corto_ptr_cast(corto_primitive(exprType), value, corto_primitive(corto_string_o), &dstValue);
-        result = ast_Expression(ast_StringCreate(dstValue));
+        result = ast_Expression(ast_String_create(NULL, NULL, dstValue));
         break;
     }
     case CORTO_ENUM:
     case CORTO_BITMASK: {
         corto_int32 dstValue;
         corto_ptr_cast(corto_primitive(exprType), value, corto_primitive(corto_int32_o), &dstValue);
-        result = ast_Expression(ast_SignedIntegerCreate(dstValue));
+        result = ast_Expression(ast_SignedInteger_create(NULL, NULL, dstValue));
         break;
     }
     }
@@ -214,7 +214,7 @@ ast_Expression ast_Expression_cast(
             /* If expression is an untyped initializer, create an anonymous variable of the destination type
              * and assign it to the initializer. */
             if(ast_Node(this)->kind == Ast_InitializerExpr) {
-                ast_Expression local = ast_Expression(ast_TemporaryCreate(type, FALSE));
+                ast_Expression local = ast_Expression(ast_Temporary_create(NULL, NULL, type, FALSE));
                 ast_InitializerExpression_insert(ast_InitializerExpression(this), local);
                 result = local;
                 castRequired = TRUE;
@@ -262,7 +262,7 @@ ast_Expression ast_Expression_cast(
                    (ast_Expression_getCastScore(corto_primitive(refType)) ==
                     ast_Expression_getCastScore(corto_primitive(type)))) {
                     if (corto_primitive(exprType)->width != corto_primitive(type)->width) {
-                        result = ast_Expression(ast_CastCreate(type, this, isReference));
+                        result = ast_Expression(ast_Cast_create(NULL, NULL, type, this, isReference));
                     } else {
                         /* Types have the same width, so no cast required */
                         castRequired = FALSE;
@@ -278,7 +278,7 @@ ast_Expression ast_Expression_cast(
 
                 /* For all other cases, insert cast */
                 } else {
-                    result = ast_Expression(ast_CastCreate(type, this, isReference));
+                    result = ast_Expression(ast_Cast_create(NULL, NULL, type, this, isReference));
                 }
             }
         /* If object is a reference and targetType is string, insert toString operation */
@@ -298,7 +298,7 @@ ast_Expression ast_Expression_cast(
 
             /* If assigning to a generic reference, insert cast */
             } else if (exprType->kind == CORTO_VOID && (exprType->reference || isReference)) {
-                result = ast_Expression(ast_CastCreate(type, this, isReference));
+                result = ast_Expression(ast_Cast_create(NULL, NULL, type, this, isReference));
             }
         }
     } else {
@@ -354,12 +354,12 @@ ast_Expression ast_Expression_fromList(
             corto_iter iter;
             ast_Expression expr;
 
-            result = ast_Expression(ast_CommaCreate());
+            result = ast_Expression(ast_Comma_create(NULL, NULL));
 
             iter = corto_ll_iter(list);
             while(corto_iter_hasNext(&iter)) {
                 expr = corto_iter_next(&iter);
-                ast_ExpressionListAppend(toList, expr);
+                ast_ExpressionList_append(toList, expr);
             }
             ast_Comma(result)->expressions = toList;
             ast_Parser_collect(yparser(), result);
@@ -495,7 +495,7 @@ ast_ExpressionList ast_Expression_toList_v(
 
     if (this) {
         result = corto_ll_new();
-        ast_ExpressionListInsert(result, this);
+        ast_ExpressionList_insert(result, this);
     }
 
     return result;

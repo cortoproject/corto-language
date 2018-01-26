@@ -118,7 +118,7 @@ void ast_declarationSeqInsert( ast_ParserDeclarationSeq *seq, ast_ParserDeclarat
 ast_Expression ast_declarationSeqDo(ast_Storage type, ast_ParserDeclarationSeq *declarations, corto_bool isReference)
 {
     unsigned int i;
-    ast_Comma result = ast_CommaCreate();
+    ast_Comma result = ast_Comma_create(NULL, NULL);
     ast_Expression expr = NULL;
 
     ast_Parser_collect(yparser(), result);
@@ -2308,43 +2308,43 @@ yyreduce:
 
   case 87:
 #line 486 "ast.y" /* yacc.c:1646  */
-    {(yyval.ast)=ast_BooleanCreate((yyvsp[0].Boolean)); ast_Parser_collect(yparser(), (yyval.ast));}
+    {(yyval.ast)=ast_Boolean_create(NULL, NULL, yyvsp[0].Boolean); ast_Parser_collect(yparser(), (yyval.ast));}
 #line 2313 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 88:
 #line 487 "ast.y" /* yacc.c:1646  */
-    {(yyval.ast)=ast_CharacterCreate((yyvsp[0].Character)); ast_Parser_collect(yparser(), (yyval.ast));}
+    {(yyval.ast)=ast_Character_create(NULL, NULL, yyvsp[0].Character); ast_Parser_collect(yparser(), (yyval.ast));}
 #line 2319 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 89:
 #line 488 "ast.y" /* yacc.c:1646  */
-    {(yyval.ast)=ast_IntegerCreate((yyvsp[0].Integer)); ast_Parser_collect(yparser(), (yyval.ast));}
+    {(yyval.ast)=ast_Integer_create(NULL, NULL, yyvsp[0].Integer); ast_Parser_collect(yparser(), (yyval.ast));}
 #line 2325 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 90:
 #line 489 "ast.y" /* yacc.c:1646  */
-    {(yyval.ast)=ast_SignedIntegerCreate((yyvsp[0].SignedInteger)); ast_Parser_collect(yparser(), (yyval.ast));}
+    {(yyval.ast)=ast_SignedInteger_create(NULL, NULL, yyvsp[0].SignedInteger); ast_Parser_collect(yparser(), (yyval.ast));}
 #line 2331 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 91:
 #line 490 "ast.y" /* yacc.c:1646  */
-    {(yyval.ast)=ast_FloatingPointCreate((yyvsp[0].FloatingPoint)); ast_Parser_collect(yparser(), (yyval.ast));}
+    {(yyval.ast)=ast_FloatingPoint_create(NULL, NULL, yyvsp[0].FloatingPoint); ast_Parser_collect(yparser(), (yyval.ast));}
 #line 2337 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 92:
 #line 491 "ast.y" /* yacc.c:1646  */
-    {(yyval.ast)=ast_StringCreate((yyvsp[0].String)); ast_Parser_collect(yparser(), (yyval.ast));}
+    {(yyval.ast)=ast_String_create(NULL, NULL, yyvsp[0].String); ast_Parser_collect(yparser(), (yyval.ast));}
 #line 2343 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 93:
 #line 492 "ast.y" /* yacc.c:1646  */
-    {(yyval.ast)=ast_NullCreate(); ast_Parser_collect(yparser(), (yyval.ast));}
+    {(yyval.ast)=ast_Null_create(NULL, NULL); ast_Parser_collect(yparser(), (yyval.ast));}
 #line 2349 "y.tab.c" /* yacc.c:1646  */
     break;
 
@@ -2404,7 +2404,7 @@ yyreduce:
 
   case 106:
 #line 515 "ast.y" /* yacc.c:1646  */
-    {ast_String str = ast_StringCreate((yyvsp[0].String)); if (!str) {YYERROR;} (yyval.ast) = ast_Parser_memberExpr(yparser(), (yyvsp[-2].ast), ast_Expression(str)); corto_release(str); fast_op;}
+    {ast_String str = ast_String_create(NULL, NULL, yyvsp[0].String); if (!str) {YYERROR;} (yyval.ast) = ast_Parser_memberExpr(yparser(), (yyvsp[-2].ast), ast_Expression(str)); corto_release(str); fast_op;}
 #line 2409 "y.tab.c" /* yacc.c:1646  */
     break;
 
@@ -2755,7 +2755,7 @@ yyreduce:
     {
         if ((yyvsp[-2].ast) && (yyvsp[0].ast)) {
             if (ast_Node((yyvsp[-2].ast))->kind != Ast_CommaExpr) {
-                (yyval.ast) = ast_CommaCreate(); fast_op;
+                (yyval.ast) = ast_Comma_create(NULL, NULL); fast_op;
                 ast_Comma_addExpression((yyval.ast), (yyvsp[-2].ast)); fast_op;
                 ast_Parser_collect(yparser(), (yyval.ast)); fast_op;
             }
@@ -3350,12 +3350,12 @@ int fast_yparse(ast_Parser parser, corto_uint32 line, corto_uint32 column) {
     parser->column = column;
 
     if (!parser->block) {
-        parser->block = ast_BlockCreate(NULL);
+        parser->block = ast_Block_create(NULL, NULL, NULL);
         parser->block->isRoot = TRUE;
 
         /* Declare argv variable */
         corto_type t = corto_resolve(NULL, "sequence{string}");
-        ast_Block_declare(parser->block, "argv", t, TRUE, FALSE);
+        ast_Block_declareVar(parser->block, "argv", t, TRUE, FALSE);
         corto_release(t);
 
         yparser()->blockCount = 0;

@@ -59,17 +59,17 @@ ast_Expression ast_Unary_fold(
     if (ptr) {
         if (type->kind == CORTO_PRIMITIVE) {
             if (this->_operator == CORTO_NOT) {
-                result = ast_Expression(ast_BooleanCreate(FALSE));
+                result = ast_Expression(ast_Boolean_create(NULL, NULL, FALSE));
             } else {
                 switch(corto_primitive(type)->kind) {
-                case CORTO_BOOLEAN: result = ast_Expression(ast_BooleanCreate(FALSE)); break;
-                case CORTO_CHARACTER: result = ast_Expression(ast_CharacterCreate('a')); break;
+                case CORTO_BOOLEAN: result = ast_Expression(ast_Boolean_create(NULL, NULL, FALSE)); break;
+                case CORTO_CHARACTER: result = ast_Expression(ast_Character_create(NULL, NULL, 'a')); break;
                 case CORTO_BITMASK:
-                case CORTO_UINTEGER: result = ast_Expression(ast_IntegerCreate(0)); break;
+                case CORTO_UINTEGER: result = ast_Expression(ast_Integer_create(NULL, NULL, 0)); break;
                 case CORTO_ENUM:
-                case CORTO_INTEGER: result = ast_Expression(ast_SignedIntegerCreate(0)); break;
-                case CORTO_FLOAT: result = ast_Expression(ast_FloatingPointCreate(0)); break;
-                case CORTO_TEXT: result = ast_Expression(ast_StringCreate(NULL)); break;
+                case CORTO_INTEGER: result = ast_Expression(ast_SignedInteger_create(NULL, NULL, 0)); break;
+                case CORTO_FLOAT: result = ast_Expression(ast_FloatingPoint_create(NULL, NULL, 0)); break;
+                case CORTO_TEXT: result = ast_Expression(ast_String_create(NULL, NULL, NULL)); break;
                 default:
                     ast_Parser_error(yparser(), "Invalid primitive for folding expression");
                     goto error;
@@ -164,7 +164,7 @@ ic_node ast_Unary_toIc(
         break;
     case CORTO_MUL: {
         /* Create an element with the iterator as base */
-        result = (ic_storage)ic_elementCreate(ic_storage(lvalue), NULL);
+        result = (ic_storage)ic_element_create(NULL, NULL, ic_storage(lvalue), NULL);
         break;
     }
     default:

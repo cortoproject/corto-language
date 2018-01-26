@@ -88,7 +88,7 @@ corto_string ast_Parser_id(corto_object o, corto_id buffer) {
 
 /* Translate result of parser to corto intermediate bytecode */
 corto_int16 ast_Parser_toIc(ast_Parser this, corto_stringSeq argv) {
-    ic_program program = ic_programCreate(this->filename);
+    ic_program program = ic_program_create(NULL, NULL, this->filename);
     corto_int16 ret = 0;
 
     /* Parse root-block */
@@ -152,7 +152,7 @@ corto_object ast_Parser_combineConditionalExpr(ast_Parser this, ast_Expression l
             combineOper = CORTO_COND_AND;
         }
 
-        result = ast_Expression(ast_BinaryCreate(lvalue, rvalue, combineOper));
+        result = ast_Expression(ast_Binary_create(NULL, NULL, lvalue, rvalue, combineOper));
         ast_Parser_collect(this, result);
         /* Fold expression where possible */
         result = ast_Expression_fold(result);
@@ -189,7 +189,7 @@ ast_Expression ast_Parser_createBinaryTernary(ast_Parser this, ast_Expression lv
         corto_set_ref(&result, rvalue);
         break;
     default:
-        result = ast_Expression(ast_BinaryCreate(lvalue, rvalue, operator));
+        result = ast_Expression(ast_Binary_create(NULL, NULL, lvalue, rvalue, operator));
         ast_Parser_collect(this, result);
         break;
     }
@@ -262,7 +262,7 @@ ast_Expression ast_Parser_delegateAssignment(ast_Parser this, ast_Expression lva
     signature = corto_sig_close(signature);
     /* Resolve function */
     corto_ptr_init(&builder, ast_CallBuilder_o);
-    ast_CallBuilderAssign(
+    ast_CallBuilder_assign(
         &builder,
         signature,
         NULL,
@@ -320,7 +320,7 @@ ast_Expression ast_Parser_delegateAssignment(ast_Parser this, ast_Expression lva
     functionExpr = tempCall->functionExpr;
     /* If procedure is compatible with delegate type, do a complex assignment */
     corto_set_ref(&variables[0].object, lvalue);
-    result = ast_InitializerExpressionCreate(variables, 1, TRUE);
+    result = ast_InitializerExpression_create(NULL, NULL, variables, 1, TRUE);
     ast_InitializerExpression_push(result);
     if (instance) {
         ast_InitializerExpression_member(result, "instance");
@@ -388,10 +388,10 @@ corto_object ast_Parser_expandBinary(ast_Parser this, ast_Expression lvalue, ast
         result = ast_Parser_createBinaryTernary(this, lvalue, rvalue, operator);
     /* Binary expression with iterator value on the left-hand side */
     } else if (tleft && tleft->kind == CORTO_ITERATOR) {
-        result = ast_Expression(ast_BinaryCreate(lvalue, rvalue, operator));
+        result = ast_Expression(ast_Binary_create(NULL, NULL, lvalue, rvalue, operator));
     /* Binary expression with primitive or reference values */
     } else {
-        result = ast_Expression(ast_BinaryCreate(lvalue, rvalue, operator));
+        result = ast_Expression(ast_Binary_create(NULL, NULL, lvalue, rvalue, operator));
         /* Fold expression */
         if (result) {
             result = ast_Expression_fold(result);
@@ -419,7 +419,7 @@ corto_object ast_Parser_expandMember(ast_Parser this, ast_Expression lvalue, ast
     ast_Expression result = NULL;
 
     /* Create member expression */
-    result = ast_Expression(ast_MemberCreate(lvalue, rvalue));
+    result = ast_Expression(ast_Member_create(NULL, NULL, lvalue, rvalue));
     if (!result) {
         goto error;
     }
@@ -433,7 +433,7 @@ error:
 corto_object ast_Parser_expandElement(ast_Parser this, ast_Expression lvalue, ast_Expression rvalue, void *userData) {
     CORTO_UNUSED(this);
     CORTO_UNUSED(userData);
-    ast_Expression result = (ast_Expression)ast_ElementCreate(lvalue, rvalue);
+    ast_Expression result = (ast_Expression)ast_Element_create(NULL, NULL, lvalue, rvalue);
     if (!result) {
         goto error;
     }
@@ -459,7 +459,7 @@ ast_Expression ast_Parser_explodeComma(ast_Parser this, ast_Expression lvalues, 
         /* Only temporarily store rvalue if it has side effects */
         if (ast_Expression_hasSideEffects(ast_Expression(corto_ll_get(lvalueList,0)))) {
             if (ast_Node(rvalues)->kind != Ast_InitializerExpr) {
-                var = ast_Expression(ast_TemporaryCreate(lvalues->type, lvalues->isReference));
+                var = ast_Expression(ast_Temporary_create(NULL, NULL, lvalues->type, lvalues->isReference));
                 ast_Parser_addStatement(this, ast_Parser_binaryExpr(this, var, lvalues, CORTO_ASSIGN));
                 rvalues = var;
             }
@@ -515,7 +515,7 @@ ast_Expression ast_Parser_expandComma(ast_Parser this, ast_Expression lvalues, a
         /* Only temporarily store rvalue if it has side effects */
         if (ast_Expression_hasSideEffects(ast_Expression(corto_ll_get(rvalueList,0)))) {
             if (ast_Node(rvalues)->kind != Ast_InitializerExpr) {
-                ast_Expression var = ast_Expression(ast_TemporaryCreate(rvalues->type, FALSE));
+                ast_Expression var = ast_Expression(ast_Temporary_create(NULL, NULL, rvalues->type, FALSE));
                 ast_Parser_addStatement(this, ast_Parser_binaryExpr(this, var, rvalues, CORTO_ASSIGN));
                 rvalues = var;
             }
@@ -604,13 +604,13 @@ ast_Expression ast_Parser_resolve(ast_Parser this, const char *id) {
     }
 
     if (object) {
-        result = ast_Expression(ast_ObjectCreate(object));
+        result = ast_Expression(ast_Object_create(NULL, NULL, object));
         corto_set_str(&ast_Object(result)->originalId, id);
         ast_Parser_collect(this, result);
         corto_release(object);
     } else {
         result = ast_Expression(
-            ast_UnresolvedReferenceCreate(
+            ast_UnresolvedReference_create(NULL, NULL, 
                 id,
                 this->scope,
                 this->line,
@@ -692,7 +692,7 @@ ast_Storage ast_Parser_observerCreate(
     }
 
     /* Create and collect result */
-    result = (ast_Storage)ast_ObjectCreate(observer);
+    result = (ast_Storage)ast_Object_create(NULL, NULL, observer);
     ast_Parser_collect(this, result);
     return result;
 error:
@@ -728,7 +728,7 @@ ast_Storage ast_Parser_declareDelegate(
         goto error;
     }
 
-    return ast_Storage(ast_ObjectCreate(delegate));
+    return ast_Storage(ast_Object_create(NULL, NULL, delegate));
 error:
     return NULL;
 }
@@ -852,7 +852,7 @@ void ast_Parser_addStatement(
                 /* If statement is a string, insert println function */
                 if (!this->repl) {
                     ast_Expression println = ast_Parser_lookup(this, "io::println(string)");
-                    ast_Comma args = ast_CommaCreate();
+                    ast_Comma args = ast_Comma_create(NULL, NULL);
                     ast_Comma_addExpression(args, ast_Expression(statement));
                     ast_Expression callExpr = ast_Parser_callExpr(this, println, ast_Expression(args));
                     ast_Block_addStatement(this->block, ast_Node(callExpr));
@@ -949,7 +949,7 @@ ast_Node ast_Parser_binaryExpr(
             corto_ll exprList = ast_Expression_toList(lvalues);
 
             /* Begin update (lock objects) */
-            result = ast_Node(ast_UpdateCreate(exprList, NULL, NULL, Ast_UpdateBegin));
+            result = ast_Node(ast_Update_create(NULL, NULL, exprList, NULL, NULL, Ast_UpdateBegin));
             if (!result) {
                 goto error;
             }
@@ -963,7 +963,7 @@ ast_Node ast_Parser_binaryExpr(
 
             ast_Parser_addStatement(this, ast_Node(result));
             /* End expression (update in reverse order) */
-            result = ast_Node(ast_UpdateCreate(exprList, NULL, NULL, Ast_UpdateEnd));
+            result = ast_Node(ast_Update_create(NULL, NULL, exprList, NULL, NULL, Ast_UpdateEnd));
             if (!result) {
                 goto error;
             }
@@ -1102,7 +1102,7 @@ ast_Block ast_Parser_blockPush(
         ast_Block newBlock;
         newBlock = NULL;
         if (!this->blockPreset || presetBlock) {
-            newBlock = ast_BlockCreate(this->block);
+            newBlock = ast_Block_create(NULL, NULL, this->block);
             ast_Parser_collect(this, newBlock);
             corto_set_ref(&this->block, newBlock);
         }
@@ -1170,7 +1170,7 @@ ast_Expression ast_Parser_callExpr(
                 if (ast_Node(a)->kind == Ast_InitializerExpr) {
                     ast_Expression var = ast_Initializer(a)->variables[0].object;
                     if (var && (ast_Storage(var)->kind == Ast_TemporaryStorage)) {
-                        ast_Deinit deinit = ast_DeinitCreate(ast_Storage(var));
+                        ast_Deinit deinit = ast_Deinit_create(NULL, NULL, ast_Storage(var));
                         result = ast_Comma_addOrCreate(result, ast_Expression(deinit));
                         ast_Parser_collect(this, deinit);
                     }
@@ -1231,7 +1231,7 @@ ast_Expression ast_Parser_castExpr(
         }
 
         if (castRequired) {
-            result = ast_Expression(ast_CastCreate(lvalue, rvalue, FALSE));
+            result = ast_Expression(ast_Cast_create(NULL, NULL, lvalue, rvalue, FALSE));
             if (!result) {
                 goto error;
             }
@@ -1317,7 +1317,7 @@ ast_Storage ast_Parser_declaration(
                 goto error;
             }
 
-            result = ast_Storage(ast_Block_declare(this->block, id, type, FALSE, isReference));
+            result = ast_Storage(ast_Block_declareVar(this->block, id, type, FALSE, isReference));
             this->variables[this->variableCount] = result;
             this->variableCount++;
         } else {
@@ -1345,7 +1345,7 @@ ast_Storage ast_Parser_declaration(
         }
 
         if (o) {
-            result = ast_Storage(ast_ObjectCreate(o));
+            result = ast_Storage(ast_Object_create(NULL, NULL, o));
             ast_Parser_collect(this, result);
             this->variables[this->variableCount] = result;
             this->variableCount++;
@@ -1459,7 +1459,7 @@ ast_Storage ast_Parser_declareFunction(
         }
 
         if (!result) {
-            result = ast_Storage(ast_ObjectCreate(function));
+            result = ast_Storage(ast_Object_create(NULL, NULL, function));
             ast_Parser_collect(this, result);
         }
 
@@ -1488,7 +1488,7 @@ ast_Storage ast_Parser_declareFunction(
             corto_assert(function != NULL,
                 "object '%s' should still be in '%s' in 2nd pass",
                 query, corto_fullpath(NULL, this->scope));
-            result = ast_Storage(ast_ObjectCreate(function));
+            result = ast_Storage(ast_Object_create(NULL, NULL, function));
             ast_Parser_collect(this, result);
             corto_release(function);
         }
@@ -1534,17 +1534,17 @@ ast_Block ast_Parser_declareFunctionParams(
                 goto error;
             }
 
-            ast_Block_declare(result, "this", parent, TRUE, FALSE);
+            ast_Block_declareVar(result, "this", parent, TRUE, FALSE);
             /* If this-type of method has a base, include super */
             if (corto_interface(parent)->base) {
-                ast_Block_declare(result, "super", corto_type(corto_interface(parent)->base), TRUE, FALSE);
+                ast_Block_declareVar(result, "super", corto_type(corto_interface(parent)->base), TRUE, FALSE);
             }
 
         }
 
         for(i=0; i<function_o->parameters.length; i++) {
             param = &function_o->parameters.buffer[i];
-            ast_Block_declare(result, param->name, param->type, TRUE, param->passByReference);
+            ast_Block_declareVar(result, param->name, param->type, TRUE, param->passByReference);
         }
 
         /* If function has a returntype, include name of function */
@@ -1600,7 +1600,7 @@ int16_t ast_Parser_defineScope(
             }
 
         } else {
-            ast_Define defineExpr = ast_DefineCreate(ast_Expression(ast_ObjectCreate(this->scope)));
+            ast_Define defineExpr = ast_Define_create(NULL, NULL, ast_Expression(ast_Object_create(NULL, NULL, this->scope)));
             ast_Parser_addStatement(this, ast_Node(defineExpr));
             ast_Parser_collect(this, defineExpr);
         }
@@ -1631,7 +1631,7 @@ int16_t ast_Parser_defineVariable(
 
     } else {
         ast_Define defineStmt;
-        defineStmt = ast_DefineCreate((ast_Expression)object);
+        defineStmt = ast_Define_create(NULL, NULL, (ast_Expression)object);
         ast_Parser_collect(this, defineStmt);
         ast_Parser_addStatement(this, ast_Node(defineStmt));
     }
@@ -1839,7 +1839,7 @@ ast_Node ast_Parser_ifStatement(
     ast_Node result = NULL;
 
     if (this->pass) {
-        result = ast_Node(ast_IfCreate(condition, trueBranch, falseBranch));
+        result = ast_Node(ast_If_create(NULL, NULL, condition, trueBranch, falseBranch));
         if (!result) {
             goto error;
         }
@@ -1864,7 +1864,7 @@ int16_t ast_Parser_import(
         goto error;
     }
 
-    corto_objectListAppend(this->imports, import);
+    corto_objectList_append(this->imports, import);
     return 0;
 error:
     return -1;
@@ -2076,7 +2076,7 @@ ast_Expression ast_Parser_initPushExpression(
         memset(variables, 0, sizeof(variables));
 
         /* Create initializer */
-        initializer = ast_Initializer(ast_InitializerExpressionCreate(variables, 1, TRUE));
+        initializer = ast_Initializer(ast_InitializerExpression_create(NULL, NULL, variables, 1, TRUE));
         corto_set_ref(&this->initializers[this->initializerCount], initializer);
         ast_Parser_collect(this, initializer);
         this->variablePushed = TRUE;
@@ -2138,25 +2138,25 @@ ast_Expression ast_Parser_initPushIdentifier(
     if ((!this->pass && !isDynamic) || forceStatic) {
         corto_object o;
         o = corto_declare(NULL, NULL, t);
-        corto_set_ref(&variables[0].object, ast_Expression(ast_ObjectCreate(o)));
-        this->initializers[this->initializerCount] = ast_Initializer(ast_StaticInitializerCreate(variables, 1));
+        corto_set_ref(&variables[0].object, ast_Expression(ast_Object_create(NULL, NULL, o)));
+        this->initializers[this->initializerCount] = ast_Initializer(ast_StaticInitializer_create(NULL, NULL, variables, 1));
         this->variablePushed = TRUE;
     } else if (this->pass && isDynamic && !forceStatic) {
         ast_Expression newExpr, assignExpr, var, refVar;
         corto_type type_o = corto_type(ast_Object(type)->value);
-        refVar = var = ast_Expression(ast_TemporaryCreate(ast_Object(type)->value, TRUE));
-        newExpr = ast_Expression(ast_NewCreate(ast_Object(type)->value,0));
+        refVar = var = ast_Expression(ast_Temporary_create(NULL, NULL, ast_Object(type)->value, TRUE));
+        newExpr = ast_Expression(ast_New_create(NULL, NULL, ast_Object(type)->value,0));
         ast_Parser_collect(this, newExpr);
         if (!type_o->reference) {
             refVar = ast_Parser_unaryExpr(this, var, CORTO_AND);
             ast_Parser_collect(yparser(), refVar);
         }
 
-        assignExpr = ast_Expression(ast_BinaryCreate(refVar, newExpr, CORTO_ASSIGN));
+        assignExpr = ast_Expression(ast_Binary_create(NULL, NULL, refVar, newExpr, CORTO_ASSIGN));
         ast_Parser_collect(this, assignExpr);
         ast_Parser_addStatement(this, ast_Node(assignExpr));
         corto_set_ref(&variables[0].object, var);
-        this->initializers[this->initializerCount] = ast_Initializer(ast_DynamicInitializerCreate(variables, 1, FALSE));
+        this->initializers[this->initializerCount] = ast_Initializer(ast_DynamicInitializer_create(NULL, NULL, variables, 1, FALSE));
         this->variablePushed = TRUE;
     } else {
         corto_set_ref(&this->initializers[this->initializerCount], NULL);
@@ -2211,12 +2211,12 @@ int16_t ast_Parser_initPushStatic(
 
     if (!this->pass) {
         /* Create initializer */
-        initializer = ast_Initializer(ast_StaticInitializerCreate(variables, this->variableCount));
+        initializer = ast_Initializer(ast_StaticInitializer_create(NULL, NULL, variables, this->variableCount));
         corto_set_ref(&this->initializers[this->initializerCount], initializer);
         ast_Parser_collect(this, initializer);
     } else {
         /* Create dummy initializer */
-        initializer = ast_InitializerCreate(variables, this->variableCount);
+        initializer = ast_Initializer_create(NULL, NULL, variables, this->variableCount);
         corto_set_ref(&this->initializers[this->initializerCount], initializer);
         ast_Parser_collect(this, initializer);
     }
@@ -2273,7 +2273,7 @@ ast_Expression ast_Parser_lookup(
         corto_type complexType = ast_Parser_getComplexType(this);
         if (complexType) {
             if (corto_interface_resolveMember(corto_interface(complexType), id)) {
-                result = ast_Expression(ast_StringCreate(id));
+                result = ast_Expression(ast_String_create(NULL, NULL, id));
             }
 
         }
@@ -2371,13 +2371,13 @@ ast_Storage ast_Parser_observerDeclaration(
         observer = ast_Object(result)->value;
         /* Declare this */
         if (!ast_Block_resolve(block, "this")) {
-            ast_Block_declare(block, "this", corto_object_o, TRUE, FALSE);
+            ast_Block_declareVar(block, "this", corto_object_o, TRUE, FALSE);
         }
 
         /* Loop parameters of observable, insert locals */
         for(i=0; i<corto_function(observer)->parameters.length; i++) {
             corto_parameter *p = &corto_function(observer)->parameters.buffer[i];
-            ast_Block_declare(block, p->name, p->type, TRUE, TRUE); /* Observable parameter are references */
+            ast_Block_declareVar(block, p->name, p->type, TRUE, TRUE); /* Observable parameter are references */
         }
 
         /* Bind observer and block */
@@ -2514,7 +2514,7 @@ int16_t ast_Parser_parseFunction(
     corto_int32 i, err = 0;
 
     /* Create parser */
-    ast_Parser parser = ast_ParserCreate(expr, NULL);
+    ast_Parser parser = ast_Parser_create(NULL, NULL, expr, NULL);
     if (!parser) {
         corto_throw("failed to create parser");
         goto error;
@@ -2522,7 +2522,7 @@ int16_t ast_Parser_parseFunction(
 
     parser->repl = TRUE;
     /* Create block that contains local variables for function arguments */
-    ast_Block block = ast_BlockCreate(NULL);
+    ast_Block block = ast_Block_create(NULL, NULL, NULL);
     if (!block) {
         corto_throw("failed to create code block");
         goto error;
@@ -2531,7 +2531,7 @@ int16_t ast_Parser_parseFunction(
     parser->blockCount ++;
     for (i = 0; i < f->parameters.length; i++) {
         corto_parameter *p = &f->parameters.buffer[i];
-        if (!ast_Block_declare(block, p->name, p->type, TRUE, p->passByReference)) {
+        if (!ast_Block_declareVar(block, p->name, p->type, TRUE, p->passByReference)) {
             corto_throw("failed to declare parameter '%s'", p->name);
             goto error;
         }
@@ -2540,7 +2540,7 @@ int16_t ast_Parser_parseFunction(
 
     if (f->returnType) {
         corto_bool isReference = f->returnType->reference || f->returnsReference;
-        resultLocal = ast_Block_declare(
+        resultLocal = ast_Block_declareVar(
             block,
             "_",
             f->returnType,
@@ -2583,7 +2583,7 @@ int16_t ast_Parser_parseFunction(
         ast_Binary assignment;
         returnType = corto_type(ast_Expression_getType(result));
         if ((returnType->kind != CORTO_VOID) || (result->deref == Ast_ByReference)) {
-            resultLocal = ast_Block_declare(parser->block, "_", result->type, FALSE,
+            resultLocal = ast_Block_declareVar(parser->block, "_", result->type, FALSE,
                 result->isReference);
             if (!resultLocal) {
                 corto_throw("failed to create return variable");
@@ -2592,7 +2592,7 @@ int16_t ast_Parser_parseFunction(
 
             ast_Expression(resultLocal)->deref = result->isReference ? Ast_ByReference : Ast_ByValue;
             resultLocal->kind = Ast_LocalReturn;
-            assignment = ast_BinaryCreate(ast_Expression(resultLocal), result, CORTO_ASSIGN);
+            assignment = ast_Binary_create(NULL, NULL, ast_Expression(resultLocal), result, CORTO_ASSIGN);
             corto_ll_replace(parser->block->statements, result, assignment);
         }
 
@@ -2601,7 +2601,7 @@ int16_t ast_Parser_parseFunction(
     }
 
     /* Create program for intermediate code */
-    program = ic_programCreate(parser->filename);
+    program = ic_program_create(NULL, NULL, parser->filename);
     if (!program) {
         corto_throw("failed to create intermediate code program");
         goto error;
@@ -2677,7 +2677,7 @@ int16_t ast_Parser_parseLine(
     corto_value *v = (corto_value*)value;
     ic_program program = NULL;
     corto_int32 err = 0;
-    ast_Parser parser = ast_ParserCreate(expr, NULL);
+    ast_Parser parser = ast_Parser_create(NULL, NULL, expr, NULL);
     parser->repl = TRUE;
 
     ast_Expression result = ast_Parser_parseIntern(parser, scope, &err);
@@ -2690,7 +2690,7 @@ int16_t ast_Parser_parseLine(
         ast_Binary assignment;
         returnType = corto_type(ast_Expression_getType(result));
         if ((returnType->kind != CORTO_VOID) || (result->deref == Ast_ByReference)) {
-            resultLocal = ast_Block_declare(parser->block, "<result>", result->type, FALSE,
+            resultLocal = ast_Block_declareVar(parser->block, "<result>", result->type, FALSE,
                 result->isReference);
             ast_Expression(resultLocal)->deref = result->isReference ? Ast_ByReference : Ast_ByValue;
             if (!resultLocal) {
@@ -2698,13 +2698,13 @@ int16_t ast_Parser_parseLine(
             }
 
             resultLocal->kind = Ast_LocalReturn;
-            assignment = ast_BinaryCreate(ast_Expression(resultLocal), result, CORTO_ASSIGN);
+            assignment = ast_Binary_create(NULL, NULL, ast_Expression(resultLocal), result, CORTO_ASSIGN);
             corto_ll_replace(parser->block->statements, result, assignment);
         }
 
     }
 
-    program = ic_programCreate(parser->filename);
+    program = ic_program_create(NULL, NULL, parser->filename);
     /* Parse root-block */
     icScope = (ic_scope)ast_Block_toIc(parser->block, program, NULL, FALSE);
     if (parser->errors) {
@@ -2827,7 +2827,7 @@ corto_type ast_Parser_parseType(
 {
     corto_int32 err = 0;
     corto_type result = NULL;
-    ast_Parser parser = ast_ParserCreate(expr, NULL);
+    ast_Parser parser = ast_Parser_create(NULL, NULL, expr, NULL);
     parser->repl = TRUE;
 
     ast_Expression e = ast_Parser_parseIntern(parser, scope, &err);
@@ -2907,7 +2907,7 @@ ast_Expression ast_Parser_postfixExpr(
     ast_Expression result = NULL;
 
     if (this->pass) {
-        result = ast_Expression(ast_PostFixCreate(lvalue, _operator));
+        result = ast_Expression(ast_PostFix_create(NULL, NULL, lvalue, _operator));
         if (!result) {
             goto error;
         }
@@ -3114,10 +3114,10 @@ ast_Expression ast_Parser_ternaryExpr(
         ast_Expression lvalue = ast_Parser_getLvalue(this, TRUE);
 
         if (!lvalue) {
-            lvalue = ast_Expression(ast_TemporaryCreate(iftrue->type, FALSE));
+            lvalue = ast_Expression(ast_Temporary_create(NULL, NULL, iftrue->type, FALSE));
         }
 
-        result = ast_Expression(ast_TernaryCreate(cond, iftrue, iffalse, lvalue));
+        result = ast_Expression(ast_Ternary_create(NULL, NULL, cond, iftrue, iffalse, lvalue));
         if (!result) {
             goto error;
         }
@@ -3146,7 +3146,7 @@ ast_Expression ast_Parser_unaryExpr(
                 switch(corto_primitive(lvalueType)->kind) {
                 case CORTO_INTEGER:
                     if (ast_Node(lvalue)->kind == Ast_LiteralExpr) {
-                        result = ast_Expression(ast_IntegerCreate(ast_Integer(lvalue)->value * -1));
+                        result = ast_Expression(ast_Integer_create(NULL, NULL, ast_Integer(lvalue)->value * -1));
                         ast_Parser_collect(this, result);
                         break;
                     }
@@ -3154,7 +3154,7 @@ ast_Expression ast_Parser_unaryExpr(
                     /* no break */
                 case CORTO_UINTEGER:
                     if (ast_Node(lvalue)->kind == Ast_LiteralExpr) {
-                        result = ast_Expression(ast_SignedIntegerCreate(ast_Integer(lvalue)->value * -1));
+                        result = ast_Expression(ast_SignedInteger_create(NULL, NULL, ast_Integer(lvalue)->value * -1));
                         ast_Parser_collect(this, result);
                         break;
                     }
@@ -3162,13 +3162,13 @@ ast_Expression ast_Parser_unaryExpr(
                     /* no break */
                 case CORTO_FLOAT:
                     if (ast_Node(lvalue)->kind == Ast_LiteralExpr) {
-                        result = ast_Expression(ast_FloatingPointCreate(ast_FloatingPoint(lvalue)->value * -1));
+                        result = ast_Expression(ast_FloatingPoint_create(NULL, NULL, ast_FloatingPoint(lvalue)->value * -1));
                         ast_Parser_collect(this, result);
                     } else {
                         if (this->pass) {
-                            ast_SignedInteger minusOne = ast_SignedIntegerCreate(-1);
+                            ast_SignedInteger minusOne = ast_SignedInteger_create(NULL, NULL, -1);
                             ast_Parser_collect(this, minusOne);
-                            result = ast_Expression(ast_BinaryCreate(lvalue, ast_Expression(minusOne), CORTO_MUL));
+                            result = ast_Expression(ast_Binary_create(NULL, NULL, lvalue, ast_Expression(minusOne), CORTO_MUL));
                             ast_Parser_collect(this, result);
                         }
 
@@ -3216,7 +3216,7 @@ ast_Expression ast_Parser_unaryExpr(
 
         } else {
             if (this->pass) {
-                result = ast_Expression(ast_UnaryCreate(lvalue, _operator));
+                result = ast_Expression(ast_Unary_create(NULL, NULL, lvalue, _operator));
                 if (!result) {
                     goto error;
                 }
@@ -3270,7 +3270,7 @@ ast_Node ast_Parser_updateStatement(
 
         /* Keep argument expressions */
         exprList = ast_Expression_toList(expr);
-        result = ast_Node(ast_UpdateCreate(exprList, block, from, Ast_UpdateDefault));
+        result = ast_Node(ast_Update_create(NULL, NULL, exprList, block, from, Ast_UpdateDefault));
         ast_Parser_collect(this, result);
     }
 
@@ -3294,7 +3294,7 @@ ast_Node ast_Parser_whileStatement(
             goto error;
         }
 
-        result = ast_Node(ast_WhileCreate(condition, trueBranch, isUntil));
+        result = ast_Node(ast_While_create(NULL, NULL, condition, trueBranch, isUntil));
         if (!result) {
             goto error;
         }

@@ -40,7 +40,7 @@ ast_Expression ast_Node_optimizeCondition(ast_Expression condition, corto_bool *
         } else {
             /* If element, add element to AND expression */
             if (elem) {
-                result = ast_Expression(ast_BinaryCreate(result, elem, CORTO_COND_AND));
+                result = ast_Expression(ast_Binary_create(NULL, NULL, result, elem, CORTO_COND_AND));
                 ast_Parser_collect(yparser(), result);
                 
             /* If element was a literal either ignore it (if result was TRUE) or discard all other

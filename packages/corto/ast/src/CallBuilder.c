@@ -14,14 +14,14 @@ ast_Call ast_CallBuilder_buildMethod(ast_CallBuilder *this) {
     if (t->kind == CORTO_COMPOSITE) {
         m = corto_interface_resolveMember(corto_interface(t), this->name);
         if (m) {
-            ast_String nameExpr = ast_StringCreate(this->name);
+            ast_String nameExpr = ast_String_create(NULL, NULL, this->name);
             ast_Parser_collect(yparser(), nameExpr);
             if ((m->type->kind == CORTO_COMPOSITE) && (corto_interface(m->type)->kind == CORTO_DELEGATE)) {
-                ast_Expression fExpr = ast_Expression(ast_MemberCreate(this->instance, ast_Expression(nameExpr)));
+                ast_Expression fExpr = ast_Expression(ast_Member_create(NULL, NULL, this->instance, ast_Expression(nameExpr)));
                 if (!fExpr) {
                     goto error;
                 }
-                result = ast_Call(ast_DelegateCallCreate(NULL, this->arguments, fExpr));
+                result = ast_Call(ast_DelegateCall_create(NULL, NULL, NULL, this->arguments, fExpr));
             }
         }
     }
@@ -48,7 +48,7 @@ ast_Call ast_CallBuilder_buildMethod(ast_CallBuilder *this) {
         }
 
         /* Create call-expression */
-        result = ast_Call(ast_StaticCallCreate(this->instance, this->arguments, f));
+        result = ast_Call(ast_StaticCall_create(NULL, NULL, this->instance, this->arguments, f));
     }
 
     return result;
@@ -77,7 +77,7 @@ ast_Call ast_CallBuilder_build(
             if (l) {
                 /* Check if l is of a delegate type */
                 if ((l->type->kind == CORTO_COMPOSITE) && (corto_interface(l->type)->kind == CORTO_DELEGATE)) {
-                    result = ast_Call(ast_DelegateCallCreate(NULL, this->arguments, ast_Expression(l)));
+                    result = ast_Call(ast_DelegateCall_create(NULL, NULL, NULL, this->arguments, ast_Expression(l)));
                     if (!result) {
                         goto error;
                     }
@@ -104,8 +104,8 @@ ast_Call ast_CallBuilder_build(
                 goto error;
             }
             if ((corto_typeof(f)->kind == CORTO_COMPOSITE) && (corto_interface(corto_typeof(f))->kind == CORTO_DELEGATE)) {
-                ast_Expression fExpr = ast_Expression(ast_ObjectCreate(f));
-                result = ast_Call(ast_DelegateCallCreate(NULL, this->arguments, fExpr));   
+                ast_Expression fExpr = ast_Expression(ast_Object_create(NULL, NULL, f));
+                result = ast_Call(ast_DelegateCall_create(NULL, NULL, NULL, this->arguments, fExpr));   
             } else {
                 if (corto_function(f)->overloaded) {
                     /* If function is overloaded, re-resolve with explicit reference requests in signature */
@@ -116,7 +116,7 @@ ast_Call ast_CallBuilder_build(
                     corto_release(f);
                     f = corto_resolve(this->scope, this->signature);
                 }
-                result = ast_Call(ast_StaticCallCreate(NULL, this->arguments, f));
+                result = ast_Call(ast_StaticCall_create(NULL, NULL, NULL, this->arguments, f));
             }  
         }
     }
