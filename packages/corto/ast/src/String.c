@@ -108,7 +108,7 @@ corto_int16 ast_String_parse(ast_String this) {
                 if (str != ptr) {
                     *ptr = '\0';
 
-                    element = ast_String_create(NULL, NULL, str);
+                    element = ast_String__create(NULL, NULL, str);
                     corto_ll_append(this->elements, element);
 
                     *ptr = ch;
@@ -132,11 +132,11 @@ corto_int16 ast_String_parse(ast_String this) {
         /* If string contains embedded expressions, add last bit of remaining
          * string to elements list */
         if ((str != this->value) && *str) {
-            element = ast_String_create(NULL, NULL, str);
+            element = ast_String__create(NULL, NULL, str);
             corto_ll_append(this->elements, element);
         }
     } else {
-        element = ast_String_create(NULL, NULL, "null");
+        element = ast_String__create(NULL, NULL, "null");
         corto_ll_append(this->elements, element);
     }
 
@@ -255,7 +255,7 @@ ic_node ast_String_toIc(
 
     if (!corto_ll_count(this->elements)) {
         corto_any l = {corto_type(corto_string_o), &this->value, FALSE};
-        result = (ic_node)ic_literal_create(NULL, NULL, l);
+        result = (ic_node)ic_literal__create(NULL, NULL, l);
     } else {
         if (stored) {
             corto_iter elementIter;
@@ -276,7 +276,7 @@ ic_node ast_String_toIc(
             }
 
             corto_any l = {corto_type(corto_string_o), NULL, FALSE};
-            dummy = (ic_node)ic_literal_create(NULL, NULL, l);
+            dummy = (ic_node)ic_literal__create(NULL, NULL, l);
 
             result = (ic_node)storage;
             elementIter = corto_ll_iter(this->elements);
@@ -287,7 +287,7 @@ ic_node ast_String_toIc(
 
                 elementType = ast_Expression_getType(element);
                 if (!elementType) {
-                    element = ast_Expression(ast_String_create(NULL, NULL, CORTO_NULL_STRING));
+                    element = ast_Expression(ast_String__create(NULL, NULL, CORTO_NULL_STRING));
                 } else if (elementType != corto_type(corto_string_o)) {
                     element = ast_Expression_cast(element, corto_type(corto_string_o), FALSE);
                     if(!element) {
@@ -315,7 +315,7 @@ ic_node ast_String_toIc(
                             elementType = ast_Expression_getType(element);
 
                             if (!elementType) {
-                                element = ast_Expression(ast_String_create(NULL, NULL, CORTO_NULL_STRING));
+                                element = ast_Expression(ast_String__create(NULL, NULL, CORTO_NULL_STRING));
                             } else if (elementType && (ast_Expression_getType(element) != corto_type(corto_string_o))) {
                                 element = ast_Expression_cast(element, corto_type(corto_string_o), FALSE);
                                 if (!element) {

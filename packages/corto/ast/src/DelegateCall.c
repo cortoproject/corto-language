@@ -15,8 +15,8 @@ int16_t ast_DelegateCall_construct(
         corto_delegate type = corto_delegate(ast_Expression_getType(this->expr));
 
         /* Create expression to obtain pointer to the instance */
-        ast_String instanceString = ast_String_create(NULL, NULL, "instance");
-        ast_Member iExpr = ast_Member_create(NULL, NULL, this->expr, ast_Expression(instanceString));
+        ast_String instanceString = ast_String__create(NULL, NULL, "instance");
+        ast_Member iExpr = ast_Member__create(NULL, NULL, this->expr, ast_Expression(instanceString));
         corto_set_ref(&ast_Call(this)->instanceExpr, iExpr);
         ast_Parser_collect(yparser(), iExpr);
         ast_Parser_collect(yparser(), instanceString);
@@ -28,7 +28,7 @@ int16_t ast_DelegateCall_construct(
         corto_set_ref(&ast_Call(this)->returnType, type->returnType);
         ast_Call(this)->returnsReference = type->returnsReference;
 
-        corto_parameterSeq_resize(&ast_Call(this)->parameters, type->parameters.length);
+        corto_parameterSeq__resize(&ast_Call(this)->parameters, type->parameters.length);
 
         for (i = 0; i < type->parameters.length; i++) {
             corto_set_ref(&ast_Call(this)->parameters.buffer[i].type, type->parameters.buffer[i].type);

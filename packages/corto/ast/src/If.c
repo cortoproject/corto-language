@@ -115,7 +115,7 @@ ic_node ast_If_toIc(
              * before the jump occurs.
              */
              if (hasReturnedResource) {
-                ic_node boolType = ic_node(ic_object_create(NULL, NULL, corto_bool_o));
+                ic_node boolType = ic_node(ic_object__create(NULL, NULL, corto_bool_o));
 
                 IC_3(program, ast_Node(this)->line, ic_cast, preEval, expr, boolType,
                     IC_DEREF_VALUE, deref1, IC_DEREF_ADDRESS);
@@ -128,7 +128,7 @@ ic_node ast_If_toIc(
 
 
             /* Create label to jump to when condition evaluates true */
-            labelEval = ic_label_create(NULL, NULL);
+            labelEval = ic_label__create(NULL, NULL);
 
             /* Evaluate condition, insert jump */
             if (this->falseBranch) {
@@ -136,7 +136,7 @@ ic_node ast_If_toIc(
                     labelEval, NULL, deref1, IC_DEREF_VALUE, IC_DEREF_VALUE);
 
                 /* Label to jump over true-branch */
-                labelEnd = ic_label_create(NULL, NULL);
+                labelEnd = ic_label__create(NULL, NULL);
             } else {
                 IC_3(program, ast_Node(this)->line, inverse ? ic_jeq : ic_jneq, expr,
                     labelEval, NULL, deref1, IC_DEREF_VALUE, IC_DEREF_VALUE);

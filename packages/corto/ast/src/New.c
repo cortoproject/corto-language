@@ -37,7 +37,7 @@ ic_node ast_New_toIc(
         result = (ic_node)ic_program_pushAccumulator(program, ast_Expression_getType(ast_Expression(this)), TRUE, FALSE);
     }
 
-    type = (ic_node)ic_object_create(NULL, NULL, ast_Expression(this)->type);
+    type = (ic_node)ic_object__create(NULL, NULL, ast_Expression(this)->type);
     if (this->attributes) {
         attrs = ast_Node_toIc(ast_Node(this->attributes), program, NULL, TRUE);
     } else {

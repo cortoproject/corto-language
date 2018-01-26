@@ -8,7 +8,7 @@ void ast_Block_addStatement(
 {
     if (statement) {
         corto_assert(this->statements != NULL, "initialization failed");
-        ast_NodeList_append(this->statements, statement);
+        ast_NodeList__append(this->statements, statement);
     }
 
 }
@@ -34,7 +34,7 @@ ast_Local ast_Block_declareVar(
 
     /* If variable did not exist, declare it in this block */
     kind = isParameter ? Ast_LocalParameter : Ast_LocalDefault;
-    result = ast_Local_create(NULL, NULL, id, type, kind, isReference);
+    result = ast_Local__create(NULL, NULL, id, type, kind, isReference);
     if (result) {
         corto_ll_append(this->locals, result);
     } else {
@@ -59,7 +59,7 @@ ast_Local ast_Block_declareReturnVariable(
     corto_assert(this->locals != NULL, "initialization failed");
 
     /* If variable did not exist, declare it in this block */
-    result = ast_Local_create(NULL, NULL, id, function->returnType, Ast_LocalReturn, function->returnsReference);
+    result = ast_Local__create(NULL, NULL, id, function->returnType, Ast_LocalReturn, function->returnsReference);
     if (result) {
         corto_ll_append(this->locals, result);
     }
@@ -85,7 +85,7 @@ ast_Template ast_Block_declareTemplate(
     }
 
     /* If variable did not exist, declare it in this block */
-    result = ast_Template_create(NULL, NULL, id, type, isParameter, isReference);
+    result = ast_Template__create(NULL, NULL, id, type, isParameter, isReference);
     if (result) {
         corto_ll_insert(this->locals, result);
     }
@@ -148,8 +148,8 @@ ast_Expression ast_Block_lookup(
                         /* If a member is found, create memberexpression */
                         if (m) {
                             ast_String memberIdExpr;
-                            memberIdExpr = ast_String_create(NULL, NULL, id);
-                            result = ast_Expression(ast_Member_create(NULL, NULL, 
+                            memberIdExpr = ast_String__create(NULL, NULL, id);
+                            result = ast_Expression(ast_Member__create(NULL, NULL, 
                                      thisLocal, ast_Expression(memberIdExpr)));
                             ast_Parser_collect(yparser(), memberIdExpr);
                             ast_Parser_collect(yparser(), result);
@@ -159,8 +159,8 @@ ast_Expression ast_Block_lookup(
                             m = corto_interface_resolveMethod(corto_interface(parent), id);
                             if (m) {
                                 ast_String memberIdExpr;
-                                memberIdExpr = ast_String_create(NULL, NULL, id);
-                                result = ast_Expression(ast_Member_create(NULL, NULL, 
+                                memberIdExpr = ast_String__create(NULL, NULL, id);
+                                result = ast_Expression(ast_Member__create(NULL, NULL, 
                                          thisLocal, ast_Expression(memberIdExpr)));
                                 ast_Parser_collect(yparser(), memberIdExpr);
                                 ast_Parser_collect(yparser(), result);

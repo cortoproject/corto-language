@@ -58,7 +58,7 @@ ic_node ast_Integer_toIc(
     CORTO_UNUSED(stored);
 
     corto_any l = {ast_Expression_getType(ast_Expression(this)), &this->value, FALSE};
-    result = (ic_node)ic_literal_create(NULL, NULL, l);
+    result = (ic_node)ic_literal__create(NULL, NULL, l);
 
     return result;
 }

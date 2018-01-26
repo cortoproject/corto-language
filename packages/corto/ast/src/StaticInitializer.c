@@ -157,9 +157,9 @@ int16_t ast_StaticInitializer_defineObject(
                 }
             }
         } else {
-            ast_Expression refVar = ast_Expression(ast_Object_create(NULL, NULL, o));
+            ast_Expression refVar = ast_Expression(ast_Object__create(NULL, NULL, o));
             refVar->isReference = TRUE; /* Always treat object as reference */
-            ast_Define defineStmt = ast_Define_create(NULL, NULL, refVar);
+            ast_Define defineStmt = ast_Define__create(NULL, NULL, refVar);
             ast_Parser_addStatement(yparser(), ast_Node(defineStmt));
             ast_Parser_collect(yparser(), defineStmt);
             ast_Parser_collect(yparser(), refVar);

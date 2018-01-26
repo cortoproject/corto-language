@@ -9,7 +9,7 @@ int16_t ast_StaticCall_construct(
 {
     ast_Object fExpr;
 
-    fExpr = ast_Object_create(NULL, NULL, this->function);
+    fExpr = ast_Object__create(NULL, NULL, this->function);
     ast_Parser_collect(yparser(), fExpr);
     corto_set_ref(&ast_Call(this)->functionExpr, fExpr);
 

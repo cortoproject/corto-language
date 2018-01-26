@@ -30,14 +30,14 @@ ast_Expression ast_OptimizeExpr_multiplyBinary(ast_Binary b, ast_Expression e, c
     /* Don't do divisions right now, like "(x + 2) / (x + 4)" */
 
     if ((oper == CORTO_MUL) && ((b->_operator == CORTO_ADD) || (b->_operator == CORTO_SUB))) {
-        newLeft = (ast_Expression)ast_Binary_create(NULL, NULL, invert ? e : left, invert ? left : e, oper);
-        newRight = (ast_Expression)ast_Binary_create(NULL, NULL, invert ? e : right, invert ? right : e, oper);
+        newLeft = (ast_Expression)ast_Binary__create(NULL, NULL, invert ? e : left, invert ? left : e, oper);
+        newRight = (ast_Expression)ast_Binary__create(NULL, NULL, invert ? e : right, invert ? right : e, oper);
     } else if ((b->_operator == CORTO_MUL) || (b->_operator == CORTO_DIV)) {
         if (left == e) {
-            newLeft = (ast_Expression)ast_Binary_create(NULL, NULL, invert ? e : left, invert ? left : e, oper);
+            newLeft = (ast_Expression)ast_Binary__create(NULL, NULL, invert ? e : left, invert ? left : e, oper);
             newRight = right;
         } else if (right == e) {
-            newRight = (ast_Expression)ast_Binary_create(NULL, NULL, invert ? e : right, invert ? e : right, oper);
+            newRight = (ast_Expression)ast_Binary__create(NULL, NULL, invert ? e : right, invert ? e : right, oper);
             newLeft = left;
         } else if (ast_Node(e)->kind == Ast_BinaryExpr) {
             if ((ast_Binary(e)->_operator == CORTO_ADD) || (ast_Binary(e)->_operator == CORTO_SUB)) {
@@ -49,7 +49,7 @@ ast_Expression ast_OptimizeExpr_multiplyBinary(ast_Binary b, ast_Expression e, c
     if (newLeft && newRight) {
         newLeft = ast_Expression_fold(newLeft);
         newRight = ast_Expression_fold(newRight);
-        return (ast_Expression)ast_Binary_create(NULL, NULL, newLeft, newRight, b->_operator);
+        return (ast_Expression)ast_Binary__create(NULL, NULL, newLeft, newRight, b->_operator);
     } else {
         return NULL;
     }
@@ -74,7 +74,7 @@ ast_Expression ast_OptimizeExpr_reorderExpression(ast_Expression expr) {
                 corto_type(corto_int32_o),
                 &minusOneVar
             );
-            right = ast_Expression(ast_Binary_create(NULL, NULL, 
+            right = ast_Expression(ast_Binary__create(NULL, NULL, 
                 right,
                 minusOne,
                 CORTO_MUL
@@ -366,19 +366,19 @@ ast_Expression ast_OptimizeExpr_combine(
     }
 
     if (literal && ((oper == CORTO_ADD) || (oper == CORTO_SUB))) {
-        result = ast_Expression(ast_Binary_create(NULL, NULL, 
+        result = ast_Expression(ast_Binary__create(NULL, NULL, 
             out,
             literal,
             CORTO_MUL
         ));
     } else {
-        result = ast_Expression(ast_Binary_create(NULL, NULL, 
+        result = ast_Expression(ast_Binary__create(NULL, NULL, 
             out,
             out,
             oper
         ));
         if (literal) {
-            result = ast_Expression(ast_Binary_create(NULL, NULL, 
+            result = ast_Expression(ast_Binary__create(NULL, NULL, 
                 result,
                 literal,
                 oper
@@ -391,7 +391,7 @@ ast_Expression ast_OptimizeExpr_combine(
         if (ast_Binary(result)->_operator == CORTO_DIV) {
             if (ast_Binary(result)->lvalue == ast_Binary(result)->rvalue) {
                 corto_release(result);
-                result = ast_Expression(ast_Integer_create(NULL, NULL, 1));
+                result = ast_Expression(ast_Integer__create(NULL, NULL, 1));
             }
         }
     }
@@ -408,7 +408,7 @@ ast_Expression ast_OptimizeExpr_reducedToExpression(corto_ll elems) {
         if (!result) {
             result = elem->e;
         } else {
-            result = ast_Expression(ast_Binary_create(NULL, NULL, 
+            result = ast_Expression(ast_Binary__create(NULL, NULL, 
                 result, elem->e, elem->oper
             ));
         }

@@ -7,7 +7,7 @@
 corto_int16 ast_Initializer_assignOper(ast_DynamicInitializer this, ast_Expression lvalue, ast_Expression rvalue) {
     CORTO_UNUSED(this);
     if (rvalue) {
-        ast_Binary expr = ast_Binary_create(NULL, NULL, lvalue, rvalue, CORTO_ASSIGN);
+        ast_Binary expr = ast_Binary__create(NULL, NULL, lvalue, rvalue, CORTO_ASSIGN);
         ast_Parser_addStatement(yparser(), ast_Node(expr));
         ast_Parser_collect(yparser(), expr);
     }
@@ -41,8 +41,8 @@ ast_Expression ast_Initializer_expr(ast_DynamicInitializer this, corto_uint8 var
             break;
         case CORTO_COMPOSITE:
             if (fp) {
-                ast_String memberString = ast_String_create(NULL, NULL, corto_idof(thisFrame->member));
-                result = ast_Expression(ast_Member_create(NULL, NULL, base, ast_Expression(memberString)));
+                ast_String memberString = ast_String__create(NULL, NULL, corto_idof(thisFrame->member));
+                result = ast_Expression(ast_Member__create(NULL, NULL, base, ast_Expression(memberString)));
                 ast_Parser_collect(yparser(), result);
                 ast_Parser_collect(yparser(), memberString);
             } else {
@@ -62,8 +62,8 @@ ast_Expression ast_Initializer_expr(ast_DynamicInitializer this, corto_uint8 var
                 }
                 case CORTO_SEQUENCE:
                 case CORTO_ARRAY: {
-                    ast_Integer index = ast_Integer_create(NULL, NULL, thisFrame->location);
-                    result = ast_Expression(ast_Element_create(NULL, NULL, base, ast_Expression(index)));
+                    ast_Integer index = ast_Integer__create(NULL, NULL, thisFrame->location);
+                    result = ast_Expression(ast_Element__create(NULL, NULL, base, ast_Expression(index)));
                     ast_Parser_collect(yparser(), result);
                     ast_Parser_collect(yparser(), index);
                     if (corto_collection(frame->type)->kind != CORTO_LIST) {
@@ -73,7 +73,7 @@ ast_Expression ast_Initializer_expr(ast_DynamicInitializer this, corto_uint8 var
                 }
                 case CORTO_MAP:
                     if (!thisFrame->isKey) {
-                        result = ast_Expression(ast_Element_create(NULL, NULL, base, ast_Expression(this->frames[fp].keyExpr[variable])));
+                        result = ast_Expression(ast_Element__create(NULL, NULL, base, ast_Expression(this->frames[fp].keyExpr[variable])));
                         ast_Parser_collect(yparser(), result);
                         thisFrame->isKey = FALSE;
                         ast_Initializer_assignOper(this, result, v);
@@ -126,7 +126,7 @@ int16_t ast_DynamicInitializer_defineObject(
     /* Insert define operations */
     if (!this->assignValue) {
         for(variable=0; variable<ast_Initializer(this)->variableCount; variable++) {
-            ast_Define defineExpr = ast_Define_create(NULL, NULL, this->frames[0].expr[variable]);
+            ast_Define defineExpr = ast_Define__create(NULL, NULL, this->frames[0].expr[variable]);
             ast_Parser_addStatement(yparser(), ast_Node(defineExpr));
             ast_Parser_collect(yparser(), defineExpr);
         }
@@ -184,7 +184,7 @@ int16_t ast_DynamicInitializer_push(
     /* If scope contains contents of a sequence insert operation to set sequence-size. Because size is not known beforehand,
      * cache the expression that contains the size. This will be set to it's final value when sequence-scope is pop'd. */
     if ((t->kind == CORTO_COLLECTION) && (corto_collection(t)->kind == CORTO_SEQUENCE)) {
-        ast_Integer size = ast_Integer_create(NULL, NULL, 0);
+        ast_Integer size = ast_Integer__create(NULL, NULL, 0);
         ast_Parser_collect(yparser(), size);
         
         /* Cast the size to uint32 so that the expression won't be replaced by a cast when it is inserted in the argumentlist

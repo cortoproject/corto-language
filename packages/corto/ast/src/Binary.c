@@ -270,42 +270,42 @@ corto_int16 ast_Binary_complexExprCompare(ast_Binary this) {
     }
     switch (this->_operator) {
         case CORTO_COND_EQ:
-            c1 = ast_Expression(ast_Integer_create(NULL, NULL, CORTO_EQ));
+            c1 = ast_Expression(ast_Integer__create(NULL, NULL, CORTO_EQ));
             break;
         case CORTO_COND_LT:
-            c1 = ast_Expression(ast_Integer_create(NULL, NULL, CORTO_LT));
+            c1 = ast_Expression(ast_Integer__create(NULL, NULL, CORTO_LT));
             break;
         case CORTO_COND_GT:
-            c1 = ast_Expression(ast_Integer_create(NULL, NULL, CORTO_GT));
+            c1 = ast_Expression(ast_Integer__create(NULL, NULL, CORTO_GT));
             break;
         case CORTO_COND_LTEQ:
-            c1 = ast_Expression(ast_Integer_create(NULL, NULL, CORTO_LT));
-            c2 = ast_Expression(ast_Integer_create(NULL, NULL, CORTO_EQ));
+            c1 = ast_Expression(ast_Integer__create(NULL, NULL, CORTO_LT));
+            c2 = ast_Expression(ast_Integer__create(NULL, NULL, CORTO_EQ));
             break;
         case CORTO_COND_GTEQ:
-            c1 = ast_Expression(ast_Integer_create(NULL, NULL, CORTO_GT));
-            c2 = ast_Expression(ast_Integer_create(NULL, NULL, CORTO_EQ));
+            c1 = ast_Expression(ast_Integer__create(NULL, NULL, CORTO_GT));
+            c2 = ast_Expression(ast_Integer__create(NULL, NULL, CORTO_EQ));
             break;
         case CORTO_COND_NEQ:
-            c1 = ast_Expression(ast_Integer_create(NULL, NULL, CORTO_LT));
-            c2 = ast_Expression(ast_Integer_create(NULL, NULL, CORTO_GT));
+            c1 = ast_Expression(ast_Integer__create(NULL, NULL, CORTO_LT));
+            c2 = ast_Expression(ast_Integer__create(NULL, NULL, CORTO_GT));
             break;
         default:
             break;
     }
 
     ast_Expression c1Result = NULL, c2Result = NULL, orResult, result;
-    c1Result = ast_Expression(ast_Binary_create(NULL, NULL, compareResult, c1, CORTO_COND_EQ));
+    c1Result = ast_Expression(ast_Binary__create(NULL, NULL, compareResult, c1, CORTO_COND_EQ));
     if (!c1Result) {
         goto error;
     }
     result = c1Result;
     if (c2) {
-        c2Result = ast_Expression(ast_Binary_create(NULL, NULL, compareResult, c2, CORTO_COND_EQ));
+        c2Result = ast_Expression(ast_Binary__create(NULL, NULL, compareResult, c2, CORTO_COND_EQ));
         if (!c2Result) {
             goto error;
         }
-        orResult = ast_Expression(ast_Binary_create(NULL, NULL, c1Result, c2Result, CORTO_OR));
+        orResult = ast_Expression(ast_Binary__create(NULL, NULL, c1Result, c2Result, CORTO_OR));
         if (!orResult) {
             goto error;
         }
@@ -360,7 +360,7 @@ corto_int16 ast_Binary_toIc_strOp(
     case CORTO_ADD: {
         corto_string str = NULL;
         corto_any l = {corto_type(corto_string_o), &str, TRUE};
-        ic_literal dummy = ic_literal_create(NULL, NULL, l);
+        ic_literal dummy = ic_literal__create(NULL, NULL, l);
         IC_2(program, ast_Node(this)->line, ic_strcat, lvalue, rvalue, IC_DEREF_VALUE, IC_DEREF_VALUE);
         IC_2(program, ast_Node(this)->line, ic_strcpy, storage, dummy, IC_DEREF_VALUE, IC_DEREF_VALUE);
         break;
@@ -478,11 +478,11 @@ ast_Expression ast_Binary_fold(
         if ((ast_Node(this->lvalue)->kind == Ast_LiteralExpr) &&
            (ast_Node(this->rvalue)->kind == Ast_LiteralExpr)) {
                 if (ast_Binary_isConditional(this)) {
-                    result = ast_Expression(ast_Boolean_create(NULL, NULL, FALSE));
+                    result = ast_Expression(ast_Boolean__create(NULL, NULL, FALSE));
                     resultPtr = (void*)ast_Literal_getValue(ast_Literal(result));
                     corto_ptr_binaryOp(corto_object_o, this->_operator, &lptr, &rptr, resultPtr);
                 } else {
-                    result = ast_Expression(ast_Null_create(NULL, NULL));
+                    result = ast_Expression(ast_Null__create(NULL, NULL));
                 }
            }
     } else if (lptr && rptr) {
@@ -494,17 +494,17 @@ ast_Expression ast_Binary_fold(
         /* Create result-expression */
         if (type->kind == CORTO_PRIMITIVE) {
             if (ast_Binary_isConditional(this)) {
-                result = ast_Expression(ast_Boolean_create(NULL, NULL, FALSE));
+                result = ast_Expression(ast_Boolean__create(NULL, NULL, FALSE));
             } else {
                 switch(corto_primitive(type)->kind) {
-                case CORTO_BOOLEAN: result = ast_Expression(ast_Boolean_create(NULL, NULL, FALSE)); break;
-                case CORTO_CHARACTER: result = ast_Expression(ast_Character_create(NULL, NULL, 'a')); break;
+                case CORTO_BOOLEAN: result = ast_Expression(ast_Boolean__create(NULL, NULL, FALSE)); break;
+                case CORTO_CHARACTER: result = ast_Expression(ast_Character__create(NULL, NULL, 'a')); break;
                 case CORTO_BITMASK:
-                case CORTO_UINTEGER: result = ast_Expression(ast_Integer_create(NULL, NULL, 0)); break;
+                case CORTO_UINTEGER: result = ast_Expression(ast_Integer__create(NULL, NULL, 0)); break;
                 case CORTO_ENUM:
-                case CORTO_INTEGER: result = ast_Expression(ast_SignedInteger_create(NULL, NULL, 0)); break;
-                case CORTO_FLOAT: result = ast_Expression(ast_FloatingPoint_create(NULL, NULL, 0)); break;
-                case CORTO_TEXT: result = ast_Expression(ast_String_create(NULL, NULL, NULL)); break;
+                case CORTO_INTEGER: result = ast_Expression(ast_SignedInteger__create(NULL, NULL, 0)); break;
+                case CORTO_FLOAT: result = ast_Expression(ast_FloatingPoint__create(NULL, NULL, 0)); break;
+                case CORTO_TEXT: result = ast_Expression(ast_String__create(NULL, NULL, NULL)); break;
                 default:
                     ast_Parser_error(yparser(), "Invalid primitive for folding expression");
                     goto error;
@@ -615,13 +615,13 @@ void ast_Binary_setOperator(
 
     /* If operator is a compound operator (assign_*), split up in two binary expressions */
     switch(this->_operator) {
-    case CORTO_ASSIGN_ADD: compoundExpr = ast_Binary_create(NULL, NULL, this->lvalue, this->rvalue, CORTO_ADD); break;
-    case CORTO_ASSIGN_SUB: compoundExpr = ast_Binary_create(NULL, NULL, this->lvalue, this->rvalue, CORTO_SUB); break;
-    case CORTO_ASSIGN_DIV: compoundExpr = ast_Binary_create(NULL, NULL, this->lvalue, this->rvalue, CORTO_DIV); break;
-    case CORTO_ASSIGN_MUL: compoundExpr = ast_Binary_create(NULL, NULL, this->lvalue, this->rvalue, CORTO_MUL); break;
-    case CORTO_ASSIGN_MOD: compoundExpr = ast_Binary_create(NULL, NULL, this->lvalue, this->rvalue, CORTO_MOD); break;
-    case CORTO_ASSIGN_OR:  compoundExpr = ast_Binary_create(NULL, NULL, this->lvalue, this->rvalue, CORTO_OR); break;
-    case CORTO_ASSIGN_AND: compoundExpr = ast_Binary_create(NULL, NULL, this->lvalue, this->rvalue, CORTO_AND); break;
+    case CORTO_ASSIGN_ADD: compoundExpr = ast_Binary__create(NULL, NULL, this->lvalue, this->rvalue, CORTO_ADD); break;
+    case CORTO_ASSIGN_SUB: compoundExpr = ast_Binary__create(NULL, NULL, this->lvalue, this->rvalue, CORTO_SUB); break;
+    case CORTO_ASSIGN_DIV: compoundExpr = ast_Binary__create(NULL, NULL, this->lvalue, this->rvalue, CORTO_DIV); break;
+    case CORTO_ASSIGN_MUL: compoundExpr = ast_Binary__create(NULL, NULL, this->lvalue, this->rvalue, CORTO_MUL); break;
+    case CORTO_ASSIGN_MOD: compoundExpr = ast_Binary__create(NULL, NULL, this->lvalue, this->rvalue, CORTO_MOD); break;
+    case CORTO_ASSIGN_OR:  compoundExpr = ast_Binary__create(NULL, NULL, this->lvalue, this->rvalue, CORTO_OR); break;
+    case CORTO_ASSIGN_AND: compoundExpr = ast_Binary__create(NULL, NULL, this->lvalue, this->rvalue, CORTO_AND); break;
         break;
     default:
         break;

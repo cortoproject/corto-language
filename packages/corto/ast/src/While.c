@@ -47,7 +47,7 @@ ic_node ast_While_toIc(
         program, ast_Expression_getType(this->condition), this->condition->isReference, FALSE);
 
     /* Create label to jump back to evaluation */
-    labelEval = ic_label_create(NULL, NULL);
+    labelEval = ic_label__create(NULL, NULL);
 
     /* Optimize condition - take into account literals, unwind condition for NOT-operator */
     condition = ast_Node_optimizeCondition(this->condition, &condResult, &inverse);
@@ -58,7 +58,7 @@ ic_node ast_While_toIc(
         }
 
         /* Create label to jump to when condition evaluates false */
-        labelNeq = ic_label_create(NULL, NULL);
+        labelNeq = ic_label__create(NULL, NULL);
         
         /* Evaluate condition, insert jump */
         if (expr) {

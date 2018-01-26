@@ -31,7 +31,7 @@ ast_Expression ast_Comma_addOrCreate(
         ast_Comma_addExpression(ast_Comma(list), expr);
         result = list;
     } else {
-        result = ast_Expression(ast_Comma_create(NULL, NULL));
+        result = ast_Expression(ast_Comma__create(NULL, NULL));
         ast_Comma_addExpression(ast_Comma(result), list);
         ast_Comma_addExpression(ast_Comma(result), expr);
         ast_Parser_collect(yparser(), result);
@@ -112,7 +112,7 @@ ast_Expression ast_Comma_insertOrCreate(
         ast_Comma_addExpression(ast_Comma(list), expr);
         result = list;
     } else {
-        result = ast_Expression(ast_Comma_create(NULL, NULL));
+        result = ast_Expression(ast_Comma__create(NULL, NULL));
         ast_Comma_addExpression(ast_Comma(result), expr);
         ast_Comma_addExpression(ast_Comma(result), list);
         ast_Parser_collect(yparser(), result);

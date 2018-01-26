@@ -102,7 +102,7 @@ void ast_Call_setParameters(
     corto_set_ref(&this->returnType, function->returnType);
     this->returnsReference = function->returnsReference;
 
-    corto_parameterSeq_resize(&this->parameters, function->parameters.length);
+    corto_parameterSeq__resize(&this->parameters, function->parameters.length);
 
     for (i = 0; i < function->parameters.length; i++) {
         corto_set_ref(&this->parameters.buffer[i].type, function->parameters.buffer[i].type);
