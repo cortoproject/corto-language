@@ -610,7 +610,7 @@ ast_Expression ast_Parser_resolve(ast_Parser this, const char *id) {
         corto_release(object);
     } else {
         result = ast_Expression(
-            ast_UnresolvedReference__create(NULL, NULL, 
+            ast_UnresolvedReference__create(NULL, NULL,
                 id,
                 this->scope,
                 this->line,
@@ -672,7 +672,7 @@ ast_Storage ast_Parser_observerCreate(
 
     /* Create observer */
     if (!id) {
-        observer = corto_observerDeclare();
+        observer = corto_declare(NULL, NULL, corto_observer_o);
         if (!observer) {
             goto error;
         }
@@ -683,7 +683,7 @@ ast_Storage ast_Parser_observerCreate(
         observer->mask = mask;
         corto_set_ref(&observer->dispatcher, dispatcher);
     } else {
-        observer = corto_observerCreateChild(
+        observer = corto_observer__create(
             this->scope, id, mask, observable, NULL, dispatcher, NULL, FALSE, NULL);
         if (!observer){
             goto error;
@@ -719,12 +719,14 @@ ast_Storage ast_Parser_declareDelegate(
     corto_sig_name(id, name);
 
     /* Declare and define delegate */
-    delegate = corto_delegateDeclareChild(this->scope, name);
+    delegate = corto_declare(this->scope, name, corto_delegate_o);
     if(!delegate) {
         goto error;
     }
 
-    if(corto_delegateDefine(delegate, corto_type(returnType), returnsReference, parameters)) {
+    corto_delegate__assign(delegate, corto_type(returnType), returnsReference, parameters);
+
+    if(corto_define(delegate)) {
         goto error;
     }
 
