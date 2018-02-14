@@ -8,7 +8,6 @@
 #define DRIVER_EXT_CX_H
 
 #include <corto/corto.h>
-#include <corto/corto.h>
 #include <driver/ext/cx/_project.h>
 #include <corto/ast/c/c.h>
 #include <corto/c/c.h>

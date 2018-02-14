@@ -10,7 +10,6 @@ void ast_Block_addStatement(
         corto_assert(this->statements != NULL, "initialization failed");
         ast_NodeList__append(this->statements, statement);
     }
-
 }
 
 ast_Local ast_Block_declareVar(
@@ -149,7 +148,7 @@ ast_Expression ast_Block_lookup(
                         if (m) {
                             ast_String memberIdExpr;
                             memberIdExpr = ast_String__create(NULL, NULL, id);
-                            result = ast_Expression(ast_Member__create(NULL, NULL, 
+                            result = ast_Expression(ast_Member__create(NULL, NULL,
                                      thisLocal, ast_Expression(memberIdExpr)));
                             ast_Parser_collect(yparser(), memberIdExpr);
                             ast_Parser_collect(yparser(), result);
@@ -160,7 +159,7 @@ ast_Expression ast_Block_lookup(
                             if (m) {
                                 ast_String memberIdExpr;
                                 memberIdExpr = ast_String__create(NULL, NULL, id);
-                                result = ast_Expression(ast_Member__create(NULL, NULL, 
+                                result = ast_Expression(ast_Member__create(NULL, NULL,
                                          thisLocal, ast_Expression(memberIdExpr)));
                                 ast_Parser_collect(yparser(), memberIdExpr);
                                 ast_Parser_collect(yparser(), result);

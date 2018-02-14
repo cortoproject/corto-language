@@ -97,7 +97,7 @@
               <corto:scope>
                   <method name="init()" returnType="int16"/>
                   <method name="construct()" returnType="int16"/>
-                  <member name="expressions" type="list{Expression}" modifiers="private"/>
+                  <member name="expressions" type="list{Expression}" modifiers="private|not_null"/>
                   <method name="addExpression(Expression expr)" returnType="int16"/>
                   <override name="toList()" returnType="list{Expression}"/>
                   <function name="addOrCreate(Expression list,Expression expr)" returnType="Expression"/>
@@ -293,8 +293,8 @@
                 <corto:scope>
                     <member name="parent" type="ast/Block"/>
                     <member name="isRoot" type="bool" modifiers="readonly"/>
-                    <member name="statements" type="list{ast/Node}" modifiers="private|local"/>
-                    <member name="locals" type="list{ast/Local}" modifiers="private|local"/>
+                    <member name="statements" type="list{ast/Node}" modifiers="private|local|not_null"/>
+                    <member name="locals" type="list{ast/Local}" modifiers="private|local|not_null"/>
                     <member name="function" type="function" modifiers="readonly"/>
                     <member name="while" type="ast/While" modifiers="readonly"/>
                     <method name="setFunction(function function"/>
@@ -489,7 +489,7 @@
                     <method name="construct()" returnType="int16"/>
                     <override name="serialize(type dstType,word dst)" returnType="int16"/>
                     <member name="value" type="string"/>
-                    <member name="elements" type="list{ast/Expression}" modifiers="readonly"/>
+                    <member name="elements" type="list{ast/Expression}" modifiers="readonly|not_null"/>
                     <member name="block" type="ast/Block" modifiers="readonly"/>
                     <member name="scope" type="object" modifiers="readonly"/>
                     <override name="getValue()" returnType="word"/>
@@ -532,7 +532,7 @@
             <class name="Update" base="Node" baseAccess="readonly">
                 <corto:scope>
                     <method name="construct()" returnType="int16"/>
-                    <member name="exprList" type="list{ast/Expression}"/>
+                    <member name="exprList" type="list{ast/Expression}" modifiers="not_null"/>
                     <member name="block" type="ast/Block"/>
                     <member name="from" type="ast/Expression"/>
                     <member name="kind" type="ast/UpdateKind"/>
@@ -653,7 +653,7 @@
                 <corto:scope>
                     <method name="construct()" returnType="int16"/>
                     <member name="assignValue" type="bool"/>
-                    <member name="operations" type="list{InitOper}" modifiers="private|local"/>
+                    <member name="operations" type="list{InitOper}" modifiers="private|local|not_null"/>
                     <method name="push()" returnType="int16"/>
                     <method name="pop()" returnType="int16"/>
                     <method name="value(Expression v)" returnType="int16"/>
@@ -708,7 +708,7 @@
                     <member name="source" type="string"/>
                     <member name="preprocessed" type="string" modifiers="readonly"/>
                     <member name="filename" type="string"/>
-                    <member name="imports" type="list{object}" modifiers="hidden"/>
+                    <member name="imports" type="list{object}" modifiers="hidden|not_null"/>
                     <member name="repl" type="uint32" modifiers="readonly"/> <!-- Is parser running in interpreted mode -->
                     <member name="line" type="uint32" modifiers="readonly"/>
                     <member name="column" type="uint32" modifiers="readonly"/>
@@ -722,11 +722,11 @@
                     <member name="errSet" type="bool" modifiers="readonly|private"/> <!-- If set the last operation on the parser returned an error -->
                     <member name="errLine" type="uint32" modifiers="readonly|private"/>
                     <member name="abort" type="bool" modifiers="readonly"/> <!-- If set the last operation on the parser indicated parsing should abort -->
-                    <member name="bindings" type="list{ast/Binding}" modifiers="readonly"/>
+                    <member name="bindings" type="list{ast/Binding}" modifiers="readonly|not_null"/>
                     <member name="pass" type="uint32" modifiers="private|local"/>
                     <method name="collectHeap(word addr)" returnType="void"/>
-                    <member name="heapCollected" type="list{word}" modifiers="private|local"/>
-                    <member name="collected" type="list{object}" modifiers="private|local"/>
+                    <member name="heapCollected" type="list{word}" modifiers="private|local|not_null"/>
+                    <member name="collected" type="list{object}" modifiers="private|local|not_null"/>
                     <member name="blockPreset" type="bool" modifiers="private|local"/>
                     <member name="isLocal" type="bool" modifiers="private|local"/> <!-- If set, next declaration will result in local variable -->
                     <member name="parseSingleExpr" type="bool" modifiers="private|local"/> <!-- If set parser is parsing one instruction -->
