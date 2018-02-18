@@ -1,5 +1,4 @@
 /* ast.h
- *
  * This is the main package file. Include this file in other projects.
  * Only modify inside the header-end and body-end sections.
  */
@@ -20,6 +19,7 @@
 #include <corto/ast/_type.h>
 #include <corto/ast/_interface.h>
 #include <corto/ast/_load.h>
+#include <corto/ast/_binding.h>
 #include <corto/ast/c/_api.h>
 
 /* $body() */
