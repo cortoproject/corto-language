@@ -125,7 +125,7 @@ ast_Call ast_createCallFromExpr(ast_Expression f, ast_Expression arguments) {
             goto error;
         default:
             ast_Parser_error(yparser(), "'%s' expression is not callable",
-                corto_idof(corto_enum_constant(ast_storageKind_o, ast_Storage(f)->kind)));
+                corto_idof(corto_enum_constant_from_value(ast_storageKind_o, ast_Storage(f)->kind)));
             goto error;
         }
 
