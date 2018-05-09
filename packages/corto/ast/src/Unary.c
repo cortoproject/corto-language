@@ -134,10 +134,10 @@ error:
     return NULL;
 }
 
-ic_node ast_Unary_toIc(
+corto_ic_node ast_Unary_toIc(
     ast_Unary this,
-    ic_program program,
-    ic_storage storage,
+    corto_ic_program program,
+    corto_ic_storage storage,
     bool stored)
 {
     ic_storage result;

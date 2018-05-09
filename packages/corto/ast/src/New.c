@@ -22,10 +22,10 @@ bool ast_New_hasSideEffects(
     return TRUE;
 }
 
-ic_node ast_New_toIc(
+corto_ic_node ast_New_toIc(
     ast_New this,
-    ic_program program,
-    ic_storage storage,
+    corto_ic_program program,
+    corto_ic_storage storage,
     bool stored)
 {
     ic_node type, attrs, result;

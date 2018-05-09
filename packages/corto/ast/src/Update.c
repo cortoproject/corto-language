@@ -69,10 +69,10 @@ static void ast_Update_end(ast_Update this, ic_program program, ic_node expr, ic
 }
 
 
-ic_node ast_Update_toIc(
+corto_ic_node ast_Update_toIc(
     ast_Update this,
-    ic_program program,
-    ic_storage storage,
+    corto_ic_program program,
+    corto_ic_storage storage,
     bool stored)
 {
     ic_node expr, from = NULL;

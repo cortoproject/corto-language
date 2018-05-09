@@ -111,10 +111,10 @@ void ast_Call_setParameters(
     }
 }
 
-ic_node ast_Call_toIc(
+corto_ic_node ast_Call_toIc(
     ast_Call this,
-    ic_program program,
-    ic_storage storage,
+    corto_ic_program program,
+    corto_ic_storage storage,
     bool stored)
 {
     ic_storage result = NULL;

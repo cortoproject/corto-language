@@ -1706,7 +1706,7 @@ error:
 
 int16_t ast_Parser_finalize(
     ast_Parser this,
-    ic_program program)
+    corto_ic_program program)
 {
     ic_scope scope = NULL;
     ic_storage returnValue = NULL;

@@ -135,10 +135,10 @@ error:
     return -1;
 }
 
-ic_node ast_Object_toIc(
+corto_ic_node ast_Object_toIc(
     ast_Object this,
-    ic_program program,
-    ic_storage storage,
+    corto_ic_program program,
+    corto_ic_storage storage,
     bool stored)
 {
     CORTO_UNUSED(program);

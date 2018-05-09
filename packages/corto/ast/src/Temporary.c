@@ -19,10 +19,10 @@ void ast_Temporary_setProxy(
     corto_set_ref(&this->proxy, proxy);
 }
 
-ic_node ast_Temporary_toIc(
+corto_ic_node ast_Temporary_toIc(
     ast_Temporary this,
-    ic_program program,
-    ic_storage storage,
+    corto_ic_program program,
+    corto_ic_storage storage,
     bool stored)
 {
     CORTO_UNUSED(storage);

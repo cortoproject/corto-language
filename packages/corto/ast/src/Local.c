@@ -16,10 +16,10 @@ int16_t ast_Local_construct(
     return ast_Storage_construct(ast_Storage(this));
 }
 
-ic_node ast_Local_toIc(
+corto_ic_node ast_Local_toIc(
     ast_Local this,
-    ic_program program,
-    ic_storage storage,
+    corto_ic_program program,
+    corto_ic_storage storage,
     bool stored)
 {
     ic_node result;

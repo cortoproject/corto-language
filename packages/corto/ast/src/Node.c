@@ -68,10 +68,10 @@ int16_t ast_Node_init(
     return 0;
 }
 
-ic_node ast_Node_toIc_v(
+corto_ic_node ast_Node_toIc_v(
     ast_Node this,
-    ic_program program,
-    ic_storage storage,
+    corto_ic_program program,
+    corto_ic_storage storage,
     bool stored)
 {
     CORTO_UNUSED(this);

@@ -121,10 +121,10 @@ ast_Expression ast_Comma_insertOrCreate(
     return result;
 }
 
-ic_node ast_Comma_toIc(
+corto_ic_node ast_Comma_toIc(
     ast_Comma this,
-    ic_program program,
-    ic_storage storage,
+    corto_ic_program program,
+    corto_ic_storage storage,
     bool stored)
 {
 

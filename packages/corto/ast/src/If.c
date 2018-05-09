@@ -35,10 +35,10 @@ void ast_If_noWarnUnreachable(
     this->warnUnreachable = FALSE;
 }
 
-ic_node ast_If_toIc(
+corto_ic_node ast_If_toIc(
     ast_If this,
-    ic_program program,
-    ic_storage storage,
+    corto_ic_program program,
+    corto_ic_storage storage,
     bool stored)
 {
     ic_storage accumulator;

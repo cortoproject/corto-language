@@ -28,10 +28,10 @@ error:
     return -1;
 }
 
-ic_node ast_While_toIc(
+corto_ic_node ast_While_toIc(
     ast_While this,
-    ic_program program,
-    ic_storage storage,
+    corto_ic_program program,
+    corto_ic_storage storage,
     bool stored)
 {
     ic_storage accumulator;

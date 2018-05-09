@@ -104,10 +104,10 @@ void ast_Ternary_setOperator(
 
 }
 
-ic_node ast_Ternary_toIc(
+corto_ic_node ast_Ternary_toIc(
     ast_Ternary this,
-    ic_program program,
-    ic_storage storage,
+    corto_ic_program program,
+    corto_ic_storage storage,
     bool stored)
 {
     ast_If_toIc(this->ifstmt, program, storage, stored);

@@ -43,10 +43,10 @@ error:
     return -1;
 }
 
-ic_node ast_Character_toIc(
+corto_ic_node ast_Character_toIc(
     ast_Character this,
-    ic_program program,
-    ic_storage storage,
+    corto_ic_program program,
+    corto_ic_storage storage,
     bool stored)
 {
     ic_literal result;

@@ -51,10 +51,10 @@ error:
     return -1;
 }
 
-ic_node ast_Null_toIc(
+corto_ic_node ast_Null_toIc(
     ast_Null this,
-    ic_program program,
-    ic_storage storage,
+    corto_ic_program program,
+    corto_ic_storage storage,
     bool stored)
 {
     CORTO_UNUSED(storage);

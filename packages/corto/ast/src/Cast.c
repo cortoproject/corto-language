@@ -42,10 +42,10 @@ bool ast_Cast_hasReturnedResource(
 
 }
 
-ic_node ast_Cast_toIc(
+corto_ic_node ast_Cast_toIc(
     ast_Cast this,
-    ic_program program,
-    ic_storage storage,
+    corto_ic_program program,
+    corto_ic_storage storage,
     bool stored)
 {
     ic_node lvalue, rvalue, result;

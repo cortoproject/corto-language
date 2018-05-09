@@ -13,10 +13,10 @@ int16_t ast_Init_construct(
     return 0;
 }
 
-ic_node ast_Init_toIc(
+corto_ic_node ast_Init_toIc(
     ast_Init this,
-    ic_program program,
-    ic_storage storage,
+    corto_ic_program program,
+    corto_ic_storage storage,
     bool stored)
 {
     ic_node s;

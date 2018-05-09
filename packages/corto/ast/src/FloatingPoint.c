@@ -44,10 +44,10 @@ error:
     return -1;
 }
 
-ic_node ast_FloatingPoint_toIc(
+corto_ic_node ast_FloatingPoint_toIc(
     ast_FloatingPoint this,
-    ic_program program,
-    ic_storage storage,
+    corto_ic_program program,
+    corto_ic_storage storage,
     bool stored)
 {
     ic_node result;

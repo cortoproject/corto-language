@@ -13,10 +13,10 @@ int16_t ast_Define_construct(
     return 0;
 }
 
-ic_node ast_Define_toIc(
+corto_ic_node ast_Define_toIc(
     ast_Define this,
-    ic_program program,
-    ic_storage storage,
+    corto_ic_program program,
+    corto_ic_storage storage,
     bool stored)
 {
     ic_node object;

@@ -97,10 +97,10 @@ bool ast_Member_hasSideEffects(
     return ast_Expression_hasSideEffects(this->lvalue);
 }
 
-ic_node ast_Member_toIc(
+corto_ic_node ast_Member_toIc(
     ast_Member this,
-    ic_program program,
-    ic_storage storage,
+    corto_ic_program program,
+    corto_ic_storage storage,
     bool stored)
 {
     ic_member result = NULL;

@@ -13,10 +13,10 @@ int16_t ast_Deinit_construct(
     return 0;
 }
 
-ic_node ast_Deinit_toIc(
+corto_ic_node ast_Deinit_toIc(
     ast_Deinit this,
-    ic_program program,
-    ic_storage storage,
+    corto_ic_program program,
+    corto_ic_storage storage,
     bool stored)
 {
     ic_node s;

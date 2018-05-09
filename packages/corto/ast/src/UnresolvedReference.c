@@ -65,10 +65,10 @@ ast_Expression ast_UnresolvedReference_resolve(
     return result;
 }
 
-ic_node ast_UnresolvedReference_toIc(
+corto_ic_node ast_UnresolvedReference_toIc(
     ast_UnresolvedReference this,
-    ic_program program,
-    ic_storage storage,
+    corto_ic_program program,
+    corto_ic_storage storage,
     bool stored)
 {
 

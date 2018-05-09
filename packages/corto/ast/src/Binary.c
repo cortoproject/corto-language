@@ -672,10 +672,10 @@ error:
     return;
 }
 
-ic_node ast_Binary_toIc(
+corto_ic_node ast_Binary_toIc(
     ast_Binary this,
-    ic_program program,
-    ic_storage storage,
+    corto_ic_program program,
+    corto_ic_storage storage,
     bool stored)
 {
     ic_node returnsResult = NULL;

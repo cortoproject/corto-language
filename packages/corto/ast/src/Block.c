@@ -245,10 +245,10 @@ void ast_Block_setFunction(
     corto_set_ref(&this->function, function);
 }
 
-ic_node ast_Block_toIc(
+corto_ic_node ast_Block_toIc(
     ast_Block this,
-    ic_program program,
-    ic_storage storage,
+    corto_ic_program program,
+    corto_ic_storage storage,
     bool stored)
 {
     ic_scope scope;
@@ -267,10 +267,10 @@ ic_node ast_Block_toIc(
     return (ic_node)scope;
 }
 
-ic_node ast_Block_toIcBody(
+corto_ic_node ast_Block_toIcBody(
     ast_Block this,
-    ic_program program,
-    ic_storage storage,
+    corto_ic_program program,
+    corto_ic_storage storage,
     bool stored)
 {
     ast_Node statement;

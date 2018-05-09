@@ -67,10 +67,10 @@ bool ast_PostFix_hasReturnedResource(
     return ast_Expression_hasReturnedResource(this->lvalue);
 }
 
-ic_node ast_PostFix_toIc(
+corto_ic_node ast_PostFix_toIc(
     ast_PostFix this,
-    ic_program program,
-    ic_storage storage,
+    corto_ic_program program,
+    corto_ic_storage storage,
     bool stored)
 {
     ic_storage result;

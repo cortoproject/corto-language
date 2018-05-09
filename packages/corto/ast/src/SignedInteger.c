@@ -47,10 +47,10 @@ error:
     return -1;
 }
 
-ic_node ast_SignedInteger_toIc(
+corto_ic_node ast_SignedInteger_toIc(
     ast_SignedInteger this,
-    ic_program program,
-    ic_storage storage,
+    corto_ic_program program,
+    corto_ic_storage storage,
     bool stored)
 {
     ic_node result;
