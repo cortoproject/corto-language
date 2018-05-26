@@ -181,8 +181,8 @@ corto_int16 corto_expr_run(corto_expr *expr, corto_value *out, ...) {
     if (expr->function->returnsReference) {
         *out = corto_value_object(*(corto_object*)ptr, NULL);
     } else {
-        *out = corto_value_value(&out->is.value.storage, expr->function->returnType);
-        *(corto_uint64*)&out->is.value.storage = dummy;
+        *out = corto_value_ptr(&out->is.pointer.storage, expr->function->returnType);
+        *(corto_uint64*)&out->is.pointer.storage = dummy;
     }
 
     return 0;
@@ -197,8 +197,8 @@ corto_int16 corto_expr_runb(corto_expr *expr, corto_value *out, void **args) {
     if (expr->function->returnsReference) {
         *out = corto_value_object(*(corto_object*)ptr, NULL);
     } else {
-        *out = corto_value_value(&out->is.value.storage, expr->function->returnType);
-        *(corto_uint64*)&out->is.value.storage = dummy;
+        *out = corto_value_ptr(&out->is.pointer.storage, expr->function->returnType);
+        *(corto_uint64*)&out->is.pointer.storage = dummy;
     }
 
     return 0;

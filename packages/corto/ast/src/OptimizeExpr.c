@@ -100,7 +100,7 @@ ast_Expression ast_OptimizeExpr_reorderExpression(ast_Expression expr) {
 
 
 void ast_OptimizeExpr_valueFromExpr(ast_Expression e, corto_value *out) {
-    *out = corto_value_value(
+    *out = corto_value_ptr(
         (void*)ast_Expression_getValue(e),
         ast_Expression_getType(e));
 }

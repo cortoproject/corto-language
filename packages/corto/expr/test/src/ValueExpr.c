@@ -29,7 +29,7 @@ corto_void _test_ValueExpr_tc_compositeArg(
     ret = corto_expr_run(&e, &result, &p);
     test_assert(ret == 0);
     test_assert(corto_value_typeof(&result) == corto_type(test_Point_o));
-    test_assert(result.kind == CORTO_VALUE);
+    test_assert(result.kind == CORTO_POINTER);
     test_assert(corto_value_ptrof(&result) != NULL);
     test_Point *ptr = corto_value_ptrof(&result);
     test_assertint(ptr->x, 10);
@@ -59,7 +59,7 @@ corto_void _test_ValueExpr_tc_compositeLiteral(
     ret = corto_expr_run(&e, &result);
     test_assert(ret == 0);
     test_assert(corto_value_typeof(&result) == corto_type(test_Point_o));
-    test_assert(result.kind == CORTO_VALUE);
+    test_assert(result.kind == CORTO_POINTER);
     test_assert(corto_value_ptrof(&result) != NULL);
     test_Point *ptr = corto_value_ptrof(&result);
     test_assertint(ptr->x, 10);
@@ -124,7 +124,7 @@ corto_void _test_ValueExpr_tc_compositeVar(
     ret = corto_expr_run(&e, &result);
     test_assert(ret == 0);
     test_assert(corto_value_typeof(&result) == corto_type(test_Point_o));
-    test_assert(result.kind == CORTO_VALUE);
+    test_assert(result.kind == CORTO_POINTER);
     test_assert(corto_value_ptrof(&result) != NULL);
     test_Point *ptr = corto_value_ptrof(&result);
     test_assertint(ptr->x, 10);
@@ -155,7 +155,7 @@ corto_void _test_ValueExpr_tc_primitiveArg(
     ret = corto_expr_run(&e, &result, 10);
     test_assert(ret == 0);
     test_assert(corto_value_typeof(&result) == corto_type(corto_int32_o));
-    test_assert(result.kind == CORTO_VALUE);
+    test_assert(result.kind == CORTO_POINTER);
     test_assert(corto_value_ptrof(&result) != NULL);
     test_assertint(*(corto_int32*)corto_value_ptrof(&result), 10);
 
@@ -182,7 +182,7 @@ corto_void _test_ValueExpr_tc_primitiveLiteral(
     ret = corto_expr_run(&e, &result, 10);
     test_assert(ret == 0);
     test_assert(corto_value_typeof(&result) == corto_type(corto_uint64_o));
-    test_assert(result.kind == CORTO_VALUE);
+    test_assert(result.kind == CORTO_POINTER);
     test_assert(corto_value_ptrof(&result) != NULL);
     test_assertint(*(corto_int32*)corto_value_ptrof(&result), 10);
 
@@ -242,7 +242,7 @@ corto_void _test_ValueExpr_tc_primitiveVar(
     ret = corto_expr_run(&e, &result);
     test_assert(ret == 0);
     test_assert(corto_value_typeof(&result) == corto_type(corto_int32_o));
-    test_assert(result.kind == CORTO_VALUE);
+    test_assert(result.kind == CORTO_POINTER);
     test_assert(corto_value_ptrof(&result) != NULL);
     test_assertint(*(corto_int32*)corto_value_ptrof(&result), 10);
 
