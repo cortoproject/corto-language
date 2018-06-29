@@ -83,7 +83,7 @@ corto_type ast_Parser_initGetType(ast_Initializer this, corto_member *m_out) {
     if (this->fp > 0) {
         t = this->frames[this->fp-1].type;
         if (this->frames[this->fp].isKey) {
-            result = corto_map(t)->keyType;
+            result = corto_map(t)->key_type;
         } else {
             switch(t->kind) {
             case CORTO_COMPOSITE: {
@@ -121,7 +121,7 @@ corto_type ast_Parser_initGetType(ast_Initializer this, corto_member *m_out) {
             }
 
             case CORTO_COLLECTION:
-                result = corto_collection(t)->elementType;
+                result = corto_collection(t)->element_type;
                 break;
             default: {
                 /* If value is a non-composite type it can only have one initializer value. If there are more
@@ -259,8 +259,8 @@ uint16_t ast_Initializer_initFrame(
         } else {
             corto_set_ref(&this->frames[this->fp].member, NULL);
             if (t->kind == CORTO_COLLECTION) {
-                corto_set_ref(&this->frames[this->fp].type, corto_collection(t)->elementType);
-                /*corto_set_ref(&yparser()->rvalueType, corto_collection(t)->elementType);*/
+                corto_set_ref(&this->frames[this->fp].type, corto_collection(t)->element_type);
+                /*corto_set_ref(&yparser()->rvalueType, corto_collection(t)->element_type);*/
             } else {
                 corto_set_ref(&this->frames[this->fp].type, NULL);
             }

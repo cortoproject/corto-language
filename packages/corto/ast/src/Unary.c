@@ -17,7 +17,7 @@ corto_int16 ast_Unary_doConstruct(ast_Unary this) {
         }
     } else {
         if (this->_operator == CORTO_MUL) {
-            corto_type iterType = corto_iterator(lvalueType)->elementType;
+            corto_type iterType = corto_iterator(lvalueType)->element_type;
             corto_set_ref(&ast_Expression(this)->type, iterType);
             ast_Expression(this)->isReference = TRUE;
         } else {

@@ -24,16 +24,16 @@ int16_t ast_Element_construct(
                         goto error;
                     }
                 } else {
-                    if (!corto_type_castable(corto_map(lvalueType)->keyType, rvalueType)) {
+                    if (!corto_type_castable(corto_map(lvalueType)->key_type, rvalueType)) {
                         corto_id id, id2;
                         ast_Parser_error(yparser(), "expected expression of type '%s' for key, got '%s'",
-                                ast_Parser_id(corto_map(lvalueType)->keyType, id), ast_Parser_id(rvalueType, id2));
+                                ast_Parser_id(corto_map(lvalueType)->key_type, id), ast_Parser_id(rvalueType, id2));
                         goto error;
                     }
                 }
             }
             /* Set type of expression */
-            corto_set_ref(&ast_Expression(this)->type, corto_collection(lvalueType)->elementType);
+            corto_set_ref(&ast_Expression(this)->type, corto_collection(lvalueType)->element_type);
         } else {
             corto_id id;
             ast_Parser_error(yparser(), "cannot obtain element from this of non-collection type '%s'", ast_Parser_id(lvalueType, id));
@@ -44,7 +44,7 @@ int16_t ast_Element_construct(
         goto error;
     }
 
-    ast_Expression(this)->isReference = corto_collection(lvalueType)->elementType->reference;
+    ast_Expression(this)->isReference = corto_collection(lvalueType)->element_type->reference;
 
     return ast_Storage_construct(ast_Storage(this));
 error:

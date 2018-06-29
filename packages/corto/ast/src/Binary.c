@@ -106,7 +106,7 @@ error:
 }
 
 /* If types of a binary expression don't match, figure out which casts are required */
-corto_int16 ast_Binary_cast(ast_Binary this, corto_type *returnType) {
+corto_int16 ast_Binary_cast(ast_Binary this, corto_type *return_type) {
     corto_type lvalueType, rvalueType, castType = NULL;
     ast_Expression lvalue, rvalue;
     corto_bool referenceMismatch = FALSE;
@@ -179,9 +179,9 @@ corto_int16 ast_Binary_cast(ast_Binary this, corto_type *returnType) {
                     if (ltype->width == rtype->width) {
                         /* If width and kind are equal, no conversion is required. */
                         if (lscore > rscore) {
-                            *returnType = lvalueType;
+                            *return_type = lvalueType;
                         } else if (lscore < rscore) {
-                            *returnType = rvalueType;
+                            *return_type = rvalueType;
                         }
                     } else {
                         /* If lvalue has a larger width than rvalue, cast rvalue to lvalueType (and vice versa) */
@@ -253,7 +253,7 @@ corto_int16 ast_Binary_cast(ast_Binary this, corto_type *returnType) {
     }
 
     if (castType) {
-        *returnType = castType;
+        *return_type = castType;
     }
 
     return 0;
@@ -640,7 +640,7 @@ void ast_Binary_setOperator(
         }
     }
 
-    /* Depending on the operator, the returnType might be a bool or the type of the lvalue */
+    /* Depending on the operator, the return_type might be a bool or the type of the lvalue */
     switch(this->_operator) {
     case CORTO_COND_EQ:
     case CORTO_COND_NEQ:
@@ -682,15 +682,15 @@ corto_ic_node ast_Binary_toIc(
 
     if (this->isScalar) {
         ic_node lvalue, rvalue, result, conditionLvalue, conditionRvalue = NULL;
-        corto_type thisType = ast_Expression_getType(ast_Expression(this));
+        corto_type this_type = ast_Expression_getType(ast_Expression(this));
         corto_bool condition = ast_Binary_isConditional(this);
         corto_bool isReference = (this->lvalue->deref == Ast_ByReference) || (this->rvalue->deref == Ast_ByReference);
         ic_derefKind deref = this->deref == Ast_ByReference ? IC_DEREF_ADDRESS : IC_DEREF_VALUE;
 
-        if (storage && (storage->type == thisType)) {
+        if (storage && (storage->type == this_type)) {
             result = (ic_node)storage;
         } else {
-            result = (ic_node)ic_program_pushAccumulator(program, thisType, isReference, FALSE);
+            result = (ic_node)ic_program_pushAccumulator(program, this_type, isReference, FALSE);
         }
 
         returnsResult = result;
@@ -716,7 +716,7 @@ corto_ic_node ast_Binary_toIc(
             }
         } else if (stored && result) {
             rvalue = ast_Node_toIc(ast_Node(this->rvalue), program, (ic_storage)conditionRvalue, TRUE);
-            if ((thisType->kind == CORTO_PRIMITIVE) && (corto_primitive(thisType)->kind == CORTO_TEXT)) {
+            if ((this_type->kind == CORTO_PRIMITIVE) && (corto_primitive(this_type)->kind == CORTO_TEXT)) {
                 if (ast_Binary_toIc_strOp(this, program, (ic_storage)result, ic_node(lvalue), ic_node(rvalue))) {
                     goto error;
                 }

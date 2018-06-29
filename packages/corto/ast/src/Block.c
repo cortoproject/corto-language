@@ -58,7 +58,7 @@ ast_Local ast_Block_declareReturnVariable(
     corto_assert(this->locals != NULL, "initialization failed");
 
     /* If variable did not exist, declare it in this block */
-    result = ast_Local__create(NULL, NULL, id, function->returnType, Ast_LocalReturn, function->returnsReference);
+    result = ast_Local__create(NULL, NULL, id, function->return_type, Ast_LocalReturn, function->is_reference);
     if (result) {
         corto_ll_append(this->locals, result);
     }
@@ -104,7 +104,7 @@ ast_Expression ast_Block_lookup(
 
     if (!result) {
         if (this->function && corto_instanceof(corto_interface_o, corto_parentof(this->function))) {
-            if (corto_procedure(corto_typeof(this->function))->hasThis) {
+            if (corto_procedure(corto_typeof(this->function))->has_this) {
                 if (strcmp(id, "this")) {
                     corto_object parent;
                     corto_member m;
@@ -140,7 +140,7 @@ ast_Expression ast_Block_lookup(
                         goto error;
                     }
 
-                    m = corto_interface_resolveMember(corto_interface(parent), id);
+                    m = corto_interface_resolve_member(corto_interface(parent), id);
                     /* If 'this' is not yet declared, lookup is used while declaring
                      * function parameters. */
                     if (thisLocal) {
@@ -155,7 +155,7 @@ ast_Expression ast_Block_lookup(
                         } else {
                             corto_method m;
                             /* If no member is found, lookup method */
-                            m = corto_interface_resolveMethod(corto_interface(parent), id);
+                            m = corto_interface_resolve_method(corto_interface(parent), id);
                             if (m) {
                                 ast_String memberIdExpr;
                                 memberIdExpr = ast_String__create(NULL, NULL, id);

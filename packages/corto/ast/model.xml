@@ -16,11 +16,11 @@
                 </corto:scope>
             </enum>
 
-            <function name="valueKindFromType(type type)" returnType="valueKind"/>
+            <function name="valueKindFromType(type type)" return_type="valueKind"/>
             <function name="report(string kind,string filename,uint32 line,uint32 column,string error,string token)"/>
             <function name="reportError(string filename,uint32 line,uint32 column,string error,string token)"/>
             <function name="reportWarning(string filename,uint32 line,uint32 column,string error,string token)"/>
-            <function name="isOperatorAssignment(operatorKind operator)" returnType="bool"/>
+            <function name="isOperatorAssignment(operatorKind operator)" return_type="bool"/>
 
             <!-- Enumeration representing the different treenode kinds -->
             <enum name="nodeKind">
@@ -51,11 +51,11 @@
             <!-- Base node -->
             <class name="Node">
                 <corto:scope>
-                    <method name="init()" returnType="int16"/>
+                    <method name="init()" return_type="int16"/>
                     <member name="kind" type="nodeKind"/>
                     <member name="line" type="uint32" modifiers="readonly"/>
                     <member name="column" type="uint32" modifiers="readonly"/>
-                    <overridable name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
+                    <overridable name="toIc(ic/program program,ic/storage storage,bool stored)" return_type="ic/node"/>
                 </corto:scope>
             </class>
 
@@ -75,104 +75,104 @@
                     <member name="isReference" type="bool" modifiers="readonly"/>
                     <member name="deref" type="derefKind" modifiers="readonly"/>
                     <member name="unresolved" type="bool" modifiers="readonly"/>
-                    <method name="getType()" returnType="type"/>
-                    <method name="getType_expr(Expression target)" returnType="type"/>
-                    <method name="getType_type(type target)" returnType="type"/>
-                    <overridable name="serialize(type dstType,word dst)" returnType="int16"/>
-                    <method name="cast(type type,bool isReference)" returnType="ast/Expression"/>
-                    <overridable name="fold()" returnType="ast/Expression"/>
-                    <overridable name="getValue()" returnType="word"/>
-                    <overridable name="toList()" returnType="list{Expression}"/>
-                    <overridable name="hasSideEffects()" returnType="bool"/>
-                    <overridable name="hasReturnedResource()" returnType="bool"/>
-                    <overridable name="resolve(type type)" returnType="Expression"/>
-                    <overridable name="id()" returnType="string"/>
-                    <function name="fromList(list{Expression} list)" returnType="Expression"/>
+                    <method name="getType()" return_type="type"/>
+                    <method name="getType_expr(Expression target)" return_type="type"/>
+                    <method name="getType_type(type target)" return_type="type"/>
+                    <overridable name="serialize(type dstType,word dst)" return_type="int16"/>
+                    <method name="cast(type type,bool isReference)" return_type="ast/Expression"/>
+                    <overridable name="fold()" return_type="ast/Expression"/>
+                    <overridable name="getValue()" return_type="word"/>
+                    <overridable name="toList()" return_type="list{Expression}"/>
+                    <overridable name="hasSideEffects()" return_type="bool"/>
+                    <overridable name="hasReturnedResource()" return_type="bool"/>
+                    <overridable name="resolve(type type)" return_type="Expression"/>
+                    <overridable name="id()" return_type="string"/>
+                    <function name="fromList(list{Expression} list)" return_type="Expression"/>
                     <function name="cleanList(list{Expression} list)"/>
                 </corto:scope>
             </class>
 
             <!-- Comma expression node -->
-            <class name="Comma" base="Expression" baseAccess="readonly">
+            <class name="Comma" base="Expression" base_modifiers="readonly">
               <corto:scope>
-                  <method name="init()" returnType="int16"/>
-                  <method name="construct()" returnType="int16"/>
+                  <method name="init()" return_type="int16"/>
+                  <method name="construct()" return_type="int16"/>
                   <member name="expressions" type="list{Expression}" modifiers="private|not_null"/>
-                  <method name="addExpression(Expression expr)" returnType="int16"/>
-                  <override name="toList()" returnType="list{Expression}"/>
-                  <function name="addOrCreate(Expression list,Expression expr)" returnType="Expression"/>
-                  <function name="insertOrCreate(Expression list,Expression expr)" returnType="Expression"/>
-                  <override name="hasSideEffects()" returnType="bool"/>
-                  <override name="hasReturnedResource()" returnType="bool"/>
-                  <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
+                  <method name="addExpression(Expression expr)" return_type="int16"/>
+                  <override name="toList()" return_type="list{Expression}"/>
+                  <function name="addOrCreate(Expression list,Expression expr)" return_type="Expression"/>
+                  <function name="insertOrCreate(Expression list,Expression expr)" return_type="Expression"/>
+                  <override name="hasSideEffects()" return_type="bool"/>
+                  <override name="hasReturnedResource()" return_type="bool"/>
+                  <override name="toIc(ic/program program,ic/storage storage,bool stored)" return_type="ic/node"/>
               </corto:scope>
             </class>
 
             <!-- Base literal node -->
-            <class name="Literal" base="Expression" baseAccess="readonly">
+            <class name="Literal" base="Expression" base_modifiers="readonly">
                 <corto:scope>
-                    <method name="init()" returnType="int16"/>
+                    <method name="init()" return_type="int16"/>
                     <member name="kind" type="valueKind"/>
-                    <overridable name="getValue()" returnType="word"/>
+                    <overridable name="getValue()" return_type="word"/>
                 </corto:scope>
             </class>
 
             <!-- Boolean literal -->
-            <class name="Boolean" base="Literal" baseAccess="readonly">
+            <class name="Boolean" base="Literal" base_modifiers="readonly">
                 <corto:scope>
-                    <method name="init()" returnType="int16"/>
-                    <override name="serialize(type dstType,word dst)" returnType="int16"/>
+                    <method name="init()" return_type="int16"/>
+                    <override name="serialize(type dstType,word dst)" return_type="int16"/>
                     <member name="value" type="bool"/>
-                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
+                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" return_type="ic/node"/>
                 </corto:scope>
             </class>
 
             <!-- Character literal -->
-            <class name="Character" base="Literal" baseAccess="readonly">
+            <class name="Character" base="Literal" base_modifiers="readonly">
                 <corto:scope>
-                    <method name="init()" returnType="int16"/>
-                    <override name="serialize(type dstType,word dst)" returnType="int16"/>
+                    <method name="init()" return_type="int16"/>
+                    <override name="serialize(type dstType,word dst)" return_type="int16"/>
                     <member name="value" type="char"/>
-                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
+                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" return_type="ic/node"/>
                 </corto:scope>
             </class>
 
             <!-- Integer literal -->
-            <class name="Integer" base="Literal" baseAccess="readonly">
+            <class name="Integer" base="Literal" base_modifiers="readonly">
                 <corto:scope>
-                    <method name="init()" returnType="int16"/>
-                    <override name="serialize(type dstType,word dst)" returnType="int16"/>
+                    <method name="init()" return_type="int16"/>
+                    <override name="serialize(type dstType,word dst)" return_type="int16"/>
                     <member name="value" type="uint64"/>
-                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
+                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" return_type="ic/node"/>
                 </corto:scope>
             </class>
 
             <!-- Signed integer literal -->
-            <class name="SignedInteger" base="Literal" baseAccess="readonly">
+            <class name="SignedInteger" base="Literal" base_modifiers="readonly">
                 <corto:scope>
-                    <method name="init()" returnType="int16"/>
-                    <override name="serialize(type dstType,word dst)" returnType="int16"/>
+                    <method name="init()" return_type="int16"/>
+                    <override name="serialize(type dstType,word dst)" return_type="int16"/>
                     <member name="value" type="int64"/>
-                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
+                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" return_type="ic/node"/>
                 </corto:scope>
             </class>
 
             <!-- Floating point literal -->
-            <class name="FloatingPoint" base="Literal" baseAccess="readonly">
+            <class name="FloatingPoint" base="Literal" base_modifiers="readonly">
                 <corto:scope>
-                    <method name="init()" returnType="int16"/>
-                    <override name="serialize(type dstType,word dst)" returnType="int16"/>
+                    <method name="init()" return_type="int16"/>
+                    <override name="serialize(type dstType,word dst)" return_type="int16"/>
                     <member name="value" type="float64"/>
-                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
+                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" return_type="ic/node"/>
                 </corto:scope>
             </class>
 
             <!-- Null literal -->
-            <class name="Null" base="Literal" baseAccess="readonly">
+            <class name="Null" base="Literal" base_modifiers="readonly">
                 <corto:scope>
-                    <method name="init()" returnType="int16"/>
-                    <override name="serialize(type dstType,word dst)" returnType="int16"/>
-                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
+                    <method name="init()" return_type="int16"/>
+                    <override name="serialize(type dstType,word dst)" return_type="int16"/>
+                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" return_type="ic/node"/>
                 </corto:scope>
             </class>
 
@@ -190,9 +190,9 @@
             </enum>
 
             <!-- Base variable node -->
-            <class name="Storage" base="Expression" baseAccess="readonly">
+            <class name="Storage" base="Expression" base_modifiers="readonly">
                 <corto:scope>
-                    <method name="construct()" returnType="int16"/>
+                    <method name="construct()" return_type="int16"/>
                     <member name="kind" type="storageKind"/>
                 </corto:scope>
             </class>
@@ -208,80 +208,80 @@
             </enum>
 
             <!-- Local variable node -->
-            <class name="Local" base="Storage" baseAccess="readonly">
+            <class name="Local" base="Storage" base_modifiers="readonly">
                 <corto:scope>
-                    <method name="construct()" returnType="int16"/>
+                    <method name="construct()" return_type="int16"/>
                     <member name="name" type="string"/>
                     <member name="type" type="type"/>
                     <member name="kind" type="ast/LocalKind"/>
                     <member name="reference" type="bool"/>
-                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
+                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" return_type="ic/node"/>
                 </corto:scope>
             </class>
 
             <!-- Temporary storage node -->
-            <class name="Temporary" base="Storage" baseAccess="readonly">
+            <class name="Temporary" base="Storage" base_modifiers="readonly">
                 <corto:scope>
-                    <method name="construct()" returnType="int16"/>
+                    <method name="construct()" return_type="int16"/>
                     <member name="type" type="type"/>
                     <member name="reference" type="bool"/>
                     <member name="proxy" type="Temporary" modifiers="private|local"/>
                     <member name="ic" type="ic/node" modifiers="private|local"/>
                     <method name="setProxy(Temporary proxy)"/>
-                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
+                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" return_type="ic/node"/>
                 </corto:scope>
             </class>
 
             <!-- Observer template variable -->
             <class name="Template" base="Local">
                 <corto:scope>
-                    <method name="construct()" returnType="int16"/>
+                    <method name="construct()" return_type="int16"/>
                 </corto:scope>
             </class>
 
             <!-- Object variable node -->
-            <class name="Object" base="Storage" baseAccess="readonly">
+            <class name="Object" base="Storage" base_modifiers="readonly">
                 <corto:scope>
-                    <method name="construct()" returnType="int16"/>
-                    <override name="serialize(type dstType,word dst)" returnType="int16"/>
-                    <override name="id()" returnType="string"/>
-                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
-                    <override name="getValue()" returnType="word"/>
+                    <method name="construct()" return_type="int16"/>
+                    <override name="serialize(type dstType,word dst)" return_type="int16"/>
+                    <override name="id()" return_type="string"/>
+                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" return_type="ic/node"/>
+                    <override name="getValue()" return_type="word"/>
                     <member name="value" type="object"/>
                     <member name="originalId" type="string" modifiers="hidden"/>
                 </corto:scope>
             </class>
 
             <!-- Unresolved object, allows for just in time resolving -->
-            <class name="UnresolvedReference" base="Storage" baseAccess="readonly">
+            <class name="UnresolvedReference" base="Storage" base_modifiers="readonly">
                 <corto:scope>
-                    <method name="construct()" returnType="int16"/>
+                    <method name="construct()" return_type="int16"/>
                     <member name="ref" type="string"/>
                     <member name="scope" type="object"/>
                     <member name="line" type="uint32"/>
                     <member name="column" type="uint32"/>
-                    <method name="error()" returnType="void"/>
-                    <override name="resolve(type type)" returnType="Expression"/>
-                    <override name="id()" returnType="string"/>
-                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
+                    <method name="error()" return_type="void"/>
+                    <override name="resolve(type type)" return_type="Expression"/>
+                    <override name="id()" return_type="string"/>
+                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" return_type="ic/node"/>
                 </corto:scope>
             </class>
 
             <!-- Explicitly init storage -->
-            <class name="Init" base="Expression" baseAccess="readonly">
+            <class name="Init" base="Expression" base_modifiers="readonly">
                 <corto:scope>
-                    <method name="construct()" returnType="int16"/>
+                    <method name="construct()" return_type="int16"/>
                     <member name="storage" type="ast/Storage"/>
-                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
+                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" return_type="ic/node"/>
                 </corto:scope>
             </class>
 
             <!-- Explicitly deinit storage -->
-            <class name="Deinit" base="Expression" baseAccess="readonly">
+            <class name="Deinit" base="Expression" base_modifiers="readonly">
                 <corto:scope>
-                    <method name="construct()" returnType="int16"/>
+                    <method name="construct()" return_type="int16"/>
                     <member name="storage" type="ast/Storage"/>
-                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
+                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" return_type="ic/node"/>
                 </corto:scope>
             </class>
 
@@ -289,7 +289,7 @@
             <corto:object name="While" type="class"/>
 
             <!-- Statement block -->
-            <class name="Block" base="Node" baseAccess="readonly">
+            <class name="Block" base="Node" base_modifiers="readonly">
                 <corto:scope>
                     <member name="parent" type="ast/Block"/>
                     <member name="isRoot" type="bool" modifiers="readonly"/>
@@ -298,68 +298,68 @@
                     <member name="function" type="function" modifiers="readonly"/>
                     <member name="while" type="ast/While" modifiers="readonly"/>
                     <method name="setFunction(function function"/>
-                    <method name="declareVar(string id,type type,bool isParameter,bool isReference)" returnType="ast/Local"/>
-                    <method name="declareTemplate(string id,type type,bool isParameter,bool isReference)" returnType="ast/Template"/>
-                    <method name="declareReturnVariable(function function)" returnType="ast/Local"/>
-                    <method name="lookup(string id)" returnType="ast/Expression"/>
-                    <method name="lookupLocal(string id)" returnType="ast/Local"/> <!-- Only search for locals -->
-                    <method name="resolve(string id)" returnType="ast/Expression"/>
-                    <method name="resolveLocal(string id)" returnType="ast/Local"/>
+                    <method name="declareVar(string id,type type,bool isParameter,bool isReference)" return_type="ast/Local"/>
+                    <method name="declareTemplate(string id,type type,bool isParameter,bool isReference)" return_type="ast/Template"/>
+                    <method name="declareReturnVariable(function function)" return_type="ast/Local"/>
+                    <method name="lookup(string id)" return_type="ast/Expression"/>
+                    <method name="lookupLocal(string id)" return_type="ast/Local"/> <!-- Only search for locals -->
+                    <method name="resolve(string id)" return_type="ast/Expression"/>
+                    <method name="resolveLocal(string id)" return_type="ast/Local"/>
                     <method name="addStatement(ast/Node statement)"/>
-                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
-                    <method name="toIcBody(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
+                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" return_type="ic/node"/>
+                    <method name="toIcBody(ic/program program,ic/storage storage,bool stored)" return_type="ic/node"/>
                 </corto:scope>
             </class>
 
             <!-- Member expression -->
-            <class name="Member" base="Storage" baseAccess="readonly">
+            <class name="Member" base="Storage" base_modifiers="readonly">
                 <corto:scope>
-                    <method name="construct()" returnType="int16"/>
+                    <method name="construct()" return_type="int16"/>
                     <member name="lvalue" type="ast/Expression"/>
                     <member name="rvalue" type="ast/Expression"/>
                     <member name="superMember" type="bool" modifiers="readonly"/>
                     <member name="member" type="object" modifiers="private"/> <!-- Only set when determined at compile-time -->
-                    <override name="hasSideEffects()" returnType="bool"/>
-                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
+                    <override name="hasSideEffects()" return_type="bool"/>
+                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" return_type="ic/node"/>
                 </corto:scope>
             </class>
 
             <!-- Element expression -->
-            <class name="Element" base="Storage" baseAccess="readonly">
+            <class name="Element" base="Storage" base_modifiers="readonly">
                 <corto:scope>
-                    <method name="construct()" returnType="int16"/>
+                    <method name="construct()" return_type="int16"/>
                     <member name="lvalue" type="ast/Expression"/>
                     <member name="rvalue" type="ast/Expression"/>
-                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
+                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" return_type="ic/node"/>
                 </corto:scope>
             </class>
 
             <!-- Call expression -->
-            <class name="Call" base="Expression" baseAccess="readonly">
+            <class name="Call" base="Expression" base_modifiers="readonly">
                 <corto:scope>
-                    <method name="construct()" returnType="int16"/>
+                    <method name="construct()" return_type="int16"/>
 
                     <member name="instanceExpr" type="ast/Expression"/>
                     <member name="arguments" type="ast/Expression"/>
                     <member name="functionExpr" type="ast/Expression" modifiers="readonly"/>
                     <member name="instanceIsAny" type="bool" modifiers="readonly"/>
 
-                    <member name="returnType" type="type" modifiers="readonly"/>
-                    <member name="returnsReference" type="bool" modifiers="readonly"/>
+                    <member name="return_type" type="type" modifiers="readonly"/>
+                    <member name="is_reference" type="bool" modifiers="readonly"/>
                     <member name="parameters" type="sequence{parameter}" modifiers="readonly"/>
                     <member name="overloaded" type="bool" modifiers="readonly"/>
 
                     <method name="setParameters(function function)"/>
-                    <override name="hasSideEffects()" returnType="bool"/>
-                    <override name="hasReturnedResource()" returnType="bool"/>
-                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
+                    <override name="hasSideEffects()" return_type="bool"/>
+                    <override name="hasReturnedResource()" return_type="bool"/>
+                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" return_type="ic/node"/>
                 </corto:scope>
             </class>
 
             <!-- Compiler-defined function call -->
             <class name="StaticCall" base="Call">
                 <corto:scope>
-                    <method name="construct()" returnType="int16"/>
+                    <method name="construct()" return_type="int16"/>
                     <member name="function" type="function"/>
                 </corto:scope>
             </class>
@@ -367,7 +367,7 @@
             <!-- Runtime-defined (delegate) function call -->
             <class name="DelegateCall" base="Call">
                 <corto:scope>
-                    <method name="construct()" returnType="int16"/>
+                    <method name="construct()" return_type="int16"/>
                     <member name="expr" type="ast/Expression"/>
                 </corto:scope>
             </class>
@@ -382,72 +382,72 @@
                     <member name="block" type="ast/Block"/>
                     <member name="overloaded" type="bool" modifiers="local|private"/>
                     <member name="signature" type="string" modifiers="local|private"/>
-                    <method name="buildSignature()" returnType="int16"/>
-                    <method name="build()" returnType="ast/Call"/>
+                    <method name="buildSignature()" return_type="int16"/>
+                    <method name="build()" return_type="ast/Call"/>
                 </corto:scope>
             </struct>
 
             <!-- Cast expression -->
-            <class name="Cast" base="Expression" baseAccess="readonly">
+            <class name="Cast" base="Expression" base_modifiers="readonly">
                 <corto:scope>
-                    <method name="construct()" returnType="int16"/>
+                    <method name="construct()" return_type="int16"/>
                     <member name="lvalue" type="type"/>
                     <member name="rvalue" type="ast/Expression"/>
                     <member name="isReference" type="bool"/>
-                    <override name="hasReturnedResource()" returnType="bool"/>
-                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
+                    <override name="hasReturnedResource()" return_type="bool"/>
+                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" return_type="ic/node"/>
                 </corto:scope>
             </class>
 
             <!-- Postfix expression -->
-            <class name="PostFix" base="Expression" baseAccess="readonly">
+            <class name="PostFix" base="Expression" base_modifiers="readonly">
                 <corto:scope>
-                    <method name="construct()" returnType="int16"/>
+                    <method name="construct()" return_type="int16"/>
                     <member name="lvalue" type="ast/Expression"/>
                     <member name="operator" type="operatorKind"/>
-                    <override name="hasReturnedResource()" returnType="bool"/>
-                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
+                    <override name="hasReturnedResource()" return_type="bool"/>
+                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" return_type="ic/node"/>
                 </corto:scope>
             </class>
 
             <!-- Unary expression -->
-            <class name="Unary" base="Expression" baseAccess="readonly">
+            <class name="Unary" base="Expression" base_modifiers="readonly">
                 <corto:scope>
-                    <method name="construct()" returnType="int16"/>
+                    <method name="construct()" return_type="int16"/>
                     <member name="lvalue" type="ast/Expression"/>
                     <member name="operator" type="operatorKind"/>
-                    <override name="fold()" returnType="ast/Expression"/>
-                    <override name="hasSideEffects()" returnType="bool"/>
-                    <override name="hasReturnedResource()" returnType="bool"/>
-                    <override name="resolve(type type)" returnType="Expression"/>
-                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
+                    <override name="fold()" return_type="ast/Expression"/>
+                    <override name="hasSideEffects()" return_type="bool"/>
+                    <override name="hasReturnedResource()" return_type="bool"/>
+                    <override name="resolve(type type)" return_type="Expression"/>
+                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" return_type="ic/node"/>
                 </corto:scope>
             </class>
 
             <!-- Binary expression -->
-            <class name="Binary" base="Expression" baseAccess="readonly">
+            <class name="Binary" base="Expression" base_modifiers="readonly">
                 <corto:scope>
-                    <method name="construct()" returnType="int16"/>
+                    <method name="construct()" return_type="int16"/>
                     <member name="lvalue" type="ast/Expression"/>
                     <member name="rvalue" type="ast/Expression"/>
                     <member name="operator" type="operatorKind"/>
                     <member name="deref" type="ast/derefKind" modifiers="local|private"/>
                     <member name="isScalar" type="lang/bool" modifiers="local|readonly"/>
-                    <override name="fold()" returnType="ast/Expression"/>
-                    <method name="setOperator(operatorKind kind)" returnType="void"/>
-                    <override name="hasSideEffects()" returnType="bool"/>
-                    <override name="hasReturnedResource()" returnType="bool"/>
-                    <override name="resolve(type type)" returnType="Expression"/>
-                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
+                    <override name="fold()" return_type="ast/Expression"/>
+                    <method name="setOperator(operatorKind kind)" return_type="void"/>
+                    <override name="hasSideEffects()" return_type="bool"/>
+                    <override name="hasReturnedResource()" return_type="bool"/>
+                    <override name="resolve(type type)" return_type="Expression"/>
+                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" return_type="ic/node"/>
                 </corto:scope>
             </class>
 
             <corto:object name="If" type="class"/>
 
             <!-- Ternary expression -->
-            <class name="Ternary" base="Expression" baseAccess="readonly">
+            <class name="Ternary" base="Expression" base_modifiers="readonly">
                 <corto:scope>
-                    <method name="construct()" returnType="int16"/>
+                    <method name="construct()" return_type="int16"/>
                     <member name="condition" type="ast/Expression"/>
                     <member name="ifTrue" type="ast/Expression"/>
                     <member name="ifFalse" type="ast/Expression"/>
@@ -455,69 +455,69 @@
                     <member name="ifFalseExpr" type="ast/Expression" modifiers="local|private"/>
                     <member name="result" type="ast/Expression"/>
                     <member name="ifstmt" type="ast/If" modifiers="local|private"/>
-                    <method name="setOperator(operatorKind kind)" returnType="void"/>
-                    <override name="hasSideEffects()" returnType="bool"/>
-                    <override name="hasReturnedResource()" returnType="bool"/>
-                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
+                    <method name="setOperator(operatorKind kind)" return_type="void"/>
+                    <override name="hasSideEffects()" return_type="bool"/>
+                    <override name="hasReturnedResource()" return_type="bool"/>
+                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" return_type="ic/node"/>
                 </corto:scope>
             </class>
 
             <!-- New expression -->
-            <class name="New" base="Expression" baseAccess="readonly">
+            <class name="New" base="Expression" base_modifiers="readonly">
                 <corto:scope>
-                    <method name="construct()" returnType="int16"/>
+                    <method name="construct()" return_type="int16"/>
                     <member name="type" type="type"/>
                     <member name="attributes" type="ast/Expression"/>
-                    <override name="hasSideEffects()" returnType="bool"/>
-                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
+                    <override name="hasSideEffects()" return_type="bool"/>
+                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" return_type="ic/node"/>
                 </corto:scope>
             </class>
 
             <!-- Define statement -->
-            <class name="Define" base="Node" baseAccess="readonly">
+            <class name="Define" base="Node" base_modifiers="readonly">
                 <corto:scope>
-                    <method name="construct()" returnType="int16"/>
+                    <method name="construct()" return_type="int16"/>
                     <member name="object" type="ast/Expression"/>
-                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
+                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" return_type="ic/node"/>
                 </corto:scope>
             </class>
 
             <!-- Text literal -->
-            <class name="String" base="Literal" baseAccess="readonly">
+            <class name="String" base="Literal" base_modifiers="readonly">
                 <corto:scope>
-                    <method name="init()" returnType="int16"/>
-                    <method name="construct()" returnType="int16"/>
-                    <override name="serialize(type dstType,word dst)" returnType="int16"/>
+                    <method name="init()" return_type="int16"/>
+                    <method name="construct()" return_type="int16"/>
+                    <override name="serialize(type dstType,word dst)" return_type="int16"/>
                     <member name="value" type="string"/>
                     <member name="elements" type="list{ast/Expression}" modifiers="readonly|not_null"/>
                     <member name="block" type="ast/Block" modifiers="readonly"/>
                     <member name="scope" type="object" modifiers="readonly"/>
-                    <override name="getValue()" returnType="word"/>
-                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
+                    <override name="getValue()" return_type="word"/>
+                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" return_type="ic/node"/>
                 </corto:scope>
             </class>
 
             <!-- If statement -->
-            <class name="If" base="Node" baseAccess="readonly">
+            <class name="If" base="Node" base_modifiers="readonly">
                 <corto:scope>
-                    <method name="construct()" returnType="int16"/>
+                    <method name="construct()" return_type="int16"/>
                     <member name="condition" type="ast/Expression"/>
                     <member name="trueBranch" type="ast/Block"/>
                     <member name="falseBranch" type="ast/If"/>
                     <member name="warnUnreachable" type="bool" modifiers="private|local"/>
                     <method name="noWarnUnreachable()"/>
-                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
+                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" return_type="ic/node"/>
                 </corto:scope>
             </class>
 
             <!-- While statement -->
-            <class name="While" base="Node" baseAccess="readonly">
+            <class name="While" base="Node" base_modifiers="readonly">
                 <corto:scope>
-                    <method name="construct()" returnType="int16"/>
+                    <method name="construct()" return_type="int16"/>
                     <member name="condition" type="ast/Expression"/>
                     <member name="trueBranch" type="ast/Block"/>
                     <member name="isUntil" type="bool"/>
-                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
+                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" return_type="ic/node"/>
                 </corto:scope>
             </class>
 
@@ -529,14 +529,14 @@
                     <constant name="UpdateEnd"/>
                 </corto:scope>
             </enum>
-            <class name="Update" base="Node" baseAccess="readonly">
+            <class name="Update" base="Node" base_modifiers="readonly">
                 <corto:scope>
-                    <method name="construct()" returnType="int16"/>
+                    <method name="construct()" return_type="int16"/>
                     <member name="exprList" type="list{ast/Expression}" modifiers="not_null"/>
                     <member name="block" type="ast/Block"/>
                     <member name="from" type="ast/Expression"/>
                     <member name="kind" type="ast/UpdateKind"/>
-                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" returnType="ic/node"/>
+                    <override name="toIc(ic/program program,ic/storage storage,bool stored)" return_type="ic/node"/>
                 </corto:scope>
             </class>
 
@@ -568,25 +568,25 @@
                 </corto:scope>
             </struct>
 
-            <class name="Initializer" base="Expression" baseAccess="readonly">
+            <class name="Initializer" base="Expression" base_modifiers="readonly">
                 <corto:scope>
                     <member name="variables" type="array{InitializerVariable,64}"/>
                     <member name="variableCount" type="uint8"/>
                     <member name="frames" type="array{InitializerFrame,64}" modifiers="private|local"/>
                     <member name="fp" type="uint8" modifiers="private|local"/>
-                    <method name="construct()" returnType="int16"/>
-                    <method name="currentType()" returnType="type"/>
-                    <method name="type()" returnType="type"/>
-                    <overridable name="push()" returnType="int16"/>
-                    <overridable name="pop()" returnType="int8"/>
-                    <overridable name="value(Expression v)" returnType="int16"/>
-                    <overridable name="member(string name)" returnType="int32"/>
-                    <overridable name="pushKey()" returnType="int16"/>
-                    <overridable name="popKey()" returnType="int16"/>
-                    <overridable name="valueKey(Expression key)" returnType="int16"/>
-                    <overridable name="defineObject()" returnType="int16"/>
-                    <overridable name="next()" returnType="int16"/>
-                    <method name="initFrame()" returnType="uint16"/>
+                    <method name="construct()" return_type="int16"/>
+                    <method name="currentType()" return_type="type"/>
+                    <method name="type()" return_type="type"/>
+                    <overridable name="push()" return_type="int16"/>
+                    <overridable name="pop()" return_type="int8"/>
+                    <overridable name="value(Expression v)" return_type="int16"/>
+                    <overridable name="member(string name)" return_type="int32"/>
+                    <overridable name="pushKey()" return_type="int16"/>
+                    <overridable name="popKey()" return_type="int16"/>
+                    <overridable name="valueKey(Expression key)" return_type="int16"/>
+                    <overridable name="defineObject()" return_type="int16"/>
+                    <overridable name="next()" return_type="int16"/>
+                    <method name="initFrame()" return_type="uint16"/>
                 </corto:scope>
             </class>
 
@@ -600,11 +600,11 @@
             <!-- A static initializer represents an object that is initialized during compiletime -->
             <class name="StaticInitializer" base="Initializer">
                 <corto:scope>
-                    <method name="construct()" returnType="int16"/>
+                    <method name="construct()" return_type="int16"/>
                     <member name="frames" type="array{StaticInitializerFrame,64}" modifiers="private|local"/>
-                    <override name="push()" returnType="int16"/>
-                    <override name="value(Expression v)" returnType="int16"/>
-                    <override name="defineObject()" returnType="int16"/>
+                    <override name="push()" return_type="int16"/>
+                    <override name="value(Expression v)" return_type="int16"/>
+                    <override name="defineObject()" return_type="int16"/>
                 </corto:scope>
             </class>
 
@@ -619,14 +619,14 @@
             <!-- A dynamic initializer represents an object that is initialized during runtime -->
             <class name="DynamicInitializer" base="Initializer">
                 <corto:scope>
-                    <method name="construct()" returnType="int16"/>
+                    <method name="construct()" return_type="int16"/>
                     <member name="assignValue" type="bool"/>
                     <member name="frames" type="array{DynamicInitializerFrame,64}" modifiers="private|local"/>
-                    <override name="push()" returnType="int16"/>
-                    <override name="pop()" returnType="int16"/>
-                    <override name="value(Expression v)" returnType="int16"/>
-                    <override name="defineObject()" returnType="int16"/>
-                    <override name="hasReturnedResource()" returnType="bool"/>
+                    <override name="push()" return_type="int16"/>
+                    <override name="pop()" return_type="int16"/>
+                    <override name="value(Expression v)" return_type="int16"/>
+                    <override name="defineObject()" return_type="int16"/>
+                    <override name="hasReturnedResource()" return_type="bool"/>
                 </corto:scope>
             </class>
 
@@ -651,16 +651,16 @@
             <!-- Record initializer for later evaluation -->
             <class name="InitializerExpression" base="Initializer">
                 <corto:scope>
-                    <method name="construct()" returnType="int16"/>
+                    <method name="construct()" return_type="int16"/>
                     <member name="assignValue" type="bool"/>
                     <member name="operations" type="list{InitOper}" modifiers="private|local|not_null"/>
-                    <method name="push()" returnType="int16"/>
-                    <method name="pop()" returnType="int16"/>
-                    <method name="value(Expression v)" returnType="int16"/>
-                    <method name="member(string name)" returnType="int32"/>
-                    <method name="defineObject()" returnType="int16"/>
-                    <method name="insert(Expression variable)" returnType="int16"/>
-                    <override name="hasReturnedResource()" returnType="bool"/>
+                    <method name="push()" return_type="int16"/>
+                    <method name="pop()" return_type="int16"/>
+                    <method name="value(Expression v)" return_type="int16"/>
+                    <method name="member(string name)" return_type="int32"/>
+                    <method name="defineObject()" return_type="int16"/>
+                    <method name="insert(Expression variable)" return_type="int16"/>
+                    <override name="hasReturnedResource()" return_type="bool"/>
                 </corto:scope>
             </class>
 
@@ -672,7 +672,7 @@
                 </corto:scope>
             </struct>
 
-            <sequence name="ParserDeclarationSeq" elementType="ParserDeclaration" max="256"/>
+            <sequence name="ParserDeclarationSeq" element_type="ParserDeclaration" max="256"/>
 
             <!-- ParserNew is used to transfer new-expression information within the parser -->
             <struct name="ParserNew">
@@ -703,7 +703,7 @@
             <!-- Parser object -->
             <class name="Parser">
                 <corto:scope>
-                    <method name="construct()" returnType="int16"/>
+                    <method name="construct()" return_type="int16"/>
                     <method name="destruct()"/>
                     <member name="source" type="string"/>
                     <member name="preprocessed" type="string" modifiers="readonly"/>
@@ -724,7 +724,7 @@
                     <member name="abort" type="bool" modifiers="readonly"/> <!-- If set the last operation on the parser indicated parsing should abort -->
                     <member name="bindings" type="list{ast/Binding}" modifiers="readonly|not_null"/>
                     <member name="pass" type="uint32" modifiers="private|local"/>
-                    <method name="collectHeap(word addr)" returnType="void"/>
+                    <method name="collectHeap(word addr)" return_type="void"/>
                     <member name="heapCollected" type="list{word}" modifiers="private|local|not_null"/>
                     <member name="collected" type="list{object}" modifiers="private|local|not_null"/>
                     <member name="blockPreset" type="bool" modifiers="private|local"/>
@@ -749,58 +749,58 @@
                     <member name="initDynamic" type="bool" modifiers="private|local"/>
 
                     <!-- Parser framework functions -->
-                    <method name="parse(sequence{string} argv)" returnType="uint32"/>
-                    <function name="parseLine(string expr,object scope,word value)" returnType="int16"/> <!--  Parse a single line -->
-                    <function name="parseType(string expr,object scope)" returnType="type"/> <!-- Obtain type of expression, don't run -->
-                    <function name="parseFunction(function f,string expr,bool inverse)" returnType="int16"/>
-                    <method name="parseExpression(string expr,ast/Block block,object scope,uint32 line,uint32 column)" returnType="ast/Expression"/>
-                    <method name="isErrSet()" returnType="bool"/>
-                    <method name="isAbortSet()" returnType="bool"/>
-                    <method name="collect(object o)" returnType="void"/>
+                    <method name="parse(sequence{string} argv)" return_type="uint32"/>
+                    <function name="parseLine(string expr,object scope,word value)" return_type="int16"/> <!--  Parse a single line -->
+                    <function name="parseType(string expr,object scope)" return_type="type"/> <!-- Obtain type of expression, don't run -->
+                    <function name="parseFunction(function f,string expr,bool inverse)" return_type="int16"/>
+                    <method name="parseExpression(string expr,ast/Block block,object scope,uint32 line,uint32 column)" return_type="ast/Expression"/>
+                    <method name="isErrSet()" return_type="bool"/>
+                    <method name="isAbortSet()" return_type="bool"/>
+                    <method name="collect(object o)" return_type="void"/>
                     <method name="reset()"/>
-                    <method name="argumentToString(type type,string id,bool reference)" returnType="string"/> <!-- Convert function argument to string -->
+                    <method name="argumentToString(type type,string id,bool reference)" return_type="string"/> <!-- Convert function argument to string -->
 
                     <!-- Scope management -->
-                    <method name="pushScope()" returnType="object"/>
+                    <method name="pushScope()" return_type="object"/>
                     <method name="popScope(object previous)"/>
-                    <method name="pushPackage(string name)" returnType="int16"/>
-                    <method name="import(string name)" returnType="int16"/>
+                    <method name="pushPackage(string name)" return_type="int16"/>
+                    <method name="import(string name)" return_type="int16"/>
 
                     <!-- Lookup -->
-                    <method name="lookup(string id)" returnType="ast/Expression"/>
+                    <method name="lookup(string id)" return_type="ast/Expression"/>
 
                     <!-- Blocks management -->
-                    <method name="blockPush(bool presetBlock)" returnType="ast/Block"/>
+                    <method name="blockPush(bool presetBlock)" return_type="ast/Block"/>
                     <method name="blockPop()"/>
                     <method name="addStatement(ast/Node statement)"/>
 
                     <!-- Declaration -->
-                    <method name="declaration(type type,string id,bool isReference)" returnType="Storage"/>
-                    <method name="declareFunction(type returnType,string id,type kind,bool returnsReference)" returnType="Storage"/>
-                    <method name="declareFunctionParams(Storage function)" returnType="ast/Block"/>
-                    <method name="defineObject()" returnType="int16"/>
-                    <method name="defineScope()" returnType="int16"/>
-                    <method name="defineVariable(Storage object)" returnType="int16"/>
-                    <method name="with()" returnType="int16"/>
+                    <method name="declaration(type type,string id,bool isReference)" return_type="Storage"/>
+                    <method name="declareFunction(type return_type,string id,type kind,bool is_reference)" return_type="Storage"/>
+                    <method name="declareFunctionParams(Storage function)" return_type="ast/Block"/>
+                    <method name="defineObject()" return_type="int16"/>
+                    <method name="defineScope()" return_type="int16"/>
+                    <method name="defineVariable(Storage object)" return_type="int16"/>
+                    <method name="with()" return_type="int16"/>
 
                     <!-- Bind function to implementation -->
-                    <method name="bind(ast/Storage function,ast/Block block)" returnType="int16"/>
-                    <method name="bindOneliner(ast/Storage function,ast/Block block,ast/Expression expr)" returnType="int16"/>
+                    <method name="bind(ast/Storage function,ast/Block block)" return_type="int16"/>
+                    <method name="bindOneliner(ast/Storage function,ast/Block block,ast/Expression expr)" return_type="int16"/>
 
                     <!-- Finalize bound functions -->
-                    <method name="finalize(ic/program program)" returnType="int16"/>
+                    <method name="finalize(ic/program program)" return_type="int16"/>
 
-                    <method name="initDeclare(Expression ids)" returnType="int16"/>
-                    <method name="initPushStatic()" returnType="int16"/>
-                    <method name="initPushExpression()" returnType="Expression"/>
-                    <method name="initPush()" returnType="int16"/>
-                    <method name="initPushIdentifier(Expression type)" returnType="Expression"/>
-                    <method name="initPop()" returnType="int16"/>
-                    <method name="initValue(Expression expr)" returnType="int16"/>
-                    <method name="initMember(string member)" returnType="int16"/>
-                    <method name="initKeyValuePush()" returnType="int16"/>
-                    <method name="initKeyValuePop()" returnType="int16"/>
-                    <method name="initKeyValueSet(ast/Expression expr)" returnType="int16"/>
+                    <method name="initDeclare(Expression ids)" return_type="int16"/>
+                    <method name="initPushStatic()" return_type="int16"/>
+                    <method name="initPushExpression()" return_type="Expression"/>
+                    <method name="initPush()" return_type="int16"/>
+                    <method name="initPushIdentifier(Expression type)" return_type="Expression"/>
+                    <method name="initPop()" return_type="int16"/>
+                    <method name="initValue(Expression expr)" return_type="int16"/>
+                    <method name="initMember(string member)" return_type="int16"/>
+                    <method name="initKeyValuePush()" return_type="int16"/>
+                    <method name="initKeyValuePop()" return_type="int16"/>
+                    <method name="initKeyValueSet(ast/Expression expr)" return_type="int16"/>
 
                     <!-- Set lvalue -->
                     <member name="lvalue" type="array{ast/Lvalue,64}" modifiers="private|local"/>
@@ -808,41 +808,41 @@
                     <method name="pushLvalue(ast/Expression lvalue,bool isAssignment)"/>
                     <method name="pushReturnAsLvalue(function function)"/>
                     <method name="popLvalue()"/>
-                    <method name="getLvalue(bool assignment)" returnType="ast/Expression"/>
-                    <method name="getLvalueType(bool assignment)" returnType="type"/>
+                    <method name="getLvalue(bool assignment)" return_type="ast/Expression"/>
+                    <method name="getLvalueType(bool assignment)" return_type="type"/>
 
                     <!-- This complex type is used to lookup member identifiers in element expression -->
                     <member name="complexType" type="array{type,64}" modifiers="private|local"/>
                     <member name="complexTypeSp" type="int32" modifiers="private|local"/>
                     <method name="pushComplexType(ast/Expression lvalue)"/>
                     <method name="popComplexType()"/>
-                    <method name="getComplexType()" returnType="type"/>
+                    <method name="getComplexType()" return_type="type"/>
 
                     <!-- Observer -->
                     <method name="observerPush()"/>
-                    <method name="observerDeclaration(string id,ast/Expression object,eventMask mask,ast/Object dispatcher)" returnType="Storage"/>
+                    <method name="observerDeclaration(string id,ast/Expression object,eventMask mask,ast/Object dispatcher)" return_type="Storage"/>
 
                     <!-- Foreach -->
-                    <method name="foreach(string loopId,ast/Expression collection)" returnType="int16"/>
+                    <method name="foreach(string loopId,ast/Expression collection)" return_type="int16"/>
 
                     <!-- Postfix expressions -->
-                    <method name="callExpr(ast/Expression function,ast/Expression arguments)" returnType="ast/Expression"/>
-                    <method name="memberExpr(ast/Expression lvalue,ast/Expression rvalue)" returnType="ast/Expression"/>
-                    <method name="elementExpr(ast/Expression lvalue,ast/Expression rvalue)" returnType="ast/Expression"/>
-                    <method name="castExpr(type lvalue,ast/Expression rvalue)" returnType="ast/Expression"/>
+                    <method name="callExpr(ast/Expression function,ast/Expression arguments)" return_type="ast/Expression"/>
+                    <method name="memberExpr(ast/Expression lvalue,ast/Expression rvalue)" return_type="ast/Expression"/>
+                    <method name="elementExpr(ast/Expression lvalue,ast/Expression rvalue)" return_type="ast/Expression"/>
+                    <method name="castExpr(type lvalue,ast/Expression rvalue)" return_type="ast/Expression"/>
 
                     <!-- Arithmic expressions -->
-                    <method name="postfixExpr(ast/Expression lvalue,operatorKind operator)" returnType="ast/Expression"/>
-                    <method name="unaryExpr(ast/Expression lvalue,operatorKind operator)" returnType="ast/Expression"/>
-                    <method name="binaryExpr(ast/Expression lvalues,ast/Expression rvalues,operatorKind operator)" returnType="ast/Node"/>
-                    <method name="ternaryExpr(ast/Expression cond,ast/Expression iftrue,ast/Expression iffalse)" returnType="ast/Expression"/>
+                    <method name="postfixExpr(ast/Expression lvalue,operatorKind operator)" return_type="ast/Expression"/>
+                    <method name="unaryExpr(ast/Expression lvalue,operatorKind operator)" return_type="ast/Expression"/>
+                    <method name="binaryExpr(ast/Expression lvalues,ast/Expression rvalues,operatorKind operator)" return_type="ast/Node"/>
+                    <method name="ternaryExpr(ast/Expression cond,ast/Expression iftrue,ast/Expression iffalse)" return_type="ast/Expression"/>
 
                     <!-- Loops and conditional statements -->
-                    <method name="ifStatement(ast/Expression condition,ast/Block trueBranch,ast/If falseBranch)" returnType="ast/Node"/>
-                    <method name="whileStatement(ast/Expression condition,ast/Block trueBranch,bool isUntil)" returnType="ast/Node"/>
+                    <method name="ifStatement(ast/Expression condition,ast/Block trueBranch,ast/If falseBranch)" return_type="ast/Node"/>
+                    <method name="whileStatement(ast/Expression condition,ast/Block trueBranch,bool isUntil)" return_type="ast/Node"/>
 
                     <!-- Update -->
-                    <method name="updateStatement(ast/Expression expr,ast/Block block)" returnType="ast/Node"/>
+                    <method name="updateStatement(ast/Expression expr,ast/Block block)" return_type="ast/Node"/>
                 </corto:scope>
             </class>
         </corto:package>

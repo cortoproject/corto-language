@@ -41,19 +41,19 @@ corto_word ast_Initializer_offset(ast_StaticInitializer this, corto_uint32 varia
     case CORTO_COLLECTION: {
         if (fp) {
             corto_collection t = corto_collection(frame->type);
-            corto_type elementType = t->elementType;
-            corto_uint32 elementSize = corto_type_sizeof(elementType);
+            corto_type element_type = t->element_type;
+            corto_uint32 elementSize = corto_type_sizeof(element_type);
             switch(t->kind) {
             case CORTO_SEQUENCE:
                 ((corto_objectseq*)base)->length++;
                 ((corto_objectseq*)base)->buffer = corto_realloc(((corto_objectseq*)base)->buffer, ((corto_objectseq*)base)->length * elementSize);
                 base = (corto_word)((corto_objectseq*)base)->buffer;
             case CORTO_ARRAY:
-                result = base + thisFrame->location * corto_type_sizeof(elementType);
+                result = base + thisFrame->location * corto_type_sizeof(element_type);
                 memset((void*)result, 0, elementSize);
                 break;
             case CORTO_LIST: {
-                if (corto_collection_requiresAlloc(elementType)) {
+                if (corto_collection_requires_alloc(element_type)) {
                     result = (corto_word)corto_calloc(elementSize);
                 }
                 if (!*(corto_ll*)base) {
@@ -66,9 +66,9 @@ corto_word ast_Initializer_offset(ast_StaticInitializer this, corto_uint32 varia
                 break;
             }
             case CORTO_MAP: {
-                corto_type keyType = corto_map(frame->type)->keyType;
+                corto_type key_type = corto_map(frame->type)->key_type;
                 if (!thisFrame->isKey) {
-                    if (corto_collection_requiresAlloc(elementType)) {
+                    if (corto_collection_requires_alloc(element_type)) {
                         result = (corto_word)corto_calloc(elementSize);
                     }
                     if (!*(corto_rb*)base) {
@@ -84,7 +84,7 @@ corto_word ast_Initializer_offset(ast_StaticInitializer this, corto_uint32 varia
                         }
                     }
                 } else {
-                    result = (corto_word)corto_calloc(corto_type_sizeof(keyType));
+                    result = (corto_word)corto_calloc(corto_type_sizeof(key_type));
                     this->frames[fp].keyPtr[variable] = result;
                     thisFrame->isKey = FALSE;
                 }
@@ -147,7 +147,7 @@ int16_t ast_StaticInitializer_defineObject(
             corto_type t = corto_typeof(o);
             if (!corto_check_attr(o, CORTO_ATTR_NAMED) ||
                 (corto_parentof(o) && corto_check_state(corto_parentof(o), CORTO_VALID)) ||
-                (t->options.parentState != CORTO_VALID))
+                (t->parent_state != CORTO_VALID))
             {
                 if (!corto(CORTO_DEFINE, {.object = o})) {
                     corto_id id1;

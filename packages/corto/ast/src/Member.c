@@ -4,7 +4,7 @@
 
 #include "ast__private.h"
 
-corto_int16 ast_Member_resolveMember(ast_Member this, corto_type type, corto_string member) {
+corto_int16 ast_Member_resolve_member(ast_Member this, corto_type type, corto_string member) {
     corto_object o = NULL;
 
     if (corto_instanceof(corto_type(corto_interface_o), type) && !strcmp(member, "super")) {
@@ -18,11 +18,11 @@ corto_int16 ast_Member_resolveMember(ast_Member this, corto_type type, corto_str
         }
     } else {
         if (corto_instanceof(corto_type(corto_interface_o), type)) {
-            o = corto_interface_resolveMember(corto_interface(type), member);
+            o = corto_interface_resolve_member(corto_interface(type), member);
         }
         if (!o) {
             /* If no members are found for name, look for methods */
-            o = corto_type_resolveProcedure(type, member);
+            o = corto_type_resolve_procedure(type, member);
             if (!o) {
                 corto_id id;
                 if (corto_lasterr()) {
@@ -34,7 +34,7 @@ corto_int16 ast_Member_resolveMember(ast_Member this, corto_type type, corto_str
                 }
                 goto error;
             }
-            corto_set_ref(&ast_Expression(this)->type, corto_function(o)->returnType);
+            corto_set_ref(&ast_Expression(this)->type, corto_function(o)->return_type);
         } else {
             corto_set_ref(&ast_Expression(this)->type, corto_member(o)->type);
         }
@@ -72,7 +72,7 @@ int16_t ast_Member_construct(
                     goto error;
                 }
 
-                if (ast_Member_resolveMember(this, this->lvalue->type, ast_String(this->rvalue)->value)) {
+                if (ast_Member_resolve_member(this, this->lvalue->type, ast_String(this->rvalue)->value)) {
                     goto error;
                 }
                 break;
@@ -117,7 +117,7 @@ corto_ic_node ast_Member_toIc(
             corto_type t = ast_Expression_getType(this->lvalue);
             if (corto_instanceof(corto_type(corto_interface_o), t)) {
                 corto_interface baseType = corto_interface(t);
-                member = corto_interface_resolveMember(baseType, ast_String(this->rvalue)->value);
+                member = corto_interface_resolve_member(baseType, ast_String(this->rvalue)->value);
             } else {
                 corto_id id;
                 ast_Parser_error(yparser(), "cannot resolve members on non-interface type '%s'", ast_Parser_id(t, id));

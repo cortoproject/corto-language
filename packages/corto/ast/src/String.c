@@ -265,7 +265,7 @@ corto_ic_node ast_String_toIc(
             corto_bool stored = FALSE;
             ic_node dummy;
             corto_uint32 accPushCount = 0;
-            corto_type elementType;
+            corto_type element_type;
 
             if (storage && (storage->type != corto_type(corto_string_o))) {
                 ast_Parser_error(yparser(),
@@ -285,10 +285,10 @@ corto_ic_node ast_String_toIc(
                 accPushCount++;
                 element = corto_iter_next(&elementIter);
 
-                elementType = ast_Expression_getType(element);
-                if (!elementType) {
+                element_type = ast_Expression_getType(element);
+                if (!element_type) {
                     element = ast_Expression(ast_String__create(NULL, NULL, CORTO_NULL_STRING));
-                } else if (elementType != corto_type(corto_string_o)) {
+                } else if (element_type != corto_type(corto_string_o)) {
                     element = ast_Expression_cast(element, corto_type(corto_string_o), FALSE);
                     if(!element) {
                         goto error;
@@ -312,11 +312,11 @@ corto_ic_node ast_String_toIc(
                             ic_accumulator acc = ic_program_pushAccumulator(program, (corto_type)corto_string_o, FALSE, FALSE);
                             accPushCount++;
                             element = corto_iter_next(&elementIter);
-                            elementType = ast_Expression_getType(element);
+                            element_type = ast_Expression_getType(element);
 
-                            if (!elementType) {
+                            if (!element_type) {
                                 element = ast_Expression(ast_String__create(NULL, NULL, CORTO_NULL_STRING));
-                            } else if (elementType && (ast_Expression_getType(element) != corto_type(corto_string_o))) {
+                            } else if (element_type && (ast_Expression_getType(element) != corto_type(corto_string_o))) {
                                 element = ast_Expression_cast(element, corto_type(corto_string_o), FALSE);
                                 if (!element) {
                                     goto error;

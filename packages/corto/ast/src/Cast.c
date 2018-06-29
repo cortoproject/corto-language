@@ -50,26 +50,26 @@ corto_ic_node ast_Cast_toIc(
 {
     ic_node lvalue, rvalue, result;
     corto_bool deref1 = IC_DEREF_VALUE, deref2 = IC_DEREF_VALUE;
-    corto_type thisType = ast_Expression_getType(ast_Expression(this));
+    corto_type this_type = ast_Expression_getType(ast_Expression(this));
     CORTO_UNUSED(stored);
 
-    if (storage && (storage->type == thisType)) {
+    if (storage && (storage->type == this_type)) {
         result = (ic_node)storage;
     } else {
         result = (ic_node)ic_program_pushAccumulator(
             program,
             ast_Expression_getType(ast_Expression(this)),
-            (this->rvalue->deref == Ast_ByReference) || thisType->reference,
+            (this->rvalue->deref == Ast_ByReference) || this_type->reference,
             FALSE);
     }
 
     lvalue = (ic_node)ic_object__create(NULL, NULL, this->lvalue);
     rvalue = ast_Node_toIc(ast_Node(this->rvalue), program, (ic_storage)NULL, TRUE);
 
-    if ((this->rvalue->deref == Ast_ByReference) || thisType->reference) {
+    if ((this->rvalue->deref == Ast_ByReference) || this_type->reference) {
         deref2 = IC_DEREF_ADDRESS;
     }
-    if ((this->rvalue->deref == Ast_ByReference) || thisType->reference) {
+    if ((this->rvalue->deref == Ast_ByReference) || this_type->reference) {
         deref1 = IC_DEREF_ADDRESS;
     }
 

@@ -12,7 +12,7 @@ ast_Call ast_CallBuilder_buildMethod(ast_CallBuilder *this) {
 
     /* First try to resolve a member with a delegate type */
     if (t->kind == CORTO_COMPOSITE) {
-        m = corto_interface_resolveMember(corto_interface(t), this->name);
+        m = corto_interface_resolve_member(corto_interface(t), this->name);
         if (m) {
             ast_String nameExpr = ast_String__create(NULL, NULL, this->name);
             ast_Parser_collect(yparser(), nameExpr);
@@ -28,7 +28,7 @@ ast_Call ast_CallBuilder_buildMethod(ast_CallBuilder *this) {
 
     /* Resolve procedure in interface */
     if (!result) {
-        f = corto_function(corto_type_resolveProcedure(t, this->signature));
+        f = corto_function(corto_type_resolve_procedure(t, this->signature));
         if (!f) {
             if (!result) {
                 corto_id id;
@@ -85,11 +85,11 @@ ast_Call ast_CallBuilder_build(
 
             /* If no local is found and block has this-local, try the corresponding interface */
             } else if ((l = ast_Block_resolveLocal(this->block, "this"))) {
-                if (corto_type_resolveProcedure(l->type, this->signature)) {
+                if (corto_type_resolve_procedure(l->type, this->signature)) {
                     /* Set instance to 'this' */
                     corto_set_ref(&this->instance, l);
                     result = ast_CallBuilder_buildMethod(this);
-                }           
+                }
             }
         }
 
@@ -98,14 +98,14 @@ ast_Call ast_CallBuilder_build(
             corto_object f = corto_resolve(this->scope, this->signature);
             if (!f) {
                 corto_id id;
-                ast_Parser_error(yparser(), "no procedure found with signature '%s' in scope '%s'", 
+                ast_Parser_error(yparser(), "no procedure found with signature '%s' in scope '%s'",
                     this->signature,
                     ast_Parser_id(this->scope, id));
                 goto error;
             }
             if ((corto_typeof(f)->kind == CORTO_COMPOSITE) && (corto_interface(corto_typeof(f))->kind == CORTO_DELEGATE)) {
                 ast_Expression fExpr = ast_Expression(ast_Object__create(NULL, NULL, f));
-                result = ast_Call(ast_DelegateCall__create(NULL, NULL, NULL, this->arguments, fExpr));   
+                result = ast_Call(ast_DelegateCall__create(NULL, NULL, NULL, this->arguments, fExpr));
             } else {
                 if (corto_function(f)->overloaded) {
                     /* If function is overloaded, re-resolve with explicit reference requests in signature */
@@ -117,7 +117,7 @@ ast_Call ast_CallBuilder_build(
                     f = corto_resolve(this->scope, this->signature);
                 }
                 result = ast_Call(ast_StaticCall__create(NULL, NULL, NULL, this->arguments, f));
-            }  
+            }
         }
     }
 
@@ -172,4 +172,3 @@ int16_t ast_CallBuilder_buildSignature(
 
     return 0;
 }
-

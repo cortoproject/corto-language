@@ -19,7 +19,7 @@ corto_int16 ast_Call_insertCasts(ast_Call this) {
             parameterType = this->parameters.buffer[i].type;
             argumentType = ast_Expression_getType(argument);
 
-            if (this->parameters.buffer[i].passByReference) {
+            if (this->parameters.buffer[i].is_reference) {
                 if (argumentType && !argument->isReference) {
                     ast_Parser_error(yparser(), "cannot pass non-reference value as reference");
                     goto error;
@@ -33,7 +33,7 @@ corto_int16 ast_Call_insertCasts(ast_Call this) {
                 /* Any types are handled in the translation to the target representation. It is often
                  * more efficient to push a value as any than to first cast it to any and then push it. */
                 if (parameterType->kind != CORTO_ANY) {
-                    expr = ast_Expression_cast(argument, parameterType, this->parameters.buffer[i].passByReference);
+                    expr = ast_Expression_cast(argument, parameterType, this->parameters.buffer[i].is_reference);
                     if (expr) {
                         corto_claim(expr);
                         corto_ll_replace(arguments, argument, expr);
@@ -64,11 +64,11 @@ int16_t ast_Call_construct(
         goto error;
     }
 
-    corto_set_ref(&ast_Expression(this)->type, this->returnType);
+    corto_set_ref(&ast_Expression(this)->type, this->return_type);
     ast_Expression(this)->isReference =
-        this->returnsReference || this->returnType->reference;
+        this->is_reference || this->return_type->reference;
 
-    ast_Expression(this)->deref = this->returnType->reference ? Ast_ByReference : Ast_ByValue;
+    ast_Expression(this)->deref = this->return_type->reference ? Ast_ByReference : Ast_ByValue;
 
     return 0;
 error:
@@ -79,9 +79,9 @@ bool ast_Call_hasReturnedResource(
     ast_Call this)
 {
 
-    return this->returnType->reference ||
-        this->returnsReference ||
-        ((this->returnType->kind == CORTO_PRIMITIVE) && (corto_primitive(this->returnType)->kind == CORTO_TEXT));
+    return this->return_type->reference ||
+        this->is_reference ||
+        ((this->return_type->kind == CORTO_PRIMITIVE) && (corto_primitive(this->return_type)->kind == CORTO_TEXT));
 
 }
 
@@ -99,15 +99,15 @@ void ast_Call_setParameters(
     corto_uint32 i;
 
     /* Set parameters */
-    corto_set_ref(&this->returnType, function->returnType);
-    this->returnsReference = function->returnsReference;
+    corto_set_ref(&this->return_type, function->return_type);
+    this->is_reference = function->is_reference;
 
     corto_parameterSeq__resize(&this->parameters, function->parameters.length);
 
     for (i = 0; i < function->parameters.length; i++) {
         corto_set_ref(&this->parameters.buffer[i].type, function->parameters.buffer[i].type);
         this->parameters.buffer[i].name = corto_strdup(function->parameters.buffer[i].name);
-        this->parameters.buffer[i].passByReference = function->parameters.buffer[i].passByReference;
+        this->parameters.buffer[i].is_reference = function->parameters.buffer[i].is_reference;
     }
 }
 
@@ -122,19 +122,19 @@ corto_ic_node ast_Call_toIc(
     ast_Expression argument = NULL;
     ic_op *pushIcs = NULL; /* Cache push instructions before inserting in program to avoid issues with nested calls */
     corto_int32 argumentId = 0, argumentCount = 0;
-    corto_type thisType = ast_Expression_getType(ast_Expression(this));
+    corto_type this_type = ast_Expression_getType(ast_Expression(this));
     corto_ll arguments = NULL;
     corto_uint32 argumentStorageCount = 0;
     corto_int32 i = 0;
 
     CORTO_UNUSED(stored);
 
-    if (storage && (storage->type == thisType)) {
+    if (storage && (storage->type == this_type)) {
         result = storage;
         result->holdsReturn = TRUE;
     } else {
         result = (ic_storage)ic_program_pushAccumulator(
-            program, thisType, this->returnsReference || this->returnType->reference, TRUE);
+            program, this_type, this->is_reference || this->return_type->reference, TRUE);
     }
 
     /* Convert arguments to iterable list */
@@ -167,7 +167,7 @@ corto_ic_node ast_Call_toIc(
         /* Temporary storage for push-instructions required for pushing the arguments of this function */
         argumentIter = corto_ll_iter(arguments);
         while(corto_iter_hasNext(&argumentIter)) {
-            corto_type paramType, exprType;
+            corto_type param_type, exprType;
             ic_derefKind deref = IC_DEREF_ADDRESS;
             corto_bool isAny = FALSE;
 
@@ -178,15 +178,15 @@ corto_ic_node ast_Call_toIc(
                 argumentStorage = (ic_storage)ic_program_pushAccumulator(
                     program,
                     ast_Expression_getType(argument),
-                    this->parameters.buffer[i].passByReference || this->parameters.buffer[i].type->reference,
+                    this->parameters.buffer[i].is_reference || this->parameters.buffer[i].type->reference,
                     FALSE);
                 argumentStorageCount++;
             }
 
-            paramType = this->parameters.buffer[i].type;
+            param_type = this->parameters.buffer[i].type;
             exprType = ast_Expression_getType(argument);
 
-            if (paramType->kind == CORTO_ANY) {
+            if (param_type->kind == CORTO_ANY) {
                 if (exprType && (exprType->kind != CORTO_ANY)) {
                     isAny = TRUE;
                 } else if (!exprType) {
@@ -194,15 +194,15 @@ corto_ic_node ast_Call_toIc(
                 }
             } else {
                 if (!exprType) {
-                    exprType = paramType;
+                    exprType = param_type;
                 }
             }
 
             if (!isAny && ast_Expression(argument)->deref == Ast_ByValue) {
                 /* If argument is pass by value or argument is not a primitive, pass by value */
-                if (!this->parameters.buffer[i].passByReference || (paramType->kind != CORTO_PRIMITIVE)) {
+                if (!this->parameters.buffer[i].is_reference || (param_type->kind != CORTO_PRIMITIVE)) {
                     /* Void references can't be passed as value */
-                    if ((exprType->kind != CORTO_VOID) && (paramType->kind != CORTO_VOID)) {
+                    if ((exprType->kind != CORTO_VOID) && (param_type->kind != CORTO_VOID)) {
                         deref = IC_DEREF_VALUE;
                     }
                 }
@@ -227,7 +227,7 @@ corto_ic_node ast_Call_toIc(
     function = ast_Node_toIc(ast_Node(this->functionExpr), program, storage, stored);
 
     IC_3(program, ast_Node(this)->line, ic_call, result, function, NULL,
-        (this->returnType->reference || this->returnsReference) ? IC_DEREF_ADDRESS : IC_DEREF_VALUE,
+        (this->return_type->reference || this->is_reference) ? IC_DEREF_ADDRESS : IC_DEREF_VALUE,
         IC_DEREF_VALUE,
         IC_DEREF_VALUE);
 

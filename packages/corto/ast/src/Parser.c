@@ -256,7 +256,7 @@ ast_Expression ast_Parser_delegateAssignment(ast_Parser this, ast_Expression lva
     signature = corto_sig_open(functionName);
     for (i = 0; i < type->parameters.length; i++) {
         corto_parameter *p = &type->parameters.buffer[i];
-        signature = corto_sig_add(signature, p->type, p->passByReference ? CORTO_PARAMETER_FORCEREFERENCE : 0);
+        signature = corto_sig_add(signature, p->type, p->is_reference ? CORTO_PARAMETER_FORCEREFERENCE : 0);
     }
 
     signature = corto_sig_close(signature);
@@ -285,10 +285,10 @@ ast_Expression ast_Parser_delegateAssignment(ast_Parser this, ast_Expression lva
     if (!ast_Parser_matchDelegateParameter(
         this,
         NULL,
-        type->returnType,
-        type->returnsReference,
-        tempCall->returnType,
-        tempCall->returnsReference)) {
+        type->return_type,
+        type->is_reference,
+        tempCall->return_type,
+        tempCall->is_reference)) {
         goto error;
     }
 
@@ -309,9 +309,9 @@ ast_Expression ast_Parser_delegateAssignment(ast_Parser this, ast_Expression lva
             this,
             p1->name,
             p1->type,
-            p1->passByReference,
+            p1->is_reference,
             p2->type,
-            p2->passByReference)) {
+            p2->is_reference)) {
             goto error;
         }
 
@@ -704,9 +704,9 @@ error:
 static
 ast_Storage ast_Parser_declareDelegate(
     ast_Parser this,
-    corto_type returnType,
+    corto_type return_type,
     const char *id,
-    corto_bool returnsReference)
+    corto_bool is_reference)
 {
     corto_delegate delegate;
     corto_parameterseq parameters;
@@ -724,7 +724,7 @@ ast_Storage ast_Parser_declareDelegate(
         goto error;
     }
 
-    corto_delegate__assign(delegate, corto_type(returnType), returnsReference, parameters);
+    corto_delegate__assign(delegate, corto_type(return_type), is_reference, parameters);
 
     if(corto_define(delegate)) {
         goto error;
@@ -1363,10 +1363,10 @@ error:
 
 ast_Storage ast_Parser_declareFunction(
     ast_Parser this,
-    corto_type returnType,
+    corto_type return_type,
     const char *id,
     corto_type kind,
-    bool returnsReference)
+    bool is_reference)
 {
     corto_function function;
     corto_object o;
@@ -1400,7 +1400,7 @@ ast_Storage ast_Parser_declareFunction(
          * function first. */
         if (!((function = corto_lookup_function(this->scope, id, &distance, NULL)) && !distance)) {
             if (!kind) {
-                kind = corto_typeof(this->scope)->options.defaultProcedureType;
+                kind = corto_typeof(this->scope)->scope_procedure_type;
                 if (!kind) {
                     kind = corto_type(corto_function_o);
                 }
@@ -1419,17 +1419,17 @@ ast_Storage ast_Parser_declareFunction(
                 if(corto_interface_baseof(kind, corto_delegate_o)) {
                     result = ast_Parser_declareDelegate(
                         this,
-                        returnType,
+                        return_type,
                         id,
-                        returnsReference);
+                        is_reference);
                 }
 
             }
 
             if (!result) {
-                if (!corto_class_instanceof(corto_type_o, returnType)) {
+                if (!corto_class_instanceof(corto_type_o, return_type)) {
                     corto_id id;
-                    ast_Parser_error(this, "object '%s' specified as returntype is not a type.", ast_Parser_id(returnType, id));
+                    ast_Parser_error(this, "object '%s' specified as returntype is not a type.", ast_Parser_id(return_type, id));
                     goto error;
                 }
 
@@ -1442,8 +1442,8 @@ ast_Storage ast_Parser_declareFunction(
                     goto error;
                 }
 
-                corto_set_ref(&function->returnType, returnType);
-                function->returnsReference = returnsReference;
+                corto_set_ref(&function->return_type, return_type);
+                function->is_reference = is_reference;
                 if (!corto(CORTO_DEFINE, {.object = function})) {
                     goto error;
                 }
@@ -1520,7 +1520,7 @@ ast_Block ast_Parser_declareFunctionParams(
         ast_Block_setFunction(result, function_o);
 
         /* If function is a method, include 'this' pointer */
-        if (corto_procedure(corto_typeof(function_o))->hasThis) {
+        if (corto_procedure(corto_typeof(function_o))->has_this) {
             corto_object parent;
 
             if (!corto_instanceof(corto_type(corto_interface_o), corto_parentof(function_o))) {
@@ -1546,11 +1546,11 @@ ast_Block ast_Parser_declareFunctionParams(
 
         for(i=0; i<function_o->parameters.length; i++) {
             param = &function_o->parameters.buffer[i];
-            ast_Block_declareVar(result, param->name, param->type, TRUE, param->passByReference);
+            ast_Block_declareVar(result, param->name, param->type, TRUE, param->is_reference);
         }
 
         /* If function has a returntype, include name of function */
-        if (function_o->returnType && ((function_o->returnType->kind != CORTO_VOID) || function_o->returnType->reference)) {
+        if (function_o->return_type && ((function_o->return_type->kind != CORTO_VOID) || function_o->return_type->reference)) {
             ast_Block_declareReturnVariable(result, function_o);
         }
 
@@ -1725,12 +1725,12 @@ int16_t ast_Parser_finalize(
                 goto error;
             }
 
-            if (binding->function->returnType && ((binding->function->returnType->kind != CORTO_VOID) || (binding->function->returnType->reference))) {
+            if (binding->function->return_type && ((binding->function->return_type->kind != CORTO_VOID) || (binding->function->return_type->reference))) {
                 corto_id name;
                 corto_sig_name(corto_idof(binding->function), name);
                 returnValue = ic_scope_lookupStorage(scope, name, TRUE);
                 ret = IC_1_OP(this->line, ic_ret, returnValue, IC_DEREF_VALUE, FALSE);
-                if (binding->function->returnsReference || binding->function->returnType->reference) {
+                if (binding->function->is_reference || binding->function->return_type->reference) {
                     ((ic_storage)returnValue)->isReference = TRUE;
                     ((ic_op)ret)->s1Deref = IC_DEREF_ADDRESS;
                 }else {
@@ -1922,9 +1922,9 @@ int16_t ast_Parser_initDeclare(
 
             /* Obtain default type from scope */
             if (scope) {
-                type = corto_typeof(scope)->options.defaultType;
+                type = corto_typeof(scope)->scope_type;
             } else {
-                type = corto_typeof(this->scope)->options.defaultType;
+                type = corto_typeof(this->scope)->scope_type;
             }
 
             if (!type && this->pass) {
@@ -2274,7 +2274,7 @@ ast_Expression ast_Parser_lookup(
         /* If complexType is set, this resolve is ran within a [] expression */
         corto_type complexType = ast_Parser_getComplexType(this);
         if (complexType) {
-            if (corto_interface_resolveMember(corto_interface(complexType), id)) {
+            if (corto_interface_resolve_member(corto_interface(complexType), id)) {
                 result = ast_Expression(ast_String__create(NULL, NULL, id));
             }
 
@@ -2509,7 +2509,7 @@ int16_t ast_Parser_parseFunction(
 {
     ic_scope icScope; /* Parsed intermediate-code program */
     ic_storage returnValue = NULL; /* Intermediate representation of return value */
-    corto_type returnType = NULL; /* Return type */
+    corto_type return_type = NULL; /* Return type */
     ic_op ret = NULL; /* ret or stop instruction */
     ic_program program = NULL;
     ast_Local resultLocal = NULL;
@@ -2533,19 +2533,19 @@ int16_t ast_Parser_parseFunction(
     parser->blockCount ++;
     for (i = 0; i < f->parameters.length; i++) {
         corto_parameter *p = &f->parameters.buffer[i];
-        if (!ast_Block_declareVar(block, p->name, p->type, TRUE, p->passByReference)) {
+        if (!ast_Block_declareVar(block, p->name, p->type, TRUE, p->is_reference)) {
             corto_throw("failed to declare parameter '%s'", p->name);
             goto error;
         }
 
     }
 
-    if (f->returnType) {
-        corto_bool isReference = f->returnType->reference || f->returnsReference;
+    if (f->return_type) {
+        corto_bool isReference = f->return_type->reference || f->is_reference;
         resultLocal = ast_Block_declareVar(
             block,
             "_",
-            f->returnType,
+            f->return_type,
             FALSE,
             isReference);
         if (!resultLocal) {
@@ -2555,7 +2555,7 @@ int16_t ast_Parser_parseFunction(
 
         resultLocal->kind = Ast_LocalReturn;
         ast_Expression(resultLocal)->deref = isReference ? Ast_ByReference : Ast_ByValue;
-        returnType = f->returnType;
+        return_type = f->return_type;
         corto_string prev = parser->source;
         parser->source = corto_asprintf("_ = %s", parser->source);
         corto_dealloc(prev);
@@ -2583,8 +2583,8 @@ int16_t ast_Parser_parseFunction(
     /* Create assignment expression that returns result of expression */
     if (!resultLocal && result && result->type) {
         ast_Binary assignment;
-        returnType = corto_type(ast_Expression_getType(result));
-        if ((returnType->kind != CORTO_VOID) || (result->deref == Ast_ByReference)) {
+        return_type = corto_type(ast_Expression_getType(result));
+        if ((return_type->kind != CORTO_VOID) || (result->deref == Ast_ByReference)) {
             resultLocal = ast_Block_declareVar(parser->block, "_", result->type, FALSE,
                 result->isReference);
             if (!resultLocal) {
@@ -2598,8 +2598,8 @@ int16_t ast_Parser_parseFunction(
             corto_ll_replace(parser->block->statements, result, assignment);
         }
 
-        corto_set_ref(&f->returnType, returnType);
-        f->returnsReference = result->isReference;
+        corto_set_ref(&f->return_type, return_type);
+        f->is_reference = result->isReference;
     }
 
     /* Create program for intermediate code */
@@ -2674,7 +2674,7 @@ int16_t ast_Parser_parseLine(
 {
     ic_scope icScope; /* Parsed intermediate-code program */
     ic_storage returnValue = NULL; /* Intermediate representation of return value */
-    corto_type returnType = NULL; /* Return type */
+    corto_type return_type = NULL; /* Return type */
     ic_op ret = NULL; /* ret or stop instruction */
     corto_value *v = (corto_value*)value;
     ic_program program = NULL;
@@ -2690,8 +2690,8 @@ int16_t ast_Parser_parseLine(
     if (result && result->type) {
         ast_Local resultLocal;
         ast_Binary assignment;
-        returnType = corto_type(ast_Expression_getType(result));
-        if ((returnType->kind != CORTO_VOID) || (result->deref == Ast_ByReference)) {
+        return_type = corto_type(ast_Expression_getType(result));
+        if ((return_type->kind != CORTO_VOID) || (result->deref == Ast_ByReference)) {
             resultLocal = ast_Block_declareVar(parser->block, "<result>", result->type, FALSE,
                 result->isReference);
             ast_Expression(resultLocal)->deref = result->isReference ? Ast_ByReference : Ast_ByValue;
@@ -2761,9 +2761,9 @@ int16_t ast_Parser_parseLine(
             }
 
         } else if (result) {
-            if(returnType->kind == CORTO_PRIMITIVE) {
+            if(return_type->kind == CORTO_PRIMITIVE) {
                 if (v) {
-                    *v = corto_value_ptr(&v->is.pointer.storage, returnType);
+                    *v = corto_value_ptr(&v->is.pointer.storage, return_type);
                     if (ic_program_run(program, (corto_word)&v->is.pointer.storage, CORTO_SEQUENCE_EMPTY(corto_stringSeq))) {
                         goto error;
                     }
@@ -2776,14 +2776,14 @@ int16_t ast_Parser_parseLine(
                 }
 
             } else {
-                void *ptr = corto_alloc(corto_type_sizeof(returnType));
+                void *ptr = corto_alloc(corto_type_sizeof(return_type));
                 if (ic_program_run(program, (corto_word)&ptr, CORTO_SEQUENCE_EMPTY(corto_stringSeq))) {
                     goto error;
                 }
 
                 if (v) {
                     if (ptr) {
-                        *v = corto_value_ptr(ptr, returnType);
+                        *v = corto_value_ptr(ptr, return_type);
                     } else {
                         v->is.pointer.storage = 0;
                         *v = corto_value_ptr(&v->is.pointer.storage, corto_object_o);
@@ -3030,7 +3030,7 @@ void ast_Parser_pushReturnAsLvalue(
     ast_Expression result = NULL;
 
     if (this->pass) {
-        if (function->returnType) {
+        if (function->return_type) {
             corto_id id;
             corto_sig_name(corto_idof(function), id);
             result = ast_Expression(ast_Block_resolve(this->block, id));
@@ -3262,7 +3262,7 @@ ast_Node ast_Parser_updateStatement(
 
         if (functionBlock) {
             if (corto_instanceof(corto_interface_o, corto_parentof(function))) {
-                if (corto_procedure(corto_typeof(function))->hasThis) {
+                if (corto_procedure(corto_typeof(function))->has_this) {
                     from = ast_Parser_lookup(this, "this");
                 }
 

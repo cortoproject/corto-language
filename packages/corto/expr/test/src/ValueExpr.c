@@ -20,8 +20,8 @@ corto_void _test_ValueExpr_tc_compositeArg(
     ret = corto_expr_comp(&e, NULL, "test/Point({%a.x, %a.y})", "test/Point");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType == (corto_type)test_Point_o);
-    test_assert(e.function->returnsReference == FALSE);
+    test_assert(e.function->return_type == (corto_type)test_Point_o);
+    test_assert(e.function->is_reference == FALSE);
     test_assert(e.function->parameters.length == 1);
     test_assertstr(e.function->parameters.buffer[0].name, "_a");
     test_assert(e.function->parameters.buffer[0].type == corto_type(test_Point_o));
@@ -52,8 +52,8 @@ corto_void _test_ValueExpr_tc_compositeLiteral(
     ret = corto_expr_comp(&e, NULL, "test/Point({10, 20})");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType == (corto_type)test_Point_o);
-    test_assert(e.function->returnsReference == FALSE);
+    test_assert(e.function->return_type == (corto_type)test_Point_o);
+    test_assert(e.function->is_reference == FALSE);
     test_assert(e.function->parameters.length == 0);
 
     ret = corto_expr_run(&e, &result);
@@ -87,8 +87,8 @@ corto_void _test_ValueExpr_tc_compositeObject(
     ret = corto_expr_comp(&e, NULL, "a");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType == (corto_type)test_Point_o);
-    test_assert(e.function->returnsReference == TRUE);
+    test_assert(e.function->return_type == (corto_type)test_Point_o);
+    test_assert(e.function->is_reference == TRUE);
     test_assert(e.function->parameters.length == 0);
 
     ret = corto_expr_run(&e, &result);
@@ -117,8 +117,8 @@ corto_void _test_ValueExpr_tc_compositeVar(
     ret = corto_expr_comp(&e, NULL, "test/Point a = {10, 20}; test/Point({a.x, a.y})");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType == (corto_type)test_Point_o);
-    test_assert(e.function->returnsReference == FALSE);
+    test_assert(e.function->return_type == (corto_type)test_Point_o);
+    test_assert(e.function->is_reference == FALSE);
     test_assert(e.function->parameters.length == 0);
 
     ret = corto_expr_run(&e, &result);
@@ -147,7 +147,7 @@ corto_void _test_ValueExpr_tc_primitiveArg(
     ret = corto_expr_comp(&e, NULL, "%a", "int32");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType == (corto_type)corto_int32_o);
+    test_assert(e.function->return_type == (corto_type)corto_int32_o);
     test_assert(e.function->parameters.length == 1);
     test_assertstr(e.function->parameters.buffer[0].name, "_a");
     test_assert(e.function->parameters.buffer[0].type == corto_type(corto_int32_o));
@@ -176,7 +176,7 @@ corto_void _test_ValueExpr_tc_primitiveLiteral(
     ret = corto_expr_comp(&e, NULL, "10");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType == (corto_type)corto_uint64_o);
+    test_assert(e.function->return_type == (corto_type)corto_uint64_o);
     test_assert(e.function->parameters.length == 0);
 
     ret = corto_expr_run(&e, &result, 10);
@@ -207,8 +207,8 @@ corto_void _test_ValueExpr_tc_primitiveObject(
     ret = corto_expr_comp(&e, NULL, "a");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType == (corto_type)corto_int32_o);
-    test_assert(e.function->returnsReference == TRUE);
+    test_assert(e.function->return_type == (corto_type)corto_int32_o);
+    test_assert(e.function->is_reference == TRUE);
     test_assert(e.function->parameters.length == 0);
 
     ret = corto_expr_run(&e, &result);
@@ -236,7 +236,7 @@ corto_void _test_ValueExpr_tc_primitiveVar(
     ret = corto_expr_comp(&e, NULL, "int32 a = 10; a");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType == (corto_type)corto_int32_o);
+    test_assert(e.function->return_type == (corto_type)corto_int32_o);
     test_assert(e.function->parameters.length == 0);
 
     ret = corto_expr_run(&e, &result);
@@ -268,8 +268,8 @@ corto_void _test_ValueExpr_tc_referenceArg(
     ret = corto_expr_comp(&e, NULL, "%a", "/test/PointRef");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType == (corto_type)test_PointRef_o);
-    test_assert(e.function->returnsReference == TRUE);
+    test_assert(e.function->return_type == (corto_type)test_PointRef_o);
+    test_assert(e.function->is_reference == TRUE);
     test_assert(e.function->parameters.length == 1);
     test_assertstr(e.function->parameters.buffer[0].name, "_a");
     test_assert(e.function->parameters.buffer[0].type == corto_type(test_PointRef_o));
@@ -303,8 +303,8 @@ corto_void _test_ValueExpr_tc_referenceObject(
     ret = corto_expr_comp(&e, NULL, "a");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType == (corto_type)test_PointRef_o);
-    test_assert(e.function->returnsReference == TRUE);
+    test_assert(e.function->return_type == (corto_type)test_PointRef_o);
+    test_assert(e.function->is_reference == TRUE);
     test_assert(e.function->parameters.length == 0);
 
     ret = corto_expr_run(&e, &result);
@@ -331,8 +331,8 @@ corto_void _test_ValueExpr_tc_referenceVar(
     ret = corto_expr_comp(&e, NULL, "test/PointRef a = test/PointRef{10, 20}; a");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType == (corto_type)test_PointRef_o);
-    test_assert(e.function->returnsReference == TRUE);
+    test_assert(e.function->return_type == (corto_type)test_PointRef_o);
+    test_assert(e.function->is_reference == TRUE);
     test_assert(e.function->parameters.length == 0);
 
     ret = corto_expr_run(&e, &result);

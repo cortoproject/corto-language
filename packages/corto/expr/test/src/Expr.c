@@ -18,8 +18,8 @@ corto_void _test_Expr_tc_assign(
     ret = corto_expr_comp(&e, NULL, "int32 a; a = 10");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType != NULL);
-    test_assert(e.function->returnType == (corto_type)corto_int32_o);
+    test_assert(e.function->return_type != NULL);
+    test_assert(e.function->return_type == (corto_type)corto_int32_o);
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
@@ -42,8 +42,8 @@ corto_void _test_Expr_tc_assignExplicitVar(
     ret = corto_expr_comp(&e, NULL, "var int32 a; a = 10");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType != NULL);
-    test_assert(e.function->returnType == (corto_type)corto_int32_o);
+    test_assert(e.function->return_type != NULL);
+    test_assert(e.function->return_type == (corto_type)corto_int32_o);
     test_assert(e.function->parameters.length == 0);
     test_assert(!corto_lookup(NULL, "a"));
 
@@ -66,8 +66,8 @@ corto_void _test_Expr_tc_assignMixedType(
     ret = corto_expr_comp(&e, NULL, "int32 a; a = 10.5");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType != NULL);
-    test_assert(e.function->returnType == (corto_type)corto_int32_o);
+    test_assert(e.function->return_type != NULL);
+    test_assert(e.function->return_type == (corto_type)corto_int32_o);
     test_assert(e.function->parameters.length == 0);
     test_assert(!corto_lookup(NULL, "a"));
 
@@ -91,8 +91,8 @@ corto_void _test_Expr_tc_assignObject(
     ret = corto_expr_comp(&e, NULL, "/a = 10");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType != NULL);
-    test_assert(e.function->returnType == (corto_type)corto_int32_o);
+    test_assert(e.function->return_type != NULL);
+    test_assert(e.function->return_type == (corto_type)corto_int32_o);
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
@@ -116,8 +116,8 @@ corto_void _test_Expr_tc_assignObjectMixedType(
     ret = corto_expr_comp(&e, NULL, "/a = 10.5");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType != NULL);
-    test_assert(e.function->returnType == (corto_type)corto_int32_o);
+    test_assert(e.function->return_type != NULL);
+    test_assert(e.function->return_type == (corto_type)corto_int32_o);
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
@@ -140,8 +140,8 @@ corto_void _test_Expr_tc_cast(
     ret = corto_expr_comp(&e, NULL, "int32(10 + 20.5)");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType != NULL);
-    test_assert(e.function->returnType == (corto_type)corto_int32_o);
+    test_assert(e.function->return_type != NULL);
+    test_assert(e.function->return_type == (corto_type)corto_int32_o);
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
@@ -163,8 +163,8 @@ corto_void _test_Expr_tc_castString(
     ret = corto_expr_comp(&e, NULL, "string(10) + string(20)");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType != NULL);
-    test_assert(e.function->returnType == (corto_type)corto_string_o);
+    test_assert(e.function->return_type != NULL);
+    test_assert(e.function->return_type == (corto_type)corto_string_o);
     test_assert(e.function->parameters.length == 0);
 
     corto_string result = 0;
@@ -182,13 +182,13 @@ corto_void _test_Expr_tc_composite(
 /* $begin(test/Expr/tc_composite) */
     corto_int16 ret;
     corto_expr e;
-    corto_expr_opt opt = {.returnType = corto_type(test_Point_o)};
+    corto_expr_opt opt = {.return_type = corto_type(test_Point_o)};
     
     ret = corto_expr_comp(&e, &opt, "{10, 20}");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType != NULL);
-    test_assert(e.function->returnType == (corto_type)test_Point_o);
+    test_assert(e.function->return_type != NULL);
+    test_assert(e.function->return_type == (corto_type)test_Point_o);
     test_assert(e.function->parameters.length == 0);
 
     test_Point result = {0, 0};
@@ -211,8 +211,8 @@ corto_void _test_Expr_tc_compositeCast(
     ret = corto_expr_comp(&e, NULL, "test/Point({10, 20})");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType != NULL);
-    test_assert(e.function->returnType == (corto_type)test_Point_o);
+    test_assert(e.function->return_type != NULL);
+    test_assert(e.function->return_type == (corto_type)test_Point_o);
     test_assert(e.function->parameters.length == 0);
 
     test_Point result = {0, 0};
@@ -235,8 +235,8 @@ corto_void _test_Expr_tc_cond(
     ret = corto_expr_comp(&e, NULL, "10 == (5 + 5)");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType != NULL);
-    test_assert(e.function->returnType == (corto_type)corto_bool_o);
+    test_assert(e.function->return_type != NULL);
+    test_assert(e.function->return_type == (corto_type)corto_bool_o);
     test_assert(e.function->parameters.length == 0);
 
     corto_bool result = FALSE;
@@ -258,8 +258,8 @@ corto_void _test_Expr_tc_div(
     ret = corto_expr_comp(&e, NULL, "10 / 2");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType != NULL);
-    test_assert(e.function->returnType == (corto_type)corto_float64_o);
+    test_assert(e.function->return_type != NULL);
+    test_assert(e.function->return_type == (corto_type)corto_float64_o);
     test_assert(e.function->parameters.length == 0);
 
     corto_float64 result = 0;
@@ -281,8 +281,8 @@ corto_void _test_Expr_tc_primitive(
     ret = corto_expr_comp(&e, NULL, "10");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType != NULL);
-    test_assert(e.function->returnType == (corto_type)corto_uint64_o);
+    test_assert(e.function->return_type != NULL);
+    test_assert(e.function->return_type == (corto_type)corto_uint64_o);
     test_assert(e.function->parameters.length == 0);
 
     corto_uint64 result = 0;
@@ -304,8 +304,8 @@ corto_void _test_Expr_tc_primitive16(
     ret = corto_expr_comp(&e, NULL, "uint16(10)");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType != NULL);
-    test_assert(e.function->returnType == (corto_type)corto_uint16_o);
+    test_assert(e.function->return_type != NULL);
+    test_assert(e.function->return_type == (corto_type)corto_uint16_o);
     test_assert(e.function->parameters.length == 0);
 
     corto_uint16 result = 0;
@@ -327,8 +327,8 @@ corto_void _test_Expr_tc_primitive32(
     ret = corto_expr_comp(&e, NULL, "uint32(10)");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType != NULL);
-    test_assert(e.function->returnType == (corto_type)corto_uint32_o);
+    test_assert(e.function->return_type != NULL);
+    test_assert(e.function->return_type == (corto_type)corto_uint32_o);
     test_assert(e.function->parameters.length == 0);
 
     corto_uint32 result = 0;
@@ -350,8 +350,8 @@ corto_void _test_Expr_tc_primitive8(
     ret = corto_expr_comp(&e, NULL, "uint8(10)");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType != NULL);
-    test_assert(e.function->returnType == (corto_type)corto_uint8_o);
+    test_assert(e.function->return_type != NULL);
+    test_assert(e.function->return_type == (corto_type)corto_uint8_o);
     test_assert(e.function->parameters.length == 0);
 
     corto_uint8 result = 0;
@@ -373,8 +373,8 @@ corto_void _test_Expr_tc_primitiveBinary(
     ret = corto_expr_comp(&e, NULL, "10 + 20");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType != NULL);
-    test_assert(e.function->returnType == (corto_type)corto_uint64_o);
+    test_assert(e.function->return_type != NULL);
+    test_assert(e.function->return_type == (corto_type)corto_uint64_o);
     test_assert(e.function->parameters.length == 0);
 
     corto_uint64 result = 0;
@@ -396,8 +396,8 @@ corto_void _test_Expr_tc_primitiveBinaryMixedType(
     ret = corto_expr_comp(&e, NULL, "10 + 20.5");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType != NULL);
-    test_assert(e.function->returnType == (corto_type)corto_float64_o);
+    test_assert(e.function->return_type != NULL);
+    test_assert(e.function->return_type == (corto_type)corto_float64_o);
     test_assert(e.function->parameters.length == 0);
 
     corto_float64 result = 0;
@@ -419,8 +419,8 @@ corto_void _test_Expr_tc_primitiveBool(
     ret = corto_expr_comp(&e, NULL, "true");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType != NULL);
-    test_assert(e.function->returnType == (corto_type)corto_bool_o);
+    test_assert(e.function->return_type != NULL);
+    test_assert(e.function->return_type == (corto_type)corto_bool_o);
     test_assert(e.function->parameters.length == 0);
 
     corto_bool result = 0;
@@ -442,8 +442,8 @@ corto_void _test_Expr_tc_primitiveDbl(
     ret = corto_expr_comp(&e, NULL, "10.5");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType != NULL);
-    test_assert(e.function->returnType == (corto_type)corto_float64_o);
+    test_assert(e.function->return_type != NULL);
+    test_assert(e.function->return_type == (corto_type)corto_float64_o);
     test_assert(e.function->parameters.length == 0);
 
     corto_float64 result = 0;
@@ -465,8 +465,8 @@ corto_void _test_Expr_tc_primitiveFlt(
     ret = corto_expr_comp(&e, NULL, "float32(10.5)");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType != NULL);
-    test_assert(e.function->returnType == (corto_type)corto_float32_o);
+    test_assert(e.function->return_type != NULL);
+    test_assert(e.function->return_type == (corto_type)corto_float32_o);
     test_assert(e.function->parameters.length == 0);
 
     corto_float32 result = 0;
@@ -488,8 +488,8 @@ corto_void _test_Expr_tc_primitiveNot(
     ret = corto_expr_comp(&e, NULL, "!true");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType != NULL);
-    test_assert(e.function->returnType == (corto_type)corto_bool_o);
+    test_assert(e.function->return_type != NULL);
+    test_assert(e.function->return_type == (corto_type)corto_bool_o);
     test_assert(e.function->parameters.length == 0);
 
     corto_bool result = 0;
@@ -513,8 +513,8 @@ corto_void _test_Expr_tc_primitiveObject(
     ret = corto_expr_comp(&e, NULL, "a");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType == (corto_type)corto_int32_o);
-    test_assert(e.function->returnsReference == TRUE);
+    test_assert(e.function->return_type == (corto_type)corto_int32_o);
+    test_assert(e.function->is_reference == TRUE);
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 *result = NULL;
@@ -537,8 +537,8 @@ corto_void _test_Expr_tc_primitiveObjectValue(
 
     /* Force returning object value */
     corto_expr_opt opt = {
-        .returnType = corto_type(corto_int32_o),
-        .returnsReference = FALSE
+        .return_type = corto_type(corto_int32_o),
+        .is_reference = FALSE
     };
 
     corto_int32 *a = corto_create(root_o, "a", corto_int32_o);
@@ -547,8 +547,8 @@ corto_void _test_Expr_tc_primitiveObjectValue(
     ret = corto_expr_comp(&e, &opt, "a");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType == (corto_type)corto_int32_o);
-    test_assert(e.function->returnsReference == FALSE);
+    test_assert(e.function->return_type == (corto_type)corto_int32_o);
+    test_assert(e.function->is_reference == FALSE);
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
@@ -569,8 +569,8 @@ corto_void _test_Expr_tc_primitiveParentheses(
     ret = corto_expr_comp(&e, NULL, "10 + (20 * 2)");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType != NULL);
-    test_assert(e.function->returnType == (corto_type)corto_uint64_o);
+    test_assert(e.function->return_type != NULL);
+    test_assert(e.function->return_type == (corto_type)corto_uint64_o);
     test_assert(e.function->parameters.length == 0);
 
     corto_uint64 result = 0;
@@ -592,8 +592,8 @@ corto_void _test_Expr_tc_stringConcat(
     ret = corto_expr_comp(&e, NULL, "\"Hello \" + \"World\"");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType != NULL);
-    test_assert(e.function->returnType == (corto_type)corto_string_o);
+    test_assert(e.function->return_type != NULL);
+    test_assert(e.function->return_type == (corto_type)corto_string_o);
     test_assert(e.function->parameters.length == 0);
 
     corto_string result = 0;

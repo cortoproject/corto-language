@@ -22,8 +22,8 @@ typedef struct corto_expr {
 
 typedef struct corto_expr_opt {
     corto_object scope;
-    corto_type returnType;
-    corto_bool returnsReference;
+    corto_type return_type;
+    corto_bool is_reference;
     corto_bool inverse;
 } corto_expr_opt;
 

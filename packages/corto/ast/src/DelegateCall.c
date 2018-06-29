@@ -25,14 +25,14 @@ int16_t ast_DelegateCall_construct(
         corto_set_ref(&ast_Call(this)->functionExpr, this->expr);
 
         /* Set parameters */
-        corto_set_ref(&ast_Call(this)->returnType, type->returnType);
-        ast_Call(this)->returnsReference = type->returnsReference;
+        corto_set_ref(&ast_Call(this)->return_type, type->return_type);
+        ast_Call(this)->is_reference = type->is_reference;
 
         corto_parameterSeq__resize(&ast_Call(this)->parameters, type->parameters.length);
 
         for (i = 0; i < type->parameters.length; i++) {
             corto_set_ref(&ast_Call(this)->parameters.buffer[i].type, type->parameters.buffer[i].type);
-            ast_Call(this)->parameters.buffer[i].passByReference = type->parameters.buffer[i].passByReference;
+            ast_Call(this)->parameters.buffer[i].is_reference = type->parameters.buffer[i].is_reference;
         }
     }
 

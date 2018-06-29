@@ -31,15 +31,15 @@ error:
 static corto_int32 corto_expr_addParam(corto_function f, corto_string name) {
     corto_int32 i;
     corto_int32 length = f->parameters.length;
-    corto_id paramName = {'_', '\0'};
+    corto_id param_name = {'_', '\0'};
 
-    if (corto_expr_getParamName(paramName + 1, name)) {
+    if (corto_expr_getParamName(param_name + 1, name)) {
         goto error;
     }
 
     for (i = 0; i < length; i ++) {
         corto_parameter *p = &f->parameters.buffer[i];
-        if (!strcmp(p->name, paramName)) {
+        if (!strcmp(p->name, param_name)) {
             return length;
         }
     }
@@ -49,9 +49,9 @@ static corto_int32 corto_expr_addParam(corto_function f, corto_string name) {
     f->parameters.length ++;
 
     corto_parameter *p = &f->parameters.buffer[length];
-    p->name = corto_strdup(paramName);
+    p->name = corto_strdup(param_name);
     p->type = NULL;
-    p->passByReference = FALSE;
+    p->is_reference = FALSE;
     p->inout = CORTO_IN;
 
     return f->parameters.length;
@@ -88,8 +88,8 @@ static corto_int16 corto_expr_finalize(corto_expr *out, corto_expr_opt *opt, cha
     }
 
     if (opt) {
-        corto_set_ref(&f->returnType, opt->returnType);
-        f->returnsReference = opt->returnsReference;
+        corto_set_ref(&f->return_type, opt->return_type);
+        f->is_reference = opt->is_reference;
     }
 
     if (ast_Parser_parseFunction(f, cortoExpr, opt ? opt->inverse : FALSE)) {
@@ -178,10 +178,10 @@ corto_int16 corto_expr_run(corto_expr *expr, corto_value *out, ...) {
     corto_invokev(expr->function, ptr, args);
     va_end(args);
 
-    if (expr->function->returnsReference) {
+    if (expr->function->is_reference) {
         *out = corto_value_object(*(corto_object*)ptr, NULL);
     } else {
-        *out = corto_value_ptr(&out->is.pointer.storage, expr->function->returnType);
+        *out = corto_value_ptr(&out->is.pointer.storage, expr->function->return_type);
         *(corto_uint64*)&out->is.pointer.storage = dummy;
     }
 
@@ -194,10 +194,10 @@ corto_int16 corto_expr_runb(corto_expr *expr, corto_value *out, void **args) {
 
     corto_invokeb(expr->function, ptr, args);
 
-    if (expr->function->returnsReference) {
+    if (expr->function->is_reference) {
         *out = corto_value_object(*(corto_object*)ptr, NULL);
     } else {
-        *out = corto_value_ptr(&out->is.pointer.storage, expr->function->returnType);
+        *out = corto_value_ptr(&out->is.pointer.storage, expr->function->return_type);
         *(corto_uint64*)&out->is.pointer.storage = dummy;
     }
 

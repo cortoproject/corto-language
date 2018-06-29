@@ -195,7 +195,7 @@ error:
 
 /* Observable mask */
 /*%type <Mask>
-    event_mask_norm event_mask event_mask_flags event_mask_childflags event_mask_baseflags
+    eventMask_norm eventMask eventMask_flags eventMask_childflags eventMask_baseflags
 */
 
 %type <Declarations>

@@ -23,7 +23,7 @@ corto_void _test_BinaryOp_tc_OM(
     ret = corto_expr_comp(&e, NULL, "a + b.x");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType == (corto_type)corto_int32_o);
+    test_assert(e.function->return_type == (corto_type)corto_int32_o);
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
@@ -50,7 +50,7 @@ corto_void _test_BinaryOp_tc_OO(
     ret = corto_expr_comp(&e, NULL, "a + b");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType == (corto_type)corto_int32_o);
+    test_assert(e.function->return_type == (corto_type)corto_int32_o);
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
@@ -75,7 +75,7 @@ corto_void _test_BinaryOp_tc_OR(
     ret = corto_expr_comp(&e, NULL, "int32 b = 20; a + b");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType == (corto_type)corto_int32_o);
+    test_assert(e.function->return_type == (corto_type)corto_int32_o);
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
@@ -100,7 +100,7 @@ corto_void _test_BinaryOp_tc_OV(
     ret = corto_expr_comp(&e, NULL, "a + 20");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType == (corto_type)corto_int32_o);
+    test_assert(e.function->return_type == (corto_type)corto_int32_o);
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
@@ -125,7 +125,7 @@ corto_void _test_BinaryOp_tc_RM(
     ret = corto_expr_comp(&e, NULL, "int32 a = 10; a + b.x");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType == (corto_type)corto_int32_o);
+    test_assert(e.function->return_type == (corto_type)corto_int32_o);
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
@@ -150,7 +150,7 @@ corto_void _test_BinaryOp_tc_RO(
     ret = corto_expr_comp(&e, NULL, "int32 a = 10; a + b");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType == (corto_type)corto_int32_o);
+    test_assert(e.function->return_type == (corto_type)corto_int32_o);
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
@@ -172,7 +172,7 @@ corto_void _test_BinaryOp_tc_RR(
     ret = corto_expr_comp(&e, NULL, "int32 a = 10; int32 b = 20; a + b");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType == (corto_type)corto_int32_o);
+    test_assert(e.function->return_type == (corto_type)corto_int32_o);
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
@@ -194,7 +194,7 @@ corto_void _test_BinaryOp_tc_RV(
     ret = corto_expr_comp(&e, NULL, "int32 a = 10; a + 20");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType == (corto_type)corto_int32_o);
+    test_assert(e.function->return_type == (corto_type)corto_int32_o);
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
@@ -219,7 +219,7 @@ corto_void _test_BinaryOp_tc_VM(
     ret = corto_expr_comp(&e, NULL, "10 + b.x");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType == (corto_type)corto_int32_o);
+    test_assert(e.function->return_type == (corto_type)corto_int32_o);
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
@@ -244,7 +244,7 @@ corto_void _test_BinaryOp_tc_VO(
     ret = corto_expr_comp(&e, NULL, "10 + b");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType == (corto_type)corto_int32_o);
+    test_assert(e.function->return_type == (corto_type)corto_int32_o);
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
@@ -266,7 +266,7 @@ corto_void _test_BinaryOp_tc_VR(
     ret = corto_expr_comp(&e, NULL, "int32 b = 20; 10 + b");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType == (corto_type)corto_int32_o);
+    test_assert(e.function->return_type == (corto_type)corto_int32_o);
     test_assert(e.function->parameters.length == 0);
 
     corto_int32 result = 0;
@@ -288,7 +288,7 @@ corto_void _test_BinaryOp_tc_VV(
     ret = corto_expr_comp(&e, NULL, "10 + 20");
     test_assert(ret == 0);
     test_assert(e.function != NULL);
-    test_assert(e.function->returnType == (corto_type)corto_uint64_o);
+    test_assert(e.function->return_type == (corto_type)corto_uint64_o);
     test_assert(e.function->parameters.length == 0);
 
     corto_uint64 result = 0;
